@@ -8,9 +8,16 @@ import { fetchMockCol } from 'client/reducer/modules/mockCol';
 import { formatTime } from 'client/common.js';
 import constants from 'client/constants/variable.js';
 import CaseDesModal from './CaseDesModal';
-import { json5_parse } from '../../../client/common';
+import json5 from "json5";
 import _ from 'underscore';
 
+const json5_parse = function(json) {
+  try {
+    return json5.parse(json);
+  } catch (err) {
+    return json;
+  }
+};
 @connect(
   state => {
     return {

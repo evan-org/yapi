@@ -10,7 +10,7 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
-import { pickRandomProperty, handlePath, nameLengthLimit } from "../../common";
+import { pickRandomProperty, handlePath, nameLengthLimit } from "../../utils/common";
 import constants from "../../constants/variable.js";
 import { withRouter } from "react-router";
 import "./Addproject.scss";

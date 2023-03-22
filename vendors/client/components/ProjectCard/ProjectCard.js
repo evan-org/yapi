@@ -5,11 +5,11 @@ import { connect } from "react-redux";
 import { delFollow, addFollow } from "../../reducer/modules/follow";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
-import { debounce } from "../../common";
+import { debounce } from "../../utils/common";
 import constants from "../../constants/variable.js";
 import produce from "immer";
 import { getProject, checkProjectName, copyProjectMsg } from "../../reducer/modules/project";
-import { trim } from "../../common.js";
+import { trim } from "../../utils/common.js";
 const confirm = Modal.confirm;
 
 @connect(

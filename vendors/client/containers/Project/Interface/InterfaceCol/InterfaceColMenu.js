@@ -13,7 +13,7 @@ import { fetchProjectList } from '../../../../reducer/modules/project';
 import axios from 'axios';
 import ImportInterface from './ImportInterface';
 import { Input, Icon, Button, Modal, message, Tooltip, Tree, Form } from 'antd';
-import { arrayChangeIndex } from '../../../../common.js';
+import { arrayChangeIndex } from '../../../../utils/common.js';
 import _ from 'underscore'
 
 const TreeNode = Tree.TreeNode;
@@ -246,7 +246,7 @@ export default class InterfaceColMenu extends Component {
     let data = caseData.payload.data.data;
     data = JSON.parse(JSON.stringify(data));
     data.casename=`${data.casename}_copy`
-    delete data._id 
+    delete data._id
     const res = await axios.post('/api/col/add_case',data);
       if (!res.data.errcode) {
         message.success('克隆用例成功');
@@ -494,7 +494,7 @@ export default class InterfaceColMenu extends Component {
       list = list.filter(item => {
 
         item.caseList = item.caseList.filter(inter => {
-          if (inter.casename.indexOf(this.state.filterValue) === -1 
+          if (inter.casename.indexOf(this.state.filterValue) === -1
           && inter.path.indexOf(this.state.filterValue) === -1
           ) {
             return false;

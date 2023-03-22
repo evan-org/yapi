@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Table, Icon, Row, Col, Tooltip, message } from "antd";
 import { Link } from "react-router-dom";
 import AceEditor from "client/components/AceEditor/AceEditor";
-import { formatTime, safeArray } from "../../../../common.js";
+import { formatTime, safeArray } from "../../../../utils/common.js";
 import ErrMsg from "../../../../components/ErrMsg/ErrMsg.js";
 import variable from "../../../../constants/variable";
 import constants from "../../../../constants/variable.js";
