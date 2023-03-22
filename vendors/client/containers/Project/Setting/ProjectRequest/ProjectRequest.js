@@ -1,25 +1,23 @@
-import React, { PureComponent as Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Form, Button, message } from 'antd';
+import React, { PureComponent as Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Form, Button, message } from "antd";
 const FormItem = Form.Item;
-import './project-request.scss';
-import AceEditor from 'client/components/AceEditor/AceEditor';
-import { updateProjectScript, getProject } from '../../../../reducer/modules/project';
+import "./project-request.scss";
+import AceEditor from "client/components/AceEditor/AceEditor";
+import { updateProjectScript, getProject } from "../../../../reducer/modules/project";
 
 @connect(
-  state => {
-    return {
-      projectMsg: state.project.currProject
-    };
-  },
+  (state) => ({
+    projectMsg: state.project.currProject
+  }),
   {
     updateProjectScript,
     getProject
   }
 )
 @Form.create()
-export default class ProjectRequest extends Component {
+class ProjectRequest extends Component {
   static propTypes = {
     projectMsg: PropTypes.object,
     updateProjectScript: PropTypes.func,
@@ -34,17 +32,17 @@ export default class ProjectRequest extends Component {
     });
   }
 
-  handleSubmit = async () => {
+  handleSubmit = async() => {
     let result = await this.props.updateProjectScript({
       id: this.props.projectId,
       pre_script: this.state.pre_script,
       after_script: this.state.after_script
     });
     if (result.payload.data.errcode === 0) {
-      message.success('保存成功');
+      message.success("保存成功");
       await this.props.getProject(this.props.projectId);
     } else {
-      message.success('保存失败, ' + result.payload.data.errmsg);
+      message.success("保存失败, " + result.payload.data.errmsg);
     }
   };
 
@@ -81,16 +79,16 @@ export default class ProjectRequest extends Component {
           <FormItem {...formItemLayout} label="Pre-request Script(请求参数处理脚本)">
             <AceEditor
               data={pre_script}
-              onChange={editor => this.setState({ pre_script: editor.text })}
-              fullScreen={true}
+              onChange={(editor) => this.setState({ pre_script: editor.text })}
+              fullScreen
               className="request-editor"
             />
           </FormItem>
           <FormItem {...formItemLayout} label="Pre-response Script(响应数据处理脚本)">
             <AceEditor
               data={after_script}
-              onChange={editor => this.setState({ after_script: editor.text })}
-              fullScreen={true}
+              onChange={(editor) => this.setState({ after_script: editor.text })}
+              fullScreen
               className="request-editor"
             />
           </FormItem>
@@ -104,3 +102,4 @@ export default class ProjectRequest extends Component {
     );
   }
 }
+export default ProjectRequest;

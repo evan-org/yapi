@@ -127,7 +127,7 @@ module.exports = {
     }),
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/),
     new HtmlWebpackPlugin({
-      template: resolve("./static/index.html")
+      template: resolve("./public/index.html")
     })
   ],
   optimization: {

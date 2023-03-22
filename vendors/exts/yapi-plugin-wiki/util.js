@@ -1,6 +1,5 @@
 // 时间
 const convert2Decimal = (num) => (num > 9 ? num : `0${num}`);
-
 /**
  * 格式化 年、月、日、时、分、秒
  * @param val {Object or String or Number} 日期对象 或是可new Date的对象或时间戳
@@ -21,5 +20,3 @@ exports.formatDate = (val) => {
     convert2Decimal(date.getSeconds())
   ].join(":")}`;
 };
-
-// const json5_parse = require('../client/common.js').json5_parse;

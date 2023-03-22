@@ -5,16 +5,15 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { Form, Switch, Button, message, Icon, Tooltip, Radio } from "antd";
 import MockCol from "./MockCol/MockCol.js";
-import mockEditor from "client/components/AceEditor/mockEditor";
+import mockEditor from "../../client/components/AceEditor/mockEditor";
 import constants from "../../client/constants/variable.js";
+//
 const FormItem = Form.Item;
-
 class AdvMock extends Component {
   static propTypes = {
     form: PropTypes.object,
     match: PropTypes.object
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +22,6 @@ class AdvMock extends Component {
       tab: "case"
     };
   }
-
   handleSubmit = (e) => {
     e.preventDefault();
     let projectId = this.props.match.params.id;
@@ -42,11 +40,9 @@ class AdvMock extends Component {
       }
     });
   };
-
   componentWillMount() {
     this.getAdvMockData();
   }
-
   async getAdvMockData() {
     let interfaceId = this.props.match.params.actionId;
     let result = await axios.get("/api/plugin/advmock/get?interface_id=" + interfaceId);
@@ -57,7 +53,6 @@ class AdvMock extends Component {
         mock_script: mockData.mock_script
       });
     }
-
     let that = this;
     mockEditor({
       container: "mock-script",
@@ -69,19 +64,16 @@ class AdvMock extends Component {
       }
     });
   }
-
   onChange = (v) => {
     this.setState({
       enable: v
     });
   };
-
   handleTapChange = (e) => {
     this.setState({
       tab: e.target.value
     });
   };
-
   render() {
     const formItemLayout = {
       labelCol: {
@@ -120,7 +112,7 @@ class AdvMock extends Component {
                     href={constants.docHref.adv_mock_script}
                   >
                     <Tooltip title="点击查看文档">
-                      <Icon type="question-circle-o" />
+                      <Icon type="question-circle-o"/>
                     </Tooltip>
                   </a>
                 </span>
@@ -134,9 +126,8 @@ class AdvMock extends Component {
                 unCheckedChildren="关"
               />
             </FormItem>
-
             <FormItem label="Mock脚本" {...formItemLayout}>
-              <div id="mock-script" style={{ minHeight: "500px" }} />
+              <div id="mock-script" style={{ minHeight: "500px" }}/>
             </FormItem>
             <FormItem {...tailFormItemLayout}>
               <Button type="primary" htmlType="submit">
@@ -146,11 +137,10 @@ class AdvMock extends Component {
           </Form>
         </div>
         <div style={{ display: isShowCase ? "" : "none" }}>
-          <MockCol />
+          <MockCol/>
         </div>
       </div>
     );
   }
 }
-
 module.exports = Form.create()(withRouter(AdvMock));

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Form, Switch, Button, Icon, Tooltip, message } from 'antd';
-import AceEditor from '../../../../components/AceEditor/AceEditor';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { Form, Switch, Button, Icon, Tooltip, message } from "antd";
+import AceEditor from "../../../../components/AceEditor/AceEditor";
 const FormItem = Form.Item;
-import { updateProjectMock, getProject } from '../../../../reducer/modules/project';
+import { updateProjectMock, getProject } from "../../../../reducer/modules/project";
 
 const formItemLayout = {
   labelCol: {
@@ -24,18 +24,16 @@ const tailFormItemLayout = {
 };
 
 @connect(
-  state => {
-    return {
-      projectMsg: state.project.currProject
-    };
-  },
+  (state) => ({
+    projectMsg: state.project.currProject
+  }),
   {
     updateProjectMock,
     getProject
   }
 )
 @Form.create()
-export default class ProjectMock extends Component {
+class ProjectMock extends Component {
   static propTypes = {
     form: PropTypes.object,
     match: PropTypes.object,
@@ -49,11 +47,11 @@ export default class ProjectMock extends Component {
     super(props);
     this.state = {
       is_mock_open: false,
-      project_mock_script: ''
+      project_mock_script: ""
     };
   }
 
-  handleSubmit = async () => {
+  handleSubmit = async() => {
     let params = {
       id: this.props.projectId,
       project_mock_script: this.state.project_mock_script,
@@ -63,10 +61,10 @@ export default class ProjectMock extends Component {
     let result = await this.props.updateProjectMock(params);
 
     if (result.payload.data.errcode === 0) {
-      message.success('保存成功');
+      message.success("保存成功");
       await this.props.getProject(this.props.projectId);
     } else {
-      message.success('保存失败, ' + result.payload.data.errmsg);
+      message.success("保存失败, " + result.payload.data.errmsg);
     }
   };
 
@@ -78,13 +76,13 @@ export default class ProjectMock extends Component {
   }
 
   // 是否开启
-  onChange = v => {
+  onChange = (v) => {
     this.setState({
       is_mock_open: v
     });
   };
 
-  handleMockJsInput = e => {
+  handleMockJsInput = (e) => {
     this.setState({
       project_mock_script: e.text
     });
@@ -121,7 +119,7 @@ export default class ProjectMock extends Component {
             <AceEditor
               data={this.state.project_mock_script}
               onChange={this.handleMockJsInput}
-              style={{ minHeight: '500px' }}
+              style={{ minHeight: "500px" }}
             />
           </FormItem>
           <FormItem {...tailFormItemLayout}>
@@ -134,3 +132,4 @@ export default class ProjectMock extends Component {
     );
   }
 }
+export default ProjectMock;
