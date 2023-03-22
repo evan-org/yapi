@@ -30,6 +30,11 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/material": "^5.11.14",
+    "@mui/styled-engine-sc": "^5.11.11",
     "ajv": "^5.5.1",
     "ajv-i18n": "^2.2.0",
     "axios": "0.18.1",
@@ -81,6 +86,7 @@
     "safeify": "^5.0.5",
     "sha.js": "2.4.9",
     "sha1": "1.1.1",
+    "styled-components": "^5.3.9",
     "swagger-client": "~3.10.13",
     "tslib": "1.8.0",
     "underscore": "1.8.3",
@@ -170,8 +176,7 @@
     "webpack-merge": "^4.2.2",
     "ydoc-plugin-img-view": "^1.0.1"
   },
-  "config": {
-  },
+  "config": {},
   "engines": {
     "node": ">= 7.6.0",
     "npm": ">= 4.1.2"

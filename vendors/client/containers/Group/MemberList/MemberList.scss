@@ -1,4 +1,4 @@
-@import '../../../styles/mixin.scss';
+@import '../../../styles/mixin';
 
 .m-panel{
   background-color: #fff;
@@ -51,7 +51,7 @@
   .m-user-name {
     margin-left: 8px;
   }
-  
+
 }
 .usernamelabel,.usernameauth{
   line-height: 36px;

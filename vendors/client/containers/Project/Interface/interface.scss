@@ -1,4 +1,4 @@
-@import '../../../styles/mixin.scss';
+@import '../../../styles/mixin';
 
 .left-menu {
   min-height: 5rem;
@@ -277,7 +277,7 @@
 }
 
 .common-setting-modal{
-  
+
   .setting-item{
     margin: 10px;
     line-height: 35px;

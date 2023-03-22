@@ -1,8 +1,8 @@
-@import '../../styles/mixin.scss';
+@import '../../styles/mixin';
 .postman {
 
 
-  
+
   .adv-button {
     margin-bottom: 8px;
   }
@@ -30,10 +30,10 @@
     }
   }
 
-  
+
 
   .insert-code{
-    
+
     margin-right: 20px;
     .code-item{
       border: 1px solid #dbd9d9;
@@ -48,12 +48,12 @@
     margin: 10px;
   }
 
-  .response-tab{    
+  .response-tab{
     margin-top: 20px;
     margin-bottom: 20px;
     .ant-tabs-nav{
       background: #f7f7f7;
-      border-radius: 0 0 4px 4px;      
+      border-radius: 0 0 4px 4px;
       border: 1px solid #d9d9d9;
       width: 100%;
     }

@@ -1,4 +1,4 @@
-@import '../../styles/mixin.scss';
+@import '../../styles/mixin';
 
 .breadcrumb-container {
   .ant-breadcrumb {
@@ -7,7 +7,7 @@
     color: #fff;
     padding-left: 16px;
     line-height: unset;
-  
+
   }
   .ant-breadcrumb a {
     color: #fff;
