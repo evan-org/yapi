@@ -44,3 +44,15 @@ tsconfig.json
 client/plugin-module.js
 .vscode
 /iconfont
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+yarn.lock
+.vs/
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
