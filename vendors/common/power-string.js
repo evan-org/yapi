@@ -2,15 +2,15 @@
  * @author suxiaoxin
  */
 
-const aUniqueVerticalStringNotFoundInData = '___UNIQUE_VERTICAL___';
-const aUniqueCommaStringNotFoundInData = '___UNIQUE_COMMA___';
-const segmentSeparateChar = '|';
-const methodAndArgsSeparateChar = ':';
-const argsSeparateChar = ',';
+const aUniqueVerticalStringNotFoundInData = "___UNIQUE_VERTICAL___";
+const aUniqueCommaStringNotFoundInData = "___UNIQUE_COMMA___";
+const segmentSeparateChar = "|";
+const methodAndArgsSeparateChar = ":";
+const argsSeparateChar = ",";
 
-const md5 = require('md5');
-const sha = require('sha.js');
-const Base64 = require('js-base64').Base64;
+const md5 = require("md5");
+const sha = require("sha.js");
+const Base64 = require("js-base64").Base64;
 
 const stringHandles = {
   md5: function(str) {
@@ -20,40 +20,40 @@ const stringHandles = {
   sha: function(str, arg) {
     return sha(arg)
       .update(str)
-      .digest('hex');
+      .digest("hex");
   },
 
   /**
    * type: sha1 sha224 sha256 sha384 sha512
    */
   sha1: function(str) {
-    return sha('sha1')
+    return sha("sha1")
       .update(str)
-      .digest('hex');
+      .digest("hex");
   },
 
   sha224: function(str) {
-    return sha('sha224')
+    return sha("sha224")
       .update(str)
-      .digest('hex');
+      .digest("hex");
   },
 
   sha256: function(str) {
-    return sha('sha256')
+    return sha("sha256")
       .update(str)
-      .digest('hex');
+      .digest("hex");
   },
 
   sha384: function(str) {
-    return sha('sha384')
+    return sha("sha384")
       .update(str)
-      .digest('hex');
+      .digest("hex");
   },
 
   sha512: function(str) {
-    return sha('sha512')
+    return sha("sha512")
       .update(str)
-      .digest('hex');
+      .digest("hex");
   },
 
   base64: function(str) {
@@ -69,14 +69,14 @@ const stringHandles = {
   },
 
   concat: function(str, ...args) {
-    args.forEach(item => {
+    args.forEach((item) => {
       str += item;
     });
     return str;
   },
 
   lconcat: function(str, ...args) {
-    args.forEach(item => {
+    args.forEach((item) => {
       str = item + this._string;
     });
     return str;
@@ -109,8 +109,8 @@ const _handleValue = function(str) {
   }
   return handleValue(
     str
-      .replace(new RegExp(aUniqueVerticalStringNotFoundInData, 'g'), segmentSeparateChar)
-      .replace(new RegExp(aUniqueCommaStringNotFoundInData, 'g'), argsSeparateChar)
+      .replace(new RegExp(aUniqueVerticalStringNotFoundInData, "g"), segmentSeparateChar)
+      .replace(new RegExp(aUniqueCommaStringNotFoundInData, "g"), argsSeparateChar)
   );
 };
 
@@ -126,7 +126,7 @@ class PowerString {
 
 function addMethod(method, fn) {
   PowerString.prototype[method] = function(...args) {
-    args.unshift(this._string + '');
+    args.unshift(this._string + "");
     this._string = fn.apply(this, args);
     return this;
   };
@@ -141,13 +141,13 @@ function importMethods(handles) {
 importMethods(stringHandles);
 
 function handleOriginStr(str, handleValueFn) {
-  if (!str) return str;
-  if (typeof handleValueFn === 'function') {
+  if (!str) {return str;}
+  if (typeof handleValueFn === "function") {
     handleValue = handleValueFn;
   }
   str = str
-    .replace('\\' + segmentSeparateChar, aUniqueVerticalStringNotFoundInData)
-    .replace('\\' + argsSeparateChar, aUniqueCommaStringNotFoundInData)
+    .replace("\\" + segmentSeparateChar, aUniqueVerticalStringNotFoundInData)
+    .replace("\\" + argsSeparateChar, aUniqueCommaStringNotFoundInData)
     .split(segmentSeparateChar)
     .map(handleSegment)
     .reduce(execute, null)
@@ -173,11 +173,11 @@ function handleSegment(str, index) {
   if (str.indexOf(methodAndArgsSeparateChar) > 0) {
     str = str.split(methodAndArgsSeparateChar);
     method = str[0].trim();
-    args = str[1].split(argsSeparateChar).map(item => _handleValue(item.trim()));
+    args = str[1].split(argsSeparateChar).map((item) => _handleValue(item.trim()));
   } else {
     method = str;
   }
-  if (typeof stringHandles[method] !== 'function') {
+  if (typeof stringHandles[method] !== "function") {
     throw new Error(`This method name(${method}) is not exist.`);
   }
 
