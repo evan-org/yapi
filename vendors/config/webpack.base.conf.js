@@ -45,7 +45,7 @@ function initPlugins(configPlugin) {
 initPlugins();
 
 module.exports = {
-  entry: "./client/index.js",
+  entry: "./client/main.js",
   output: {
     path: resolve("static/prd")
   },

@@ -20,7 +20,7 @@ const theme = createTheme({
   }
 });
 //
-import App from "./Application";
+import App from "./App";
 import { Provider } from "react-redux";
 import createStore from "./reducer/create";
 const store = createStore();
