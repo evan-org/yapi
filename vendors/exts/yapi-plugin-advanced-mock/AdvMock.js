@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 // import { connect } from 'react-redux'
-import axios from 'axios';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { Form, Switch, Button, message, Icon, Tooltip, Radio } from 'antd';
-import MockCol from './MockCol/MockCol.js';
-import mockEditor from 'client/components/AceEditor/mockEditor';
-import constants from '../../client/constants/variable.js';
+import axios from "axios";
+import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
+import { Form, Switch, Button, message, Icon, Tooltip, Radio } from "antd";
+import MockCol from "./MockCol/MockCol.js";
+import mockEditor from "client/components/AceEditor/mockEditor";
+import constants from "../../client/constants/variable.js";
 const FormItem = Form.Item;
 
 class AdvMock extends Component {
@@ -19,12 +19,12 @@ class AdvMock extends Component {
     super(props);
     this.state = {
       enable: false,
-      mock_script: '',
-      tab: 'case'
+      mock_script: "",
+      tab: "case"
     };
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     let projectId = this.props.match.params.id;
     let interfaceId = this.props.match.params.actionId;
@@ -34,9 +34,9 @@ class AdvMock extends Component {
       mock_script: this.state.mock_script,
       enable: this.state.enable
     };
-    axios.post('/api/plugin/advmock/save', params).then(res => {
+    axios.post("/api/plugin/advmock/save", params).then((res) => {
       if (res.data.errcode === 0) {
-        message.success('保存成功');
+        message.success("保存成功");
       } else {
         message.error(res.data.errmsg);
       }
@@ -49,7 +49,7 @@ class AdvMock extends Component {
 
   async getAdvMockData() {
     let interfaceId = this.props.match.params.actionId;
-    let result = await axios.get('/api/plugin/advmock/get?interface_id=' + interfaceId);
+    let result = await axios.get("/api/plugin/advmock/get?interface_id=" + interfaceId);
     if (result.data.errcode === 0) {
       let mockData = result.data.data;
       this.setState({
@@ -60,7 +60,7 @@ class AdvMock extends Component {
 
     let that = this;
     mockEditor({
-      container: 'mock-script',
+      container: "mock-script",
       data: that.state.mock_script,
       onChange: function(d) {
         that.setState({
@@ -70,13 +70,13 @@ class AdvMock extends Component {
     });
   }
 
-  onChange = v => {
+  onChange = (v) => {
     this.setState({
       enable: v
     });
   };
 
-  handleTapChange = e => {
+  handleTapChange = (e) => {
     this.setState({
       tab: e.target.value
     });
@@ -100,16 +100,16 @@ class AdvMock extends Component {
       }
     };
     const { tab } = this.state;
-    const isShowCase = tab === 'case';
+    const isShowCase = tab === "case";
     return (
-      <div style={{ padding: '20px 10px' }}>
-        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+      <div style={{ padding: "20px 10px" }}>
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
           <Radio.Group value={tab} size="large" onChange={this.handleTapChange}>
             <Radio.Button value="case">期望</Radio.Button>
             <Radio.Button value="script">脚本</Radio.Button>
           </Radio.Group>
         </div>
-        <div style={{ display: isShowCase ? 'none' : '' }}>
+        <div style={{ display: isShowCase ? "none" : "" }}>
           <Form onSubmit={this.handleSubmit}>
             <FormItem
               label={
@@ -136,7 +136,7 @@ class AdvMock extends Component {
             </FormItem>
 
             <FormItem label="Mock脚本" {...formItemLayout}>
-              <div id="mock-script" style={{ minHeight: '500px' }} />
+              <div id="mock-script" style={{ minHeight: "500px" }} />
             </FormItem>
             <FormItem {...tailFormItemLayout}>
               <Button type="primary" htmlType="submit">
@@ -145,7 +145,7 @@ class AdvMock extends Component {
             </FormItem>
           </Form>
         </div>
-        <div style={{ display: isShowCase ? '' : 'none' }}>
+        <div style={{ display: isShowCase ? "" : "none" }}>
           <MockCol />
         </div>
       </div>

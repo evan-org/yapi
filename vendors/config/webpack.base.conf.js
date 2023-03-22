@@ -1,4 +1,4 @@
-var fs = require("fs");
+const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -7,8 +7,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const devMode = process.env.NODE_ENV !== "production";
 const resolve = (dir) => path.resolve(__dirname, "../", dir);
-var isWin = require('os').platform() === 'win32';
-var commonLib = require("../common/plugin.js");
+let isWin = require("os").platform() === "win32";
+let commonLib = require("../common/plugin.js");
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === "node_modules") {
@@ -19,9 +19,9 @@ function createScript(plugin, pathAlias) {
 
 function initPlugins(configPlugin) {
   configPlugin = require("../../config.json").plugins;
-  var systemConfigPlugin = require("../common/config.js").exts;
+  let systemConfigPlugin = require("../common/config.js").exts;
 
-  var scripts = [];
+  let scripts = [];
   if (configPlugin && Array.isArray(configPlugin) && configPlugin.length) {
     configPlugin = commonLib.initPlugins(configPlugin, "plugin");
     configPlugin.forEach((plugin) => {

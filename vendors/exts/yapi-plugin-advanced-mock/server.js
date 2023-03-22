@@ -1,27 +1,27 @@
-const controller = require('./controller');
-const advModel = require('./advMockModel.js');
-const caseModel = require('./caseModel.js');
-const yapi = require('yapi.js');
-const mongoose = require('mongoose');
-const _ = require('underscore');
-const path = require('path');
-const lib = require(path.resolve(yapi.WEBROOT, 'common/lib.js'));
-const Mock = require('mockjs');
-const mockExtra = require(path.resolve(yapi.WEBROOT, 'common/mock-extra.js'));
+const controller = require("./controller");
+const advModel = require("./advMockModel.js");
+const caseModel = require("./caseModel.js");
+const yapi = require("yapi.js");
+const mongoose = require("mongoose");
+const _ = require("underscore");
+const path = require("path");
+const lib = require(path.resolve(yapi.WEBROOT, "common/lib.js"));
+const Mock = require("mockjs");
+const mockExtra = require(path.resolve(yapi.WEBROOT, "common/mock-extra.js"));
 
 function arrToObj(arr) {
-  let obj = { 'Set-Cookie': [] };
-  arr.forEach(item => {
-    if (item.name === 'Set-Cookie') {
-      obj['Set-Cookie'].push(item.value);
-    } else obj[item.name] = item.value;
+  let obj = { "Set-Cookie": [] };
+  arr.forEach((item) => {
+    if (item.name === "Set-Cookie") {
+      obj["Set-Cookie"].push(item.value);
+    } else {obj[item.name] = item.value;}
   });
   return obj;
 }
 
 module.exports = function() {
   yapi.connect.then(function() {
-    let Col = mongoose.connection.db.collection('adv_mock');
+    let Col = mongoose.connection.db.collection("adv_mock");
     Col.createIndex({
       interface_id: 1
     });
@@ -29,7 +29,7 @@ module.exports = function() {
       project_id: 1
     });
 
-    let caseCol = mongoose.connection.db.collection('adv_mock_case');
+    let caseCol = mongoose.connection.db.collection("adv_mock_case");
     caseCol.createIndex({
       interface_id: 1
     });
@@ -54,10 +54,10 @@ module.exports = function() {
         ip_enable: true,
         ip: ip
       })
-      .select('_id params case_enable');
+      .select("_id params case_enable");
 
     let matchList = [];
-    listWithIp.forEach(item => {
+    listWithIp.forEach((item) => {
       let params = item.params;
       if (item.case_enable && lib.isDeepMatch(reqParams, params)) {
         matchList.push(item);
@@ -71,8 +71,8 @@ module.exports = function() {
           interface_id: interfaceId,
           ip_enable: false
         })
-        .select('_id params case_enable');
-      list.forEach(item => {
+        .select("_id params case_enable");
+      list.forEach((item) => {
         let params = item.params;
         if (item.case_enable && lib.isDeepMatch(reqParams, params)) {
           matchList.push(item);
@@ -81,7 +81,7 @@ module.exports = function() {
     }
 
     if (matchList.length > 0) {
-      let maxItem = _.max(matchList, item => (item.params && Object.keys(item.params).length) || 0);
+      let maxItem = _.max(matchList, (item) => (item.params && Object.keys(item.params).length) || 0);
       return maxItem;
     }
     return null;
@@ -95,34 +95,34 @@ module.exports = function() {
     return result;
   }
 
-  this.bindHook('add_router', function(addRouter) {
+  this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: controller,
-      method: 'get',
-      path: 'advmock/get',
-      action: 'getMock'
+      method: "get",
+      path: "advmock/get",
+      action: "getMock"
     });
     addRouter({
       controller: controller,
-      method: 'post',
-      path: 'advmock/save',
-      action: 'upMock'
+      method: "post",
+      path: "advmock/save",
+      action: "upMock"
     });
     addRouter({
       /**
        * 保存期望
        */
       controller: controller,
-      method: 'post',
-      path: 'advmock/case/save',
-      action: 'saveCase'
+      method: "post",
+      path: "advmock/case/save",
+      action: "saveCase"
     });
 
     addRouter({
       controller: controller,
-      method: 'get',
-      path: 'advmock/case/get',
-      action: 'getCase'
+      method: "get",
+      path: "advmock/case/get",
+      action: "getCase"
     });
 
     addRouter({
@@ -130,9 +130,9 @@ module.exports = function() {
        * 获取期望列表
        */
       controller: controller,
-      method: 'get',
-      path: 'advmock/case/list',
-      action: 'list'
+      method: "get",
+      path: "advmock/case/list",
+      action: "list"
     });
 
     addRouter({
@@ -140,9 +140,9 @@ module.exports = function() {
        * 删除期望列表
        */
       controller: controller,
-      method: 'post',
-      path: 'advmock/case/del',
-      action: 'delCase'
+      method: "post",
+      path: "advmock/case/del",
+      action: "delCase"
     });
 
     addRouter({
@@ -150,16 +150,16 @@ module.exports = function() {
        * 隐藏期望列表
        */
       controller: controller,
-      method: 'post',
-      path: 'advmock/case/hide',
-      action: 'hideCase'
+      method: "post",
+      path: "advmock/case/hide",
+      action: "hideCase"
     });
   });
-  this.bindHook('interface_del', async function(id) {
+  this.bindHook("interface_del", async function(id) {
     let inst = yapi.getInst(advModel);
     await inst.delByInterfaceId(id);
   });
-  this.bindHook('project_del', async function(id) {
+  this.bindHook("project_del", async function(id) {
     let inst = yapi.getInst(advModel);
     await inst.delByProjectId(id);
   });
@@ -168,10 +168,10 @@ module.exports = function() {
       projectData: project,
       interfaceData: interfaceData,
       ctx: ctx,
-      mockJson: res 
-    } 
+      mockJson: res
+    }
    */
-  this.bindHook('mock_after', async function(context) {
+  this.bindHook("mock_after", async function(context) {
     let interfaceId = context.interfaceData._id;
     let caseData = await checkCase(context.ctx, interfaceId);
 
@@ -190,7 +190,7 @@ module.exports = function() {
           })
         );
       } catch (err) {
-        yapi.commons.log(err, 'error');
+        yapi.commons.log(err, "error");
       }
 
       context.resHeader = arrToObj(data.headers);

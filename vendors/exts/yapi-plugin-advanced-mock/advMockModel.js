@@ -1,16 +1,16 @@
-const yapi = require('yapi.js');
-const baseModel = require('models/base.js');
+const yapi = require("yapi.js");
+const baseModel = require("models/base.js");
 
 class advMockModel extends baseModel {
   getName() {
-    return 'adv_mock';
+    return "adv_mock";
   }
 
   getSchema() {
     return {
       interface_id: { type: Number, required: true },
       project_id: {type: Number, required: true},
-      enable: {type: Boolean, default: false}, 
+      enable: {type: Boolean, default: false},
       mock_script: String,
       uid: String,
       up_time: Number
@@ -30,7 +30,7 @@ class advMockModel extends baseModel {
     });
   }
 
-  delByProjectId(project_id){
+  delByProjectId(project_id) {
     return this.model.remove({
       project_id: project_id
     })
@@ -47,13 +47,13 @@ class advMockModel extends baseModel {
     return this.model.update({
       interface_id: data.interface_id
     }, {
-        uid: data.uid,
-        up_time: data.up_time,
-        mock_script: data.mock_script,
-        enable: data.enable
-      }, {
-        upsert: true
-      })
+      uid: data.uid,
+      up_time: data.up_time,
+      mock_script: data.mock_script,
+      enable: data.enable
+    }, {
+      upsert: true
+    })
   }
 
 }

@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Button, Checkbox } from 'antd';
-import Editor from 'common/tui-editor/dist/tui-editor-Editor-all.min.js';
-require('common/tui-editor/dist/tui-editor.min.css'); // editor ui
-require('common/tui-editor/dist/tui-editor-contents.min.css'); // editor content
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Button, Checkbox } from "antd";
+import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
+require("common/tui-editor/dist/tui-editor.min.css"); // editor ui
+require("common/tui-editor/dist/tui-editor-contents.min.css"); // editor content
 class WikiEditor extends Component {
   constructor(props) {
     super(props);
@@ -20,9 +20,9 @@ class WikiEditor extends Component {
 
   componentDidMount() {
     this.editor = new Editor({
-      el: document.querySelector('#desc'),
-      initialEditType: 'wysiwyg',
-      height: '500px',
+      el: document.querySelector("#desc"),
+      initialEditType: "wysiwyg",
+      height: "500px",
       initialValue: this.props.desc
     });
   }
@@ -40,7 +40,7 @@ class WikiEditor extends Component {
         <div
           id="desc"
           className="wiki-editor"
-          style={{ display: !isConflict ? 'block' : 'none' }}
+          style={{ display: !isConflict ? "block" : "none" }}
         />
         <div className="wiki-title wiki-up">
           <Button
