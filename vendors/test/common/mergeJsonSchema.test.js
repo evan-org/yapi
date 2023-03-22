@@ -1,27 +1,27 @@
-import test from 'ava';
-import mergeJsonSchema from '../../common/mergeJsonSchema';
+import test from "ava";
+import mergeJsonSchema from "../../common/mergeJsonSchema";
 
-test('base', t=>{
+test("base", (t) => {
   let schema1 = {
-    type: 'string',
-    default: 'xxx'
+    type: "string",
+    default: "xxx"
   }
 
   let schema2 = {
-    type: 'string',
-    format: 'email'
+    type: "string",
+    format: "email"
   }
 
   let result = mergeJsonSchema(schema1, schema2)
 
   t.deepEqual(result, {
-    type:'string',
-    default: 'xxx',
-    format: 'email'
+    type: "string",
+    default: "xxx",
+    format: "email"
   })
 })
 
-test('object', t=>{
+test("object", (t) => {
   let schema1 = {
     "type": "object",
     "title": "empty object",
@@ -61,20 +61,20 @@ test('object', t=>{
   })
 })
 
-test('array', t=>{
+test("array", (t) => {
   let schema1 = {
     "type": "object",
     "title": "empty object",
     "properties": {
       "field_1": {
         "type": "array",
-        "tt":1,
+        "tt": 1,
         "items": {
           "type": "object",
           "xxx": "2",
           "properties": {
             "field_3": {
-              "format": 'ttt',
+              "format": "ttt",
               "type": "string"
             }
           }
@@ -94,7 +94,7 @@ test('array', t=>{
           "properties": {
             "field_3": {
               "type": "string",
-              "enum": [1,2]
+              "enum": [1, 2]
             }
           }
         }
@@ -110,15 +110,15 @@ test('array', t=>{
     "properties": {
       "field_1": {
         "type": "array",
-        "tt":1,
+        "tt": 1,
         "items": {
           "type": "object",
           "xxx": "2",
           "properties": {
             "field_3": {
-              "format": 'ttt',
+              "format": "ttt",
               "type": "string",
-              "enum": [1,2]
+              "enum": [1, 2]
             }
           }
         }
