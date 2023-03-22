@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+        "common/*": ["common/*"],
+        "client/*": ["client/*"]
+    }
+  },
+  "include": ["client","common"],
+  "exclude": ["node_modules", "dist", ".yarn"]
+}
