@@ -3,7 +3,7 @@ const baseWebpackConfig = require("./webpack.base.conf");
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   mode: "development",
-  devtool: "eval",
+  devtool: "source-map",
   output: {
     filename: "[name].bundle.js",
     publicPath: "/",
@@ -22,7 +22,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: "trace",
     host: "0.0.0.0",
     hot: true,
-    open: true,
+    open: false,
     historyApiFallback: true,
   },
 });

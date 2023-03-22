@@ -33,6 +33,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.14",
     "@mui/styled-engine-sc": "^5.11.11",
     "ajv": "^5.5.1",
@@ -92,6 +93,7 @@
     "underscore": "1.8.3",
     "url": "0.11.0",
     "vm2": "^3.8.4",
+    "web-vitals": "^3.3.0",
     "yapi-plugin-qsso": "^1.1.0"
   },
   "devDependencies": {
