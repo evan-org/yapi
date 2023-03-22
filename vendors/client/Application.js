@@ -9,10 +9,11 @@ import User from './containers/User/User.js';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Loading from './components/Loading/Loading';
+import Notify from './components/Notify/Notify';
 import MyPopConfirm from './components/MyPopConfirm/MyPopConfirm';
 import { checkLoginState } from './reducer/modules/user';
 import { requireAuthentication } from './components/AuthenticatedComponent';
-import Notify from './components/Notify/Notify';
+
 
 const plugin = require('client/plugin.js');
 

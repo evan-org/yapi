@@ -1,4 +1,4 @@
-import { createStore as _createStore, applyMiddleware } from "redux";
+import { applyMiddleware, createStore as _createStore } from "redux";
 import promiseMiddleware from "redux-promise";
 import messageMiddleware from "./middleware/messageMiddleware";
 import reducer from "./modules/reducer";
@@ -16,7 +16,5 @@ export default function createStore(initialState = {}) {
   //   )(_createStore);
   // }
 
-  const store = finalCreateStore(reducer, initialState);
-
-  return store;
+  return finalCreateStore(reducer, initialState);
 }
