@@ -89,11 +89,11 @@ module.exports = {
         'react/jsx-equals-spacing': 2,
         'react/jsx-filename-extension': ['error', { 'extensions': ['.js', '.jsx', '.ts', '.tsx'] }],
         'no-cond-assign': 2,
-        // 'no-console': [
-        //   'error', {
-        //     'allow': ['log', 'warn', 'error', 'info']
-        //   }
-        // ],
+        'no-console': [
+          'error', {
+            'allow': ['log', 'warn', 'error', 'info']
+          }
+        ],
         // 禁止 function 定义中出现重名参数
         'no-dupe-args': 2,
         // 禁止对象字面量中出现重复的 key
