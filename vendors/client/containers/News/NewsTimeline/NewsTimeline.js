@@ -1,19 +1,17 @@
-import React, { PureComponent as Component } from 'react';
-import { Timeline, Spin } from 'antd';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { formatTime } from '../../../common.js';
-import { fetchNewsData } from '../../../reducer/modules/news.js';
-import { timeago } from '../../../../common/utils';
+import React, { PureComponent as Component } from "react";
+import { Timeline, Spin } from "antd";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { formatTime } from "../../../common.js";
+import { fetchNewsData } from "../../../reducer/modules/news.js";
+import { timeago } from "../../../../common/utils";
 // timeago(new Date().getTime() - 40);
 
 @connect(
-  state => {
-    return {
-      newsData: state.news.newsData,
-      curpage: state.news.curpage
-    };
-  },
+  (state) => ({
+    newsData: state.news.newsData,
+    curpage: state.news.curpage
+  }),
   {
     fetchNewsData: fetchNewsData
   }
@@ -31,7 +29,7 @@ class NewsTimeline extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bidden: '',
+      bidden: "",
       loading: false
     };
   }
@@ -39,16 +37,16 @@ class NewsTimeline extends Component {
   getMore() {
     const that = this;
     this.setState({ loading: true });
-    this.props.fetchNewsData(21, 'project', this.props.curpage, 8).then(function() {
+    this.props.fetchNewsData(21, "project", this.props.curpage, 8).then(function() {
       that.setState({ loading: false });
       if (that.props.newsData.total + 1 === that.props.curpage) {
-        that.setState({ bidden: 'logbidden' });
+        that.setState({ bidden: "logbidden" });
       }
     });
   }
 
   componentWillMount() {
-    this.props.fetchNewsData(21, 'project', this.props.curpage, 8);
+    this.props.fetchNewsData(21, "project", this.props.curpage, 8);
   }
 
   render() {
@@ -66,7 +64,7 @@ class NewsTimeline extends Component {
         );
       });
     } else {
-      data = '';
+      data = "";
     }
     let pending = this.state.bidden ? (
       <a className={this.state.bidden}>以上为全部内容</a>

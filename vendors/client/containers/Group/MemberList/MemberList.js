@@ -1,38 +1,34 @@
-import React, { PureComponent as Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Table, Select, Button, Modal, Row, Col, message, Popconfirm } from 'antd';
-import { Link } from 'react-router-dom';
-import './MemberList.scss';
-import { autobind } from 'core-decorators';
+import React, { PureComponent as Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Table, Select, Button, Modal, Row, Col, message, Popconfirm } from "antd";
+import { Link } from "react-router-dom";
+import "./MemberList.scss";
+import { autobind } from "core-decorators";
 import {
   fetchGroupMemberList,
   fetchGroupMsg,
   addMember,
   delMember,
   changeMemberRole
-} from '../../../reducer/modules/group.js';
-import ErrMsg from '../../../components/ErrMsg/ErrMsg.js';
-import UsernameAutoComplete from '../../../components/UsernameAutoComplete/UsernameAutoComplete.js';
+} from "../../../reducer/modules/group.js";
+import ErrMsg from "../../../components/ErrMsg/ErrMsg.js";
+import UsernameAutoComplete from "../../../components/UsernameAutoComplete/UsernameAutoComplete.js";
 const Option = Select.Option;
 
 function arrayAddKey(arr) {
-  return arr.map((item, index) => {
-    return {
-      ...item,
-      key: index
-    };
-  });
+  return arr.map((item, index) => ({
+    ...item,
+    key: index
+  }));
 }
 
 @connect(
-  state => {
-    return {
-      currGroup: state.group.currGroup,
-      uid: state.user.uid,
-      role: state.group.role
-    };
-  },
+  (state) => ({
+    currGroup: state.group.currGroup,
+    uid: state.user.uid,
+    role: state.group.role
+  }),
   {
     fetchGroupMemberList,
     fetchGroupMsg,
@@ -46,11 +42,11 @@ class MemberList extends Component {
     super(props);
     this.state = {
       userInfo: [],
-      role: '',
+      role: "",
       visible: false,
       dataSource: [],
       inputUids: [],
-      inputRole: 'dev'
+      inputRole: "dev"
     };
   }
   static propTypes = {
@@ -72,7 +68,7 @@ class MemberList extends Component {
 
   // 重新获取列表
   reFetchList = () => {
-    this.props.fetchGroupMemberList(this.props.currGroup._id).then(res => {
+    this.props.fetchGroupMemberList(this.props.currGroup._id).then((res) => {
       this.setState({
         userInfo: arrayAddKey(res.payload.data.data),
         visible: false
@@ -89,13 +85,13 @@ class MemberList extends Component {
         member_uids: this.state.inputUids,
         role: this.state.inputRole
       })
-      .then(res => {
+      .then((res) => {
         if (!res.payload.data.errcode) {
           const { add_members, exist_members } = res.payload.data.data;
           const addLength = add_members.length;
           const existLength = exist_members.length;
           this.setState({
-            inputRole: 'dev',
+            inputRole: "dev",
             inputUids: []
           });
           message.success(`添加成功! 已成功添加 ${addLength} 人，其中 ${existLength} 人已存在`);
@@ -105,7 +101,7 @@ class MemberList extends Component {
   };
   // 添加成员时 选择新增成员权限
 
-  changeNewMemberRole = value => {
+  changeNewMemberRole = (value) => {
     this.setState({
       inputRole: value
     });
@@ -113,24 +109,22 @@ class MemberList extends Component {
 
   // 删 - 删除分组成员
 
-  deleteConfirm = member_uid => {
-    return () => {
-      const id = this.props.currGroup._id;
-      this.props.delMember({ id, member_uid }).then(res => {
-        if (!res.payload.data.errcode) {
-          message.success(res.payload.data.errmsg);
-          this.reFetchList(); // 添加成功后重新获取分组成员列表
-        }
-      });
-    };
+  deleteConfirm = (member_uid) => () => {
+    const id = this.props.currGroup._id;
+    this.props.delMember({ id, member_uid }).then((res) => {
+      if (!res.payload.data.errcode) {
+        message.success(res.payload.data.errmsg);
+        this.reFetchList(); // 添加成功后重新获取分组成员列表
+      }
+    });
   };
 
   // 改 - 修改成员权限
-  changeUserRole = e => {
+  changeUserRole = (e) => {
     const id = this.props.currGroup._id;
-    const role = e.split('-')[0];
-    const member_uid = e.split('-')[1];
-    this.props.changeMemberRole({ id, member_uid, role }).then(res => {
+    const role = e.split("-")[0];
+    const member_uid = e.split("-")[1];
+    this.props.changeMemberRole({ id, member_uid, role }).then((res) => {
       if (!res.payload.data.errcode) {
         message.success(res.payload.data.errmsg);
         this.reFetchList(); // 添加成功后重新获取分组成员列表
@@ -151,12 +145,12 @@ class MemberList extends Component {
       return null;
     }
     if (this.props.currGroup._id !== nextProps.currGroup._id) {
-      this.props.fetchGroupMemberList(nextProps.currGroup._id).then(res => {
+      this.props.fetchGroupMemberList(nextProps.currGroup._id).then((res) => {
         this.setState({
           userInfo: arrayAddKey(res.payload.data.data)
         });
       });
-      this.props.fetchGroupMsg(nextProps.currGroup._id).then(res => {
+      this.props.fetchGroupMsg(nextProps.currGroup._id).then((res) => {
         this.setState({
           role: res.payload.data.data.role
         });
@@ -166,12 +160,12 @@ class MemberList extends Component {
 
   componentDidMount() {
     const currGroupId = (this._groupId = this.props.currGroup._id);
-    this.props.fetchGroupMsg(currGroupId).then(res => {
+    this.props.fetchGroupMsg(currGroupId).then((res) => {
       this.setState({
         role: res.payload.data.data.role
       });
     });
-    this.props.fetchGroupMemberList(currGroupId).then(res => {
+    this.props.fetchGroupMemberList(currGroupId).then((res) => {
       this.setState({
         userInfo: arrayAddKey(res.payload.data.data)
       });
@@ -189,52 +183,50 @@ class MemberList extends Component {
     const columns = [
       {
         title:
-          this.props.currGroup.group_name + ' 分组成员 (' + this.state.userInfo.length + ') 人',
-        dataIndex: 'username',
-        key: 'username',
-        render: (text, record) => {
-          return (
-            <div className="m-user">
-              <Link to={`/user/profile/${record.uid}`}>
-                <img
-                  src={
-                    location.protocol + '//' + location.host + '/api/user/avatar?uid=' + record.uid
-                  }
-                  className="m-user-img"
-                />
-              </Link>
-              <Link to={`/user/profile/${record.uid}`}>
-                <p className="m-user-name">{text}</p>
-              </Link>
-            </div>
-          );
-        }
+          this.props.currGroup.group_name + " 分组成员 (" + this.state.userInfo.length + ") 人",
+        dataIndex: "username",
+        key: "username",
+        render: (text, record) => (
+          <div className="m-user">
+            <Link to={`/user/profile/${record.uid}`}>
+              <img
+                src={
+                  location.protocol + "//" + location.host + "/api/user/avatar?uid=" + record.uid
+                }
+                className="m-user-img"
+              />
+            </Link>
+            <Link to={`/user/profile/${record.uid}`}>
+              <p className="m-user-name">{text}</p>
+            </Link>
+          </div>
+        )
       },
       {
         title:
-          this.state.role === 'owner' || this.state.role === 'admin' ? (
+          this.state.role === "owner" || this.state.role === "admin" ? (
             <div className="btn-container">
               <Button className="btn" type="primary" onClick={this.showAddMemberModal}>
                 添加成员
               </Button>
             </div>
           ) : (
-            ''
+            ""
           ),
-        key: 'action',
-        className: 'member-opration',
+        key: "action",
+        className: "member-opration",
         render: (text, record) => {
-          if (this.state.role === 'owner' || this.state.role === 'admin') {
+          if (this.state.role === "owner" || this.state.role === "admin") {
             return (
               <div>
                 <Select
-                  value={record.role + '-' + record.uid}
+                  value={record.role + "-" + record.uid}
                   className="select"
                   onChange={this.changeUserRole}
                 >
-                  <Option value={'owner-' + record.uid}>组长</Option>
-                  <Option value={'dev-' + record.uid}>开发者</Option>
-                  <Option value={'guest-' + record.uid}>访客</Option>
+                  <Option value={"owner-" + record.uid}>组长</Option>
+                  <Option value={"dev-" + record.uid}>开发者</Option>
+                  <Option value={"guest-" + record.uid}>访客</Option>
                 </Select>
                 <Popconfirm
                   placement="topRight"
@@ -250,14 +242,14 @@ class MemberList extends Component {
             );
           } else {
             // 非管理员可以看到权限 但无法修改
-            if (record.role === 'owner') {
-              return '组长';
-            } else if (record.role === 'dev') {
-              return '开发者';
-            } else if (record.role === 'guest') {
-              return '访客';
+            if (record.role === "owner") {
+              return "组长";
+            } else if (record.role === "dev") {
+              return "开发者";
+            } else if (record.role === "guest") {
+              return "访客";
             } else {
-              return '';
+              return "";
             }
           }
         }
@@ -268,13 +260,13 @@ class MemberList extends Component {
     let devinfo = [];
     let guestinfo = [];
     for (let i = 0; i < userinfo.length; i++) {
-      if (userinfo[i].role === 'owner') {
+      if (userinfo[i].role === "owner") {
         ownerinfo.push(userinfo[i]);
       }
-      if (userinfo[i].role === 'dev') {
+      if (userinfo[i].role === "dev") {
         devinfo.push(userinfo[i]);
       }
-      if (userinfo[i].role === 'guest') {
+      if (userinfo[i].role === "guest") {
         guestinfo.push(userinfo[i]);
       }
     }
@@ -310,7 +302,7 @@ class MemberList extends Component {
             </Row>
           </Modal>
         ) : (
-          ''
+          ""
         )}
         <Table
           columns={columns}

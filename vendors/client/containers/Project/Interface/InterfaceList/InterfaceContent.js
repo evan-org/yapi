@@ -1,24 +1,22 @@
-import React, { PureComponent as Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Tabs, Modal, Button } from 'antd';
-import Edit from './Edit.js';
-import View from './View.js';
-import { Prompt } from 'react-router';
-import { fetchInterfaceData } from '../../../../reducer/modules/interface.js';
-import { withRouter } from 'react-router-dom';
-import Run from './Run/Run.js';
-const plugin = require('client/plugin.js');
+import React, { PureComponent as Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { Tabs, Modal, Button } from "antd";
+import Edit from "./Edit.js";
+import View from "./View.js";
+import { Prompt } from "react-router";
+import { fetchInterfaceData } from "../../../../reducer/modules/interface.js";
+import { withRouter } from "react-router-dom";
+import Run from "./Run/Run.js";
+const plugin = require("client/plugin.js");
 
 const TabPane = Tabs.TabPane;
 @connect(
-  state => {
-    return {
-      curdata: state.inter.curdata,
-      list: state.inter.list,
-      editStatus: state.inter.editStatus
-    };
-  },
+  (state) => ({
+    curdata: state.inter.curdata,
+    list: state.inter.list,
+    editStatus: state.inter.editStatus
+  }),
   {
     fetchInterfaceData
   }
@@ -34,11 +32,11 @@ class Content extends Component {
   };
   constructor(props) {
     super(props);
-    this.title = 'YApi-高效、易用、功能强大的可视化接口管理平台';
+    this.title = "YApi-高效、易用、功能强大的可视化接口管理平台";
     this.state = {
-      curtab: 'view',
+      curtab: "view",
       visible: false,
-      nextTab: ''
+      nextTab: ""
     };
   }
 
@@ -49,7 +47,7 @@ class Content extends Component {
   }
 
   componentWillUnmount() {
-    document.getElementsByTagName('title')[0].innerText = this.title;
+    document.getElementsByTagName("title")[0].innerText = this.title;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -64,18 +62,18 @@ class Content extends Component {
     const params = nextProps.match.params;
     this.props.fetchInterfaceData(params.actionId);
     this.setState({
-      curtab: 'view'
+      curtab: "view"
     });
   }
 
   switchToView = () => {
     this.setState({
-      curtab: 'view'
+      curtab: "view"
     });
   };
 
-  onChange = key => {
-    if (this.state.curtab === 'edit' && this.props.editStatus) {
+  onChange = (key) => {
+    if (this.state.curtab === "edit" && this.props.editStatus) {
       this.showModal();
     } else {
       this.setState({
@@ -107,26 +105,26 @@ class Content extends Component {
   };
   render() {
     if (this.props.curdata.title) {
-      document.getElementsByTagName('title')[0].innerText =
-        this.props.curdata.title + '-' + this.title;
+      document.getElementsByTagName("title")[0].innerText =
+        this.props.curdata.title + "-" + this.title;
     }
 
     let InterfaceTabs = {
       view: {
         component: View,
-        name: '预览'
+        name: "预览"
       },
       edit: {
         component: Edit,
-        name: '编辑'
+        name: "编辑"
       },
       run: {
         component: Run,
-        name: '运行'
+        name: "运行"
       }
     };
 
-    plugin.emitHook('interface_tab', InterfaceTabs);
+    plugin.emitHook("interface_tab", InterfaceTabs);
 
     const tabs = (
       <Tabs
@@ -135,7 +133,7 @@ class Content extends Component {
         activeKey={this.state.curtab}
         defaultActiveKey="view"
       >
-        {Object.keys(InterfaceTabs).map(key => {
+        {Object.keys(InterfaceTabs).map((key) => {
           let item = InterfaceTabs[key];
           return <TabPane tab={item.name} key={key} />;
         })}
@@ -150,11 +148,11 @@ class Content extends Component {
     return (
       <div className="interface-content">
         <Prompt
-          when={this.state.curtab === 'edit' && this.props.editStatus ? true : false}
-          message={() => {
+          when={!!(this.state.curtab === "edit" && this.props.editStatus)}
+          message={() =>
             // this.showModal();
-            return '离开页面会丢失当前编辑的内容，确定要离开吗？';
-          }}
+            "离开页面会丢失当前编辑的内容，确定要离开吗？"
+          }
         />
         {tabs}
         {tabContent}

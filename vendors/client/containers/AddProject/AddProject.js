@@ -1,19 +1,19 @@
-import React, { PureComponent as Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Button, Form, Input, Icon, Tooltip, Select, message, Row, Col, Radio } from 'antd';
-import { addProject } from '../../reducer/modules/project.js';
-import { fetchGroupList } from '../../reducer/modules/group.js';
-import { autobind } from 'core-decorators';
-import { setBreadcrumb } from '../../reducer/modules/user';
+import React, { PureComponent as Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Button, Form, Input, Icon, Tooltip, Select, message, Row, Col, Radio } from "antd";
+import { addProject } from "../../reducer/modules/project.js";
+import { fetchGroupList } from "../../reducer/modules/group.js";
+import { autobind } from "core-decorators";
+import { setBreadcrumb } from "../../reducer/modules/user";
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
-import { pickRandomProperty, handlePath, nameLengthLimit } from '../../common';
-import constants from '../../constants/variable.js';
-import { withRouter } from 'react-router';
-import './Addproject.scss';
+import { pickRandomProperty, handlePath, nameLengthLimit } from "../../common";
+import constants from "../../constants/variable.js";
+import { withRouter } from "react-router";
+import "./Addproject.scss";
 
 const formItemLayout = {
   labelCol: {
@@ -26,16 +26,14 @@ const formItemLayout = {
     xs: { span: 24 },
     sm: { span: 14 }
   },
-  className: 'form-item'
+  className: "form-item"
 };
 
 @connect(
-  state => {
-    return {
-      groupList: state.group.groupList,
-      currGroup: state.group.currGroup
-    };
-  },
+  (state) => ({
+    groupList: state.group.groupList,
+    currGroup: state.group.currGroup
+  }),
   {
     fetchGroupList,
     addProject,
@@ -61,7 +59,7 @@ class ProjectList extends Component {
     fetchGroupList: PropTypes.func
   };
 
-  handlePath = e => {
+  handlePath = (e) => {
     let val = e.target.value;
     this.props.form.setFieldsValue({
       basepath: handlePath(val)
@@ -78,11 +76,11 @@ class ProjectList extends Component {
         values.group_id = values.group;
         values.icon = constants.PROJECT_ICON[0];
         values.color = pickRandomProperty(constants.PROJECT_COLOR);
-        addProject(values).then(res => {
+        addProject(values).then((res) => {
           if (res.payload.data.errcode == 0) {
             form.resetFields();
-            message.success('创建成功! ');
-            this.props.history.push('/project/' + res.payload.data.data._id + '/interface/api');
+            message.success("创建成功! ");
+            this.props.history.push("/project/" + res.payload.data.data._id + "/interface/api");
           }
         });
       }
@@ -90,7 +88,7 @@ class ProjectList extends Component {
   }
 
   async componentWillMount() {
-    this.props.setBreadcrumb([{ name: '新建项目' }]);
+    this.props.setBreadcrumb([{ name: "新建项目" }]);
     if (!this.props.currGroup._id) {
       await this.props.fetchGroupList();
     }
@@ -110,18 +108,18 @@ class ProjectList extends Component {
         <div className="g-row m-container">
           <Form>
             <FormItem {...formItemLayout} label="项目名称">
-              {getFieldDecorator('name', {
-                rules: nameLengthLimit('项目')
+              {getFieldDecorator("name", {
+                rules: nameLengthLimit("项目")
               })(<Input />)}
             </FormItem>
 
             <FormItem {...formItemLayout} label="所属分组">
-              {getFieldDecorator('group', {
-                initialValue: this.state.currGroupId + '',
+              {getFieldDecorator("group", {
+                initialValue: this.state.currGroupId + "",
                 rules: [
                   {
                     required: true,
-                    message: '请选择项目所属的分组!'
+                    message: "请选择项目所属的分组!"
                   }
                 ]
               })(
@@ -129,7 +127,7 @@ class ProjectList extends Component {
                   {this.state.groupList.map((item, index) => (
                     <Option
                       disabled={
-                        !(item.role === 'dev' || item.role === 'owner' || item.role === 'admin')
+                        !(item.role === "dev" || item.role === "owner" || item.role === "admin")
                       }
                       value={item._id.toString()}
                       key={index}
@@ -154,22 +152,22 @@ class ProjectList extends Component {
                 </span>
               }
             >
-              {getFieldDecorator('basepath', {
+              {getFieldDecorator("basepath", {
                 rules: [
                   {
                     required: false,
-                    message: '请输入项目基本路径'
+                    message: "请输入项目基本路径"
                   }
                 ]
               })(<Input onBlur={this.handlePath} />)}
             </FormItem>
 
             <FormItem {...formItemLayout} label="描述">
-              {getFieldDecorator('desc', {
+              {getFieldDecorator("desc", {
                 rules: [
                   {
                     required: false,
-                    message: '描述不超过144字!',
+                    message: "描述不超过144字!",
                     max: 144
                   }
                 ]
@@ -177,13 +175,13 @@ class ProjectList extends Component {
             </FormItem>
 
             <FormItem {...formItemLayout} label="权限">
-              {getFieldDecorator('project_type', {
+              {getFieldDecorator("project_type", {
                 rules: [
                   {
                     required: true
                   }
                 ],
-                initialValue: 'private'
+                initialValue: "private"
               })(
                 <RadioGroup>
                   <Radio value="private" className="radio">

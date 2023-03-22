@@ -1,31 +1,31 @@
-import React, { PureComponent as Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Menu } from 'antd';
-import { fetchNewsData } from '../../../reducer/modules/news.js';
+import React, { PureComponent as Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { Menu } from "antd";
+import { fetchNewsData } from "../../../reducer/modules/news.js";
 
 const logList = [
   {
-    name: '用户'
+    name: "用户"
   },
   {
-    name: '分组'
+    name: "分组"
   },
   {
-    name: '接口'
+    name: "接口"
   },
   {
-    name: '项目'
+    name: "项目"
   }
 ];
 @connect(
-  state => {
+  (state) =>
     // console.log(state);
-    return {
-      uid: state.user.uid + '',
+    ({
+      uid: state.user.uid + "",
       newsData: state.news.newsData
-    };
-  },
+    })
+  ,
   {
     fetchNewsData
   }
@@ -64,13 +64,11 @@ class NewsList extends Component {
           selectedKeys={[`${this.state.selectedKeys}`]}
           onClick={this.getLogData.bind(this)}
         >
-          {logList.map((item, i) => {
-            return (
-              <Menu.Item key={i} className="log-item">
-                {item.name}
-              </Menu.Item>
-            );
-          })}
+          {logList.map((item, i) => (
+            <Menu.Item key={i} className="log-item">
+              {item.name}
+            </Menu.Item>
+          ))}
         </Menu>
       </div>
     );

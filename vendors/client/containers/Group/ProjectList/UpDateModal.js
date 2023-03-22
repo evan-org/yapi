@@ -1,19 +1,19 @@
-import React, { PureComponent as Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Modal, Form, Input, Icon, Tooltip, Select, message, Button, Row, Col } from 'antd';
+import React, { PureComponent as Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Modal, Form, Input, Icon, Tooltip, Select, message, Button, Row, Col } from "antd";
 import {
   updateProject,
   fetchProjectList,
   delProject,
   changeUpdateModal,
   changeTableLoading
-} from '../../../reducer/modules/project';
+} from "../../../reducer/modules/project";
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-import './ProjectList.scss';
+import "./ProjectList.scss";
 
 // layout
 const formItemLayout = {
@@ -35,15 +35,13 @@ const formItemLayoutWithOutLabel = {
 let uuid = 0;
 
 @connect(
-  state => {
-    return {
-      projectList: state.project.projectList,
-      isUpdateModalShow: state.project.isUpdateModalShow,
-      handleUpdateIndex: state.project.handleUpdateIndex,
-      tableLoading: state.project.tableLoading,
-      currGroup: state.group.currGroup
-    };
-  },
+  (state) => ({
+    projectList: state.project.projectList,
+    isUpdateModalShow: state.project.isUpdateModalShow,
+    handleUpdateIndex: state.project.handleUpdateIndex,
+    tableLoading: state.project.tableLoading,
+    currGroup: state.group.currGroup
+  }),
   {
     fetchProjectList,
     updateProject,
@@ -56,8 +54,8 @@ class UpDateModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      protocol: 'http://',
-      envProtocolChange: 'http://'
+      protocol: "http://",
+      envProtocolChange: "http://"
     };
   }
   static propTypes = {
@@ -74,7 +72,7 @@ class UpDateModal extends Component {
   };
 
   // 修改线上域名的协议类型 (http/https)
-  protocolChange = value => {
+  protocolChange = (value) => {
     this.setState({
       protocol: value
     });
@@ -86,7 +84,7 @@ class UpDateModal extends Component {
   };
 
   // 确认修改
-  handleOk = e => {
+  handleOk = (e) => {
     e.preventDefault();
     const {
       form,
@@ -102,21 +100,19 @@ class UpDateModal extends Component {
       if (!err) {
         // console.log(projectList[handleUpdateIndex]);
         let assignValue = Object.assign(projectList[handleUpdateIndex], values);
-        values.protocol = this.state.protocol.split(':')[0];
-        assignValue.env = assignValue.envs.map((item, index) => {
-          return {
-            name: values['envs-name-' + index],
-            domain: values['envs-protocol-' + index] + values['envs-domain-' + index]
-          };
-        });
+        values.protocol = this.state.protocol.split(":")[0];
+        assignValue.env = assignValue.envs.map((item, index) => ({
+          name: values["envs-name-" + index],
+          domain: values["envs-protocol-" + index] + values["envs-domain-" + index]
+        }));
         // console.log(assignValue);
 
         changeTableLoading(true);
         updateProject(assignValue)
-          .then(res => {
+          .then((res) => {
             if (res.payload.data.errcode == 0) {
               changeUpdateModal(false, -1);
-              message.success('修改成功! ');
+              message.success("修改成功! ");
               fetchProjectList(currGroup._id).then(() => {
                 changeTableLoading(false);
               });
@@ -134,10 +130,10 @@ class UpDateModal extends Component {
   };
 
   // 项目的修改操作 - 删除一项环境配置
-  remove = id => {
+  remove = (id) => {
     const { form } = this.props;
     // can use data-binding to get
-    const envs = form.getFieldValue('envs');
+    const envs = form.getFieldValue("envs");
     // We need at least one passenger
     if (envs.length === 0) {
       return;
@@ -145,7 +141,7 @@ class UpDateModal extends Component {
 
     // can use data-binding to set
     form.setFieldsValue({
-      envs: envs.filter(key => {
+      envs: envs.filter((key) => {
         const realKey = key._id ? key._id : key;
         return realKey !== id;
       })
@@ -157,7 +153,7 @@ class UpDateModal extends Component {
     uuid++;
     const { form } = this.props;
     // can use data-binding to get
-    const envs = form.getFieldValue('envs');
+    const envs = form.getFieldValue("envs");
     const nextKeys = envs.concat(uuid);
     // can use data-binding to set
     // important! notify form to detect changes
@@ -181,20 +177,20 @@ class UpDateModal extends Component {
         envMessage = env;
       }
       initFormValues.prd_host = projectList[handleUpdateIndex].prd_host;
-      initFormValues.prd_protocol = projectList[handleUpdateIndex].protocol + '://';
+      initFormValues.prd_protocol = projectList[handleUpdateIndex].protocol + "://";
     }
 
-    getFieldDecorator('envs', { initialValue: envMessage });
-    const envs = getFieldValue('envs');
+    getFieldDecorator("envs", { initialValue: envMessage });
+    const envs = getFieldValue("envs");
     const formItems = envs.map((k, index) => {
-      const secondIndex = 'next' + index; // 为保证key的唯一性
+      const secondIndex = "next" + index; // 为保证key的唯一性
       return (
-        <Row key={index} type="flex" justify="space-between" align={index === 0 ? 'middle' : 'top'}>
+        <Row key={index} type="flex" justify="space-between" align={index === 0 ? "middle" : "top"}>
           <Col span={10} offset={2}>
-            <FormItem label={index === 0 ? <span>环境名称</span> : ''} required={false} key={index}>
+            <FormItem label={index === 0 ? <span>环境名称</span> : ""} required={false} key={index}>
               {getFieldDecorator(`envs-name-${index}`, {
-                validateTrigger: ['onChange', 'onBlur'],
-                initialValue: envMessage.length !== 0 ? k.name : '',
+                validateTrigger: ["onChange", "onBlur"],
+                initialValue: envMessage.length !== 0 ? k.name : "",
                 rules: [
                   {
                     required: false,
@@ -202,48 +198,48 @@ class UpDateModal extends Component {
                     validator(rule, value, callback) {
                       if (value) {
                         if (value.length === 0) {
-                          callback('请输入环境域名');
+                          callback("请输入环境域名");
                         } else if (!/\S/.test(value)) {
-                          callback('请输入环境域名');
+                          callback("请输入环境域名");
                         } else if (/prd/.test(value)) {
                           callback('环境域名不能是"prd"');
                         } else {
                           return callback();
                         }
                       } else {
-                        callback('请输入环境域名');
+                        callback("请输入环境域名");
                       }
                     }
                   }
                 ]
-              })(<Input placeholder="请输入环境名称" style={{ width: '90%', marginRight: 8 }} />)}
+              })(<Input placeholder="请输入环境名称" style={{ width: "90%", marginRight: 8 }} />)}
             </FormItem>
           </Col>
           <Col span={10}>
             <FormItem
-              label={index === 0 ? <span>环境域名</span> : ''}
+              label={index === 0 ? <span>环境域名</span> : ""}
               required={false}
               key={secondIndex}
             >
               {getFieldDecorator(`envs-domain-${index}`, {
-                validateTrigger: ['onChange', 'onBlur'],
-                initialValue: envMessage.length !== 0 && k.domain ? k.domain.split('//')[1] : '',
+                validateTrigger: ["onChange", "onBlur"],
+                initialValue: envMessage.length !== 0 && k.domain ? k.domain.split("//")[1] : "",
                 rules: [
                   {
                     required: false,
                     whitespace: true,
-                    message: '请输入环境域名',
+                    message: "请输入环境域名",
                     validator(rule, value, callback) {
                       if (value) {
                         if (value.length === 0) {
-                          callback('请输入环境域名');
+                          callback("请输入环境域名");
                         } else if (!/\S/.test(value)) {
-                          callback('请输入环境域名');
+                          callback("请输入环境域名");
                         } else {
                           return callback();
                         }
                       } else {
-                        callback('请输入环境域名');
+                        callback("请输入环境域名");
                       }
                     }
                   }
@@ -251,12 +247,12 @@ class UpDateModal extends Component {
               })(
                 <Input
                   placeholder="请输入环境域名"
-                  style={{ width: '90%', marginRight: 8 }}
+                  style={{ width: "90%", marginRight: 8 }}
                   addonBefore={getFieldDecorator(`envs-protocol-${index}`, {
                     initialValue:
                       envMessage.length !== 0 && k.domain
-                        ? k.domain.split('//')[0] + '//'
-                        : 'http://',
+                        ? k.domain.split("//")[0] + "//"
+                        : "http://",
                     rules: [
                       {
                         required: true
@@ -264,8 +260,8 @@ class UpDateModal extends Component {
                     ]
                   })(
                     <Select>
-                      <Option value="http://">{'http://'}</Option>
-                      <Option value="https://">{'https://'}</Option>
+                      <Option value="http://">{"http://"}</Option>
+                      <Option value="https://">{"https://"}</Option>
                     </Select>
                   )}
                 />
@@ -278,9 +274,7 @@ class UpDateModal extends Component {
               <Icon
                 className="dynamic-delete-button"
                 type="minus-circle-o"
-                onClick={() => {
-                  return this.remove(k._id ? k._id : k);
-                }}
+                onClick={() => this.remove(k._id ? k._id : k)}
               />
             ) : null}
           </Col>
@@ -296,12 +290,12 @@ class UpDateModal extends Component {
       >
         <Form>
           <FormItem {...formItemLayout} label="项目名称">
-            {getFieldDecorator('name', {
+            {getFieldDecorator("name", {
               initialValue: initFormValues.name,
               rules: [
                 {
                   required: true,
-                  message: '请输入项目名称!'
+                  message: "请输入项目名称!"
                 }
               ]
             })(<Input />)}
@@ -318,20 +312,20 @@ class UpDateModal extends Component {
               </span>
             }
           >
-            {getFieldDecorator('prd_host', {
+            {getFieldDecorator("prd_host", {
               initialValue: initFormValues.prd_host,
               rules: [
                 {
                   required: true,
-                  message: '请输入项目线上域名!'
+                  message: "请输入项目线上域名!"
                 }
               ]
             })(
               <Input
                 addonBefore={
                   <Select defaultValue={initFormValues.prd_protocol} onChange={this.protocolChange}>
-                    <Option value="http://">{'http://'}</Option>
-                    <Option value="https://">{'https://'}</Option>
+                    <Option value="http://">{"http://"}</Option>
+                    <Option value="https://">{"https://"}</Option>
                   </Select>
                 }
               />
@@ -349,24 +343,24 @@ class UpDateModal extends Component {
               </span>
             }
           >
-            {getFieldDecorator('basepath', {
+            {getFieldDecorator("basepath", {
               initialValue: initFormValues.basepath,
               rules: [
                 {
                   required: false,
-                  message: '请输入项目基本路径! '
+                  message: "请输入项目基本路径! "
                 }
               ]
             })(<Input />)}
           </FormItem>
 
           <FormItem {...formItemLayout} label="描述">
-            {getFieldDecorator('desc', {
+            {getFieldDecorator("desc", {
               initialValue: initFormValues.desc,
               rules: [
                 {
                   required: false,
-                  message: '请输入描述!'
+                  message: "请输入描述!"
                 }
               ]
             })(<TextArea rows={4} />)}
@@ -374,7 +368,7 @@ class UpDateModal extends Component {
 
           {formItems}
           <FormItem {...formItemLayoutWithOutLabel}>
-            <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
+            <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
               <Icon type="plus" /> 添加环境配置
             </Button>
           </FormItem>

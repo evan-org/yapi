@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Row, Icon, Input, Select, Tooltip } from 'antd';
-import _ from 'underscore';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Row, Icon, Input, Select, Tooltip } from "antd";
+import _ from "underscore";
 const Option = Select.Option;
 
 // 深拷贝
@@ -10,17 +10,17 @@ function deepEqual(state) {
 }
 
 const METHODS_LIST = [
-  { name: 'md5', type: false, params: [], desc: 'md5加密' },
-  { name: 'lower', type: false, params: [], desc: '所有字母变成小写' },
-  { name: 'length', type: false, params: [], desc: '数据长度' },
-  { name: 'substr', type: true, component: 'doubleInput', params: [], desc: '截取部分字符串' },
-  { name: 'sha', type: true, component: 'select', params: ['sha1'], desc: 'sha加密' },
-  { name: 'base64', type: false, params: [], desc: 'base64加密' },
-  { name: 'unbase64', type: false, params: [], desc: 'base64解密' },
-  { name: 'concat', type: true, component: 'input', params: [], desc: '连接字符串' },
-  { name: 'lconcat', type: true, component: 'input', params: [], desc: '左连接' },
-  { name: 'upper', type: false, desc: '所有字母变成大写' },
-  { name: 'number', type: false, desc: '字符串转换为数字类型' }
+  { name: "md5", type: false, params: [], desc: "md5加密" },
+  { name: "lower", type: false, params: [], desc: "所有字母变成小写" },
+  { name: "length", type: false, params: [], desc: "数据长度" },
+  { name: "substr", type: true, component: "doubleInput", params: [], desc: "截取部分字符串" },
+  { name: "sha", type: true, component: "select", params: ["sha1"], desc: "sha加密" },
+  { name: "base64", type: false, params: [], desc: "base64加密" },
+  { name: "unbase64", type: false, params: [], desc: "base64解密" },
+  { name: "concat", type: true, component: "input", params: [], desc: "连接字符串" },
+  { name: "lconcat", type: true, component: "input", params: [], desc: "左连接" },
+  { name: "upper", type: false, desc: "所有字母变成大写" },
+  { name: "number", type: false, desc: "字符串转换为数字类型" }
 ];
 
 class MethodsList extends Component {
@@ -48,15 +48,15 @@ class MethodsList extends Component {
   };
 
   componentDidMount() {
-    var index = _.findIndex(METHODS_LIST, { name: this.props.clickValue });
+    let index = _.findIndex(METHODS_LIST, { name: this.props.clickValue });
 
-    let moreFlag = index > 3 ? false : true;
+    let moreFlag = !(index > 3);
     this.setState({
       moreFlag
     });
   }
 
-  inputComponent = props => {
+  inputComponent = (props) => {
     let clickIndex = props.clickIndex;
     let paramsIndex = props.paramsIndex;
     let params = props.params;
@@ -65,12 +65,12 @@ class MethodsList extends Component {
         size="small"
         placeholder="请输入参数"
         value={params[0]}
-        onChange={e => this.handleParamsChange(e.target.value, clickIndex, paramsIndex, 0)}
+        onChange={(e) => this.handleParamsChange(e.target.value, clickIndex, paramsIndex, 0)}
       />
     );
   };
 
-  doubleInputComponent = props => {
+  doubleInputComponent = (props) => {
     let clickIndex = props.clickIndex;
     let paramsIndex = props.paramsIndex;
     let params = props.params;
@@ -81,38 +81,36 @@ class MethodsList extends Component {
           size="small"
           placeholder="start"
           value={params[0]}
-          onChange={e => this.handleParamsChange(e.target.value, clickIndex, paramsIndex, 0)}
+          onChange={(e) => this.handleParamsChange(e.target.value, clickIndex, paramsIndex, 0)}
         />
         <Input
           size="small"
           placeholder="length"
           value={params[1]}
-          onChange={e => this.handleParamsChange(e.target.value, clickIndex, paramsIndex, 1)}
+          onChange={(e) => this.handleParamsChange(e.target.value, clickIndex, paramsIndex, 1)}
         />
       </div>
     );
   };
 
-  selectComponent = props => {
-    const subname = ['sha1', 'sha224', 'sha256', 'sha384', 'sha512'];
+  selectComponent = (props) => {
+    const subname = ["sha1", "sha224", "sha256", "sha384", "sha512"];
     let clickIndex = props.clickIndex;
     let paramsIndex = props.paramsIndex;
     let params = props.params;
     return (
       <Select
-        value={params[0] || 'sha1'}
+        value={params[0] || "sha1"}
         placeholder="请选择"
         style={{ width: 150 }}
         size="small"
-        onChange={e => this.handleParamsChange(e, clickIndex, paramsIndex, 0)}
+        onChange={(e) => this.handleParamsChange(e, clickIndex, paramsIndex, 0)}
       >
-        {subname.map((item, index) => {
-          return (
-            <Option value={item} key={index}>
-              {item}
-            </Option>
-          );
-        })}
+        {subname.map((item, index) => (
+          <Option value={item} key={index}>
+            {item}
+          </Option>
+        ))}
       </Select>
     );
   };
@@ -135,14 +133,14 @@ class MethodsList extends Component {
       params
     };
     switch (item.component) {
-      case 'select':
-        return this.selectComponent(query);
-      case 'input':
-        return this.inputComponent(query);
-      case 'doubleInput':
-        return this.doubleInputComponent(query);
-      default:
-        break;
+    case "select":
+      return this.selectComponent(query);
+    case "input":
+      return this.inputComponent(query);
+    case "doubleInput":
+      return this.doubleInputComponent(query);
+    default:
+      break;
     }
   }
 
@@ -154,34 +152,32 @@ class MethodsList extends Component {
     return (
       <div className="modal-postman-form-method">
         <h3 className="methods-title title">方法</h3>
-        {showList.map((item, index) => {
-          return (
-            <Row
-              key={index}
-              type="flex"
-              align="middle"
-              className={'row methods-row ' + (item.name === clickValue ? 'checked' : '')}
-              onClick={() => click(item.name, showList[index].params)}
-            >
-              <Tooltip title={item.desc}>
-                <span>{item.name}</span>
-              </Tooltip>
-              <span className="input-component">
-                {item.type &&
+        {showList.map((item, index) => (
+          <Row
+            key={index}
+            type="flex"
+            align="middle"
+            className={"row methods-row " + (item.name === clickValue ? "checked" : "")}
+            onClick={() => click(item.name, showList[index].params)}
+          >
+            <Tooltip title={item.desc}>
+              <span>{item.name}</span>
+            </Tooltip>
+            <span className="input-component">
+              {item.type &&
                   this.handleComponent(
                     item,
                     clickIndex,
                     index,
                     item.name === clickValue ? params : []
                   )}
-              </span>
-            </Row>
-          );
-        })}
+            </span>
+          </Row>
+        ))}
         {moreFlag && (
           <div className="show-more" onClick={this.showMore}>
             <Icon type="down" />
-            <span style={{ paddingLeft: '4px' }}>更多</span>
+            <span style={{ paddingLeft: "4px" }}>更多</span>
           </div>
         )}
       </div>

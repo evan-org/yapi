@@ -1,26 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Row, Col, Tabs } from 'antd';
+import React from "react";
+import PropTypes from "prop-types";
+import { Row, Col, Tabs } from "antd";
 const TabPane = Tabs.TabPane;
 function jsonFormat(json) {
   // console.log('json',json)
-  if (json && typeof json === 'object') {
-    return JSON.stringify(json, null, '   ');
+  if (json && typeof json === "object") {
+    return JSON.stringify(json, null, "   ");
   }
   return json;
 }
 
 const CaseReport = function(props) {
   let params = jsonFormat(props.data);
-  let headers = jsonFormat(props.headers, null, '   ');
-  let res_header = jsonFormat(props.res_header, null, '   ');
+  let headers = jsonFormat(props.headers, null, "   ");
+  let res_header = jsonFormat(props.res_header, null, "   ");
   let res_body = jsonFormat(props.res_body);
   let httpCode = props.status;
   let validRes;
   if (props.validRes && Array.isArray(props.validRes)) {
-    validRes = props.validRes.map((item, index) => {
-      return <div key={index}>{item.message}</div>;
-    });
+    validRes = props.validRes.map((item, index) => <div key={index}>{item.message}</div>);
   }
 
   return (
@@ -59,7 +57,7 @@ const CaseReport = function(props) {
                 Body
               </Col>
               <Col span="18">
-                <pre style={{ whiteSpace: 'pre-wrap' }}>{params}</pre>
+                <pre style={{ whiteSpace: "pre-wrap" }}>{params}</pre>
               </Col>
             </Row>
           ) : null}
@@ -101,7 +99,7 @@ const CaseReport = function(props) {
                 验证结果
               </Col>
               <Col span="18"><pre>
-                {validRes}  
+                {validRes}
               </pre></Col>
             </Row>
           ) : null}

@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Loading.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Loading.scss";
 
 export default class Loading extends React.PureComponent {
   static defaultProps = {
@@ -18,7 +18,7 @@ export default class Loading extends React.PureComponent {
   }
   render() {
     return (
-      <div className="loading-box" style={{ display: this.state.show ? 'flex' : 'none' }}>
+      <div className="loading-box" style={{ display: this.state.show ? "flex" : "none" }}>
         <div className="loading-box-bg" />
         <div className="loading-box-inner">
           <div />

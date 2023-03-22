@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Row, Input } from 'antd';
-import constants from '../../constants/variable.js';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Row, Input } from "antd";
+import constants from "../../constants/variable.js";
 const wordList = constants.MOCK_SOURCE;
 const Search = Input.Search;
 
@@ -14,7 +14,7 @@ class MockList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filter: '',
+      filter: "",
       list: []
     };
   }
@@ -25,10 +25,8 @@ class MockList extends Component {
     });
   }
 
-  onFilter = e => {
-    const list = wordList.filter(item => {
-      return item.mock.indexOf(e.target.value) !== -1;
-    });
+  onFilter = (e) => {
+    const list = wordList.filter((item) => item.mock.indexOf(e.target.value) !== -1);
     this.setState({
       filter: e.target.value,
       list: list
@@ -46,19 +44,17 @@ class MockList extends Component {
           placeholder="搜索mock数据"
           className="mock-search"
         />
-        {list.map((item, index) => {
-          return (
-            <Row
-              key={index}
-              type="flex"
-              align="middle"
-              className={'row ' + (item.mock === clickValue ? 'checked' : '')}
-              onClick={() => click(item.mock)}
-            >
-              <span>{item.mock}</span>
-            </Row>
-          );
-        })}
+        {list.map((item, index) => (
+          <Row
+            key={index}
+            type="flex"
+            align="middle"
+            className={"row " + (item.mock === clickValue ? "checked" : "")}
+            onClick={() => click(item.mock)}
+          >
+            <span>{item.mock}</span>
+          </Row>
+        ))}
       </div>
     );
   }

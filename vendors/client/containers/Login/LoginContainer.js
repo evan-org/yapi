@@ -1,7 +1,7 @@
-import React, { PureComponent as Component } from 'react';
-import Login from './LoginWrap';
-import { Row, Col, Card } from 'antd';
-import LogoSVG from '../../components/LogoSVG/index.js';
+import React, { PureComponent as Component } from "react";
+import Login from "./LoginWrap";
+import { Row, Col, Card } from "antd";
+import LogoSVG from "../../components/LogoSVG/index.js";
 
 class LoginContainer extends Component {
   render() {

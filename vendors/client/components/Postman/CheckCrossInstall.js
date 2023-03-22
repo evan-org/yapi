@@ -1,8 +1,8 @@
-import React from 'react';
-import { Alert } from 'antd';
-import PropTypes from 'prop-types';
+import React from "react";
+import { Alert } from "antd";
+import PropTypes from "prop-types";
 
-exports.initCrossRequest = function (fn) {
+exports.initCrossRequest = function(fn) {
   let startTime = 0;
   let _crossRequest = setInterval(() => {
     startTime += 500;
@@ -26,9 +26,9 @@ CheckCrossInstall.propTypes = {
 function CheckCrossInstall(props) {
   const hasPlugin = props.hasPlugin;
   return (
-    <div className={hasPlugin ? null : 'has-plugin'}>
+    <div className={hasPlugin ? null : "has-plugin"}>
       {hasPlugin ? (
-        ''
+        ""
       ) : (
         <Alert
           message={
@@ -45,8 +45,8 @@ function CheckCrossInstall(props) {
               </div> */}
               <div>
                 <a target="blank" href="https://juejin.im/post/5e3bbd986fb9a07ce152b53d">
-                  {' '}
-                  [谷歌请求插件详细安装教程]{' '}
+                  {" "}
+                  [谷歌请求插件详细安装教程]{" "}
                 </a>
               </div>
             </div>

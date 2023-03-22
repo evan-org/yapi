@@ -1,16 +1,16 @@
-import axios from 'axios';
-import qs from 'qs';
+import axios from "axios";
+import qs from "qs";
 // Actions
-const INIT_INTERFACE_DATA = 'yapi/interface/INIT_INTERFACE_DATA';
-const FETCH_INTERFACE_DATA = 'yapi/interface/FETCH_INTERFACE_DATA';
-const FETCH_INTERFACE_LIST_MENU = 'yapi/interface/FETCH_INTERFACE_LIST_MENU';
-const DELETE_INTERFACE_DATA = 'yapi/interface/DELETE_INTERFACE_DATA';
-const DELETE_INTERFACE_CAT_DATA = 'yapi/interface/DELETE_INTERFACE_CAT_DATA';
-const UPDATE_INTERFACE_DATA = 'yapi/interface/UPDATE_INTERFACE_DATA';
-const CHANGE_EDIT_STATUS = 'yapi/interface/CHANGE_EDIT_STATUS';
-const FETCH_INTERFACE_LIST = 'yapi/interface/FETCH_INTERFACE_LIST';
-const SAVE_IMPORT_DATA = 'yapi/interface/SAVE_IMPORT_DATA';
-const FETCH_INTERFACE_CAT_LIST = 'yapi/interface/FETCH_INTERFACE_CAT_LIST';
+const INIT_INTERFACE_DATA = "yapi/interface/INIT_INTERFACE_DATA";
+const FETCH_INTERFACE_DATA = "yapi/interface/FETCH_INTERFACE_DATA";
+const FETCH_INTERFACE_LIST_MENU = "yapi/interface/FETCH_INTERFACE_LIST_MENU";
+const DELETE_INTERFACE_DATA = "yapi/interface/DELETE_INTERFACE_DATA";
+const DELETE_INTERFACE_CAT_DATA = "yapi/interface/DELETE_INTERFACE_CAT_DATA";
+const UPDATE_INTERFACE_DATA = "yapi/interface/UPDATE_INTERFACE_DATA";
+const CHANGE_EDIT_STATUS = "yapi/interface/CHANGE_EDIT_STATUS";
+const FETCH_INTERFACE_LIST = "yapi/interface/FETCH_INTERFACE_LIST";
+const SAVE_IMPORT_DATA = "yapi/interface/SAVE_IMPORT_DATA";
+const FETCH_INTERFACE_CAT_LIST = "yapi/interface/FETCH_INTERFACE_CAT_LIST";
 // const SAVE_INTERFACE_PROJECT_ID = 'yapi/interface/SAVE_INTERFACE_PROJECT_ID';
 // const GET_INTERFACE_GROUP_LIST = 'yapi/interface/GET_INTERFACE_GROUP_LIST';
 
@@ -27,47 +27,47 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case INIT_INTERFACE_DATA:
-      return initialState;
-    case UPDATE_INTERFACE_DATA:
-      return {
-        ...state,
-        curdata: Object.assign({}, state.curdata, action.updata)
-      };
-    case FETCH_INTERFACE_DATA:
-      return {
-        ...state,
-        curdata: action.payload.data.data
-      };
-    case FETCH_INTERFACE_LIST_MENU:
-      return {
-        ...state,
-        list: action.payload.data.data
-      };
-    case CHANGE_EDIT_STATUS: {
-      return {
-        ...state,
-        editStatus: action.status
-      };
-    }
+  case INIT_INTERFACE_DATA:
+    return initialState;
+  case UPDATE_INTERFACE_DATA:
+    return {
+      ...state,
+      curdata: Object.assign({}, state.curdata, action.updata)
+    };
+  case FETCH_INTERFACE_DATA:
+    return {
+      ...state,
+      curdata: action.payload.data.data
+    };
+  case FETCH_INTERFACE_LIST_MENU:
+    return {
+      ...state,
+      list: action.payload.data.data
+    };
+  case CHANGE_EDIT_STATUS: {
+    return {
+      ...state,
+      editStatus: action.status
+    };
+  }
 
-    case FETCH_INTERFACE_LIST: {
-      return {
-        ...state,
-        totalTableList: action.payload.data.data.list,
-        totalCount: action.payload.data.data.count
-      };
-    }
+  case FETCH_INTERFACE_LIST: {
+    return {
+      ...state,
+      totalTableList: action.payload.data.data.list,
+      totalCount: action.payload.data.data.count
+    };
+  }
 
-    case FETCH_INTERFACE_CAT_LIST: {
-      return {
-        ...state,
-        catTableList: action.payload.data.data.list,
-        count: action.payload.data.data.count
-      };
-    }
-    default:
-      return state;
+  case FETCH_INTERFACE_CAT_LIST: {
+    return {
+      ...state,
+      catTableList: action.payload.data.data.list,
+      count: action.payload.data.data.count
+    };
+  }
+  default:
+    return state;
   }
 };
 
@@ -94,7 +94,7 @@ export function updateInterfaceData(updata) {
 }
 
 export async function deleteInterfaceData(id) {
-  let result = await axios.post('/api/interface/del', {id: id});
+  let result = await axios.post("/api/interface/del", {id: id});
   return {
     type: DELETE_INTERFACE_DATA,
     payload: result
@@ -102,7 +102,7 @@ export async function deleteInterfaceData(id) {
 }
 
 export async function saveImportData(data) {
-  let result = await axios.post('/api/interface/save', data);
+  let result = await axios.post("/api/interface/save", data);
   return {
     type: SAVE_IMPORT_DATA,
     payload: result
@@ -110,7 +110,7 @@ export async function saveImportData(data) {
 }
 
 export async function deleteInterfaceCatData(id) {
-  let result = await axios.post('/api/interface/del_cat', {catid: id});
+  let result = await axios.post("/api/interface/del_cat", {catid: id});
   return {
     type: DELETE_INTERFACE_CAT_DATA,
     payload: result
@@ -119,7 +119,7 @@ export async function deleteInterfaceCatData(id) {
 
 // Action Creators
 export async function fetchInterfaceData(interfaceId) {
-  let result = await axios.get('/api/interface/get?id=' + interfaceId);
+  let result = await axios.get("/api/interface/get?id=" + interfaceId);
   return {
     type: FETCH_INTERFACE_DATA,
     payload: result
@@ -127,7 +127,7 @@ export async function fetchInterfaceData(interfaceId) {
 }
 
 export async function fetchInterfaceListMenu(projectId) {
-  let result = await axios.get('/api/interface/list_menu?project_id=' + projectId);
+  let result = await axios.get("/api/interface/list_menu?project_id=" + projectId);
   return {
     type: FETCH_INTERFACE_LIST_MENU,
     payload: result
@@ -135,11 +135,9 @@ export async function fetchInterfaceListMenu(projectId) {
 }
 
 export async function fetchInterfaceList(params) {
-  let result = await axios.get('/api/interface/list', {
+  let result = await axios.get("/api/interface/list", {
     params,
-    paramsSerializer: params => {
-      return qs.stringify(params, {indices: false})
-    }
+    paramsSerializer: (params) => qs.stringify(params, {indices: false})
   })
   return {
     type: FETCH_INTERFACE_LIST,
@@ -148,11 +146,9 @@ export async function fetchInterfaceList(params) {
 }
 
 export async function fetchInterfaceCatList(params) {
-  let result = axios.get('/api/interface/list_cat', {
+  let result = axios.get("/api/interface/list_cat", {
     params,
-    paramsSerializer: params => {
-      return qs.stringify(params, {indices: false})
-    }
+    paramsSerializer: (params) => qs.stringify(params, {indices: false})
   })
   return {
     type: FETCH_INTERFACE_CAT_LIST,

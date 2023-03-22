@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Icon } from 'antd';
-import './Intro.scss';
-import { OverPack } from 'rc-scroll-anim';
-import TweenOne from 'rc-tween-one';
-import QueueAnim from 'rc-queue-anim';
+import React from "react";
+import PropTypes from "prop-types";
+import { Icon } from "antd";
+import "./Intro.scss";
+import { OverPack } from "rc-scroll-anim";
+import TweenOne from "rc-tween-one";
+import QueueAnim from "rc-queue-anim";
 
-const IntroPart = props => (
+const IntroPart = (props) => (
   <li className="switch-content">
     <div className="icon-switch">
       <Icon type={props.iconType} />
@@ -46,10 +46,10 @@ class Intro extends React.PureComponent {
   };
   render() {
     const { intro } = this.props;
-    const id = 'motion';
+    const id = "motion";
     const animType = {
-      queue: 'right',
-      one: { x: '-=30', opacity: 0, type: 'from' }
+      queue: "right",
+      one: { x: "-=30", opacity: 0, type: "from" }
     };
     return (
       <div className="intro-container">
@@ -70,7 +70,7 @@ class Intro extends React.PureComponent {
             type={animType.queue}
             key={`${id}-text`}
             leaveReverse
-            ease={['easeOutCubic', 'easeInCubic']}
+            ease={["easeOutCubic", "easeInCubic"]}
             id={`${id}-textWrapper`}
             className={`${id}-text des-container textWrapper`}
           >

@@ -1,19 +1,17 @@
-import './index.scss';
-import React, { PureComponent as Component } from 'react';
-import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
-import List from './List.js';
-import PropTypes from 'prop-types';
-import Profile from './Profile.js';
-import { Row } from 'antd';
+import "./index.scss";
+import React, { PureComponent as Component } from "react";
+import { connect } from "react-redux";
+import { Route } from "react-router-dom";
+import List from "./List.js";
+import PropTypes from "prop-types";
+import Profile from "./Profile.js";
+import { Row } from "antd";
 @connect(
-  state => {
-    return {
-      curUid: state.user.uid,
-      userType: state.user.type,
-      role: state.user.role
-    };
-  },
+  (state) => ({
+    curUid: state.user.uid,
+    userType: state.user.type,
+    role: state.user.role
+  }),
   {}
 )
 class User extends Component {
@@ -33,8 +31,8 @@ class User extends Component {
       <div>
         <div className="g-doc">
           <Row className="user-box">
-            <Route path={this.props.match.path + '/list'} component={List} />
-            <Route path={this.props.match.path + '/profile/:uid'} component={Profile} />
+            <Route path={this.props.match.path + "/list"} component={List} />
+            <Route path={this.props.match.path + "/profile/:uid"} component={Profile} />
           </Row>
         </div>
       </div>
