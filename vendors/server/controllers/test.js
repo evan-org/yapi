@@ -1,7 +1,7 @@
-const yapi = require('../yapi.js');
-const baseController = require('./base.js');
-const fs = require('fs'); //引入文件模块
-const path = require('path');
+const yapi = require("../yapi.js");
+const baseController = require("./base.js");
+const fs = require("fs"); // 引入文件模块
+const path = require("path");
 
 class interfaceColController extends baseController {
   constructor(ctx) {
@@ -19,7 +19,7 @@ class interfaceColController extends baseController {
     try {
       let query = ctx.query;
       // cookie 检测
-      ctx.cookies.set('_uid', 12, {
+      ctx.cookies.set("_uid", 12, {
         expires: yapi.commons.expireDate(7),
         httpOnly: true
       });
@@ -42,7 +42,7 @@ class interfaceColController extends baseController {
       let params = ctx.request.body;
       ctx.status = +ctx.query.code || 200;
       ctx.body = yapi.commons.resReturn(params);
-    } catch(e) {
+    } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
@@ -77,28 +77,28 @@ class interfaceColController extends baseController {
 
       let chunks = [],
         size = 0;
-      req.on('data', function(chunk) {
+      req.on("data", function(chunk) {
         chunks.push(chunk);
         size += chunk.length;
       });
 
-      req.on('finish', function() {
+      req.on("finish", function() {
         console.log(34343);
       });
 
-      req.on('end', function() {
+      req.on("end", function() {
         let data = new Buffer(size);
         for (let i = 0, pos = 0, l = chunks.length; i < l; i++) {
           let chunk = chunks[i];
           chunk.copy(data, pos);
           pos += chunk.length;
         }
-        fs.writeFileSync(path.join(yapi.WEBROOT_RUNTIME, 'test.text'), data, function(err) {
-          return (ctx.body = yapi.commons.resReturn(null, 402, '写入失败'));
+        fs.writeFileSync(path.join(yapi.WEBROOT_RUNTIME, "test.text"), data, function(err) {
+          return (ctx.body = yapi.commons.resReturn(null, 402, "写入失败"));
         });
       });
 
-      ctx.body = yapi.commons.resReturn({ res: '上传成功' });
+      ctx.body = yapi.commons.resReturn({ res: "上传成功" });
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
@@ -114,9 +114,9 @@ class interfaceColController extends baseController {
   async testFilesUpload(ctx) {
     try {
       let file = ctx.request.body.files.file;
-      let newPath = path.join(yapi.WEBROOT_RUNTIME, 'test.text');
+      let newPath = path.join(yapi.WEBROOT_RUNTIME, "test.text");
       fs.renameSync(file.path, newPath);
-      ctx.body = yapi.commons.resReturn({ res: '上传成功' });
+      ctx.body = yapi.commons.resReturn({ res: "上传成功" });
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
@@ -228,9 +228,9 @@ class interfaceColController extends baseController {
     try {
       // let result = `<div><h2>12222222</h2></div>`;
       // let result = `wieieieieiieieie`
-      let result = { b: '12', c: '23' };
-      ctx.set('Access-Control-Allow-Origin', '*');
-      ctx.set('Content-Type', 'text');
+      let result = { b: "12", c: "23" };
+      ctx.set("Access-Control-Allow-Origin", "*");
+      ctx.set("Content-Type", "text");
       console.log(ctx.response);
       ctx.body = result;
     } catch (e) {

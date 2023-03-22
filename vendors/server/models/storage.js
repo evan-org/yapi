@@ -1,10 +1,10 @@
-const baseModel = require('./base.js');
-const mongoose = require('mongoose');
+const baseModel = require("./base.js");
+const mongoose = require("mongoose");
 
 class stroageModel extends baseModel {
   constructor() {
     super()
-    let storageCol = mongoose.connection.db.collection('storage');
+    let storageCol = mongoose.connection.db.collection("storage");
     storageCol.createIndex(
       {
         key: 1
@@ -16,7 +16,7 @@ class stroageModel extends baseModel {
   }
 
   getName() {
-    return 'storage';
+    return "storage";
   }
 
   getSchema() {
@@ -24,8 +24,8 @@ class stroageModel extends baseModel {
       key: { type: Number, required: true },
       data: {
         type: String,
-        default: ''
-      } //用于原始数据存储
+        default: ""
+      } // 用于原始数据存储
     };
   }
   save(key, data = {}, isInsert = false) {
@@ -34,7 +34,7 @@ class stroageModel extends baseModel {
       key,
       data: JSON.stringify(data, null, 2)
     };
-    if(isInsert){
+    if (isInsert) {
       let r = new this.model(saveData);
       return r.save();
     }
@@ -54,9 +54,9 @@ class stroageModel extends baseModel {
       .findOne({
         key
       })
-      .exec().then(data => {
+      .exec().then((data) => {
         this.save(key, {})
-        if (!data) return null;
+        if (!data) {return null;}
         data = data.toObject().data;
         try {
           return JSON.parse(data)
