@@ -1,9 +1,8 @@
-const merge = require("webpack-merge");
-const baseWebpackConfig = require("./webpack.base.conf");
-
-const devWebpackConfig = merge(baseWebpackConfig, {
+const path = require("path");
+module.exports = {
   mode: "development",
   devtool: "source-map",
+  stats: "errors-only",
   output: {
     filename: "[name].bundle.js",
     publicPath: "/",
@@ -18,13 +17,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         ws: true,
       },
     ],
-    allowedHosts: [""],
-    clientLogLevel: "warning",
+    allowedHosts: ["localhost"],
+    static: path.join(__dirname, "public"),
+    compress: true,
     host: "localhost",
     hot: true,
     open: false,
     historyApiFallback: true,
   },
-});
-
-module.exports = devWebpackConfig;
+};

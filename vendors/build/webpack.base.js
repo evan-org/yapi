@@ -39,10 +39,20 @@ function initPlugins(configPlugin) {
 }
 initPlugins();
 module.exports = {
-  entry: "./client/main.jsx",
+  entry: {
+    main: "./client/main.jsx",
+    polyfill: ["buffer", "process", "util"]
+  },
   output: {
     filename: "[name].bundle.[ext]",
-    path: resolve("static/prd")
+    path: resolve("static/prd"),
+    clean: true
+  },
+  cache: {
+    type: "filesystem"
+  },
+  experiments: {
+    topLevelAwait: true
   },
   module: {
     rules: [
@@ -114,6 +124,11 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
+      process: "process/browser",
+      util: "util"
+    }),
     new CleanWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
     new MiniCssExtractPlugin({
@@ -159,6 +174,30 @@ module.exports = {
       common: resolve("common"),
       client: resolve("client"),
       exts: resolve("exts")
+    },
+    // node 依赖特殊实现
+    fallback: {
+      "path": require.resolve("path-browserify"),
+      "constants": require.resolve("constants-browserify"),
+      "vm": require.resolve("vm-browserify"),
+      "stream": require.resolve("stream-browserify"),
+      "crypto": require.resolve("crypto-browserify"),
+      "http": require.resolve("stream-http"),
+      "https": require.resolve("https-browserify"),
+      "zlib": require.resolve("browserify-zlib"),
+      //
+      "fs": false,
+      "dns": false,
+      "child_process": false,
+      "net": false,
+      "tls": false
+      /**
+       * "fs": require("node-libs-browser").fs,
+       * "dns": require("node-libs-browser").dns,
+       * "child_process": require("node-libs-browser").child_process,
+       * "net": require("node-libs-browser").net,
+       * "tls": require("node-libs-browser").tls
+       * */
     }
   }
 };
