@@ -54,7 +54,7 @@ class ProjectList extends Component {
     });
   };
   // 确认添加项目
-  @autobind
+  // @autobind
   handleOk(e) {
     const { form, addProject } = this.props;
     e.preventDefault();
@@ -179,7 +179,7 @@ class ProjectList extends Component {
           </Form>
           <Row>
             <Col sm={{ offset: 6 }} lg={{ offset: 3 }}>
-              <Button className="m-btn" icon="plus" type="primary" onClick={this.handleOk}>
+              <Button className="m-btn" icon="plus" type="primary" onClick={() => this.handleOk()}>
                 创建项目
               </Button>
             </Col>

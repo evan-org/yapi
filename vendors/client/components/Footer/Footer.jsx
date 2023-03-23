@@ -1,9 +1,7 @@
 import "./Footer.scss";
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
-import { Row, Col } from "antd";
-import { Icon } from "antd";
-
+import { Row, Col, Icon } from "antd";
 const version = process.env.version;
 class Footer extends Component {
   constructor(props) {
@@ -31,7 +29,6 @@ class Footer extends Component {
     );
   }
 }
-
 class FootItem extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +42,7 @@ class FootItem extends Component {
     return (
       <Col span={6}>
         <h4 className="title">
-          {this.props.iconType ? <Icon type={this.props.iconType} className="icon" /> : ""}
+          {this.props.iconType ? <Icon type={this.props.iconType} className="icon"/> : ""}
           {this.props.title}
         </h4>
         {this.props.linkList.map(function(item, i) {
@@ -61,7 +58,6 @@ class FootItem extends Component {
     );
   }
 }
-
 Footer.defaultProps = {
   footList: [
     {
@@ -113,5 +109,4 @@ Footer.defaultProps = {
     }
   ]
 };
-
 export default Footer;

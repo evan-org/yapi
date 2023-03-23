@@ -26,7 +26,15 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react({
         babel: {
-          configFile: true
+          parserOpts: {
+            plugins: ["decorators-legacy"],
+          },
+          // plugins: ["decorators-legacy", "class-properties-loose"],
+          // plugins: [
+          //   ["@babel/plugin-proposal-decorators", { legacy: true }],
+          //   ["@babel/plugin-proposal-class-properties", { loose: true }]
+          // ],
+          // configFile: true
         }
       }),
       // gzip静态资源压缩
@@ -60,16 +68,18 @@ export default defineConfig(({ mode }) => {
       port: 4000, // 端口号为3000
       open: false, // 是否在默认浏览器中自动打开该地址
       proxy: { // 使用代理
-        "/api": {
-          target: env["VITE_REACT_APP_BASE_URL"],
-          changeOrigin: true, // 是否跨域
-          rewrite: (path) => path.replace(/^\/api/, "")
-        }
+        // "/api": {
+        //   target: env["VITE_REACT_APP_BASE_URL"],
+        //   changeOrigin: true, // 是否跨域
+        //   rewrite: (path) => path.replace(/^\/api/, "")
+        // }
       },
       cors: true // 配置 CORS
     },
     // 最常见的用例是自定义 JSX
+
     esbuild: {
+      // jsxInject: "import React from 'react'",
       jsxFactory: "h",
       jsxFragment: "Fragment"
     },

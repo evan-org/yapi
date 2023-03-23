@@ -297,7 +297,7 @@ class HeaderCom extends Component {
     );
   }
 }
-connect((state) => ({
+export default connect((state) => ({
   user: state.user.userName,
   uid: state.user.uid,
   msg: null,
