@@ -49,12 +49,12 @@ module.exports = function(jsondiffpatch, formattersHtml, curDiffData) {
 
     Object.keys(newItem).forEach((key) => {
       switch (key) {
-      case "required":
-        newItem[key] = valueMaps[newItem[key]];
-        break;
-      case "type":
-        newItem[key] = valueMaps[newItem[key]];
-        break;
+        case "required":
+          newItem[key] = valueMaps[newItem[key]];
+          break;
+        case "type":
+          newItem[key] = valueMaps[newItem[key]];
+          break;
       }
     });
     return newItem;

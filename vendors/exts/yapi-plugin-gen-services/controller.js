@@ -94,36 +94,36 @@ class exportController extends baseController {
       const list = await this.handleListClass(pid, status);
 
       switch (type) {
-      case "markdown": {
-        tp = await createMarkdown.bind(this)(list, false);
-        ctx.set("Content-Disposition", "attachment; filename=api.md");
-        return (ctx.body = tp);
-      }
-      case "json": {
-        let data = this.handleExistId(list);
-        if (Array.isArray(data) && fullPath === "full-path" && basepath) {
-          data.forEach(function(cate) {
-            if (Array.isArray(cate.list)) {
-              cate.proBasepath = basepath;
-              cate.proName = curProject.name;
-              cate.proDescription = curProject.desc;
-              cate.list = cate.list.map(function(api) {
-                api.path = api.query_path.path = (basepath + "/" + api.path).replace(/[\/]{2,}/g, "/");
-                return api;
-              });
-            }
-          })
+        case "markdown": {
+          tp = await createMarkdown.bind(this)(list, false);
+          ctx.set("Content-Disposition", "attachment; filename=api.md");
+          return (ctx.body = tp);
         }
-        tp = JSON.stringify(data, null, 2);
-        ctx.set("Content-Disposition", "attachment; filename=api.json");
-        return (ctx.body = tp);
-      }
-      default: {
+        case "json": {
+          let data = this.handleExistId(list);
+          if (Array.isArray(data) && fullPath === "full-path" && basepath) {
+            data.forEach(function(cate) {
+              if (Array.isArray(cate.list)) {
+                cate.proBasepath = basepath;
+                cate.proName = curProject.name;
+                cate.proDescription = curProject.desc;
+                cate.list = cate.list.map(function(api) {
+                  api.path = api.query_path.path = (basepath + "/" + api.path).replace(/[\/]{2,}/g, "/");
+                  return api;
+                });
+              }
+            })
+          }
+          tp = JSON.stringify(data, null, 2);
+          ctx.set("Content-Disposition", "attachment; filename=api.json");
+          return (ctx.body = tp);
+        }
+        default: {
         // 默认为html
-        tp = await createHtml.bind(this)(list);
-        ctx.set("Content-Disposition", "attachment; filename=api.html");
-        return (ctx.body = tp);
-      }
+          tp = await createHtml.bind(this)(list);
+          ctx.set("Content-Disposition", "attachment; filename=api.html");
+          return (ctx.body = tp);
+        }
       }
     } catch (error) {
       yapi.commons.log(error, "error");

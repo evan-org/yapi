@@ -25,25 +25,25 @@ function checkJsonSchema(json) {
 
 const mapping = function(data, index) {
   switch (data.type) {
-  case "string":
-    return SchemaString(data);
+    case "string":
+      return SchemaString(data);
 
-  case "number":
-    return SchemaNumber(data);
+    case "number":
+      return SchemaNumber(data);
 
-  case "array":
-    return SchemaArray(data, index);
+    case "array":
+      return SchemaArray(data, index);
 
-  case "object":
-    return SchemaObject(data, index);
+    case "object":
+      return SchemaObject(data, index);
 
-  case "boolean":
-    return SchemaBoolean(data);
+    case "boolean":
+      return SchemaBoolean(data);
 
-  case "integer":
-    return SchemaInt(data);
-  default:
-    return SchemaOther(data);
+    case "integer":
+      return SchemaInt(data);
+    default:
+      return SchemaOther(data);
   }
 };
 

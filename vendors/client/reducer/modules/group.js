@@ -33,46 +33,46 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-  case FETCH_GROUP_LIST: {
-    return {
-      ...state,
-      groupList: action.payload.data.data
-    };
-  }
-  case UPDATE_GROUP_LIST: {
-    return {
-      ...state,
-      groupList: action.payload
-    };
-  }
-  case SET_CURR_GROUP: {
-    return {
-      ...state,
-      currGroup: action.payload.data.data
-    };
-  }
-  case FETCH_GROUP_MEMBER: {
-    return {
-      ...state,
-      member: action.payload.data.data
-    };
-  }
-  case FETCH_GROUP_MSG: {
-    console.log(action.payload)
-    // const {role,group_name,group_desc,} = action.payload.data.data
-    return {
-      ...state,
-      role: action.payload.data.data.role,
-      currGroup: action.payload.data.data,
-      field: {
-        name: action.payload.data.data.custom_field1.name,
-        enable: action.payload.data.data.custom_field1.enable
-      }
-    };
-  }
+    case FETCH_GROUP_LIST: {
+      return {
+        ...state,
+        groupList: action.payload.data.data
+      };
+    }
+    case UPDATE_GROUP_LIST: {
+      return {
+        ...state,
+        groupList: action.payload
+      };
+    }
+    case SET_CURR_GROUP: {
+      return {
+        ...state,
+        currGroup: action.payload.data.data
+      };
+    }
+    case FETCH_GROUP_MEMBER: {
+      return {
+        ...state,
+        member: action.payload.data.data
+      };
+    }
+    case FETCH_GROUP_MSG: {
+      console.log(action.payload)
+      // const {role,group_name,group_desc,} = action.payload.data.data
+      return {
+        ...state,
+        role: action.payload.data.data.role,
+        currGroup: action.payload.data.data,
+        field: {
+          name: action.payload.data.data.custom_field1.name,
+          enable: action.payload.data.data.custom_field1.enable
+        }
+      };
+    }
 
-  default:
-    return state;
+    default:
+      return state;
   }
 };
 

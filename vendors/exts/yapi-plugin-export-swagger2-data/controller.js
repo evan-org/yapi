@@ -80,18 +80,18 @@ class exportSwaggerController extends baseController {
       const list = await this.handleListClass(pid, status);
 
       switch (type) {
-      case "OpenAPIV2":
-      { // in this time, only implemented OpenAPI V2.0
-        let data = this.handleExistId(list);
-        let model = await convertToSwaggerV2Model(data);
-        tp = JSON.stringify(model, null, 2);
-        ctx.set("Content-Disposition", "attachment; filename=swaggerApi.json");
-        return (ctx.body = tp);
-      }
-      default:
-      {
-        ctx.body = yapi.commons.resReturn(null, 400, "type 无效参数")
-      }
+        case "OpenAPIV2":
+        { // in this time, only implemented OpenAPI V2.0
+          let data = this.handleExistId(list);
+          let model = await convertToSwaggerV2Model(data);
+          tp = JSON.stringify(model, null, 2);
+          ctx.set("Content-Disposition", "attachment; filename=swaggerApi.json");
+          return (ctx.body = tp);
+        }
+        default:
+        {
+          ctx.body = yapi.commons.resReturn(null, 400, "type 无效参数")
+        }
       }
     } catch (error) {
       yapi.commons.log(error, "error");
@@ -140,18 +140,18 @@ class exportSwaggerController extends baseController {
                 apiItem["summary"] = api.title;
                 apiItem["description"] = api.markdown;
                 switch (api.req_body_type) {
-                case "form":
-                case "file":
-                  apiItem["consumes"] = ["multipart/form-data"]; // form data required
-                  break;
-                case "json":
-                  apiItem["consumes"] = ["application/json"];
-                  break;
-                case "raw":
-                  apiItem["consumes"] = ["text/plain"];
-                  break;
-                default:
-                  break;
+                  case "form":
+                  case "file":
+                    apiItem["consumes"] = ["multipart/form-data"]; // form data required
+                    break;
+                  case "json":
+                    apiItem["consumes"] = ["application/json"];
+                    break;
+                  case "raw":
+                    apiItem["consumes"] = ["text/plain"];
+                    break;
+                  default:
+                    break;
                 }
                 apiItem["parameters"] = (() => {
                   let paramArray = [];
@@ -192,60 +192,60 @@ class exportSwaggerController extends baseController {
                   }
                   switch (api.req_body_type) // Body parameters
                   {
-                  case "form":
-                  {
-                    for (let p of api.req_body_form) {
-                      paramArray.push({
-                        name: p.name,
-                        in: "formData",
-                        required: Number(p.required) === 1,
-                        description: p.desc,
-                        type: p.type === "text" ? "string" : "file" // in this time .formData type have only text or file
-                      });
-                    }
-                    break;
-                  }
-                  case "json":
-                  {
-                    if (api.req_body_other) {
-                      let jsonParam = JSON.parse(api.req_body_other);
-                      if (jsonParam) {
+                    case "form":
+                    {
+                      for (let p of api.req_body_form) {
                         paramArray.push({
-                          name: "root",
-                          in: "body",
-                          description: jsonParam.description,
-                          schema: jsonParam // as same as swagger's format
+                          name: p.name,
+                          in: "formData",
+                          required: Number(p.required) === 1,
+                          description: p.desc,
+                          type: p.type === "text" ? "string" : "file" // in this time .formData type have only text or file
                         });
                       }
+                      break;
                     }
-                    break;
-                  }
-                  case "file":
-                  {
-                    paramArray.push({
-                      name: "upfile",
-                      in: "formData", // use formData
-                      description: api.req_body_other,
-                      type: "file"
-                    });
-                    break;
-                  }
-                  case "raw":
-                  {
-                    paramArray.push({
-                      name: "raw",
-                      in: "body",
-                      description: "raw paramter",
-                      schema: {
-                        type: "string",
-                        format: "binary",
-                        default: api.req_body_other
+                    case "json":
+                    {
+                      if (api.req_body_other) {
+                        let jsonParam = JSON.parse(api.req_body_other);
+                        if (jsonParam) {
+                          paramArray.push({
+                            name: "root",
+                            in: "body",
+                            description: jsonParam.description,
+                            schema: jsonParam // as same as swagger's format
+                          });
+                        }
                       }
-                    });
-                    break;
-                  }
-                  default:
-                    break;
+                      break;
+                    }
+                    case "file":
+                    {
+                      paramArray.push({
+                        name: "upfile",
+                        in: "formData", // use formData
+                        description: api.req_body_other,
+                        type: "file"
+                      });
+                      break;
+                    }
+                    case "raw":
+                    {
+                      paramArray.push({
+                        name: "raw",
+                        in: "body",
+                        description: "raw paramter",
+                        schema: {
+                          type: "string",
+                          format: "binary",
+                          default: api.req_body_other
+                        }
+                      });
+                      break;
+                    }
+                    default:
+                      break;
                   }
                   return paramArray;
                 })();

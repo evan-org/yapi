@@ -173,30 +173,30 @@ function tableCol(col, columns, level) {
     let text = "";
 
     switch (dataIndex) {
-    case "sub":
-      text = handleObject(value);
-      break;
-    case "type":
-      text =
+      case "sub":
+        text = handleObject(value);
+        break;
+      case "type":
+        text =
           value === "array"
             ? `<span>${col.sub ? col.sub.itemType || "" : "array"} []</span>`
             : `<span>${value}</span>`;
-      break;
-    case "required":
-      text = value ? "必须" : "非必须";
-      break;
-    case "desc":
-      text = _.isUndefined(col.childrenDesc)
-        ? `<span style="white-space: pre-wrap">${value}</span>`
-        : `<span style="white-space: pre-wrap">${col.childrenDesc}</span>`;
-      break;
-    case "name":
-      text = `<span style="padding-left: ${20 * level}px"><span style="color: #8c8a8a">${
-        level > 0 ? "├─" : ""
-      }</span> ${value}</span>`;
-      break;
-    default:
-      text = value;
+        break;
+      case "required":
+        text = value ? "必须" : "非必须";
+        break;
+      case "desc":
+        text = _.isUndefined(col.childrenDesc)
+          ? `<span style="white-space: pre-wrap">${value}</span>`
+          : `<span style="white-space: pre-wrap">${col.childrenDesc}</span>`;
+        break;
+      case "name":
+        text = `<span style="padding-left: ${20 * level}px"><span style="color: #8c8a8a">${
+          level > 0 ? "├─" : ""
+        }</span> ${value}</span>`;
+        break;
+      default:
+        text = value;
     }
     tpl += `<td key=${index}>${text}</td>`;
   });

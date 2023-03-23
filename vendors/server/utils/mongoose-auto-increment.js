@@ -46,13 +46,13 @@ exports.plugin = function(schema, options) {
 
   switch (typeof (options)) {
   // If string, the user chose to pass in just the model name.
-  case "string":
-    settings.model = options;
-    break;
+    case "string":
+      settings.model = options;
+      break;
     // If object, the user passed in a hash of options.
-  case "object":
-    extend(settings, options);
-    break;
+    case "object":
+      extend(settings, options);
+      break;
   }
 
   if (settings.model == null) {throw new Error("model must be set");}

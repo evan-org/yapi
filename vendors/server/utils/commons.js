@@ -79,18 +79,18 @@ exports.log = (msg, type) => {
   let f;
 
   switch (type) {
-  case "log":
+    case "log":
       f = console.log; // eslint-disable-line
-    break;
-  case "warn":
+      break;
+    case "warn":
       f = console.warn; // eslint-disable-line
-    break;
-  case "error":
+      break;
+    case "error":
       f = console.error; // eslint-disable-line
-    break;
-  default:
+      break;
+    default:
       f = console.log; // eslint-disable-line
-    break;
+      break;
   }
 
   f(type + ":", msg);
@@ -333,14 +333,14 @@ exports.handleParams = (params, keys) => {
     let filter = keys[key];
     if (params[key]) {
       switch (filter) {
-      case "string":
-        params[key] = trim(params[key] + "");
-        break;
-      case "number":
-        params[key] = !isNaN(params[key]) ? parseInt(params[key], 10) : 0;
-        break;
-      default:
-        params[key] = trim(params + "");
+        case "string":
+          params[key] = trim(params[key] + "");
+          break;
+        case "number":
+          params[key] = !isNaN(params[key]) ? parseInt(params[key], 10) : 0;
+          break;
+        default:
+          params[key] = trim(params + "");
       }
     }
   }

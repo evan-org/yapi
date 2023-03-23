@@ -188,18 +188,18 @@ function leftHtml(index, name, code) {
 function codeHtml(code) {
   let codeHtml = "";
   switch (code) {
-  case 0:
-    codeHtml += "<div title=\"验证通过\" class=\"status status-ok\"><i class=\"icon icon-check-circle\"></i></div>";
-    break;
-  case 400:
-    codeHtml += "<div title=\"请求异常\" class=\"status status-ko\"><i class=\"icon icon-close-circle\"></i></div>";
-    break;
-  case 1:
-    codeHtml += "<div title=\"验证失败\" class=\"status status-warning\"><i class=\"icon icon-warning-circle\"></i></div>";
-    break;
-  default:
-    codeHtml += "<div title=\"验证通过\" class=\"status status-warning\"><i class=\"icon icon-warning-circle\"></i></div>";
-    break;
+    case 0:
+      codeHtml += "<div title=\"验证通过\" class=\"status status-ok\"><i class=\"icon icon-check-circle\"></i></div>";
+      break;
+    case 400:
+      codeHtml += "<div title=\"请求异常\" class=\"status status-ko\"><i class=\"icon icon-close-circle\"></i></div>";
+      break;
+    case 1:
+      codeHtml += "<div title=\"验证失败\" class=\"status status-warning\"><i class=\"icon icon-warning-circle\"></i></div>";
+      break;
+    default:
+      codeHtml += "<div title=\"验证通过\" class=\"status status-warning\"><i class=\"icon icon-warning-circle\"></i></div>";
+      break;
   }
   return codeHtml;
 }

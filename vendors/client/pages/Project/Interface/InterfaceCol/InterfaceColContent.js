@@ -669,32 +669,32 @@ class InterfaceColContent extends Component {
                 );
               }
               switch (code) {
-              case 0:
-                return (
-                  <div>
-                    <Tooltip title="Pass">
-                      <Icon style={{ color: "#00a854" }} type="check-circle"/>
-                    </Tooltip>
-                  </div>
-                );
-              case 400:
-                return (
-                  <div>
-                    <Tooltip title="请求异常">
-                      <Icon type="info-circle" style={{ color: "#f04134" }}/>
-                    </Tooltip>
-                  </div>
-                );
-              case 1:
-                return (
-                  <div>
-                    <Tooltip title="验证失败">
-                      <Icon type="exclamation-circle" style={{ color: "#ffbf00" }}/>
-                    </Tooltip>
-                  </div>
-                );
-              default:
-                return (<div><Icon style={{ color: "#00a854" }} type="check-circle"/></div>);
+                case 0:
+                  return (
+                    <div>
+                      <Tooltip title="Pass">
+                        <Icon style={{ color: "#00a854" }} type="check-circle"/>
+                      </Tooltip>
+                    </div>
+                  );
+                case 400:
+                  return (
+                    <div>
+                      <Tooltip title="请求异常">
+                        <Icon type="info-circle" style={{ color: "#f04134" }}/>
+                      </Tooltip>
+                    </div>
+                  );
+                case 1:
+                  return (
+                    <div>
+                      <Tooltip title="验证失败">
+                        <Icon type="exclamation-circle" style={{ color: "#ffbf00" }}/>
+                      </Tooltip>
+                    </div>
+                  );
+                default:
+                  return (<div><Icon style={{ color: "#00a854" }} type="check-circle"/></div>);
               }
             }
           ]

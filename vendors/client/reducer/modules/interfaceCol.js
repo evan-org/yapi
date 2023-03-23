@@ -32,45 +32,45 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-  case FETCH_INTERFACE_COL_LIST: {
-    return {
-      ...state,
-      interfaceColList: action.payload.data.data
-    };
-  }
-  case FETCH_CASE_DATA: {
-    return {
-      ...state,
-      currCase: action.payload.data.data
-    };
-  }
-  case FETCH_CASE_LIST: {
-    return {
-      ...state,
-      currCaseList: action.payload.data.data
-    };
-  }
+    case FETCH_INTERFACE_COL_LIST: {
+      return {
+        ...state,
+        interfaceColList: action.payload.data.data
+      };
+    }
+    case FETCH_CASE_DATA: {
+      return {
+        ...state,
+        currCase: action.payload.data.data
+      };
+    }
+    case FETCH_CASE_LIST: {
+      return {
+        ...state,
+        currCaseList: action.payload.data.data
+      };
+    }
 
-  case FETCH_VARIABLE_PARAMS_LIST: {
-    return {
-      ...state,
-      variableParamsList: action.payload.data.data
-    };
-  }
-  case SET_COL_DATA: {
-    return {
-      ...state,
-      ...action.payload
-    };
-  }
-  case FETCH_CASE_ENV_LIST: {
-    return {
-      ...state,
-      envList: action.payload.data.data
-    };
-  }
-  default:
-    return state;
+    case FETCH_VARIABLE_PARAMS_LIST: {
+      return {
+        ...state,
+        variableParamsList: action.payload.data.data
+      };
+    }
+    case SET_COL_DATA: {
+      return {
+        ...state,
+        ...action.payload
+      };
+    }
+    case FETCH_CASE_ENV_LIST: {
+      return {
+        ...state,
+        envList: action.payload.data.data
+      };
+    }
+    default:
+      return state;
   }
 };
 

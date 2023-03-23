@@ -12,13 +12,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-  case FETCH_MOCK_COL:
-    return {
-      ...state,
-      list: action.payload.data
-    }
-  default:
-    return state
+    case FETCH_MOCK_COL:
+      return {
+        ...state,
+        list: action.payload.data
+      }
+    default:
+      return state
   }
 }
 

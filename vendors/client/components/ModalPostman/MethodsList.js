@@ -133,14 +133,14 @@ class MethodsList extends Component {
       params
     };
     switch (item.component) {
-    case "select":
-      return this.selectComponent(query);
-    case "input":
-      return this.inputComponent(query);
-    case "doubleInput":
-      return this.doubleInputComponent(query);
-    default:
-      break;
+      case "select":
+        return this.selectComponent(query);
+      case "input":
+        return this.inputComponent(query);
+      case "doubleInput":
+        return this.doubleInputComponent(query);
+      default:
+        break;
     }
   }
 

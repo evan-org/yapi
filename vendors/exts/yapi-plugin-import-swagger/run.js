@@ -239,25 +239,25 @@ function handleSwagger(data, originTags = []) {
 
       if (param.in) {
         switch (param.in) {
-        case "path":
-          api.req_params.push(defaultParam);
-          break;
-        case "query":
-          api.req_query.push(defaultParam);
-          break;
-        case "body":
-          handleBodyPamras(param.schema, api);
-          break;
-        case "formData":
-          defaultParam.type = param.type === "file" ? "file" : "text";
-          if (param.example) {
-            defaultParam.example = param.example;
-          }
-          api.req_body_form.push(defaultParam);
-          break;
-        case "header":
-          api.req_headers.push(defaultParam);
-          break;
+          case "path":
+            api.req_params.push(defaultParam);
+            break;
+          case "query":
+            api.req_query.push(defaultParam);
+            break;
+          case "body":
+            handleBodyPamras(param.schema, api);
+            break;
+          case "formData":
+            defaultParam.type = param.type === "file" ? "file" : "text";
+            if (param.example) {
+              defaultParam.example = param.example;
+            }
+            api.req_body_form.push(defaultParam);
+            break;
+          case "header":
+            api.req_headers.push(defaultParam);
+            break;
         }
       } else {
         api.req_query.push(defaultParam);

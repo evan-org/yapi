@@ -32,63 +32,63 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-  case FETCH_ADD_INTERFACE_INPUT:
-    return {
-      ...state,
-      url: action.payload
-    };
-  case FETCH_ADD_INTERFACE_TAG_VALUE:
-    return {
-      ...state,
-      tagValue: action.payload
-    };
-  case FETCH_ADD_INTERFACE_HEADER_VALUE:
-    return {
-      ...state,
-      headerValue: action.payload
-    };
-  case ADD_INTERFACE_SEQ_HEADER:
-    return {
-      ...state,
-      seqGroup: action.payload
-    };
-  case DELETE_INTERFACE_SEQ_HEADER:
-    return {
-      ...state,
-      seqGroup: action.payload
-    };
-  case GET_INTERFACE_REQ_PARAMS:
-    return {
-      ...state,
-      reqParams: action.payload
-    };
-  case GET_INTERFACE_RES_PARAMS:
-    return {
-      ...state,
-      resParams: action.payload
-    };
-  case PUSH_INTERFACE_NAME:
-    return {
-      ...state,
-      interfaceName: action.payload
-    };
-  case PUSH_INTERFACE_METHOD:
-    return {
-      ...state,
-      method: action.payload
-    };
-  case FETCH_INTERFACE_PROJECT:
-    return {
-      ...state,
-      project: action.payload.data.data
-    };
-  case ADD_INTERFACE_CLIPBOARD:
-    return {
-      ...state,
-      clipboard: action.payload
-    };
-  default:
-    return state;
+    case FETCH_ADD_INTERFACE_INPUT:
+      return {
+        ...state,
+        url: action.payload
+      };
+    case FETCH_ADD_INTERFACE_TAG_VALUE:
+      return {
+        ...state,
+        tagValue: action.payload
+      };
+    case FETCH_ADD_INTERFACE_HEADER_VALUE:
+      return {
+        ...state,
+        headerValue: action.payload
+      };
+    case ADD_INTERFACE_SEQ_HEADER:
+      return {
+        ...state,
+        seqGroup: action.payload
+      };
+    case DELETE_INTERFACE_SEQ_HEADER:
+      return {
+        ...state,
+        seqGroup: action.payload
+      };
+    case GET_INTERFACE_REQ_PARAMS:
+      return {
+        ...state,
+        reqParams: action.payload
+      };
+    case GET_INTERFACE_RES_PARAMS:
+      return {
+        ...state,
+        resParams: action.payload
+      };
+    case PUSH_INTERFACE_NAME:
+      return {
+        ...state,
+        interfaceName: action.payload
+      };
+    case PUSH_INTERFACE_METHOD:
+      return {
+        ...state,
+        method: action.payload
+      };
+    case FETCH_INTERFACE_PROJECT:
+      return {
+        ...state,
+        project: action.payload.data.data
+      };
+    case ADD_INTERFACE_CLIPBOARD:
+      return {
+        ...state,
+        clipboard: action.payload
+      };
+    default:
+      return state;
   }
 };
 
