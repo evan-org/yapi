@@ -16,6 +16,7 @@ module.exports = {
         legacy: true,
       },
     ],
+    "babel-plugin-transform-decorators-legacy",
     "@babel/transform-runtime",
     "@babel/plugin-proposal-class-properties",
     [
@@ -25,6 +26,5 @@ module.exports = {
         style: true,
       },
     ],
-    "react-hot-loader/babel",
   ],
 };

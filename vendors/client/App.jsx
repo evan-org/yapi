@@ -15,11 +15,8 @@ import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 import { checkLoginState } from "./reducer/modules/user";
 import { requireAuthentication } from "./components/AuthenticatedComponent";
 
-
 const plugin = require("client/plugin.js");
-
 const LOADING_STATUS = 0;
-
 const alertContent = () => {
   const ua = window.navigator.userAgent,
     isChrome = ua.indexOf("Chrome") && window.chrome;
@@ -34,7 +31,6 @@ const alertContent = () => {
     );
   }
 };
-
 const AppRoute = {
   home: {
     path: "/",
@@ -67,16 +63,6 @@ const AppRoute = {
 };
 // 增加路由钩子
 plugin.emitHook("app_route", AppRoute);
-
-@connect(
-  (state) => ({
-    loginState: state.user.loginState,
-    curUserRole: state.user.role
-  }),
-  {
-    checkLoginState
-  }
-)
 class App extends Component {
   constructor(props) {
     super(props);
@@ -84,44 +70,40 @@ class App extends Component {
       login: LOADING_STATUS
     };
   }
-
   static propTypes = {
     checkLoginState: PropTypes.func,
     loginState: PropTypes.number,
     curUserRole: PropTypes.string
   };
-
   componentDidMount() {
     this.props.checkLoginState();
   }
-
   showConfirm = (msg, callback) => {
     // 自定义 window.confirm
     // http://reacttraining.cn/web/api/BrowserRouter/getUserConfirmation-func
     let container = document.createElement("div");
     document.body.appendChild(container);
-    ReactDOM.render(<MyPopConfirm msg={msg} callback={callback} />, container);
+    ReactDOM.render(<MyPopConfirm msg={msg} callback={callback}/>, container);
   };
-
   route = (status) => {
     let r;
     if (status === LOADING_STATUS) {
-      return <Loading visible />;
+      return <Loading visible/>;
     } else {
       r = (
         <Router getUserConfirmation={this.showConfirm}>
           <div className="g-main">
             <div className="router-main">
-              {this.props.curUserRole === "admin" && <Notify />}
+              {this.props.curUserRole === "admin" && <Notify/>}
               {alertContent()}
-              {this.props.loginState !== 1 ? <Header /> : null}
+              {this.props.loginState !== 1 ? <Header/> : null}
               <div className="router-container">
                 {Object.keys(AppRoute).map((key) => {
                   let item = AppRoute[key];
                   return key === "login" ? (
-                    <Route key={key} path={item.path} component={item.component} />
+                    <Route key={key} path={item.path} component={item.component}/>
                   ) : key === "home" ? (
-                    <Route key={key} exact path={item.path} component={item.component} />
+                    <Route key={key} exact path={item.path} component={item.component}/>
                   ) : (
                     <Route
                       key={key}
@@ -142,16 +124,24 @@ class App extends Component {
                 {/* <Route path="/statistic" component={statisticsPage} /> */}
               {/* </div> */}
             </div>
-            <Footer />
+            <Footer/>
           </div>
         </Router>
       );
     }
     return r;
   };
-
   render() {
     return this.route(this.props.loginState);
   }
 }
-export default App;
+
+export default connect(
+  (state) => ({
+    loginState: state.user.loginState,
+    curUserRole: state.user.role
+  }),
+  {
+    checkLoginState
+  }
+)(App);
