@@ -7,7 +7,7 @@ module.exports = {
   mode: "production",
   devtool: "none",
   output: {
-    filename: "[name].[contenthash:8].bundle.js",
+    filename: "static/js/[name].[contenthash:8].bundle.js",
     publicPath: "/prd",
   },
   optimization: {

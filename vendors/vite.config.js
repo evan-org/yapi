@@ -29,12 +29,7 @@ export default defineConfig(({ mode }) => {
           parserOpts: {
             plugins: ["decorators-legacy"],
           },
-          // plugins: ["decorators-legacy", "class-properties-loose"],
-          // plugins: [
-          //   ["@babel/plugin-proposal-decorators", { legacy: true }],
-          //   ["@babel/plugin-proposal-class-properties", { loose: true }]
-          // ],
-          // configFile: true
+          configFile: true
         }
       }),
       // gzip静态资源压缩

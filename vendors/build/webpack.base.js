@@ -5,8 +5,8 @@ const TerserJSPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const { HotModuleReplacementPlugin } = require("webpack");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+// const { HotModuleReplacementPlugin } = require("webpack");
+// const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 //
 const devMode = process.env.NODE_ENV !== "production";
 const resolve = (dir) => path.resolve(__dirname, "../", dir);
@@ -50,7 +50,7 @@ module.exports = {
   },
   output: {
     publicPath: "/",
-    filename: "[name].[hash].js",
+    filename: "static/js/[name].[contenthash:8].bundle.js",
     path: resolve("static/prd"),
     clean: true
   },
@@ -92,7 +92,14 @@ module.exports = {
           //   },
           // },
           "style-loader",
-          "css-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: {
+                localIdentName: "[local]_[hash:base64:5]"
+              }
+            }
+          },
           /* {
             loader: "postcss-loader",
             options: {
@@ -120,7 +127,14 @@ module.exports = {
               // hmr: devMode
             }
           },
-          "css-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: {
+                localIdentName: "[local]_[hash:base64:5]"
+              }
+            }
+          },
           "sass-loader"
         ]
       },
@@ -134,7 +148,14 @@ module.exports = {
               // hmr: devMode
             }
           },
-          "css-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: {
+                localIdentName: "[local]_[hash:base64:5]"
+              }
+            }
+          },
           "less-loader"
         ]
       },
@@ -145,7 +166,7 @@ module.exports = {
             loader: "url-loader",
             options: {
               limit: 1024,
-              name: "img/[name].[ext]"
+              name: "static/img/[name].[ext]"
             },
           },
         ],
@@ -185,8 +206,8 @@ module.exports = {
     new CleanWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
     new MiniCssExtractPlugin({
-      filename: devMode ? "[name].css" : "[name].[hash].css",
-      chunkFilename: devMode ? "[id].css" : "[id].[hash].css",
+      filename: devMode ? "static/css/[name].[hash].css" : "static/css/[name].[hash].css",
+      chunkFilename: devMode ? "static/css/[id].[hash].css" : "static/css/[id].[hash].css",
       ignoreOrder: true,
     }),
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/),
@@ -203,7 +224,7 @@ module.exports = {
       },
     }),
     //
-    new HotModuleReplacementPlugin(), // HMR
+    // new HotModuleReplacementPlugin(), // HMR
   ],
   optimization: {
     minimizer: [
