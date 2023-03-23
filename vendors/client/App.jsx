@@ -3,9 +3,10 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Route, BrowserRouter as Router } from "react-router-dom";
-import { Home, Group, Project, Follows, AddProject, Login } from "./containers/index";
+import { Home, Group, Project, Follows, AddProject, Login } from "./pages/index";
 import { Alert } from "antd";
-import User from "./containers/User/User.js";
+import User from "./pages/User/User.js";
+//
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Loading from "./components/Loading/Loading";

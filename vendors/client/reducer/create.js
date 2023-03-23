@@ -12,7 +12,7 @@ export default function createStore(initialState = {}) {
   // } else {
   //   finalCreateStore = compose(
   //     applyMiddleware(...middleware),
-  //     window.devToolsExtension ? window.devToolsExtension() : require('../containers/DevTools/DevTools').instrument()
+  //     window.devToolsExtension ? window.devToolsExtension() : require('../pages/DevTools/DevTools').instrument()
   //   )(_createStore);
   // }
 

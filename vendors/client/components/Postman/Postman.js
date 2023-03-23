@@ -24,7 +24,7 @@ import axios from "axios";
 import ModalPostman from "../ModalPostman/index.js";
 import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.js";
 import "./Postman.scss";
-import ProjectEnv from "../../containers/Project/Setting/ProjectEnv/index.js";
+import ProjectEnv from "../../pages/Project/Setting/ProjectEnv/index.js";
 import json5 from "json5";
 const { handleParamsValue, ArrayToObject, schemaValidator } = require("common/utils.js");
 const {

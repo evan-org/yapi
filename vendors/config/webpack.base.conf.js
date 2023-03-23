@@ -16,11 +16,9 @@ function createScript(plugin, pathAlias) {
   }
   return `"${plugin.name}" : {module: require('${pathAlias}/yapi-plugin-${plugin.name}/client.js'),options: ${options}}`;
 }
-
 function initPlugins(configPlugin) {
   configPlugin = require("../../config.json").plugins;
   let systemConfigPlugin = require("../common/config.js").exts;
-
   let scripts = [];
   if (configPlugin && Array.isArray(configPlugin) && configPlugin.length) {
     configPlugin = commonLib.initPlugins(configPlugin, "plugin");
@@ -30,23 +28,20 @@ function initPlugins(configPlugin) {
       }
     });
   }
-
   systemConfigPlugin = commonLib.initPlugins(systemConfigPlugin, "ext");
   systemConfigPlugin.forEach((plugin) => {
     if (plugin.client && plugin.enable) {
       scripts.push(createScript(plugin, "exts"));
     }
   });
-
   scripts = "module.exports = {" + scripts.join(",") + "}";
   fs.writeFileSync(resolve("./client/plugin-module.js"), scripts);
 }
-
 initPlugins();
-
 module.exports = {
-  entry: "./client/main.js",
+  entry: "./client/main.jsx",
   output: {
+    filename: "[name].bundle.[ext]",
     path: resolve("static/prd")
   },
   module: {
@@ -159,7 +154,7 @@ module.exports = {
   },
   resolve: {
     modules: ["node_modules"],
-    extensions: [".js", ".css", ".json", ".string", ".tpl"],
+    extensions: [".ts", ".js", ".jsx", ".css", ".json", ".string", ".tpl"],
     alias: {
       common: resolve("common"),
       client: resolve("client"),
