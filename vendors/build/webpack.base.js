@@ -1,14 +1,19 @@
 const fs = require("fs");
 const path = require("path");
-const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserJSPlugin = require("terser-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { HotModuleReplacementPlugin } = require("webpack");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+//
 const devMode = process.env.NODE_ENV !== "production";
 const resolve = (dir) => path.resolve(__dirname, "../", dir);
 let isWin = require("os").platform() === "win32";
 let commonLib = require("../common/plugin.js");
+const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+const webpack = require("webpack");
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === "node_modules") {
@@ -44,12 +49,17 @@ module.exports = {
     polyfill: ["buffer", "process", "util"]
   },
   output: {
-    filename: "[name].bundle.[ext]",
+    publicPath: "/",
+    filename: "[name].[hash].js",
     path: resolve("static/prd"),
     clean: true
   },
   cache: {
-    type: "filesystem"
+    type: "filesystem",
+    cacheDirectory: resolve(__dirname, ".temp_cache"),
+    buildDependencies: {
+      config: [__filename],
+    },
   },
   experiments: {
     topLevelAwait: true
@@ -61,7 +71,7 @@ module.exports = {
         // exclude: /node_modules\/(?!(json-schema-editor-visual)\/).*/,
         exclude: isWin ? /(tui-editor|node_modules\\(?!_?(yapi-plugin|json-schema-editor-visual)))/ : /(tui-editor|node_modules\/(?!_?(yapi-plugin|json-schema-editor-visual)))/,
         use: [
-          "thread-loader",
+          // "thread-loader",
           {
             loader: "babel-loader",
             options: {
@@ -83,7 +93,7 @@ module.exports = {
           // },
           "style-loader",
           "css-loader",
-          {
+          /* {
             loader: "postcss-loader",
             options: {
               postcssOptions: {
@@ -97,7 +107,7 @@ module.exports = {
                 ]
               }
             }
-          }
+          }*/
         ]
       },
       {
@@ -129,12 +139,40 @@ module.exports = {
         ]
       },
       {
-        test: /\.(gif|jpg|jpeg|png|woff|woff2|eot|ttf|svg)$/i,
+        test: /\.(png|jpg|jpeg|gif)(\?.+)?$/,
         use: [
           {
-            loader: "url-loader"
+            loader: "url-loader",
+            options: {
+              limit: 1024,
+              name: "img/[name].[ext]"
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 8 * 1024,
           }
-        ]
+        },
+        generator: {
+          filename: "static/media/[name].[contenthash:8].[ext]",
+        },
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 8 * 1024,
+          }
+        },
+        generator: {
+          filename: "static/fonts/[name].[contenthash:8].[ext]",
+        },
       }
     ]
   },
@@ -147,41 +185,58 @@ module.exports = {
     new CleanWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
     new MiniCssExtractPlugin({
-      filename: devMode ? "css/[name].css" : "css/[name].[contenthash:8].css",
-      chunkFilename: devMode ? "css/[id].css" : "css/[id].[contenthash:8].css"
+      filename: devMode ? "[name].css" : "[name].[hash].css",
+      chunkFilename: devMode ? "[id].css" : "[id].[hash].css",
+      ignoreOrder: true,
     }),
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/),
     new HtmlWebpackPlugin({
-      template: resolve("./public/index.html"),
-      filename: "index.html"
-    })
+      template: "./public/index.html",
+      filename: "index.html",
+      favicon: "./public/favicon.ico",
+      minify: {
+        removeAttributeQuotes: true,
+        removeComments: true,
+        collapseWhitespace: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+      },
+    }),
+    //
+    new HotModuleReplacementPlugin(), // HMR
   ],
   optimization: {
+    minimizer: [
+      new TerserJSPlugin({}),
+      new OptimizeCSSAssetsPlugin({})
+    ],
+    runtimeChunk: "single",
     splitChunks: {
-      chunks: "all",
-      maxInitialRequests: Infinity,
-      minSize: 400000,
+      minSize: 100000,
+      maxSize: 300000,
       cacheGroups: {
-        commons: {
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/, // test: /[\\/]node_modules[\\/]/,
           chunks: "all",
+          priority: 10,
+          name: "base",
+        },
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          chunks: "async",
+          priority: 9,
           minChunks: 2,
-          name: "commons",
-          maxInitialRequests: 5
-        }
-        // npmVendor: {
-        //   test: /[\\/]node_modules[\\/]/,
-        //   name(module) {
-        //     const packageName = module.context.match(
-        //       /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-        //     )[1];
-        //     return `npm.${packageName.replace("@", "")}`;
-        //   }
-        // }
-      }
+          name: "vendors",
+        },
+        styles: {
+          test: /\.css$/,
+          chunks: "all",
+          enforce: true,
+          priority: 20,
+          name: "styles",
+        },
+      },
     },
-    runtimeChunk: {
-      name: "manifest"
-    }
   },
   resolve: {
     modules: ["node_modules"],

@@ -1,11 +1,11 @@
 import React, { PureComponent as Component } from "react";
 import { Tabs } from "antd";
 import PropTypes from "prop-types";
-import ProjectMessage from "./ProjectMessage/ProjectMessage.js";
-import ProjectEnv from "./ProjectEnv/index.js";
-import ProjectRequest from "./ProjectRequest/ProjectRequest";
-import ProjectToken from "./ProjectToken/ProjectToken";
-import ProjectMock from "./ProjectMock/index.js";
+import ProjectMessage from "./ProjectMessage/ProjectMessage.jsx";
+import ProjectEnv from "./ProjectEnv/index.jsx";
+import ProjectRequest from "./ProjectRequest/ProjectRequest.jsx";
+import ProjectToken from "./ProjectToken/ProjectToken.jsx";
+import ProjectMock from "./ProjectMock/index.jsx";
 import { connect } from "react-redux";
 const TabPane = Tabs.TabPane;
 const plugin = require("client/plugin.js");

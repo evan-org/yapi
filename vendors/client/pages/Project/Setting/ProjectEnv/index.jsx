@@ -4,7 +4,7 @@ import "./index.scss";
 import { Icon, Layout, Tooltip, message, Row, Popconfirm } from "antd";
 
 const { Content, Sider } = Layout;
-import ProjectEnvContent from "./ProjectEnvContent.js";
+import ProjectEnvContent from "./ProjectEnvContent.jsx";
 import { connect } from "react-redux";
 import { updateEnv, getProject, getEnv } from "client/reducer/modules/project";
 import EasyDragSort from "../../../../components/EasyDragSort/EasyDragSort.jsx";

@@ -38,7 +38,7 @@ class LoginWrap extends Component {
     );
   }
 }
-connect((state) => ({
+export default connect((state) => ({
   loginWrapActiveKey: state.user.loginWrapActiveKey,
   canRegister: state.user.canRegister
 }))(LoginWrap)

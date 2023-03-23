@@ -1,9 +1,9 @@
 import React from "react";
-import styles from "styles.module.scss";
+import "client/layout/Layout.module.scss";
 
 function Main(props) {
   return (
-    <div className={styles.Main}>{props.childen}</div>
+    <div className="Main">{props.children}</div>
   )
 }
 export default Main;

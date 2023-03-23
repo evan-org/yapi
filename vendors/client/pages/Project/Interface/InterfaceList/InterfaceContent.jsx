@@ -2,14 +2,15 @@ import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Tabs, Modal, Button } from "antd";
-import Edit from "./Edit.js";
-import View from "./View.js";
+import Edit from "./Edit.jsx";
+import View from "./View.jsx";
+//
 import { Prompt } from "react-router";
-import { fetchInterfaceData } from "../../../../reducer/modules/interface.js";
+import { fetchInterfaceData } from "client/reducer/modules/interface";
 import { withRouter } from "react-router-dom";
 import Run from "./Run/Run.jsx";
-const plugin = require("client/plugin.js");
 
+const plugin = require("client/plugin.js");
 const TabPane = Tabs.TabPane;
 //
 class Content extends Component {
@@ -30,17 +31,14 @@ class Content extends Component {
       nextTab: ""
     };
   }
-
   componentWillMount() {
     const params = this.props.match.params;
     this.actionId = params.actionId;
     this.handleRequest(this.props);
   }
-
   componentWillUnmount() {
     document.getElementsByTagName("title")[0].innerText = this.title;
   }
-
   componentWillReceiveProps(nextProps) {
     const params = nextProps.match.params;
     if (params.actionId !== this.actionId) {
@@ -48,7 +46,6 @@ class Content extends Component {
       this.handleRequest(nextProps);
     }
   }
-
   handleRequest(nextProps) {
     const params = nextProps.match.params;
     this.props.fetchInterfaceData(params.actionId);
@@ -56,13 +53,11 @@ class Content extends Component {
       curtab: "view"
     });
   }
-
   switchToView = () => {
     this.setState({
       curtab: "view"
     });
   };
-
   onChange = (key) => {
     if (this.state.curtab === "edit" && this.props.editStatus) {
       this.showModal();
@@ -99,7 +94,6 @@ class Content extends Component {
       document.getElementsByTagName("title")[0].innerText =
         this.props.curdata.title + "-" + this.title;
     }
-
     let InterfaceTabs = {
       view: {
         component: View,
@@ -114,9 +108,7 @@ class Content extends Component {
         name: "运行"
       }
     };
-
     plugin.emitHook("interface_tab", InterfaceTabs);
-
     const tabs = (
       <Tabs
         className="tabs-large"
@@ -126,16 +118,15 @@ class Content extends Component {
       >
         {Object.keys(InterfaceTabs).map((key) => {
           let item = InterfaceTabs[key];
-          return <TabPane tab={item.name} key={key} />;
+          return <TabPane tab={item.name} key={key}/>;
         })}
       </Tabs>
     );
     let tabContent = null;
     if (this.state.curtab) {
       let C = InterfaceTabs[this.state.curtab].component;
-      tabContent = <C switchToView={this.switchToView} />;
+      tabContent = <C switchToView={this.switchToView}/>;
     }
-
     return (
       <div className="interface-content">
         <Prompt
@@ -168,7 +159,6 @@ class Content extends Component {
     );
   }
 }
-
 export default connect(
   (state) => ({
     curdata: state.inter.curdata,

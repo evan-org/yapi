@@ -1,12 +1,7 @@
 const path = require("path");
 module.exports = {
   mode: "development",
-  devtool: "source-map",
-  stats: "errors-only",
-  output: {
-    filename: "[name].bundle.js",
-    publicPath: "/",
-  },
+  devtool: "inline-source-map",
   devServer: {
     port: "4000",
     proxy: [

@@ -9,8 +9,8 @@ import {
   deleteInterfaceData,
   deleteInterfaceCatData,
   initInterface
-} from "../../../../reducer/modules/interface.js";
-import { getProject } from "../../../../reducer/modules/project.js";
+} from "client/reducer/modules/interface";
+import { getProject } from "client/reducer/modules/project";
 import { Input, Icon, Button, Modal, message, Tree, Tooltip } from "antd";
 import AddInterfaceForm from "./AddInterfaceForm";
 import AddInterfaceCatForm from "./AddInterfaceCatForm";

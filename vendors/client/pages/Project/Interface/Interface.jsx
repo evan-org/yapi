@@ -3,24 +3,23 @@ import PropTypes from "prop-types";
 import { Tabs, Layout } from "antd";
 import { Route, Switch, matchPath } from "react-router-dom";
 import { connect } from "react-redux";
+
 const { Content, Sider } = Layout;
-
 import "./interface.scss";
-
-import InterfaceMenu from "./InterfaceList/InterfaceMenu.js";
-import InterfaceList from "./InterfaceList/InterfaceList.js";
-import InterfaceContent from "./InterfaceList/InterfaceContent.js";
-
+import InterfaceMenu from "./InterfaceList/InterfaceMenu.jsx";
+import InterfaceList from "./InterfaceList/InterfaceList.jsx";
+import InterfaceContent from "./InterfaceList/InterfaceContent.jsx";
 import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.jsx";
 import InterfaceColContent from "./InterfaceCol/InterfaceColContent.jsx";
 import InterfaceCaseContent from "./InterfaceCol/InterfaceCaseContent.jsx";
-import { getProject } from "../../../reducer/modules/project";
-import { setColData } from "../../../reducer/modules/interfaceCol.js";
+//
+import { getProject } from "client/reducer/modules/project";
+import { setColData } from "client/reducer/modules/interfaceCol";
+
 const contentRouter = {
   path: "/project/:id/interface/:action/:actionId",
   exact: true
 };
-
 const InterfaceRoute = (props) => {
   let C;
   if (props.match.params.action === "api") {
@@ -42,12 +41,10 @@ const InterfaceRoute = (props) => {
   }
   return <C {...props} />;
 };
-
 InterfaceRoute.propTypes = {
   match: PropTypes.object,
   history: PropTypes.object
 };
-
 //
 class Interface extends Component {
   static propTypes = {
@@ -59,14 +56,12 @@ class Interface extends Component {
     setColData: PropTypes.func
     // fetchInterfaceColList: PropTypes.func
   };
-
   constructor(props) {
     super(props);
     // this.state = {
     //   curkey: this.props.match.params.action === 'api' ? 'api' : 'colOrCase'
     // }
   }
-
   onChange = (action) => {
     let params = this.props.match.params;
     if (action === "colOrCase") {
@@ -84,14 +79,13 @@ class Interface extends Component {
     const { action } = this.props.match.params;
     // const activeKey = this.state.curkey;
     const activeKey = action === "api" ? "api" : "colOrCase";
-
     return (
       <Layout style={{ minHeight: "calc(100vh - 156px)", marginLeft: "24px", marginTop: "24px" }}>
         <Sider style={{ height: "100%" }} width={300}>
           <div className="left-menu">
             <Tabs type="card" className="tabs-large" activeKey={activeKey} onChange={this.onChange}>
-              <Tabs.TabPane tab="接口列表" key="api" />
-              <Tabs.TabPane tab="测试集合" key="colOrCase" />
+              <Tabs.TabPane tab="接口列表" key="api"/>
+              <Tabs.TabPane tab="测试集合" key="colOrCase"/>
             </Tabs>
             {activeKey === "api" ? (
               <InterfaceMenu
@@ -117,8 +111,8 @@ class Interface extends Component {
           >
             <div className="right-content">
               <Switch>
-                <Route exact path="/project/:id/interface/:action" component={InterfaceRoute} />
-                <Route {...contentRouter} component={InterfaceRoute} />
+                <Route exact path="/project/:id/interface/:action" component={InterfaceRoute}/>
+                <Route {...contentRouter} component={InterfaceRoute}/>
               </Switch>
             </div>
           </Content>
@@ -127,7 +121,6 @@ class Interface extends Component {
     );
   }
 }
-
 export default connect(
   (state) => ({
     isShowCol: state.interfaceCol.isShowCol

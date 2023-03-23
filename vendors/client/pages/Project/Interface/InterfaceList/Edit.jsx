@@ -1,19 +1,14 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import InterfaceEditForm from "./InterfaceEditForm.js";
-import {
-  updateInterfaceData,
-  fetchInterfaceListMenu,
-  fetchInterfaceData
-} from "../../../../reducer/modules/interface.js";
-import { getProject } from "../../../../reducer/modules/project.js";
+import InterfaceEditForm from "./InterfaceEditForm.jsx";
+import { updateInterfaceData, fetchInterfaceListMenu, fetchInterfaceData } from "client/reducer/modules/interface";
+import { getProject } from "client/reducer/modules/project";
 import axios from "axios";
 import { message, Modal } from "antd";
 import "./Edit.scss";
 import { withRouter, Link } from "react-router-dom";
-import ProjectTag from "../../Setting/ProjectMessage/ProjectTag.js";
-
+import ProjectTag from "../../Setting/ProjectMessage/ProjectTag.jsx";
 //
 class InterfaceEdit extends Component {
   static propTypes = {
@@ -26,7 +21,6 @@ class InterfaceEdit extends Component {
     switchToView: PropTypes.func,
     getProject: PropTypes.func
   };
-
   constructor(props) {
     super(props);
     const { curdata, currProject } = this.props;
@@ -43,7 +37,6 @@ class InterfaceEdit extends Component {
       // tag: []
     };
   }
-
   onSubmit = async(params) => {
     params.id = this.props.match.params.actionId;
     let result = await axios.post("/api/interface/up", params);
@@ -56,7 +49,6 @@ class InterfaceEdit extends Component {
       message.error(result.data.errmsg);
     }
   };
-
   componentWillUnmount() {
     try {
       if (this.state.status === 1) {
@@ -66,14 +58,12 @@ class InterfaceEdit extends Component {
       return null;
     }
   }
-
   componentDidMount() {
     let domain = location.hostname + (location.port !== "" ? ":" + location.port : "");
     let s,
       initData = false;
     // 因后端 node 仅支持 ws， 暂不支持 wss
     let wsProtocol = location.protocol === "https:" ? "wss" : "ws";
-
     setTimeout(() => {
       if (initData === false) {
         this.setState({
@@ -83,19 +73,17 @@ class InterfaceEdit extends Component {
         initData = true;
       }
     }, 3000);
-
     try {
       s = new WebSocket(
         wsProtocol +
-          "://" +
-          domain +
-          "/api/interface/solve_conflict?id=" +
-          this.props.match.params.actionId
+        "://" +
+        domain +
+        "/api/interface/solve_conflict?id=" +
+        this.props.match.params.actionId
       );
       s.onopen = () => {
         this.WebSocket = s;
       };
-
       s.onmessage = (e) => {
         initData = true;
         let result = JSON.parse(e.data);
@@ -111,7 +99,6 @@ class InterfaceEdit extends Component {
           });
         }
       };
-
       s.onerror = () => {
         this.setState({
           curdata: this.props.curdata,
@@ -127,48 +114,39 @@ class InterfaceEdit extends Component {
       console.error("websocket 连接失败，将导致多人编辑同一个接口冲突。");
     }
   }
-
   onTagClick = () => {
     this.setState({
       visible: true
     });
   };
-
   handleOk = async() => {
     let { tag } = this.tag.state;
     tag = tag.filter((val) => val.name !== "");
-
     let id = this.props.currProject._id;
     let params = {
       id,
       tag
     };
     let result = await axios.post("/api/project/up_tag", params);
-
     if (result.data.errcode === 0) {
       await this.props.getProject(id);
       message.success("保存成功");
     } else {
       message.error(result.data.errmsg);
     }
-
     this.setState({
       visible: false
     });
   };
-
   handleCancel = () => {
     this.setState({
       visible: false
     });
   };
-
   tagSubmit = (tagRef) => {
     this.tag = tagRef;
-
     // this.setState({tag})
   };
-
   render() {
     const { cat, basepath, switch_notice, tag } = this.props.currProject;
     return (
@@ -193,7 +171,6 @@ class InterfaceEdit extends Component {
           </div>
         ) : null}
         {this.state.status === 0 && "正在加载，请耐心等待..."}
-
         <Modal
           title="Tag 设置"
           width={680}
@@ -203,14 +180,13 @@ class InterfaceEdit extends Component {
           okText="保存"
         >
           <div className="tag-modal-center">
-            <ProjectTag tagMsg={tag} ref={this.tagSubmit} />
+            <ProjectTag tagMsg={tag} ref={this.tagSubmit}/>
           </div>
         </Modal>
       </div>
     );
   }
 }
-
 export default connect(
   (state) => ({
     curdata: state.inter.curdata,

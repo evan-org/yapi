@@ -39,7 +39,7 @@ const confirm = Modal.confirm;
 import { nameLengthLimit, entries, trim, htmlFilter } from "client/utils/common";
 import "../Setting.scss";
 import _ from "underscore";
-import ProjectTag from "./ProjectTag.js";
+import ProjectTag from "./ProjectTag.jsx";
 // layout
 const formItemLayout = {
   labelCol: {

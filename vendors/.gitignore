@@ -44,6 +44,7 @@ tsconfig.json
 client/plugin-module.js
 .vscode
 /iconfont
+build/default-development
 
 npm-debug.log*
 yarn-debug.log*

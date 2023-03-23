@@ -1,5 +1,5 @@
 import React, { PureComponent as Component } from "react";
-import Login from "./LoginWrap";
+import Login from "./LoginWrap.jsx";
 import { Row, Col, Card } from "antd";
 import LogoSVG from "../../components/LogoSVG";
 

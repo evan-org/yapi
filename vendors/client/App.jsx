@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Route, BrowserRouter as Router } from "react-router-dom";
+import Layout from "./layout/Layout";
 import { Home, Group, Project, Follows, AddProject, Login } from "./pages/index";
 import { Alert } from "antd";
 import User from "./pages/User/User.jsx";
@@ -92,7 +93,7 @@ class App extends Component {
     } else {
       r = (
         <Router getUserConfirmation={this.showConfirm}>
-          <div className="g-main">
+          <Layout className="g-main">
             <div className="router-main">
               {this.props.curUserRole === "admin" && <Notify/>}
               {alertContent()}
@@ -125,7 +126,7 @@ class App extends Component {
               {/* </div> */}
             </div>
             <Footer/>
-          </div>
+          </Layout>
         </Router>
       );
     }
@@ -135,7 +136,6 @@ class App extends Component {
     return this.route(this.props.loginState);
   }
 }
-
 export default connect(
   (state) => ({
     loginState: state.user.loginState,

@@ -450,7 +450,7 @@ class Profile extends Component {
     );
   }
 }
-connect(
+export default connect(
   (state) => ({
     curUid: state.user.uid,
     userType: state.user.type,
@@ -549,5 +549,3 @@ function getBase64(img, callback) {
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
 }
-
-export default Profile;
