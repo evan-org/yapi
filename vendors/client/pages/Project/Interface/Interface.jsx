@@ -11,9 +11,9 @@ import InterfaceMenu from "./InterfaceList/InterfaceMenu.js";
 import InterfaceList from "./InterfaceList/InterfaceList.js";
 import InterfaceContent from "./InterfaceList/InterfaceContent.js";
 
-import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.js";
-import InterfaceColContent from "./InterfaceCol/InterfaceColContent.js";
-import InterfaceCaseContent from "./InterfaceCol/InterfaceCaseContent.js";
+import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.jsx";
+import InterfaceColContent from "./InterfaceCol/InterfaceColContent.jsx";
+import InterfaceCaseContent from "./InterfaceCol/InterfaceCaseContent.jsx";
 import { getProject } from "../../../reducer/modules/project";
 import { setColData } from "../../../reducer/modules/interfaceCol.js";
 const contentRouter = {

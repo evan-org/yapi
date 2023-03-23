@@ -18,7 +18,7 @@ import {
 const Option = Select.Option;
 const FormItem = Form.Item;
 import { safeAssign } from "../../../client/utils/common.js";
-import AceEditor from "../../../client/components/AceEditor/AceEditor";
+import AceEditor from "client/components/AceEditor/AceEditor";
 import constants from "../../../client/constants/variable.js";
 import { httpCodes } from "../index.js";
 import "./CaseDesModal.scss";

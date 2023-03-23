@@ -22,7 +22,7 @@ import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
 import axios from "axios";
 import ModalPostman from "../ModalPostman/index.js";
-import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.js";
+import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.jsx";
 import "./Postman.scss";
 import ProjectEnv from "../../pages/Project/Setting/ProjectEnv/index.js";
 import json5 from "json5";

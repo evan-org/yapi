@@ -9,9 +9,9 @@ import { changeMenuItem } from '../../reducer/modules/menu';
 import { withRouter } from 'react-router';
 import Srch from './Search/Search';
 const { Header } = Layout;
-import LogoSVG from '../LogoSVG/index.js';
-import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
-import GuideBtns from '../GuideBtns/GuideBtns.js';
+import LogoSVG from '../LogoSVG';
+import Breadcrumb from '../Breadcrumb/Breadcrumb.jsx';
+import GuideBtns from '../GuideBtns/GuideBtns.jsx';
 const plugin = require('client/plugin.js');
 
 let HeaderMenu = {

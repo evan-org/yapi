@@ -8,7 +8,7 @@ import variable from "../../constants/variable";
 import { Link } from "react-router-dom";
 import { fetchNewsData, fetchMoreNews } from "../../reducer/modules/news.js";
 import { fetchInterfaceList } from "../../reducer/modules/interface.js";
-import ErrMsg from "../ErrMsg/ErrMsg.js";
+import ErrMsg from "../ErrMsg/ErrMsg.jsx";
 const jsondiffpatch = require("jsondiffpatch/dist/jsondiffpatch.umd.js");
 const formattersHtml = jsondiffpatch.formatters.html;
 import "jsondiffpatch/dist/formatters-styles/annotated.css";

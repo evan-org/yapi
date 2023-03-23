@@ -9,8 +9,8 @@ import {
   delProject,
   changeUpdateModal
 } from "../../../reducer/modules/project";
-import ProjectCard from "../../../components/ProjectCard/ProjectCard.js";
-import ErrMsg from "../../../components/ErrMsg/ErrMsg.js";
+import ProjectCard from "../../../components/ProjectCard/ProjectCard.jsx";
+import ErrMsg from "../../../components/ErrMsg/ErrMsg.jsx";
 import { autobind } from "core-decorators";
 import { setBreadcrumb } from "../../../reducer/modules/user";
 

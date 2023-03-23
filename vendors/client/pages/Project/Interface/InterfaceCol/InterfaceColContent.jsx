@@ -19,11 +19,11 @@ import * as Table from "reactabular-table";
 import * as dnd from "reactabular-dnd";
 import * as resolve from "table-resolver";
 import axios from "axios";
-import CaseReport from "./CaseReport.js";
+import CaseReport from "./CaseReport.jsx";
 import _ from "underscore";
-import { initCrossRequest } from "client/components/Postman/CheckCrossInstall.js";
+import { initCrossRequest } from "client/components/Postman/CheckCrossInstall.jsx";
 import produce from "immer";
-import { InsertCodeMap } from "client/components/Postman/Postman.js"
+import { InsertCodeMap } from "client/components/Postman/Postman.jsx"
 
 const plugin = require("client/plugin.js");
 const {
@@ -34,7 +34,7 @@ const {
 } = require("common/postmanLib.js");
 const { handleParamsValue, json_parse, ArrayToObject } = require("common/utils.js");
 import CaseEnv from "client/components/CaseEnv";
-import Label from "../../../../components/Label/Label.js";
+import Label from "../../../../components/Label/Label.jsx";
 
 const Option = Select.Option;
 const createContext = require("common/createContext")

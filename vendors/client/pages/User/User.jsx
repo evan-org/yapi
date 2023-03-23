@@ -2,9 +2,9 @@ import "./index.scss";
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import { Route } from "react-router-dom";
-import List from "./List.js";
+import List from "./List.jsx";
 import PropTypes from "prop-types";
-import Profile from "./Profile.js";
+import Profile from "./Profile.jsx";
 import { Row } from "antd";
 @connect(
   (state) => ({

@@ -2,19 +2,12 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Modal, Form, Input, Icon, Tooltip, Select, message, Button, Row, Col } from "antd";
-import {
-  updateProject,
-  fetchProjectList,
-  delProject,
-  changeUpdateModal,
-  changeTableLoading
-} from "../../../reducer/modules/project";
+import { updateProject, fetchProjectList, delProject, changeUpdateModal, changeTableLoading } from "client/reducer/modules/project";
+
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
-
 import "./ProjectList.scss";
-
 // layout
 const formItemLayout = {
   labelCol: {
@@ -33,7 +26,6 @@ const formItemLayoutWithOutLabel = {
   }
 };
 let uuid = 0;
-
 @connect(
   (state) => ({
     projectList: state.project.projectList,
@@ -70,19 +62,16 @@ class UpDateModal extends Component {
     isUpdateModalShow: PropTypes.bool,
     handleUpdateIndex: PropTypes.number
   };
-
   // 修改线上域名的协议类型 (http/https)
   protocolChange = (value) => {
     this.setState({
       protocol: value
     });
   };
-
   handleCancel = () => {
     this.props.form.resetFields();
     this.props.changeUpdateModal(false, -1);
   };
-
   // 确认修改
   handleOk = (e) => {
     e.preventDefault();
@@ -106,7 +95,6 @@ class UpDateModal extends Component {
           domain: values["envs-protocol-" + index] + values["envs-domain-" + index]
         }));
         // console.log(assignValue);
-
         changeTableLoading(true);
         updateProject(assignValue)
           .then((res) => {
@@ -128,7 +116,6 @@ class UpDateModal extends Component {
       }
     });
   };
-
   // 项目的修改操作 - 删除一项环境配置
   remove = (id) => {
     const { form } = this.props;
@@ -138,7 +125,6 @@ class UpDateModal extends Component {
     if (envs.length === 0) {
       return;
     }
-
     // can use data-binding to set
     form.setFieldsValue({
       envs: envs.filter((key) => {
@@ -147,7 +133,6 @@ class UpDateModal extends Component {
       })
     });
   };
-
   // 项目的修改操作 - 添加一项环境配置
   add = () => {
     uuid++;
@@ -161,7 +146,6 @@ class UpDateModal extends Component {
       envs: nextKeys
     });
   };
-
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
     // const that = this;
@@ -179,7 +163,6 @@ class UpDateModal extends Component {
       initFormValues.prd_host = projectList[handleUpdateIndex].prd_host;
       initFormValues.prd_protocol = projectList[handleUpdateIndex].protocol + "://";
     }
-
     getFieldDecorator("envs", { initialValue: envMessage });
     const envs = getFieldValue("envs");
     const formItems = envs.map((k, index) => {
@@ -212,7 +195,7 @@ class UpDateModal extends Component {
                     }
                   }
                 ]
-              })(<Input placeholder="请输入环境名称" style={{ width: "90%", marginRight: 8 }} />)}
+              })(<Input placeholder="请输入环境名称" style={{ width: "90%", marginRight: 8 }}/>)}
             </FormItem>
           </Col>
           <Col span={10}>
@@ -298,16 +281,15 @@ class UpDateModal extends Component {
                   message: "请输入项目名称!"
                 }
               ]
-            })(<Input />)}
+            })(<Input/>)}
           </FormItem>
-
           <FormItem
             {...formItemLayout}
             label={
               <span>
                 线上域名&nbsp;
                 <Tooltip title="将根据配置的线上域名访问mock数据">
-                  <Icon type="question-circle-o" />
+                  <Icon type="question-circle-o"/>
                 </Tooltip>
               </span>
             }
@@ -331,14 +313,13 @@ class UpDateModal extends Component {
               />
             )}
           </FormItem>
-
           <FormItem
             {...formItemLayout}
             label={
               <span>
                 基本路径&nbsp;
                 <Tooltip title="基本路径为空表示根路径">
-                  <Icon type="question-circle-o" />
+                  <Icon type="question-circle-o"/>
                 </Tooltip>
               </span>
             }
@@ -351,9 +332,8 @@ class UpDateModal extends Component {
                   message: "请输入项目基本路径! "
                 }
               ]
-            })(<Input />)}
+            })(<Input/>)}
           </FormItem>
-
           <FormItem {...formItemLayout} label="描述">
             {getFieldDecorator("desc", {
               initialValue: initFormValues.desc,
@@ -363,13 +343,12 @@ class UpDateModal extends Component {
                   message: "请输入描述!"
                 }
               ]
-            })(<TextArea rows={4} />)}
+            })(<TextArea rows={4}/>)}
           </FormItem>
-
           {formItems}
           <FormItem {...formItemLayoutWithOutLabel}>
             <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
-              <Icon type="plus" /> 添加环境配置
+              <Icon type="plus"/> 添加环境配置
             </Button>
           </FormItem>
         </Form>
@@ -377,5 +356,4 @@ class UpDateModal extends Component {
     );
   }
 }
-
 export default Form.create()(UpDateModal);

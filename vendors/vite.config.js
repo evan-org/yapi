@@ -2,7 +2,6 @@ import path from "path";
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import reactRefresh from "@vitejs/plugin-react-refresh"
-
 // 静态资源压缩
 import compressPlugin from "vite-plugin-compression";
 // resolve
@@ -26,7 +25,9 @@ export default defineConfig(({ mode }) => {
     assetsInclude: resolve("./client/assets"),
     logLevel: "info", // 调整控制台输出的级别 'info' | 'warn' | 'error' | 'silent'
     plugins: [
-      react(),
+      react({
+        // babel: { plugins: [] }
+      }),
       // gzip静态资源压缩
       compressPlugin({
         verbose: true,    // 默认即可

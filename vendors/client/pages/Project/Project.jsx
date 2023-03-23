@@ -7,7 +7,7 @@ import { fetchGroupMsg } from "../../reducer/modules/group";
 import { setBreadcrumb } from "../../reducer/modules/user";
 import { getProject } from "../../reducer/modules/project";
 import Interface from "./Interface/Interface.js";
-import Activity from "./Activity/Activity.js";
+import Activity from "./Activity/Activity.jsx";
 import Setting from "./Setting/Setting.js";
 import Loading from "../../components/Loading/Loading";
 import ProjectMember from "./Setting/ProjectMember/ProjectMember.js";

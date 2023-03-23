@@ -7,7 +7,7 @@ import { handlePath, nameLengthLimit } from "client/utils/common";
 import { changeEditStatus } from "client/reducer/modules/interface";
 import json5 from "json5";
 import { message, Affix, Tabs, Modal } from "antd";
-import EasyDragSort from "../../../../components/EasyDragSort/EasyDragSort.js";
+import EasyDragSort from "../../../../components/EasyDragSort/EasyDragSort.jsx";
 import mockEditor from "client/components/AceEditor/mockEditor";
 import AceEditor from "client/components/AceEditor/AceEditor";
 import axios from "axios";

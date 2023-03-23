@@ -7,7 +7,7 @@ import View from "./View.js";
 import { Prompt } from "react-router";
 import { fetchInterfaceData } from "../../../../reducer/modules/interface.js";
 import { withRouter } from "react-router-dom";
-import Run from "./Run/Run.js";
+import Run from "./Run/Run.jsx";
 const plugin = require("client/plugin.js");
 
 const TabPane = Tabs.TabPane;

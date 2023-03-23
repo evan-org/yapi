@@ -7,8 +7,8 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 const { TextArea } = Input;
 const Search = Input.Search;
-import UsernameAutoComplete from '../../../components/UsernameAutoComplete/UsernameAutoComplete.js';
-import GuideBtns from '../../../components/GuideBtns/GuideBtns.js';
+import UsernameAutoComplete from '../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx';
+import GuideBtns from '../../../components/GuideBtns/GuideBtns.jsx';
 import { fetchNewsData } from '../../../reducer/modules/news.js';
 import {
   fetchGroupList,
@@ -221,7 +221,7 @@ export default class GroupList extends Component {
                   <Icon className="btn" type="folder-add" onClick={this.showModal} />
                 </a>
               </Tooltip>
-            
+
             </div>
             <div className="curr-group-desc">简介: {currGroup.group_desc}</div>
           </div>

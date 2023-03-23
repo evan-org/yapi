@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import { Home, Group, Project, Follows, AddProject, Login } from "./pages/index";
 import { Alert } from "antd";
-import User from "./pages/User/User.js";
+import User from "./pages/User/User.jsx";
 //
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
