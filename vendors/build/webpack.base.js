@@ -82,7 +82,22 @@ module.exports = {
           //   },
           // },
           "style-loader",
-          "css-loader"
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require("autoprefixer"),
+                  require("postcss-pxtorem")({
+                    rootValue: 75,
+                    propList: ["*"],
+                  }),
+                  require("cssnano")
+                ]
+              }
+            }
+          }
         ]
       },
       {
@@ -92,7 +107,7 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: "./",
-              hmr: devMode
+              // hmr: devMode
             }
           },
           "css-loader",
@@ -106,7 +121,7 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: "./",
-              hmr: devMode
+              // hmr: devMode
             }
           },
           "css-loader",
@@ -152,16 +167,16 @@ module.exports = {
           minChunks: 2,
           name: "commons",
           maxInitialRequests: 5
-        },
-        npmVendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            return `npm.${packageName.replace("@", "")}`;
-          }
         }
+        // npmVendor: {
+        //   test: /[\\/]node_modules[\\/]/,
+        //   name(module) {
+        //     const packageName = module.context.match(
+        //       /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+        //     )[1];
+        //     return `npm.${packageName.replace("@", "")}`;
+        //   }
+        // }
       }
     },
     runtimeChunk: {
@@ -186,12 +201,14 @@ module.exports = {
       "http": require.resolve("stream-http"),
       "https": require.resolve("https-browserify"),
       "zlib": require.resolve("browserify-zlib"),
+      "os": require("node-libs-browser").os,
       //
       "fs": false,
       "dns": false,
       "child_process": false,
       "net": false,
-      "tls": false
+      "tls": false,
+      "hmr": false,
       /**
        * "fs": require("node-libs-browser").fs,
        * "dns": require("node-libs-browser").dns,

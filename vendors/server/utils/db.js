@@ -3,7 +3,7 @@ const yapi = require("../yapi.js");
 const autoIncrement = require("./mongoose-auto-increment");
 
 function model(model, schema) {
-  if (schema instanceof mongoose.Schema === false) {
+  if (!(schema instanceof mongoose.Schema)) {
     schema = new mongoose.Schema(schema);
   }
 

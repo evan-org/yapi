@@ -35,7 +35,7 @@ const alertContent = () => {
   }
 };
 
-let AppRoute = {
+const AppRoute = {
   home: {
     path: "/",
     component: Home

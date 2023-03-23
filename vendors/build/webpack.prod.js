@@ -1,9 +1,7 @@
-//
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-// .BundleAnalyzerPlugin
+const path = require("path");
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CompressionPlugin = require("compression-webpack-plugin");
 const TerserJSPlugin = require("terser-webpack-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 //
 module.exports = {
   mode: "production",
@@ -20,8 +18,7 @@ module.exports = {
         terserOptions: {
           ecma: 6,
         },
-      }),
-      new OptimizeCSSAssetsPlugin({}),
+      })
     ],
   },
   plugins: [

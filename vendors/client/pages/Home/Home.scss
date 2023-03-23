@@ -1,9 +1,8 @@
 @import '../../styles/mixin';
-
-$color-white : #fff;
-$color-blue-lighter : #f1f5ff;
-$color-blue-grey-lighter : #f7fafc;
-$color-grey-lighter : #F7F7F7;
+$color-white: #fff;
+$color-blue-lighter: #f1f5ff;
+$color-blue-grey-lighter: #f7fafc;
+$color-grey-lighter: #F7F7F7;
 $color-blue-light: #5dade2;
 $color-black-lighter: #404040;
 $color-text-dark: #2e2e5a;
@@ -18,15 +17,14 @@ $color-bg-lightblue: #c6e2ff;
     text-decoration: none;
     display: inline-block;
     color: #fff;
-    font-size: .17rem;
-    padding: .16rem .24rem;
+    font-size: 18px;
+    padding: 20px;
     -webkit-font-smoothing: antialiased;
     &:hover {
       color: #27cdfd;
     }
   }
 }
-
 // 按钮组
 .btn-group {
   padding: .3rem .24rem;
@@ -39,12 +37,12 @@ $color-bg-lightblue: #c6e2ff;
     height: .4rem;
     padding: 0 .24rem;
     margin-right: .24rem;
-    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
     transform: translateY(0);
     transition: all .2s;
     &:hover {
       transform: translateY(-1px);
-      box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+      box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
     }
     &:active {
       transform: translateY(1px);
@@ -73,7 +71,6 @@ $color-bg-lightblue: #c6e2ff;
     cursor: pointer;
   }
 }
-
 .m-bg {
   position: absolute;
   left: 0;
@@ -117,15 +114,15 @@ $color-bg-lightblue: #c6e2ff;
   background-color: #fff;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  .main-one{
+  .main-one {
     height: 600px;
-    .home-des{
+    .home-des {
       padding: 1rem 0 0;
       color: #fff;
-      .title{
+      .title {
         font-size: .6rem;
       }
-      .detail{
+      .detail {
         font-size: .2rem;
       }
       .logo {
@@ -151,36 +148,36 @@ $color-bg-lightblue: #c6e2ff;
         font-size: .18rem;
       }
     }
-    .login-form{
+    .login-form {
       color: $color-white;
     }
-    .main-one-left{
+    .main-one-left {
       padding-right: .15rem;
       margin-top: .2rem;
     }
-    .main-one-right{
+    .main-one-right {
       padding-left: .5rem;
       padding-top: .3rem;
     }
   }
-  .user-home{
+  .user-home {
     display: flex;
     align-items: center;
     height: 100%;
     margin: 1rem auto 0;
-    .user-des{
+    .user-des {
       margin: 0 auto .5rem;
       text-align: center;
-      .title{
+      .title {
         font-size: .8rem;
         margin-bottom: .2rem;
       }
-      .des{
+      .des {
         font-size: .25rem;
         margin-bottom: .3rem;
       }
-      .btn{
-        button{
+      .btn {
+        button {
           font-size: .2rem;
           line-height: .2rem;
           height: .5rem;
@@ -189,26 +186,26 @@ $color-bg-lightblue: #c6e2ff;
       }
     }
   }
-  .main-part{
+  .main-part {
     padding: 1.5rem 0;
     height: 5.8rem;
-    &:nth-child(odd){
+    &:nth-child(odd) {
       background-color: $color-blue-lighter;
     }
-    &:nth-child(even){
+    &:nth-child(even) {
       background-color: $color-white;
     }
   }
-  .feat-part{
+  .feat-part {
     padding: 1.5rem 0;
     background-color: $color-white;
   }
   .section-feature {
     min-height: 6rem;
   }
-  .container{
+  .container {
     margin: 0 auto;
-    height:100%;
+    height: 100%;
     position: relative;
     max-width: 12.2rem;
   }
@@ -254,17 +251,17 @@ $color-bg-lightblue: #c6e2ff;
       }
     }
   }
-  .img-container{
+  .img-container {
     width: 100%;
     position: absolute;
     top: .74rem;
     left: 50%;
     transform: translateX(-50%);
     text-align: right;
-    .img{
+    .img {
       width: 7.12rem;
       border-radius: 4px;
-      box-shadow : 0 30px 60px rgba(0,0,0,0.2);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
     }
   }
   .m-skew {
@@ -305,7 +302,6 @@ $color-bg-lightblue: #c6e2ff;
     }
   }
 }
-
 .home-section {
   text-align: center;
   -webkit-font-smoothing: antialiased;
@@ -351,11 +347,11 @@ $color-bg-lightblue: #c6e2ff;
     .ant-card {
       font-size: .17rem;
       border-radius: .04rem;
-      box-shadow: 0 16px 35px rgba(50,50,93,.1), 0 5px 16px rgba(0,0,0,.07);
+      box-shadow: 0 16px 35px rgba(50, 50, 93, .1), 0 5px 16px rgba(0, 0, 0, .07);
       border: none;
     }
     .ant-card:not(.ant-card-no-hovering):hover {
-      box-shadow: 0 16px 35px rgba(50,50,93,.1), 0 5px 16px rgba(0,0,0,.07);
+      box-shadow: 0 16px 35px rgba(50, 50, 93, .1), 0 5px 16px rgba(0, 0, 0, .07);
     }
     .ant-card-head {
       background-color: $color-blue-grey-lighter;
@@ -407,7 +403,7 @@ $color-bg-lightblue: #c6e2ff;
     }
     .item {
       overflow: hidden;
-      text-overflow:ellipsis;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
   }
@@ -420,9 +416,8 @@ $color-bg-lightblue: #c6e2ff;
     }
   }
 }
-
 .section-manage {
-  .section-card{
+  .section-card {
     padding-top: .24rem;
     .ant-card {
       border-radius: .04rem;
@@ -472,7 +467,6 @@ $color-bg-lightblue: #c6e2ff;
     }
   }
 }
-
 .row-tip {
   margin-top: .48rem;
   padding-top: .48rem;
@@ -507,10 +501,8 @@ $color-bg-lightblue: #c6e2ff;
     font-size: .16rem;
   }
 }
-
 // LOGO 旋转动画
-@keyframes spin
-{
+@keyframes spin {
   from {
     transform: rotate(0deg);
   }

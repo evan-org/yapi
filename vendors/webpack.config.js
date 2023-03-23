@@ -4,6 +4,7 @@ const devConfig = require("./build/webpack.dev.js");
 const prodConfig = require("./build/webpack.prod.js");
 //
 module.exports = (env, args) => {
+  console.log(env, args);
   switch (args.mode) {
     case "development":
       return merge(baseConfig, devConfig);

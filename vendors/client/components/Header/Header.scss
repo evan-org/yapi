@@ -1,9 +1,7 @@
 @import '../../styles/mixin';
-
 .nav-tooltip {
   color: red;
 }
-
 .user-menu.ant-menu.ant-menu-dark .ant-menu-item-selected {
   background: #32363a;
   color: rgba(255, 255, 255, 0.67);
@@ -11,7 +9,6 @@
 .user-menu.ant-menu-dark .ant-menu-item-selected > a {
   color: rgba(255, 255, 255, 0.67);
 }
-
 /* .header-box.css */
 .header-box {
   height: .56rem;
@@ -27,7 +24,7 @@
     border-left: 1px solid #55616d;
     background-color: inherit;
     transition: all .2s;
-    &:hover{
+    &:hover {
       background-color: #2395f1;
     }
     .href {
@@ -45,7 +42,7 @@
       left: 0;
       top: 50%;
       left: 50%;
-      transform: translate(-16px,-17px);
+      transform: translate(-16px, -17px);
     }
     .ui-badge {
       position: absolute;
@@ -76,16 +73,14 @@
     //   right: -.27rem;
     // }
   }
-
   .nav-toolbar {
     font-size: .15rem;
     float: left;
-
   }
-  .user-menu{
+  .user-menu {
     margin-top: 20px;
   }
-  .user-toolbar{
+  .user-toolbar {
     float: right;
     height: .54rem;
     display: flex;
@@ -93,7 +88,7 @@
     .item-search {
       width: 2rem;
     }
-    .toolbar-li{
+    .toolbar-li {
       float: left;
       font-size: .14rem;
       cursor: pointer;
@@ -112,7 +107,7 @@
         // .ant-avatar > img{
         //   height: auto;
         // }
-        .avatar-image{
+        .avatar-image {
           margin-bottom: -10px;
           display: inline-block;
           text-align: center;
@@ -126,18 +121,16 @@
           line-height: 0;
           border-radius: 16px;
         }
-
-        .avatar-image > img{
+        .avatar-image > img {
           height: auto;
-          width:100%;
-          display: bloack;
+          width: 100%;
+          display: black;
         }
-
       }
       .anticon.active {
         color: #2395f1;
       }
-      &:hover{
+      &:hover {
         .dropdown-link {
           color: #2395f1;
         }
