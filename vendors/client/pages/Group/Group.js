@@ -8,14 +8,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Tabs, Layout, Spin } from 'antd';
+//
 const { Content, Sider } = Layout;
 const TabPane = Tabs.TabPane;
 import { fetchNewsData } from '../../reducer/modules/news.js';
-import {
-  setCurrGroup
-} from '../../reducer/modules/group';
+import { setCurrGroup } from '../../reducer/modules/group';
+//
 import './Group.scss';
-import axios from 'axios'
+import axios from 'axios';
 
 @connect(
   state => {
@@ -34,25 +34,23 @@ import axios from 'axios'
 export default class Group extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       groupId: -1
     }
   }
-
-  async componentDidMount(){
-    let r = await axios.get('/api/group/get_mygroup')
-    try{
+  async componentDidMount() {
+    let r = await axios.get('/api/group/get_mygroup');
+    console.debug('Group ', r);
+    try {
       let group = r.data.data;
       this.setState({
         groupId: group._id
       })
       this.props.setCurrGroup(group)
-    }catch(e){
+    } catch (e) {
       console.error(e)
     }
   }
-
   static propTypes = {
     fetchNewsData: PropTypes.func,
     curGroupId: PropTypes.number,
@@ -67,12 +65,12 @@ export default class Group extends Component {
   //   // }
   // }
   render() {
-    if(this.state.groupId === -1)return <Spin />
+    if (this.state.groupId === -1) return <Spin/>
     const GroupContent = (
       <Layout style={{ minHeight: 'calc(100vh - 100px)', marginLeft: '24px', marginTop: '24px' }}>
         <Sider style={{ height: '100%' }} width={300}>
-          <div className="logo" />
-          <GroupList />
+          <div className="logo"/>
+          <GroupList/>
         </Sider>
         <Layout>
           <Content
@@ -85,17 +83,17 @@ export default class Group extends Component {
           >
             <Tabs type="card" className="m-tab tabs-large" style={{ height: '100%' }}>
               <TabPane tab="项目列表" key="1">
-                <ProjectList />
+                <ProjectList/>
               </TabPane>
               {this.props.currGroup.type === 'public' ? (
                 <TabPane tab="成员列表" key="2">
-                  <MemberList />
+                  <MemberList/>
                 </TabPane>
               ) : null}
               {['admin', 'owner', 'guest', 'dev'].indexOf(this.props.curUserRoleInGroup) > -1 ||
               this.props.curUserRole === 'admin' ? (
                 <TabPane tab="分组动态" key="3">
-                  <GroupLog />
+                  <GroupLog/>
                 </TabPane>
               ) : (
                 ''
@@ -103,7 +101,7 @@ export default class Group extends Component {
               {(this.props.curUserRole === 'admin' || this.props.curUserRoleInGroup === 'owner') &&
               this.props.currGroup.type !== 'private' ? (
                 <TabPane tab="分组设置" key="4">
-                  <GroupSetting />
+                  <GroupSetting/>
                 </TabPane>
               ) : null}
             </Tabs>
@@ -114,8 +112,8 @@ export default class Group extends Component {
     return (
       <div className="projectGround">
         <Switch>
-          <Redirect exact from="/group" to={"/group/" + this.state.groupId} />
-          <Route path="/group/:groupId" render={() => GroupContent} />
+          <Redirect exact from="/group" to={"/group/" + this.state.groupId}/>
+          <Route path="/group/:groupId" render={() => GroupContent}/>
         </Switch>
       </div>
     );

@@ -153,6 +153,7 @@ export function fetchGroupList() {
 }
 
 export function setCurrGroup(group) {
+  console.debug("setCurrGroup", group);
   return {
     type: SET_CURR_GROUP,
     payload: axios.get("/api/group/get", {
