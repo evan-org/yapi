@@ -26,22 +26,7 @@ const formItemLayoutWithOutLabel = {
   }
 };
 let uuid = 0;
-@connect(
-  (state) => ({
-    projectList: state.project.projectList,
-    isUpdateModalShow: state.project.isUpdateModalShow,
-    handleUpdateIndex: state.project.handleUpdateIndex,
-    tableLoading: state.project.tableLoading,
-    currGroup: state.group.currGroup
-  }),
-  {
-    fetchProjectList,
-    updateProject,
-    delProject,
-    changeUpdateModal,
-    changeTableLoading
-  }
-)
+//
 class UpDateModal extends Component {
   constructor(props) {
     super(props);
@@ -356,4 +341,19 @@ class UpDateModal extends Component {
     );
   }
 }
-export default Form.create()(UpDateModal);
+export default connect(
+  (state) => ({
+    projectList: state.project.projectList,
+    isUpdateModalShow: state.project.isUpdateModalShow,
+    handleUpdateIndex: state.project.handleUpdateIndex,
+    tableLoading: state.project.tableLoading,
+    currGroup: state.group.currGroup
+  }),
+  {
+    fetchProjectList,
+    updateProject,
+    delProject,
+    changeUpdateModal,
+    changeTableLoading
+  }
+)(Form.create()(UpDateModal));

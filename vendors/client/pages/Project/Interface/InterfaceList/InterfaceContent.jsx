@@ -11,16 +11,7 @@ import Run from "./Run/Run.jsx";
 const plugin = require("client/plugin.js");
 
 const TabPane = Tabs.TabPane;
-@connect(
-  (state) => ({
-    curdata: state.inter.curdata,
-    list: state.inter.list,
-    editStatus: state.inter.editStatus
-  }),
-  {
-    fetchInterfaceData
-  }
-)
+//
 class Content extends Component {
   static propTypes = {
     match: PropTypes.object,
@@ -178,4 +169,13 @@ class Content extends Component {
   }
 }
 
-export default withRouter(Content);
+export default connect(
+  (state) => ({
+    curdata: state.inter.curdata,
+    list: state.inter.list,
+    editStatus: state.inter.editStatus
+  }),
+  {
+    fetchInterfaceData
+  }
+)(withRouter(Content));

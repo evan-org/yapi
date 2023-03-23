@@ -1,44 +1,24 @@
-import React, { PureComponent as Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { message, Tooltip, Input } from 'antd';
-import { getEnv } from '../../../../reducer/modules/project';
+import React, { PureComponent as Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { message, Tooltip, Input } from "antd";
+import { getEnv } from "client/reducer/modules/project";
 import {
   fetchInterfaceColList,
   setColData,
   fetchCaseData,
   fetchCaseList
-} from '../../../../reducer/modules/interfaceCol';
-import { Postman } from '../../../../components';
+} from "client/reducer/modules/interfaceCol";
+import { Postman } from "../../../../components";
 
-import './InterfaceCaseContent.scss';
+import "./InterfaceCaseContent.scss";
 
-@connect(
-  state => {
-    return {
-      interfaceColList: state.interfaceCol.interfaceColList,
-      currColId: state.interfaceCol.currColId,
-      currCaseId: state.interfaceCol.currCaseId,
-      currCase: state.interfaceCol.currCase,
-      isShowCol: state.interfaceCol.isShowCol,
-      currProject: state.project.currProject,
-      projectEnv: state.project.projectEnv,
-      curUid: state.user.uid
-    };
-  },
-  {
-    fetchInterfaceColList,
-    fetchCaseData,
-    setColData,
-    fetchCaseList,
-    getEnv
-  }
-)
-@withRouter
-export default class InterfaceCaseContent extends Component {
+//
+//
+class InterfaceCaseContent extends Component {
   static propTypes = {
     match: PropTypes.object,
     interfaceColList: PropTypes.array,
@@ -59,7 +39,7 @@ export default class InterfaceCaseContent extends Component {
 
   state = {
     isEditingCasename: true,
-    editCasename: ''
+    editCasename: ""
   };
 
   constructor(props) {
@@ -68,8 +48,8 @@ export default class InterfaceCaseContent extends Component {
 
   getColId(colList, currCaseId) {
     let currColId = 0;
-    colList.forEach(col => {
-      col.caseList.forEach(caseItem => {
+    colList.forEach((col) => {
+      col.caseList.forEach((caseItem) => {
         if (+caseItem._id === +currCaseId) {
           currColId = col._id;
         }
@@ -109,11 +89,11 @@ export default class InterfaceCaseContent extends Component {
     }
   }
 
-  savePostmanRef = postman => {
+  savePostmanRef = (postman) => {
     this.postman = postman;
   };
 
-  updateCase = async () => {
+  updateCase = async() => {
     const {
       case_env,
       req_params,
@@ -146,14 +126,14 @@ export default class InterfaceCaseContent extends Component {
       test_res_header
     };
 
-    const res = await axios.post('/api/col/up_case', params);
+    const res = await axios.post("/api/col/up_case", params);
     if (this.props.currCase.casename !== casename) {
       this.props.fetchInterfaceColList(this.props.match.params.id);
     }
     if (res.data.errcode) {
       message.error(res.data.errmsg);
     } else {
-      message.success('更新成功');
+      message.success("更新成功");
       this.props.fetchCaseData(id);
     }
   };
@@ -187,7 +167,7 @@ export default class InterfaceCaseContent extends Component {
     );
 
     return (
-      <div style={{ padding: '6px 0' }} className="case-content">
+      <div style={{ padding: "6px 0" }} className="case-content">
         <div className="case-title">
           {!isEditingCasename && (
             <Tooltip title="点击编辑" placement="bottom">
@@ -201,12 +181,12 @@ export default class InterfaceCaseContent extends Component {
             <div className="edit-case-name">
               <Input
                 value={editCasename}
-                onChange={e => this.setState({ editCasename: e.target.value })}
+                onChange={(e) => this.setState({ editCasename: e.target.value })}
                 style={{ fontSize: 18 }}
               />
             </div>
           )}
-          <span className="inter-link" style={{ margin: '0px 8px 0px 6px', fontSize: 12 }}>
+          <span className="inter-link" style={{ margin: "0px 8px 0px 6px", fontSize: 12 }}>
             <Link
               className="text"
               to={`/project/${currCase.project_id}/interface/api/${currCase.interface_id}`}
@@ -233,3 +213,22 @@ export default class InterfaceCaseContent extends Component {
     );
   }
 }
+export default connect(
+  (state) => ({
+    interfaceColList: state.interfaceCol.interfaceColList,
+    currColId: state.interfaceCol.currColId,
+    currCaseId: state.interfaceCol.currCaseId,
+    currCase: state.interfaceCol.currCase,
+    isShowCol: state.interfaceCol.isShowCol,
+    currProject: state.project.currProject,
+    projectEnv: state.project.projectEnv,
+    curUid: state.user.uid
+  }),
+  {
+    fetchInterfaceColList,
+    fetchCaseData,
+    setColData,
+    fetchCaseList,
+    getEnv
+  }
+)(withRouter(InterfaceCaseContent))

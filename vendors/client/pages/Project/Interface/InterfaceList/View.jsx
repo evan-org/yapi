@@ -14,11 +14,7 @@ import SchemaTable from "../../../../components/SchemaTable/SchemaTable.jsx";
 
 const HTTP_METHOD = constants.HTTP_METHOD;
 
-@connect((state) => ({
-  curData: state.inter.curdata,
-  custom_field: state.group.field,
-  currProject: state.project.currProject
-}))
+//
 class View extends Component {
   constructor(props) {
     super(props);
@@ -580,4 +576,8 @@ class View extends Component {
   }
 }
 
-export default View;
+export default connect((state) => ({
+  curData: state.inter.curdata,
+  custom_field: state.group.field,
+  currProject: state.project.currProject
+}))(View);

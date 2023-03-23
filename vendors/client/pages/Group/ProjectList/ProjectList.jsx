@@ -8,30 +8,15 @@ import {
   fetchProjectList,
   delProject,
   changeUpdateModal
-} from "../../../reducer/modules/project";
+} from "client/reducer/modules/project";
 import ProjectCard from "../../../components/ProjectCard/ProjectCard.jsx";
 import ErrMsg from "../../../components/ErrMsg/ErrMsg.jsx";
 import { autobind } from "core-decorators";
-import { setBreadcrumb } from "../../../reducer/modules/user";
+import { setBreadcrumb } from "client/reducer/modules/user";
 
 import "./ProjectList.scss";
 
-@connect(
-  (state) => ({
-    projectList: state.project.projectList,
-    userInfo: state.project.userInfo,
-    tableLoading: state.project.tableLoading,
-    currGroup: state.group.currGroup,
-    currPage: state.project.currPage
-  }),
-  {
-    fetchProjectList,
-    addProject,
-    delProject,
-    changeUpdateModal,
-    setBreadcrumb
-  }
-)
+//
 class ProjectList extends Component {
   constructor(props) {
     super(props);
@@ -196,4 +181,19 @@ class ProjectList extends Component {
   }
 }
 
-export default ProjectList;
+export default connect(
+  (state) => ({
+    projectList: state.project.projectList,
+    userInfo: state.project.userInfo,
+    tableLoading: state.project.tableLoading,
+    currGroup: state.group.currGroup,
+    currPage: state.project.currPage
+  }),
+  {
+    fetchProjectList,
+    addProject,
+    delProject,
+    changeUpdateModal,
+    setBreadcrumb
+  }
+)(ProjectList);

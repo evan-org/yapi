@@ -7,16 +7,8 @@ import "./project-request.scss";
 import AceEditor from "client/components/AceEditor/AceEditor";
 import { updateProjectScript, getProject } from "../../../../reducer/modules/project";
 
-@connect(
-  (state) => ({
-    projectMsg: state.project.currProject
-  }),
-  {
-    updateProjectScript,
-    getProject
-  }
-)
-@Form.create()
+//
+//
 class ProjectRequest extends Component {
   static propTypes = {
     projectMsg: PropTypes.object,
@@ -102,4 +94,12 @@ class ProjectRequest extends Component {
     );
   }
 }
-export default ProjectRequest;
+export default connect(
+  (state) => ({
+    projectMsg: state.project.currProject
+  }),
+  {
+    updateProjectScript,
+    getProject
+  }
+)(Form.create()(ProjectRequest));

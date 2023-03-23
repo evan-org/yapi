@@ -49,19 +49,7 @@ function handleExportRouteParams(url, status, isWiki) {
 //   route: '/api/interface/download_crx',
 //   desc: '导出项目接口文档为 pdf 文件'
 // }
-@connect(
-  (state) => ({
-    curCatid: -(-state.inter.curdata.catid),
-    basePath: state.project.currProject.basepath,
-    updateLogList: state.news.updateLogList,
-    swaggerUrlData: state.project.swaggerUrlData
-  }),
-  {
-    saveImportData,
-    fetchUpdateLogData,
-    handleSwaggerUrlData
-  }
-)
+//
 class ProjectData extends Component {
   constructor(props) {
     super(props);
@@ -507,4 +495,16 @@ class ProjectData extends Component {
   }
 }
 
-export default ProjectData;
+export default connect(
+  (state) => ({
+    curCatid: -(-state.inter.curdata.catid),
+    basePath: state.project.currProject.basepath,
+    updateLogList: state.news.updateLogList,
+    swaggerUrlData: state.project.swaggerUrlData
+  }),
+  {
+    saveImportData,
+    fetchUpdateLogData,
+    handleSwaggerUrlData
+  }
+)(ProjectData);

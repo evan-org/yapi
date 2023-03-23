@@ -5,14 +5,7 @@ import { getToken } from "../../../client/reducer/modules/project.js";
 //
 import "./Services.scss";
 
-@connect(
-  (state) => ({
-    token: state.project.token
-  }),
-  {
-    getToken
-  }
-)
+//
 class Services extends Component {
   static propTypes = {
     projectId: PropTypes.string,
@@ -69,4 +62,11 @@ class Services extends Component {
     );
   }
 }
-export default Services;
+export default connect(
+  (state) => ({
+    token: state.project.token
+  }),
+  {
+    getToken
+  }
+)(Services);

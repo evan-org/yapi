@@ -11,28 +11,14 @@ import {
   updateGroupList,
   deleteGroup
 } from "../../../reducer/modules/group.js";
+
 const { TextArea } = Input;
 import { trim } from "../../../utils/common.js";
 import _ from "underscore";
 import "./GroupSetting.scss";
-const confirm = Modal.confirm;
 
-@connect(
-  (state) => ({
-    groupList: state.group.groupList,
-    currGroup: state.group.currGroup,
-    curUserRole: state.user.role
-  }),
-  {
-    changeGroupMsg,
-    fetchGroupList,
-    setCurrGroup,
-    fetchGroupMsg,
-    fetchNewsData,
-    updateGroupList,
-    deleteGroup
-  }
-)
+const confirm = Modal.confirm;
+//
 class GroupSetting extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +31,6 @@ class GroupSetting extends Component {
       custom_field1_rule: false
     };
   }
-
   static propTypes = {
     currGroup: PropTypes.object,
     curUserRole: PropTypes.string,
@@ -58,7 +43,6 @@ class GroupSetting extends Component {
     deleteGroup: PropTypes.func,
     groupList: PropTypes.array
   };
-
   initState(props) {
     this.setState({
       currGroupName: props.currGroup.group_name,
@@ -67,7 +51,6 @@ class GroupSetting extends Component {
       custom_field1_enable: props.currGroup.custom_field1.enable
     });
   }
-
   // 修改分组名称
   changeName = (e) => {
     this.setState({
@@ -80,7 +63,6 @@ class GroupSetting extends Component {
       currGroupDesc: e.target.value
     });
   };
-
   // 修改自定义字段名称
   changeCustomName = (e) => {
     let custom_field1_rule = this.state.custom_field1_enable ? !e.target.value : false;
@@ -89,7 +71,6 @@ class GroupSetting extends Component {
       custom_field1_rule
     });
   };
-
   // 修改开启状态
   changeCustomEnable = (e) => {
     let custom_field1_rule = e ? !this.state.custom_field1_name : false;
@@ -98,12 +79,10 @@ class GroupSetting extends Component {
       custom_field1_rule
     });
   };
-
   componentWillMount() {
     // console.log('custom_field1',this.props.currGroup.custom_field1)
     this.initState(this.props);
   }
-
   // 点击“查看危险操作”按钮
   toggleDangerOptions = () => {
     // console.log(this.state.showDangerOptions);
@@ -111,7 +90,6 @@ class GroupSetting extends Component {
       showDangerOptions: !this.state.showDangerOptions
     });
   };
-
   // 编辑分组信息
   editGroup = async() => {
     const id = this.props.currGroup._id;
@@ -127,7 +105,6 @@ class GroupSetting extends Component {
       },
       id: this.props.currGroup._id
     });
-
     if (!res.payload.data.errcode) {
       message.success("修改成功！");
       await this.props.fetchGroupList(this.props.groupList);
@@ -138,9 +115,7 @@ class GroupSetting extends Component {
       this.props.fetchNewsData(this.props.currGroup._id, "group", 1, 10);
     }
   };
-
   // 删除分组
-
   deleteGroup = async() => {
     const that = this;
     const { currGroup } = that.props;
@@ -153,7 +128,6 @@ class GroupSetting extends Component {
       that.props.setCurrGroup(currGroup);
     }
   };
-
   // 删除分组的二次确认
   showConfirm = () => {
     const that = this;
@@ -169,7 +143,7 @@ class GroupSetting extends Component {
             <p>
               <b>请输入分组名称确认此操作:</b>
             </p>
-            <Input id="group_name" />
+            <Input id="group_name"/>
           </div>
         </div>
       ),
@@ -185,10 +159,10 @@ class GroupSetting extends Component {
         }
       },
       iconType: "delete",
-      onCancel() {}
+      onCancel() {
+      }
     });
   };
-
   componentWillReceiveProps(nextProps) {
     // 切换分组时，更新分组信息并关闭删除分组操作
     if (this.props.currGroup._id !== nextProps.currGroup._id) {
@@ -198,7 +172,6 @@ class GroupSetting extends Component {
       });
     }
   }
-
   render() {
     return (
       <div className="m-panel card-panel card-panel-s panel-group">
@@ -233,7 +206,7 @@ class GroupSetting extends Component {
           <Col span={4} className="label">
             接口自定义字段&nbsp;
             <Tooltip title={"可以在接口中添加 额外字段 数据"}>
-              <Icon type="question-circle-o" style={{ width: "10px" }} />
+              <Icon type="question-circle-o" style={{ width: "10px" }}/>
             </Tooltip> ：
           </Col>
           <Col span={12} style={{ position: "relative" }}>
@@ -274,10 +247,10 @@ class GroupSetting extends Component {
           <Row type="flex" justify="center" className="danger-container">
             <Col span={24} className="title">
               <h2 className="content">
-                <Icon type="exclamation-circle-o" /> 危险操作
+                <Icon type="exclamation-circle-o"/> 危险操作
               </h2>
               <Button onClick={this.toggleDangerOptions}>
-                查 看<Icon type={this.state.showDangerOptions ? "up" : "down"} />
+                查 看<Icon type={this.state.showDangerOptions ? "up" : "down"}/>
               </Button>
             </Col>
             {this.state.showDangerOptions ? (
@@ -298,5 +271,17 @@ class GroupSetting extends Component {
     );
   }
 }
-
-export default GroupSetting;
+export default connect((state) => ({
+  groupList: state.group.groupList,
+  currGroup: state.group.currGroup,
+  curUserRole: state.user.role
+}),
+{
+  changeGroupMsg,
+  fetchGroupList,
+  setCurrGroup,
+  fetchGroupMsg,
+  fetchNewsData,
+  updateGroupList,
+  deleteGroup
+})(GroupSetting);

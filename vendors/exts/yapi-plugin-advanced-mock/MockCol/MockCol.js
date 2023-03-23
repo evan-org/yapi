@@ -18,11 +18,7 @@ const json5_parse = function(json) {
     return json;
   }
 };
-@connect((state) => ({
-  list: state.mockCol.list, currInterface: state.inter.curdata, currProject: state.project.currProject
-}), {
-  fetchMockCol
-}) @withRouter
+//
 class MockCol extends Component {
   static propTypes = {
     list: PropTypes.array, currInterface: PropTypes.object, match: PropTypes.object, fetchMockCol: PropTypes.func, currProject: PropTypes.object
@@ -197,4 +193,8 @@ class MockCol extends Component {
     </div>);
   }
 }
-export default MockCol;
+export default connect((state) => ({
+  list: state.mockCol.list, currInterface: state.inter.curdata, currProject: state.project.currProject
+}), {
+  fetchMockCol
+})(withRouter(MockCol));

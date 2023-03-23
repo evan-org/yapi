@@ -105,13 +105,8 @@ const StatusOverview = (props) => (
 StatusOverview.propTypes = {
   data: PropTypes.object
 };
-@connect(
-  null,
-  {
-    setBreadcrumb
-  }
-)
-class statisticsPage extends Component {
+//
+class StatisticsPage extends Component {
   static propTypes = {
     setBreadcrumb: PropTypes.func
   };
@@ -191,4 +186,9 @@ class statisticsPage extends Component {
     );
   }
 }
-export default statisticsPage;
+export default connect(
+  null,
+  {
+    setBreadcrumb
+  }
+)(StatisticsPage);

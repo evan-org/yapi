@@ -4,11 +4,7 @@ import TimeTree from "../../../components/TimeLine/TimeLine";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Button } from "antd";
-@connect((state) => ({
-  uid: state.user.uid + "",
-  curdata: state.inter.curdata,
-  currProject: state.project.currProject
-}))
+//
 class Activity extends Component {
   constructor(props) {
     super(props);
@@ -53,4 +49,8 @@ class Activity extends Component {
   }
 }
 
-export default Activity;
+export default connect((state) => ({
+  uid: state.user.uid + "",
+  curdata: state.inter.curdata,
+  currProject: state.project.currProject
+}))(Activity);

@@ -12,18 +12,8 @@ import Setting from "./Setting/Setting.js";
 import Loading from "../../components/Loading/Loading";
 import ProjectMember from "./Setting/ProjectMember/ProjectMember.js";
 import ProjectData from "./Setting/ProjectData/ProjectData.js";
+
 const plugin = require("client/plugin.js");
-@connect(
-  (state) => ({
-    curProject: state.project.currProject,
-    currGroup: state.group.currGroup
-  }),
-  {
-    getProject,
-    fetchGroupMsg,
-    setBreadcrumb
-  }
-)
 class Project extends Component {
   static propTypes = {
     match: PropTypes.object,
@@ -34,15 +24,12 @@ class Project extends Component {
     setBreadcrumb: PropTypes.func,
     currGroup: PropTypes.object
   };
-
   constructor(props) {
     super(props);
   }
-
   async componentWillMount() {
     await this.props.getProject(this.props.match.params.id);
     await this.props.fetchGroupMsg(this.props.curProject.group_id);
-
     this.props.setBreadcrumb([
       {
         name: this.props.currGroup.group_name,
@@ -53,7 +40,6 @@ class Project extends Component {
       }
     ]);
   }
-
   async componentWillReceiveProps(nextProps) {
     const currProjectId = this.props.match.params.id;
     const nextProjectId = nextProps.match.params.id;
@@ -71,7 +57,6 @@ class Project extends Component {
       ]);
     }
   }
-
   render() {
     const { match, location } = this.props;
     let routers = {
@@ -81,9 +66,7 @@ class Project extends Component {
       members: { name: "成员管理", path: "/project/:id/members", component: ProjectMember },
       setting: { name: "设置", path: "/project/:id/setting", component: Setting }
     };
-
     plugin.emitHook("sub_nav", routers);
-
     let key, defaultName;
     for (key in routers) {
       if (
@@ -95,7 +78,6 @@ class Project extends Component {
         break;
       }
     }
-
     // let subnavData = [{
     //   name: routers.interface.name,
     //   path: `/project/${match.params.id}/interface/api`
@@ -112,7 +94,6 @@ class Project extends Component {
     //   name: routers.setting.name,
     //   path: `/project/${match.params.id}/setting`
     // }];
-
     let subnavData = [];
     Object.keys(routers).forEach((key) => {
       let item = routers[key];
@@ -130,20 +111,17 @@ class Project extends Component {
       }
       subnavData.push(value);
     });
-
     if (this.props.currGroup.type === "private") {
       subnavData = subnavData.filter((item) => item.name != "成员管理");
     }
-
     if (this.props.curProject == null || Object.keys(this.props.curProject).length === 0) {
-      return <Loading visible />;
+      return <Loading visible/>;
     }
-
     return (
       <div>
-        <Subnav default={defaultName} data={subnavData} />
+        <Subnav default={defaultName} data={subnavData}/>
         <Switch>
-          <Redirect exact from="/project/:id" to={`/project/${match.params.id}/interface/api`} />
+          <Redirect exact from="/project/:id" to={`/project/${match.params.id}/interface/api`}/>
           {/* <Route path={routers.activity.path} component={Activity} />
 
           <Route path={routers.setting.path} component={Setting} />
@@ -155,13 +133,12 @@ class Project extends Component {
           <Route path={routers.data.path} component={ProjectData} /> */}
           {Object.keys(routers).map((key) => {
             let item = routers[key];
-
             return key === "members" ? (
               this.props.currGroup.type !== "private" ? (
-                <Route path={item.path} component={item.component} key={key} />
+                <Route path={item.path} component={item.component} key={key}/>
               ) : null
             ) : (
-              <Route path={item.path} component={item.component} key={key} />
+              <Route path={item.path} component={item.component} key={key}/>
             );
           })}
         </Switch>
@@ -169,4 +146,14 @@ class Project extends Component {
     );
   }
 }
-export default Project;
+export default connect(
+  (state) => ({
+    curProject: state.project.currProject,
+    currGroup: state.group.currGroup
+  }),
+  {
+    getProject,
+    fetchGroupMsg,
+    setBreadcrumb
+  }
+)(Project);

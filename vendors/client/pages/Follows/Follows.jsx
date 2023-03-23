@@ -8,16 +8,7 @@ import { setBreadcrumb } from "../../reducer/modules/user";
 import ProjectCard from "../../components/ProjectCard/ProjectCard.jsx";
 import ErrMsg from "../../components/ErrMsg/ErrMsg.jsx";
 
-@connect(
-  (state) => ({
-    data: state.follow.data,
-    uid: state.user.uid
-  }),
-  {
-    getFollowList,
-    setBreadcrumb
-  }
-)
+//
 class Follows extends Component {
   constructor(props) {
     super(props);
@@ -79,4 +70,13 @@ class Follows extends Component {
   }
 }
 
-export default Follows;
+export default connect(
+  (state) => ({
+    data: state.follow.data,
+    uid: state.user.uid
+  }),
+  {
+    getFollowList,
+    setBreadcrumb
+  }
+)(Follows);

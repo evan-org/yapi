@@ -23,20 +23,7 @@ function arrayAddKey(arr) {
   }));
 }
 
-@connect(
-  (state) => ({
-    currGroup: state.group.currGroup,
-    uid: state.user.uid,
-    role: state.group.role
-  }),
-  {
-    fetchGroupMemberList,
-    fetchGroupMsg,
-    addMember,
-    delMember,
-    changeMemberRole
-  }
-)
+//
 class MemberList extends Component {
   constructor(props) {
     super(props);
@@ -315,4 +302,17 @@ class MemberList extends Component {
   }
 }
 
-export default MemberList;
+export default connect(
+  (state) => ({
+    currGroup: state.group.currGroup,
+    uid: state.user.uid,
+    role: state.group.role
+  }),
+  {
+    fetchGroupMemberList,
+    fetchGroupMsg,
+    addMember,
+    delMember,
+    changeMemberRole
+  }
+)(MemberList);

@@ -14,18 +14,7 @@ import "./Edit.scss";
 import { withRouter, Link } from "react-router-dom";
 import ProjectTag from "../../Setting/ProjectMessage/ProjectTag.js";
 
-@connect(
-  (state) => ({
-    curdata: state.inter.curdata,
-    currProject: state.project.currProject
-  }),
-  {
-    updateInterfaceData,
-    fetchInterfaceListMenu,
-    fetchInterfaceData,
-    getProject
-  }
-)
+//
 class InterfaceEdit extends Component {
   static propTypes = {
     curdata: PropTypes.object,
@@ -222,4 +211,15 @@ class InterfaceEdit extends Component {
   }
 }
 
-export default withRouter(InterfaceEdit);
+export default connect(
+  (state) => ({
+    curdata: state.inter.curdata,
+    currProject: state.project.currProject
+  }),
+  {
+    updateInterfaceData,
+    fetchInterfaceListMenu,
+    fetchInterfaceData,
+    getProject
+  }
+)(withRouter(InterfaceEdit));

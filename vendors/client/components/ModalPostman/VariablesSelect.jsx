@@ -6,26 +6,16 @@ import { fetchVariableParamsList } from "../../reducer/modules/interfaceCol.js";
 
 const TreeNode = Tree.TreeNode;
 const CanSelectPathPrefix = "CanSelectPath-";
-
 function deleteLastObject(str) {
   return str
     .split(".")
     .slice(0, -1)
     .join(".");
 }
-
 function deleteLastArr(str) {
   return str.replace(/\[.*?\]/g, "");
 }
-
-@connect(
-  (state) => ({
-    currColId: state.interfaceCol.currColId
-  }),
-  {
-    fetchVariableParamsList
-  }
-)
+//
 class VariablesSelect extends Component {
   static propTypes = {
     click: PropTypes.func,
@@ -39,7 +29,6 @@ class VariablesSelect extends Component {
     expandedKeys: [],
     selectedKeys: []
   };
-
   handleRecordsData(id) {
     let newRecords = [];
     this.id = id;
@@ -53,17 +42,16 @@ class VariablesSelect extends Component {
       records: newRecords
     });
   }
-
   async componentDidMount() {
     const { currColId, fetchVariableParamsList, clickValue } = this.props;
     let result = await fetchVariableParamsList(currColId);
     let records = result.payload.data.data;
     this.records = records.sort((a, b) => a.index - b.index);
     this.handleRecordsData(this.props.id);
-
     if (clickValue) {
       let isArrayParams = clickValue.lastIndexOf("]") === clickValue.length - 1;
       let key = isArrayParams ? deleteLastArr(clickValue) : deleteLastObject(clickValue);
+      // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({
         expandedKeys: [key],
         selectedKeys: [CanSelectPathPrefix + clickValue]
@@ -71,13 +59,11 @@ class VariablesSelect extends Component {
       // this.props.click(clickValue);
     }
   }
-
   async componentWillReceiveProps(nextProps) {
     if (this.records && nextProps.id && this.id !== nextProps.id) {
       this.handleRecordsData(nextProps.id);
     }
   }
-
   handleSelect = (key) => {
     this.setState({
       selectedKeys: [key]
@@ -91,11 +77,9 @@ class VariablesSelect extends Component {
       });
     }
   };
-
   onExpand = (keys) => {
     this.setState({ expandedKeys: keys });
   };
-
   render() {
     const pathSelctByTree = (data, elementKeyPrefix = "$", deepLevel = 0) => {
       let keys = Object.keys(data);
@@ -129,12 +113,10 @@ class VariablesSelect extends Component {
             </TreeNode>
           );
         }
-        return <TreeNode key={CanSelectPathPrefix + elementKeyPrefix} title={key} />;
+        return <TreeNode key={CanSelectPathPrefix + elementKeyPrefix} title={key}/>;
       });
-
       return TreeComponents;
     };
-
     return (
       <div className="modal-postman-form-variable">
         <Tree
@@ -149,5 +131,11 @@ class VariablesSelect extends Component {
     );
   }
 }
-
-export default VariablesSelect;
+export default connect(
+  (state) => ({
+    currColId: state.interfaceCol.currColId
+  }),
+  {
+    fetchVariableParamsList
+  }
+)(VariablesSelect);

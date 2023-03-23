@@ -47,16 +47,7 @@ EditButton.propTypes = {
   admin: PropTypes.bool
 };
 
-@connect(
-  (state) => ({
-    curUid: state.user.uid,
-    userType: state.user.type,
-    curRole: state.user.role
-  }),
-  {
-    setBreadcrumb
-  }
-)
+
 class Profile extends Component {
   static propTypes = {
     match: PropTypes.object,
@@ -459,16 +450,18 @@ class Profile extends Component {
     );
   }
 }
-
-@connect(
+connect(
   (state) => ({
-    url: state.user.imageUrl
+    curUid: state.user.uid,
+    userType: state.user.type,
+    curRole: state.user.role
   }),
   {
-    setImageUrl
+    setBreadcrumb
   }
-)
-class AvatarUpload extends Component {
+)(Profile)
+//
+class AvatarUploads extends Component {
   constructor(props) {
     super(props);
   }
@@ -529,6 +522,14 @@ class AvatarUpload extends Component {
   }
 }
 
+export const AvatarUpload = connect(
+  (state) => ({
+    url: state.user.imageUrl
+  }),
+  {
+    setImageUrl
+  }
+)(AvatarUploads)
 function beforeUpload(file) {
   const isJPG = file.type === "image/jpeg";
   const isPNG = file.type === "image/png";

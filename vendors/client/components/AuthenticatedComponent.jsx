@@ -1,18 +1,10 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { changeMenuItem } from "../reducer/modules/menu";
 
 export function requireAuthentication(Component) {
-  return @connect(
-    (state) => ({
-      isAuthenticated: state.user.isLogin
-    }),
-    {
-      changeMenuItem
-    }
-  )
-  class AuthenticatedComponent extends React.PureComponent {
+  class AuthenticatedComponent extends PureComponent {
     constructor(props) {
       super(props);
     }
@@ -38,5 +30,13 @@ export function requireAuthentication(Component) {
     render() {
       return <div>{this.props.isAuthenticated ? <Component {...this.props} /> : null}</div>;
     }
-  };
+  }
+  return connect(
+    (state) => ({
+      isAuthenticated: state.user.isLogin
+    }),
+    {
+      changeMenuItem
+    }
+  )(AuthenticatedComponent)
 }

@@ -1,18 +1,13 @@
-import './Breadcrumb.scss';
-import { withRouter } from 'react-router-dom';
-import { Breadcrumb } from 'antd';
-import PropTypes from 'prop-types';
-import React, { PureComponent as Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import "./Breadcrumb.scss";
+import { withRouter } from "react-router-dom";
+import { Breadcrumb } from "antd";
+import PropTypes from "prop-types";
+import React, { PureComponent as Component } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
-@connect(state => {
-  return {
-    breadcrumb: state.user.breadcrumb
-  };
-})
-@withRouter
-export default class BreadcrumbNavigation extends Component {
+//
+class BreadcrumbNavigation extends Component {
   constructor(props) {
     super(props);
   }
@@ -40,3 +35,6 @@ export default class BreadcrumbNavigation extends Component {
     );
   }
 }
+export default connect((state) => ({
+  breadcrumb: state.user.breadcrumb
+}))(withRouter(BreadcrumbNavigation))

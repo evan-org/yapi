@@ -37,24 +37,7 @@ const arrayAddKey = (arr) => arr.map((item, index) => ({
   key: index
 }));
 
-@connect(
-  (state) => ({
-    projectMsg: state.project.currProject,
-    uid: state.user.uid,
-    projectList: state.project.projectList
-  }),
-  {
-    fetchGroupMemberList,
-    getProjectMemberList,
-    addMember,
-    delMember,
-    fetchGroupMsg,
-    changeMemberRole,
-    getProject,
-    fetchProjectList,
-    changeMemberEmailNotice
-  }
-)
+//
 class ProjectMember extends Component {
   constructor(props) {
     super(props);
@@ -427,4 +410,21 @@ class ProjectMember extends Component {
   }
 }
 
-export default ProjectMember;
+export default connect(
+  (state) => ({
+    projectMsg: state.project.currProject,
+    uid: state.user.uid,
+    projectList: state.project.projectList
+  }),
+  {
+    fetchGroupMemberList,
+    getProjectMemberList,
+    addMember,
+    delMember,
+    fetchGroupMsg,
+    changeMemberRole,
+    getProject,
+    fetchProjectList,
+    changeMemberEmailNotice
+  }
+)(ProjectMember);

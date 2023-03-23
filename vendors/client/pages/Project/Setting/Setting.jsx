@@ -14,9 +14,7 @@ const routers = {}
 
 import "./Setting.scss";
 
-@connect((state) => ({
-  curProjectRole: state.project.currProject.role
-}))
+//
 class Setting extends Component {
   static propTypes = {
     match: PropTypes.object,
@@ -57,4 +55,6 @@ class Setting extends Component {
   }
 }
 
-export default Setting;
+export default connect((state) => ({
+  curProjectRole: state.project.currProject.role
+}))(Setting);

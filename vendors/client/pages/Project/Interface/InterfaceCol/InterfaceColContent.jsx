@@ -50,32 +50,7 @@ function handleReport(json) {
     return {};
   }
 }
-@connect(
-  (state) => ({
-    interfaceColList: state.interfaceCol.interfaceColList,
-    currColId: state.interfaceCol.currColId,
-    currCaseId: state.interfaceCol.currCaseId,
-    isShowCol: state.interfaceCol.isShowCol,
-    isRander: state.interfaceCol.isRander,
-    currCaseList: state.interfaceCol.currCaseList,
-    currProject: state.project.currProject,
-    token: state.project.token,
-    envList: state.interfaceCol.envList,
-    curProjectRole: state.project.currProject.role,
-    projectEnv: state.project.projectEnv,
-    curUid: state.user.uid
-  }),
-  {
-    fetchInterfaceColList,
-    fetchCaseList,
-    setColData,
-    getToken,
-    getEnv,
-    fetchCaseEnvList
-  }
-)
-@withRouter
-@DragDropContext(HTML5Backend)
+//
 class InterfaceColContent extends Component {
   static propTypes = {
     match: PropTypes.object,
@@ -1131,4 +1106,27 @@ class InterfaceColContent extends Component {
     );
   }
 }
-export default InterfaceColContent;
+export default connect(
+  (state) => ({
+    interfaceColList: state.interfaceCol.interfaceColList,
+    currColId: state.interfaceCol.currColId,
+    currCaseId: state.interfaceCol.currCaseId,
+    isShowCol: state.interfaceCol.isShowCol,
+    isRander: state.interfaceCol.isRander,
+    currCaseList: state.interfaceCol.currCaseList,
+    currProject: state.project.currProject,
+    token: state.project.token,
+    envList: state.interfaceCol.envList,
+    curProjectRole: state.project.currProject.role,
+    projectEnv: state.project.projectEnv,
+    curUid: state.user.uid
+  }),
+  {
+    fetchInterfaceColList,
+    fetchCaseList,
+    setColData,
+    getToken,
+    getEnv,
+    fetchCaseEnvList
+  }
+)(withRouter(DragDropContext(HTML5Backend)(InterfaceColContent)));

@@ -1,24 +1,12 @@
 module.exports = {
   presets: [
     "@babel/preset-react",
-    [
-      "@babel/preset-env",
-      {
-        modules: "commonjs",
-      },
-    ],
+    "@babel/preset-env"
   ],
-
   plugins: [
-    [
-      "@babel/plugin-proposal-decorators",
-      {
-        legacy: true,
-      },
-    ],
-    "babel-plugin-transform-decorators-legacy",
-    "@babel/transform-runtime",
-    "@babel/plugin-proposal-class-properties",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    ["@babel/transform-runtime"],
     [
       "import",
       {

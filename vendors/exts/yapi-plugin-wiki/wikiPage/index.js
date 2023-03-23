@@ -8,13 +8,7 @@ import { timeago } from "../../../common/utils";
 import { Link } from "react-router-dom";
 import WikiView from "./View.js";
 import WikiEditor from "./Editor.js";
-
-@connect(
-  (state) => ({
-    projectMsg: state.project.currProject
-  }),
-  {}
-)
+//
 class WikiPage extends Component {
   constructor(props) {
     super(props);
@@ -30,18 +24,15 @@ class WikiPage extends Component {
       curdata: null
     };
   }
-
   static propTypes = {
     match: PropTypes.object,
     projectMsg: PropTypes.object
   };
-
   async componentDidMount() {
     const currProjectId = this.props.match.params.id;
     await this.handleData({ project_id: currProjectId });
     this.handleConflict();
   }
-
   componentWillUnmount() {
     // willUnmount
     try {
@@ -66,7 +57,6 @@ class WikiPage extends Component {
       return null;
     }
   };
-
   // 处理多人编辑冲突问题
   handleConflict = () => {
     // console.log(location)
@@ -76,16 +66,15 @@ class WikiPage extends Component {
     let wsProtocol = location.protocol === "https:" ? "wss" : "ws";
     s = new WebSocket(
       wsProtocol +
-        "://" +
-        domain +
-        "/api/ws_plugin/wiki_desc/solve_conflict?id=" +
-        this.props.match.params.id
+      "://" +
+      domain +
+      "/api/ws_plugin/wiki_desc/solve_conflict?id=" +
+      this.props.match.params.id
     );
     s.onopen = () => {
       this.WebSocket = s;
       s.send("start");
     };
-
     s.onmessage = (e) => {
       let result = JSON.parse(e.data);
       if (result.errno === 0) {
@@ -112,7 +101,6 @@ class WikiPage extends Component {
         });
       }
     };
-
     s.onerror = () => {
       this.setState({
         status: "CLOSE"
@@ -120,7 +108,6 @@ class WikiPage extends Component {
       console.warn("websocket 连接失败，将导致多人编辑同一个接口冲突。");
     };
   };
-
   // 点击编辑按钮 发送 websocket 获取数据
   onEditor = () => {
     // this.WebSocket.send('editor');
@@ -136,7 +123,6 @@ class WikiPage extends Component {
       }
     });
   };
-
   // 处理websocket  意外断开问题
   handleWebsocketAccidentClose = (fn, callback) => {
     // websocket 是否启动
@@ -152,7 +138,6 @@ class WikiPage extends Component {
       callback(false);
     }
   };
-
   //  获取数据
   handleData = async(params) => {
     let result = await axios.get("/api/plugin/wiki_desc/get", { params });
@@ -171,7 +156,6 @@ class WikiPage extends Component {
       message.error(`请求数据失败： ${result.data.errmsg}`);
     }
   };
-
   // 数据上传
   onUpload = async(desc, markdown) => {
     const currProjectId = this.props.match.params.id;
@@ -196,14 +180,12 @@ class WikiPage extends Component {
     this.setState({ isEditor: false });
     this.endWebSocket();
   };
-
   // 邮件通知
   onEmailNotice = (e) => {
     this.setState({
       notice: e.target.checked
     });
   };
-
   render() {
     const { isEditor, username, editorTime, notice, uid, status, editUid, editName } = this.state;
     const editorEable =
@@ -211,7 +193,6 @@ class WikiPage extends Component {
       this.props.projectMsg.role === "owner" ||
       this.props.projectMsg.role === "dev";
     const isConflict = status === "EDITOR";
-
     return (
       <div className="g-row">
         <div className="m-panel wiki-content">
@@ -249,5 +230,9 @@ class WikiPage extends Component {
     );
   }
 }
-
-export default WikiPage;
+export default connect(
+  (state) => ({
+    projectMsg: state.project.currProject
+  }),
+  {}
+)(WikiPage);

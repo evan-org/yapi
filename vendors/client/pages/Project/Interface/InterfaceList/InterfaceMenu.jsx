@@ -25,24 +25,7 @@ const confirm = Modal.confirm;
 const TreeNode = Tree.TreeNode;
 const headHeight = 240; // menu顶部到网页顶部部分的高度
 
-@connect(
-  (state) => ({
-    list: state.inter.list,
-    inter: state.inter.curdata,
-    curProject: state.project.currProject,
-    expands: []
-  }),
-  {
-    fetchInterfaceListMenu,
-    fetchInterfaceData,
-    deleteInterfaceCatData,
-    deleteInterfaceData,
-    initInterface,
-    getProject,
-    fetchInterfaceCatList,
-    fetchInterfaceList
-  }
-)
+//
 class InterfaceMenu extends Component {
   static propTypes = {
     match: PropTypes.object,
@@ -630,4 +613,21 @@ class InterfaceMenu extends Component {
   }
 }
 
-export default withRouter(InterfaceMenu);
+export default connect(
+  (state) => ({
+    list: state.inter.list,
+    inter: state.inter.curdata,
+    curProject: state.project.currProject,
+    expands: []
+  }),
+  {
+    fetchInterfaceListMenu,
+    fetchInterfaceData,
+    deleteInterfaceCatData,
+    deleteInterfaceData,
+    initInterface,
+    getProject,
+    fetchInterfaceCatList,
+    fetchInterfaceList
+  }
+)(withRouter(InterfaceMenu));

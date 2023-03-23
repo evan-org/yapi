@@ -18,23 +18,7 @@ import Label from "../../../../components/Label/Label.jsx";
 const Option = Select.Option;
 const limit = 20;
 
-@connect(
-  (state) => ({
-    curData: state.inter.curdata,
-    curProject: state.project.currProject,
-    catList: state.inter.list,
-    totalTableList: state.inter.totalTableList,
-    catTableList: state.inter.catTableList,
-    totalCount: state.inter.totalCount,
-    count: state.inter.count
-  }),
-  {
-    fetchInterfaceListMenu,
-    fetchInterfaceList,
-    fetchInterfaceCatList,
-    getProject
-  }
-)
+//
 class InterfaceList extends Component {
   constructor(props) {
     super(props);
@@ -392,4 +376,20 @@ class InterfaceList extends Component {
   }
 }
 
-export default InterfaceList;
+export default connect(
+  (state) => ({
+    curData: state.inter.curdata,
+    curProject: state.project.currProject,
+    catList: state.inter.list,
+    totalTableList: state.inter.totalTableList,
+    catTableList: state.inter.catTableList,
+    totalCount: state.inter.totalCount,
+    count: state.inter.count
+  }),
+  {
+    fetchInterfaceListMenu,
+    fetchInterfaceList,
+    fetchInterfaceCatList,
+    getProject
+  }
+)(InterfaceList);

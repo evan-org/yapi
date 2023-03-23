@@ -7,15 +7,7 @@ import { fetchNewsData } from "../../../reducer/modules/news.js";
 import { timeago } from "../../../../common/utils";
 // timeago(new Date().getTime() - 40);
 
-@connect(
-  (state) => ({
-    newsData: state.news.newsData,
-    curpage: state.news.curpage
-  }),
-  {
-    fetchNewsData: fetchNewsData
-  }
-)
+//
 class NewsTimeline extends Component {
   static propTypes = {
     newsData: PropTypes.object,
@@ -84,4 +76,12 @@ class NewsTimeline extends Component {
   }
 }
 
-export default NewsTimeline;
+export default connect(
+  (state) => ({
+    newsData: state.news.newsData,
+    curpage: state.news.curpage
+  }),
+  {
+    fetchNewsData: fetchNewsData
+  }
+)(NewsTimeline);

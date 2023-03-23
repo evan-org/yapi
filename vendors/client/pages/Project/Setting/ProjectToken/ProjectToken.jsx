@@ -5,17 +5,9 @@ import { getToken, updateToken } from "client/reducer/modules/project";
 import { connect } from "react-redux";
 import { Icon, Tooltip, message, Modal } from "antd";
 import copy from "copy-to-clipboard";
-const confirm = Modal.confirm;
 
-@connect(
-  (state) => ({
-    token: state.project.token
-  }),
-  {
-    getToken,
-    updateToken
-  }
-)
+const confirm = Modal.confirm;
+//
 class ProjectToken extends Component {
   static propTypes = {
     projectId: PropTypes.number,
@@ -24,16 +16,13 @@ class ProjectToken extends Component {
     updateToken: PropTypes.func,
     curProjectRole: PropTypes.string
   };
-
   async componentDidMount() {
     await this.props.getToken(this.props.projectId);
   }
-
   copyToken = () => {
     copy(this.props.token);
     message.success("已经成功复制到剪切板");
   };
-
   updateToken = () => {
     let that = this;
     confirm({
@@ -45,10 +34,10 @@ class ProjectToken extends Component {
         await that.props.updateToken(that.props.projectId);
         message.success("更新成功");
       },
-      onCancel() {}
+      onCancel() {
+      }
     });
   };
-
   render() {
     return (
       <div className="project-token">
@@ -61,20 +50,20 @@ class ProjectToken extends Component {
             token: <span className="token-message">{this.props.token}</span>
           </span>
           <Tooltip title="复制">
-            <Icon className="token-btn" type="copy" onClick={this.copyToken} />
+            <Icon className="token-btn" type="copy" onClick={this.copyToken}/>
           </Tooltip>
           {this.props.curProjectRole === "admin" || this.props.curProjectRole === "owner" ? (
             <Tooltip title="刷新">
-              <Icon className="token-btn" type="reload" onClick={this.updateToken} />
+              <Icon className="token-btn" type="reload" onClick={this.updateToken}/>
             </Tooltip>
           ) : null}
         </div>
         <div className="blockquote">
           为确保项目内数据的安全性和私密性，请勿轻易将该token暴露给项目组外用户。
         </div>
-        <br />
-        <h2  className="token-title">open接口：</h2>
-        <p><a target="_blank" rel="noopener noreferrer"   href="https://hellosean1025.github.io/yapi/openapi.html">详细接口文档</a></p>
+        <br/>
+        <h2 className="token-title">open接口：</h2>
+        <p><a target="_blank" rel="noopener noreferrer" href="https://hellosean1025.github.io/yapi/openapi.html">详细接口文档</a></p>
         <div>
           <ul className="open-api">
             <li>/api/open/run_auto_test [运行自动化测试]</li>
@@ -93,5 +82,13 @@ class ProjectToken extends Component {
     );
   }
 }
-
-export default ProjectToken;
+//
+export default connect(
+  (state) => ({
+    token: state.project.token
+  }),
+  {
+    getToken,
+    updateToken
+  }
+)(ProjectToken);

@@ -48,15 +48,7 @@ InterfaceRoute.propTypes = {
   history: PropTypes.object
 };
 
-@connect(
-  (state) => ({
-    isShowCol: state.interfaceCol.isShowCol
-  }),
-  {
-    setColData,
-    getProject
-  }
-)
+//
 class Interface extends Component {
   static propTypes = {
     match: PropTypes.object,
@@ -136,4 +128,12 @@ class Interface extends Component {
   }
 }
 
-export default Interface;
+export default connect(
+  (state) => ({
+    isShowCol: state.interfaceCol.isShowCol
+  }),
+  {
+    setColData,
+    getProject
+  }
+)(Interface);

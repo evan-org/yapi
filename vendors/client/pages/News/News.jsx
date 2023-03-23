@@ -8,14 +8,7 @@ import { Button } from "antd";
 import { getMockUrl } from "../../reducer/modules/news.js";
 import Subnav from "../../components/Subnav/Subnav.jsx";
 
-@connect(
-  (state) => ({
-    uid: state.user.uid + ""
-  }),
-  {
-    getMockUrl: getMockUrl
-  }
-)
+//
 class News extends Component {
   constructor(props) {
     super(props);
@@ -75,4 +68,11 @@ class News extends Component {
   }
 }
 
-export default News;
+export default connect(
+  (state) => ({
+    uid: state.user.uid + ""
+  }),
+  {
+    getMockUrl: getMockUrl
+  }
+)(News);

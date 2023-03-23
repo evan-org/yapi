@@ -10,14 +10,6 @@ import axios from "axios";
 
 const Search = Input.Search;
 const limit = 20;
-@connect(
-  (state) => ({
-    curUserRole: state.user.role
-  }),
-  {
-    setBreadcrumb
-  }
-)
 class List extends Component {
   constructor(props) {
     super(props);
@@ -220,4 +212,11 @@ class List extends Component {
   }
 }
 
-export default List;
+export default connect(
+  (state) => ({
+    curUserRole: state.user.role
+  }),
+  {
+    setBreadcrumb
+  }
+)(List);

@@ -32,9 +32,7 @@ const formItemLayout = {
 const formItemLayoutWithOutLabel = {
   wrapperCol: { span: 12, offset: 5 }
 };
-@connect((state) => ({
-  currInterface: state.inter.curdata
-}))
+//
 class CaseDesForm extends Component {
   static propTypes = {
     form: PropTypes.object,
@@ -458,4 +456,6 @@ class CaseDesForm extends Component {
   }
 }
 const CaseDesModal = Form.create()(CaseDesForm);
-export default CaseDesModal;
+export default connect((state) => ({
+  currInterface: state.inter.curdata
+}))(CaseDesModal);

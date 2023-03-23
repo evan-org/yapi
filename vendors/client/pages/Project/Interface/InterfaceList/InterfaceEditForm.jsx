@@ -105,15 +105,7 @@ const HTTP_METHOD = constants.HTTP_METHOD;
 const HTTP_METHOD_KEYS = Object.keys(HTTP_METHOD);
 const HTTP_REQUEST_HEADER = constants.HTTP_REQUEST_HEADER;
 
-@connect(
-  (state) => ({
-    custom_field: state.group.field,
-    projectMsg: state.project.currProject
-  }),
-  {
-    changeEditStatus
-  }
-)
+//
 class InterfaceEditForm extends Component {
   static propTypes = {
     custom_field: PropTypes.object,
@@ -1320,8 +1312,16 @@ class InterfaceEditForm extends Component {
   }
 }
 
-export default Form.create({
+export default connect(
+  (state) => ({
+    custom_field: state.group.field,
+    projectMsg: state.project.currProject
+  }),
+  {
+    changeEditStatus
+  }
+)(Form.create({
   onValuesChange() {
     EditFormContext.props.changeEditStatus(true);
   }
-})(InterfaceEditForm);
+})(InterfaceEditForm));

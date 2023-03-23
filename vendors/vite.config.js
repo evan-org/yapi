@@ -1,7 +1,6 @@
 import path from "path";
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
-import reactRefresh from "@vitejs/plugin-react-refresh"
 // 静态资源压缩
 import compressPlugin from "vite-plugin-compression";
 // resolve
@@ -26,7 +25,9 @@ export default defineConfig(({ mode }) => {
     logLevel: "info", // 调整控制台输出的级别 'info' | 'warn' | 'error' | 'silent'
     plugins: [
       react({
-        // babel: { plugins: [] }
+        babel: {
+          configFile: true
+        }
       }),
       // gzip静态资源压缩
       compressPlugin({
@@ -36,8 +37,7 @@ export default defineConfig(({ mode }) => {
         threshold: 102400, // 压缩前最小文件大小
         algorithm: "gzip",  // 压缩算法
         ext: ".gz", // 文件类型
-      }),
-      reactRefresh()
+      })
     ],
     define: {
       "process.env": env
@@ -73,9 +73,9 @@ export default defineConfig(({ mode }) => {
       jsxFactory: "h",
       jsxFragment: "Fragment"
     },
-    optimizeDeps: {
-      include: ["@babel/plugin-proposal-decorators"]
-    },
+    // optimizeDeps: {
+    //   include: ["@babel/plugin-proposal-decorators"]
+    // },
     // ******项目构建配置******
     build: {
       target: "modules", // 设置最终构建的浏览器兼容目标  //es2015(编译成es5) | modules

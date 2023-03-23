@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { formatTime } from "../../../client/utils/common.js";
+import { formatTime } from "client/utils/common";
 import { Form, Switch, Button, Icon, Tooltip, message, Input, Select } from "antd";
-import { handleSwaggerUrlData } from "../../../client/reducer/modules/project";
+import { handleSwaggerUrlData } from "client/reducer/modules/project";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -23,11 +23,7 @@ const tailFormItemLayout = {
     }
   }
 };
-@connect((state) => ({
-  projectMsg: state.project.currProject
-}), {
-  handleSwaggerUrlData
-}) @Form.create()
+//
 class ProjectInterfaceSync extends Component {
   static propTypes = {
     form: PropTypes.object, match: PropTypes.object, projectId: PropTypes.number, projectMsg: PropTypes.object, handleSwaggerUrlData: PropTypes.func
@@ -181,4 +177,8 @@ class ProjectInterfaceSync extends Component {
     </div>);
   }
 }
-export default ProjectInterfaceSync;
+export default connect((state) => ({
+  projectMsg: state.project.currProject
+}), {
+  handleSwaggerUrlData
+})(Form.create()(ProjectInterfaceSync));

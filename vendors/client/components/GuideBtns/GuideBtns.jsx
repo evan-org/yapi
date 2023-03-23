@@ -3,25 +3,16 @@ import PropTypes from "prop-types";
 import { Button } from "antd";
 import { connect } from "react-redux";
 import { changeStudyTip, finishStudy } from "../../reducer/modules/user.js";
-
-@connect(
-  null,
-  {
-    changeStudyTip,
-    finishStudy
-  }
-)
+//
 class GuideBtns extends Component {
   constructor(props) {
     super(props);
   }
-
   static propTypes = {
     changeStudyTip: PropTypes.func,
     finishStudy: PropTypes.func,
     isLast: PropTypes.bool
   };
-
   // 点击下一步
   nextStep = () => {
     this.props.changeStudyTip();
@@ -29,12 +20,10 @@ class GuideBtns extends Component {
       this.props.finishStudy();
     }
   };
-
   // 点击退出指引
   exitGuide = () => {
     this.props.finishStudy();
   };
-
   render() {
     return (
       <div className="btn-container">
@@ -48,4 +37,10 @@ class GuideBtns extends Component {
     );
   }
 }
-export default GuideBtns;
+export default connect(
+  null,
+  {
+    changeStudyTip,
+    finishStudy
+  }
+)(GuideBtns);

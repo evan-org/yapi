@@ -18,25 +18,13 @@ const logList = [
     name: "项目"
   }
 ];
-@connect(
-  (state) =>
-    // console.log(state);
-    ({
-      uid: state.user.uid + "",
-      newsData: state.news.newsData
-    })
-  ,
-  {
-    fetchNewsData
-  }
-)
+//
 class NewsList extends Component {
   static propTypes = {
     fetchNewsData: PropTypes.func,
     setLoading: PropTypes.func,
     uid: PropTypes.string
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -74,5 +62,8 @@ class NewsList extends Component {
     );
   }
 }
-
-export default NewsList;
+export default connect((state) => ({
+  uid: state.user.uid + "",
+  newsData: state.news.newsData
+}),
+{ fetchNewsData })(NewsList);

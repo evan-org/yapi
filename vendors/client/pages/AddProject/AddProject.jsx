@@ -29,18 +29,7 @@ const formItemLayout = {
   },
   className: "form-item"
 };
-@connect(
-  (state) => ({
-    groupList: state.group.groupList,
-    currGroup: state.group.currGroup
-  }),
-  {
-    fetchGroupList,
-    addProject,
-    setBreadcrumb
-  }
-)
-@withRouter
+//
 class ProjectList extends Component {
   constructor(props) {
     super(props);
@@ -200,4 +189,14 @@ class ProjectList extends Component {
     );
   }
 }
-export default Form.create()(ProjectList);
+export default connect(
+  (state) => ({
+    groupList: state.group.groupList,
+    currGroup: state.group.currGroup
+  }),
+  {
+    fetchGroupList,
+    addProject,
+    setBreadcrumb
+  }
+)(withRouter(Form.create()(ProjectList)));

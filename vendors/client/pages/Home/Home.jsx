@@ -322,16 +322,8 @@ const HomeGuest = () => (
 HomeGuest.propTypes = {
   introList: PropTypes.array
 };
-
-@connect(
-  (state) => ({
-    login: state.user.isLogin
-  }),
-  {
-    changeMenuItem
-  }
-)
-@withRouter
+//
+//
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -406,4 +398,11 @@ class Home extends Component {
 //   ]
 // };
 
-export default Home;
+export default connect(
+  (state) => ({
+    login: state.user.isLogin
+  }),
+  {
+    changeMenuItem
+  }
+)(withRouter(Home));

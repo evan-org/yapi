@@ -10,29 +10,15 @@ import constants from "../../constants/variable.js";
 import produce from "immer";
 import { getProject, checkProjectName, copyProjectMsg } from "../../reducer/modules/project";
 import { trim } from "../../utils/common.js";
-const confirm = Modal.confirm;
 
-@connect(
-  (state) => ({
-    uid: state.user.uid,
-    currPage: state.project.currPage
-  }),
-  {
-    delFollow,
-    addFollow,
-    getProject,
-    checkProjectName,
-    copyProjectMsg
-  }
-)
-@withRouter
+const confirm = Modal.confirm;
+//
 class ProjectCard extends Component {
   constructor(props) {
     super(props);
     this.add = debounce(this.add, 400);
     this.del = debounce(this.del, 400);
   }
-
   static propTypes = {
     projectData: PropTypes.object,
     uid: PropTypes.number,
@@ -47,26 +33,21 @@ class ProjectCard extends Component {
     copyProjectMsg: PropTypes.func,
     currPage: PropTypes.number
   };
-
   copy = async(projectName) => {
     const id = this.props.projectData._id;
-
     let projectData = await this.props.getProject(id);
     let data = projectData.payload.data.data;
     let newData = produce(data, (draftData) => {
       draftData.preName = draftData.name;
       draftData.name = projectName;
     });
-
     await this.props.copyProjectMsg(newData);
     message.success("项目复制成功");
     this.props.callbackResult();
   };
-
   // 复制项目的二次确认
   showConfirm = () => {
     const that = this;
-
     confirm({
       title: "确认复制 " + that.props.projectData.name + " 项目吗？",
       okText: "确认",
@@ -83,23 +64,22 @@ class ProjectCard extends Component {
             <p>
               <b>项目名称:</b>
             </p>
-            <Input id="project_name" placeholder="项目名称" />
+            <Input id="project_name" placeholder="项目名称"/>
           </div>
         </div>
       ),
       async onOk() {
         const projectName = trim(document.getElementById("project_name").value);
-
         // 查询项目名称是否重复
         const group_id = that.props.projectData.group_id;
         await that.props.checkProjectName(projectName, group_id);
         that.copy(projectName);
       },
       iconType: "copy",
-      onCancel() {}
+      onCancel() {
+      }
     });
   };
-
   del = () => {
     const id = this.props.projectData.projectid || this.props.projectData._id;
     this.props.delFollow(id).then((res) => {
@@ -109,7 +89,6 @@ class ProjectCard extends Component {
       }
     });
   };
-
   add = () => {
     const { uid, projectData } = this.props;
     const param = {
@@ -126,7 +105,6 @@ class ProjectCard extends Component {
       }
     });
   };
-
   render() {
     const { projectData, inFollowPage, isShow } = this.props;
     return (
@@ -165,7 +143,7 @@ class ProjectCard extends Component {
         {isShow && (
           <div className="copy-btns" onClick={this.showConfirm}>
             <Tooltip placement="rightTop" title="复制项目">
-              <Icon type="copy" className="icon" />
+              <Icon type="copy" className="icon"/>
             </Tooltip>
           </div>
         )}
@@ -173,5 +151,13 @@ class ProjectCard extends Component {
     );
   }
 }
-
-export default ProjectCard;
+export default connect((state) => ({
+  uid: state.user.uid,
+  currPage: state.project.currPage
+}), {
+  delFollow,
+  addFollow,
+  getProject,
+  checkProjectName,
+  copyProjectMsg
+})(withRouter(ProjectCard));

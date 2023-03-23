@@ -24,7 +24,7 @@ import { withRouter } from "react-router";
  * @description 一般用于描述错误信息名称
  * @returns {object}
  */
-@withRouter
+//
 class ErrMsg extends Component {
   constructor(props) {
     super(props);
@@ -90,4 +90,4 @@ class ErrMsg extends Component {
   }
 }
 
-export default ErrMsg;
+export default withRouter(ErrMsg);

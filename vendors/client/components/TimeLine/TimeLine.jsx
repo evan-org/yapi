@@ -41,19 +41,6 @@ AddDiffView.propTypes = {
 };
 
 // timeago(new Date().getTime() - 40);
-
-@connect(
-  (state) => ({
-    newsData: state.news.newsData,
-    curpage: state.news.curpage,
-    curUid: state.user.uid
-  }),
-  {
-    fetchNewsData,
-    fetchMoreNews,
-    fetchInterfaceList
-  }
-)
 class TimeTree extends Component {
   static propTypes = {
     newsData: PropTypes.object,
@@ -280,4 +267,15 @@ class TimeTree extends Component {
   }
 }
 
-export default TimeTree;
+export default connect(
+  (state) => ({
+    newsData: state.news.newsData,
+    curpage: state.news.curpage,
+    curUid: state.user.uid
+  }),
+  {
+    fetchNewsData,
+    fetchMoreNews,
+    fetchInterfaceList
+  }
+)(TimeTree);
