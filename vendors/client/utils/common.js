@@ -1,5 +1,5 @@
 const moment = require("moment");
-const constants = require("../constants/variable");
+const constants = require("./variable");
 const Mock = require("mockjs");
 const json5 = require("json5");
 const MockExtra = require("common/mock-extra.js");
@@ -141,7 +141,7 @@ exports.handleApiPath = (path) => {
 };
 
 // 名称限制 constants.NAME_LIMIT 字符
-exports.nameLengthLimit = type => {
+exports.nameLengthLimit = (type) => {
   // 返回字符串长度，汉字计数为2
   const strLength = (str) => {
     let length = 0;

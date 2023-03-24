@@ -1,5 +1,5 @@
 import axios from "axios";
-import variable from "../../constants/variable";
+import variable from "../../utils/variable";
 import {htmlFilter} from "../../utils/common";
 
 // Actions

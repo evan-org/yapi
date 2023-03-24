@@ -11,7 +11,7 @@ import {
 } from "client/reducer/modules/interface";
 import { getProject } from "client/reducer/modules/project";
 import { Link } from "react-router-dom";
-import variable from "../../../../constants/variable";
+import variable from "../../../../utils/variable";
 import "./Edit.scss";
 import Label from "../../../../components/Label/Label.jsx";
 

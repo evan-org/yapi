@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 import AceEditor from "client/components/AceEditor/AceEditor";
 import { formatTime, safeArray } from "client/utils/common";
 import ErrMsg from "../../../../components/ErrMsg/ErrMsg.jsx";
-import variable from "../../../../constants/variable";
-import constants from "../../../../constants/variable.js";
+import variable from "../../../../utils/variable";
+import constants from "../../../../utils/variable.js";
 import copy from "copy-to-clipboard";
 import SchemaTable from "../../../../components/SchemaTable/SchemaTable.jsx";
 

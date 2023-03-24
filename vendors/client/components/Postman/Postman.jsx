@@ -16,7 +16,7 @@ import {
   Col,
   Alert
 } from "antd";
-import constants from "../../constants/variable.js";
+import constants from "../../utils/variable.js";
 import AceEditor from "client/components/AceEditor/AceEditor";
 import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
