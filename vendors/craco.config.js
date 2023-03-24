@@ -93,13 +93,10 @@ module.exports = {
     }
   },*/
   webpack: {
-    entry: {
-      main: "./client/main.jsx",
-      polyfill: ["buffer", "process", "util"]
-    },
     // 别名
     alias: {
-      "@": path.resolve("client"),
+      "src": resolve("client"),
+      "@": resolve("client"),
     },
     plugins: {
       add: [
@@ -116,8 +113,9 @@ module.exports = {
       ]
     },
     configure: (webpackConfig, { env, paths }) => {
-      webpackConfig.entry.main = "./client/main.jsx";
-      return whenProd(() => {
+      console.log("configure", webpackConfig);
+      webpackConfig.entry = resolve("./client/main");
+      const widthProd = whenProd(() => {
         //
         paths.appBuild = resolve("./dist");
         paths.publicUrlOrPath = "./";
@@ -145,6 +143,8 @@ module.exports = {
         console.log(webpackConfig, paths);
         return smp.wrap(webpackConfig)
       }, webpackConfig)
+      console.log(widthProd);
+      return widthProd
     }
   },
   devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {

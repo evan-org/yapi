@@ -6,7 +6,7 @@
   "scripts": {
     "dev:vite": "vite",
     "build:vite": "tsc && vite build",
-    "start:craco": "craco start",
+    "start:craco": "craco start -verbose",
     "build:craco": "craco build",
     "start:react-scripts": "react-scripts start",
     "build:react-scripts": "react-scripts build",
