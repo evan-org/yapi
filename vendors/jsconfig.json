@@ -5,9 +5,7 @@
     "emitDecoratorMetadata": true,
     "paths": {
       "common/*": ["common/*"],
-      "client/*": ["client/*"],
-      "yapi.js": ["server/yapi.js"],
-      "models/*": ["server/models/*"]
+      "client/*": ["client/*"]
     }
   },
   "include": ["client","common", "exts"],

@@ -119,6 +119,9 @@ module.exports = {
     alias: {
       "src": resolve("client"),
       "@": resolve("client"),
+      "client": resolve("client"),
+      "common": resolve("common"),
+      "exts": resolve("exts")
     },
     plugins: {
       add: [
