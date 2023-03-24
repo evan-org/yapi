@@ -34,6 +34,8 @@ import "./styles/antd-ui/index.less";
 //
 import "./styles/material-ui/index.scss";
 import { ConfigProvider } from "antd";
+import "babel-polyfill"
+//
 console.debug("11111111111", store, process.env);
 //
 const root = ReactDOM.createRoot(document.getElementById("yapi"));

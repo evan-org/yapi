@@ -48,6 +48,7 @@
     "antd": "~3.26.20",
     "axios": "0.18.1",
     "babel-plugin-import": "^1.13.6",
+    "babel-polyfill": "^6.26.0",
     "browserify-zlib": "^0.2.0",
     "compare-versions": "^3.4.0",
     "constants-browserify": "^1.0.0",
@@ -133,6 +134,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-decorators": "^7.19.1",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@craco/craco": "~6.4.5",
     "@types/ldapjs": "^2.2.5",
     "@types/node": "^18.15.5",
@@ -163,6 +165,7 @@
     "nodemon": "^2.0.2",
     "prettier": "^1.18.2",
     "prop-types": "^15.5.10",
+    "redux-devtools-extension": "^2.13.9",
     "sass": "~1.27.2",
     "sass-loader": "~8.0.2",
     "simple-progress-webpack-plugin": "^2.0.0",

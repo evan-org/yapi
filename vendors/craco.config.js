@@ -149,19 +149,66 @@ module.exports = {
       webpackConfig.output.path = resolve("./dist");
       webpackConfig.output.publicPath = "./";
       console.log("configure new", paths);
-      if (env === "development") {
-        webpackConfig.devtool = "source-map";
+      // if (env === "development") {
+      //   webpackConfig.devtool = "source-map";
+      // }
+      //
+      webpackConfig.devtool = false;
+      webpackConfig.optimization = {
+        splitChunks: {
+          chunks: "async",
+          minSize: 40000,
+          maxAsyncRequests: 5, // 最大异步请求数
+          maxInitialRequests: 4, // 页面初始化最大异步请求数
+          automaticNameDelimiter: "~", // 解决命名冲突
+          // name: true值将会自动根据切割之前的代码块和缓存组键值(key)自动分配命名,否则就需要传入一个String或者function.
+          name: true,
+          cacheGroups: {
+            common: {
+              name: "chunk-common",
+              chunks: "all",
+              test: /[\\/]node_modules[\\/](react|react-dom|react-router|redux-saga|dva|react-router-dom|draft-js\/lib|core-js|@antv\/data-set\/build|)[\\/]/,
+              priority: -10,
+            },
+            antd: {
+              name: "chunk-antd",
+              chunks: "all",
+              test: /[\\/]node_modules[\\/](@ant-design|antd|moment|immutable\/dist|rc-calendar\/es|braft-finder\/dist|lodash|rc-tree\/es)[\\/]/,
+              priority: -11,
+            },
+            echarts: {
+              name: "chunk-echarts",
+              chunks: "all",
+              test: /[\\/]node_modules[\\/](echarts)[\\/]/,
+              priority: 10,
+            },
+          }
+        }
       }
+      //
       console.log("configure new\n\n", webpackConfig);
       return webpackConfig;
       // return smp.wrap(webpackConfig);
     }
   },
   babel: {
+    presets: [
+      "@babel/preset-react",
+      ["@babel/preset-env", { modules: "commonjs" }]
+    ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
       "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-proposal-optional-chaining",
       ["@babel/transform-runtime"],
+      [
+        "import",
+        {
+          libraryName: "antd",
+          libraryDirectory: "es",
+          style: true,
+        },
+      ],
       [
         "babel-plugin-react-css-modules",
         {
@@ -169,6 +216,16 @@ module.exports = {
           attributeNames: { activeStyleName: "activeClassName" },
         },
       ],
+      [
+        "babel-plugin-styled-components",
+        {
+          "displayName": false,
+          "minify": true,
+          "transpileTemplateLiterals": true,
+          "ssr": false,
+          "pure": true
+        }
+      ]
     ]
   },
   devServer: {

@@ -8,6 +8,6 @@
       "client/*": ["client/*"]
     }
   },
-  "include": ["client","common", "exts"],
+  "include": ["client","common"],
   "exclude": ["node_modules", "dist", ".yarn", "docs", "static"]
 }

@@ -17,9 +17,9 @@ import {
 //
 const Option = Select.Option;
 const FormItem = Form.Item;
-import { safeAssign } from "client/utils/common";
-import AceEditor from "client/components/AceEditor/AceEditor";
-import constants from "client/utils/variable.js";
+import { safeAssign } from "../../../client/utils/common";
+import AceEditor from "../../../client/components/AceEditor/AceEditor";
+import constants from "../../../client/utils/variable.js";
 import { httpCodes } from "../index.js";
 import "./CaseDesModal.scss";
 import { connect } from "react-redux";
