@@ -32,10 +32,10 @@ yapi-plugin-demo
   client.js  //客户端入口文件
   server.js  //服务端入口文件
   packjson.json //插件依赖管理
-  main.jsx //插件配置文件
+  index.jsx //插件配置文件
 ```
 
-## main.jsx 配置说明
+## index.jsx 配置说明
 ```
 server: true // 如果为true,表名该插件需要经过后端服务器加载
 client: true // 如果为true,表名该插件需要经过前端编译

@@ -2,7 +2,7 @@ import "./Footer.scss";
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { Row, Col, Icon } from "antd";
-const version = process.env.version;
+const version = "1.0.0" // process.env.version;
 class Footer extends Component {
   constructor(props) {
     super(props);

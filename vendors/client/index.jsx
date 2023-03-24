@@ -1,6 +1,11 @@
-import * as React from "react";
-import { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
+//
+import App from "./App.jsx";
+import { Provider } from "react-redux";
+import store from "./reducer/store";
+//
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 //
@@ -21,12 +26,6 @@ const theme = createTheme({
   }
 });
 //
-import App from "./App.jsx";
-import { Provider } from "react-redux";
-import createStore from "./reducer/create";
-// 状态管理器
-const store = createStore();
-//
 import "./plugin";
 // style
 import "./styles/custom-ui/index.less";
@@ -35,14 +34,12 @@ import "./styles/antd-ui/index.less";
 //
 import "./styles/material-ui/index.scss";
 import { ConfigProvider } from "antd";
+console.debug("11111111111", store, process.env);
 //
-const rootElement = document.getElementById("yapi");
-const root = createRoot(rootElement);
+const root = ReactDOM.createRoot(document.getElementById("yapi"));
 root.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-      <CssBaseline/>
       <ConfigProvider>
         <App/>
       </ConfigProvider>
@@ -50,4 +47,4 @@ root.render(
   </Provider>
 );
 //
-reportWebVitals(console.log);
+reportWebVitals();

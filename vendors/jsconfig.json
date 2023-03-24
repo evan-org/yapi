@@ -10,6 +10,6 @@
       "models/*": ["server/models/*"]
     }
   },
-  "include": ["client","common", "server", "exts"],
-  "exclude": ["node_modules", "dist", ".yarn"]
+  "include": ["client","common", "exts"],
+  "exclude": ["node_modules", "dist", ".yarn", "docs", "static"]
 }
