@@ -1,15 +1,11 @@
 const path = require("path");
 const fs = require("fs");
-// const CracoAntDesignPlugin = require("craco-antd");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const CracoLessPlugin = require("craco-less");
-const webpack = require("webpack");
 const { whenProd } = require("@craco/craco");
-// const CracoVtkPlugin = require('craco-vtk');
+const CracoLessPlugin = require("craco-less");
 // 打包gzip
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 // 打包进程分析
-const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
+// const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
 // 分析打包时间
 // const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 // const smp = new SpeedMeasurePlugin();
@@ -19,9 +15,6 @@ let commonLib = require("./common/plugin.js");
 // const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 //
 let { exts: systemConfigPlugin } = require("./common/config");
-const CircularDependencyPlugin = require("circular-dependency-plugin");
-// const package = require("./package.json");
-// const configPlugins = require("../config.json");
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === "node_modules") {
@@ -67,6 +60,8 @@ function invade(target, name, callback) {
     }
   });
 }
+let isWin = require("os").platform() === "win32";
+
 //
 module.exports = {
   // reactScriptsVersion: "react-scripts",
@@ -98,15 +93,15 @@ module.exports = {
     }
   },*/
   style: {
-    modules: {
-      localIdentName: "[local]___[hash:base64:5]",
-    },
+    // modules: {
+    //   localIdentName: "[local]___[hash:base64:5]",
+    // },
     sass: {
       loaderOptions: {
         // Prefer 'sass' (dart-sass) over 'node-sass' if both packages are installed.
         implementation: require("sass"),
         // Workaround for this bug: https://github.com/webpack-contrib/sass-loader/issues/804
-        webpackImporter: false,
+        webpackImporter: true,
       },
     },
     //   postcss: {
@@ -130,16 +125,6 @@ module.exports = {
     },
     plugins: {
       add: [
-        // new webpack.DefinePlugin({
-        //   "process.env": process.env
-        // }),
-        new CircularDependencyPlugin({
-          exclude: /node_modules/,
-          include: /src/,
-          failOnError: true,
-          allowAsyncCycles: false,
-          cwd: process.cwd()
-        }),
         // 打压缩包
         ...whenProd(() => [
           // new SimpleProgressWebpackPlugin(),
@@ -160,9 +145,9 @@ module.exports = {
       paths.appBuild = resolve("./dist");
       paths.appSrc = resolve("./client");
       paths.appIndexJs = resolve("./client/index.js");
-      // paths.swSrc = resolve("./client/service-worker.js");
-      // paths.testsSetup = resolve("./client/testsSetup.js");
-      // paths.proxySetup = resolve("./client/proxySetup.js");
+      paths.swSrc = resolve("./client/service-worker.js");
+      paths.testsSetup = resolve("./client/testsSetup.js");
+      paths.proxySetup = resolve("./client/proxySetup.js");
       // console.log("configure new", paths, webpackConfig);
       webpackConfig.entry = resolve("./client/index.js");
       webpackConfig.output.path = resolve("./dist");
@@ -180,7 +165,7 @@ module.exports = {
   babel: {
     presets: [
       "@babel/preset-react",
-      ["@babel/preset-env", { modules: "commonjs" }]
+      ["@babel/preset-env"]
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
@@ -204,6 +189,7 @@ module.exports = {
   devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {
     console.log("env, paths, proxy, allowedHost", env, paths, proxy, allowedHost);
     console.log("devServerConfig", devServerConfig);
+    devServerConfig.static.publicPath.push(resolve("/"));
     devServerConfig.proxy = {
       "/api": {
         target: "http://127.0.0.1:3000",
@@ -276,4 +262,4 @@ module.exports = {
     //   },
     // },
   ]
-};
+}

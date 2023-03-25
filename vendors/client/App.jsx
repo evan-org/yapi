@@ -16,22 +16,19 @@ import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 import { checkLoginState } from "./reducer/modules/user";
 import { requireAuthentication } from "./components/AuthenticatedComponent";
 
-const plugin = require("@client/plugin.js");
+const plugin = require("/plugin.js");
 const LOADING_STATUS = 0;
-const alertContent = () => {
-  const ua = window.navigator.userAgent,
-    isChrome = ua.indexOf("Chrome") && window.chrome;
+function AlertContent(props) {
+  const ua = window.navigator.userAgent;
+  const isChrome = ua.indexOf("Chrome") && window.chrome;
   if (!isChrome) {
-    return (
-      <Alert
-        style={{ zIndex: 99 }}
-        message={"YApi 的接口测试等功能仅支持 Chrome 浏览器，请使用 Chrome 浏览器获得完整功能。"}
-        banner
-        closable
-      />
-    );
+    return (<Alert style={{ zIndex: 99 }} message={"YApi 的接口测试等功能仅支持 Chrome 浏览器，请使用 Chrome 浏览器获得完整功能。"}
+      banner closable/>
+    )
   }
-};
+  return null
+}
+//
 const AppRoute = {
   home: {
     path: "/",
@@ -96,7 +93,7 @@ class App extends Component {
           <Layout className="g-main">
             <div className="router-main">
               {this.props.curUserRole === "admin" && <Notify/>}
-              {alertContent()}
+              <AlertContent/>
               {this.props.loginState !== 1 ? <Header/> : null}
               <div className="router-container">
                 {Object.keys(AppRoute).map((key) => {
