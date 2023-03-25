@@ -4,7 +4,7 @@ import { Table, Select, Tooltip, Icon } from "antd";
 import variable from "../../../../utils/variable";
 import { connect } from "react-redux";
 const Option = Select.Option;
-import { fetchInterfaceListMenu } from "client/reducer/modules/interface";
+import { fetchInterfaceListMenu } from "@client/reducer/modules/interface";
 
 //
 class ImportInterface extends Component {

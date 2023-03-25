@@ -2,8 +2,8 @@ import React, { PureComponent as Component } from "react";
 import { Timeline, Spin } from "antd";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { formatTime } from "client/utils/common";
-import { fetchNewsData } from "client/reducer/modules/news";
+import { formatTime } from "@client/utils/common";
+import { fetchNewsData } from "@client/reducer/modules/news";
 import { timeago } from "common/utils";
 // timeago(new Date().getTime() - 40);
 

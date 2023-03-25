@@ -8,7 +8,7 @@ import ProjectToken from "./ProjectToken/ProjectToken.jsx";
 import ProjectMock from "./ProjectMock/index.jsx";
 import { connect } from "react-redux";
 const TabPane = Tabs.TabPane;
-const plugin = require("client/plugin.js");
+const plugin = require("@client/plugin.js");
 
 const routers = {}
 

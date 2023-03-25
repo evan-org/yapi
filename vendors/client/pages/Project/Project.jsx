@@ -14,7 +14,7 @@ import Loading from "../../components/Loading/Loading";
 import ProjectMember from "./Setting/ProjectMember/ProjectMember.jsx";
 import ProjectData from "./Setting/ProjectData/ProjectData.jsx";
 
-const plugin = require("client/plugin.js");
+const plugin = require("@client/plugin.js");
 class Project extends Component {
   static propTypes = {
     match: PropTypes.object,

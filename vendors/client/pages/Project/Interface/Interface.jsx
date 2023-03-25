@@ -13,8 +13,8 @@ import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.jsx";
 import InterfaceColContent from "./InterfaceCol/InterfaceColContent.jsx";
 import InterfaceCaseContent from "./InterfaceCol/InterfaceCaseContent.jsx";
 //
-import { getProject } from "client/reducer/modules/project";
-import { setColData } from "client/reducer/modules/interfaceCol";
+import { getProject } from "@client/reducer/modules/project";
+import { setColData } from "@client/reducer/modules/interfaceCol";
 
 const contentRouter = {
   path: "/project/:id/interface/:action/:actionId",

@@ -11,7 +11,7 @@ import {
   addMember,
   delMember,
   changeMemberRole
-} from "client/reducer/modules/group";
+} from "@client/reducer/modules/group";
 import ErrMsg from "../../../components/ErrMsg/ErrMsg.jsx";
 import UsernameAutoComplete from "../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 const Option = Select.Option;

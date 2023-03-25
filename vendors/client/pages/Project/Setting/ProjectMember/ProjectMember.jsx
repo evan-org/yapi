@@ -14,7 +14,7 @@ import {
   Tooltip
 } from "antd";
 import PropTypes from "prop-types";
-import { fetchGroupMsg, fetchGroupMemberList } from "client/reducer/modules/group";
+import { fetchGroupMsg, fetchGroupMemberList } from "@client/reducer/modules/group";
 import { connect } from "react-redux";
 import ErrMsg from "../../../../components/ErrMsg/ErrMsg.jsx";
 import {
@@ -25,7 +25,7 @@ import {
   delMember,
   changeMemberRole,
   changeMemberEmailNotice
-} from "client/reducer/modules/project";
+} from "@client/reducer/modules/project";
 import UsernameAutoComplete from "../../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 import "../Setting.scss";
 

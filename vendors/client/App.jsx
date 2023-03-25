@@ -16,7 +16,7 @@ import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 import { checkLoginState } from "./reducer/modules/user";
 import { requireAuthentication } from "./components/AuthenticatedComponent";
 
-const plugin = require("client/plugin.js");
+const plugin = require("@client/plugin.js");
 const LOADING_STATUS = 0;
 const alertContent = () => {
   const ua = window.navigator.userAgent,

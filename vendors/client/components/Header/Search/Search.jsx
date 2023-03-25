@@ -5,10 +5,10 @@ import { Icon, Input, AutoComplete } from "antd";
 import "./Search.scss";
 import { withRouter } from "react-router";
 import axios from "axios";
-import { setCurrGroup, fetchGroupMsg } from "client/reducer/modules/group";
-import { changeMenuItem } from "client/reducer/modules/menu";
+import { setCurrGroup, fetchGroupMsg } from "@client/reducer/modules/group";
+import { changeMenuItem } from "@client/reducer/modules/menu";
 
-import { fetchInterfaceListMenu } from "client/reducer/modules/interface";
+import { fetchInterfaceListMenu } from "@client/reducer/modules/interface";
 const Option = AutoComplete.Option;
 
 //

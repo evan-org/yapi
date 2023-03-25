@@ -1,5 +1,5 @@
 import React from "react";
-import "client/layout/Layout.module.scss";
+import "@client/layout/Layout.module.scss";
 
 function Main(props) {
   return (

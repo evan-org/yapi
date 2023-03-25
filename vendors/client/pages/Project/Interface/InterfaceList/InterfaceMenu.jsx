@@ -9,15 +9,15 @@ import {
   deleteInterfaceData,
   deleteInterfaceCatData,
   initInterface
-} from "client/reducer/modules/interface";
-import { getProject } from "client/reducer/modules/project";
+} from "@client/reducer/modules/interface";
+import { getProject } from "@client/reducer/modules/project";
 import { Input, Icon, Button, Modal, message, Tree, Tooltip } from "antd";
 import AddInterfaceForm from "./AddInterfaceForm";
 import AddInterfaceCatForm from "./AddInterfaceCatForm";
 import axios from "axios";
 import { Link, withRouter } from "react-router-dom";
 import produce from "immer";
-import { arrayChangeIndex } from "client/utils/common";
+import { arrayChangeIndex } from "@client/utils/common";
 
 import "./interfaceMenu.scss";
 

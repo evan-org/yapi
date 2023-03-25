@@ -9,22 +9,22 @@ import {
   fetchCaseList,
   setColData,
   fetchCaseEnvList
-} from "client/reducer/modules/interfaceCol";
+} from "@client/reducer/modules/interfaceCol";
 import HTML5Backend from "react-dnd-html5-backend";
-import { getToken, getEnv } from "client/reducer/modules/project";
+import { getToken, getEnv } from "@client/reducer/modules/project";
 import { DragDropContext } from "react-dnd";
-import AceEditor from "client/components/AceEditor/AceEditor";
+import AceEditor from "@client/components/AceEditor/AceEditor";
 import * as Table from "reactabular-table";
 import * as dnd from "reactabular-dnd";
 import * as resolve from "table-resolver";
 import axios from "axios";
 import CaseReport from "./CaseReport.jsx";
 import _ from "underscore";
-import { initCrossRequest } from "client/components/Postman/CheckCrossInstall.jsx";
+import { initCrossRequest } from "@client/components/Postman/CheckCrossInstall.jsx";
 import produce from "immer";
-import { InsertCodeMap } from "client/components/Postman/Postman.jsx"
+import { InsertCodeMap } from "@client/components/Postman/Postman.jsx"
 
-const plugin = require("client/plugin.js");
+const plugin = require("@client/plugin.js");
 const {
   handleParams,
   crossRequest,
@@ -32,7 +32,7 @@ const {
   checkNameIsExistInArray
 } = require("common/postmanLib.js");
 const { handleParamsValue, json_parse, ArrayToObject } = require("common/utils.js");
-import CaseEnv from "client/components/CaseEnv";
+import CaseEnv from "@client/components/CaseEnv";
 import Label from "../../../../components/Label/Label.jsx";
 
 const Option = Select.Option;

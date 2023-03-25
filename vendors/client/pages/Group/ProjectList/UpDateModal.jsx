@@ -2,7 +2,7 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Modal, Form, Input, Icon, Tooltip, Select, message, Button, Row, Col } from "antd";
-import { updateProject, fetchProjectList, delProject, changeUpdateModal, changeTableLoading } from "client/reducer/modules/project";
+import { updateProject, fetchProjectList, delProject, changeUpdateModal, changeTableLoading } from "@client/reducer/modules/project";
 
 const { TextArea } = Input;
 const FormItem = Form.Item;

@@ -8,8 +8,8 @@ import {
   fetchInterfaceListMenu,
   fetchInterfaceList,
   fetchInterfaceCatList
-} from "client/reducer/modules/interface";
-import { getProject } from "client/reducer/modules/project";
+} from "@client/reducer/modules/interface";
+import { getProject } from "@client/reducer/modules/project";
 import { Link } from "react-router-dom";
 import variable from "../../../../utils/variable";
 import "./Edit.scss";

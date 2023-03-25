@@ -15,15 +15,15 @@ module.exports = {
         style: "css",
       },
     ],
-    [
-      "babel-plugin-styled-components",
-      {
-        "displayName": false,
-        "minify": true,
-        "transpileTemplateLiterals": true,
-        "ssr": false,
-        "pure": true
-      }
-    ]
+    // [
+    //   "babel-plugin-styled-components",
+    //   {
+    //     "displayName": false,
+    //     "minify": true,
+    //     "transpileTemplateLiterals": true,
+    //     "ssr": false,
+    //     "pure": true
+    //   }
+    // ]
   ],
 };

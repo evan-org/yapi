@@ -6,11 +6,11 @@ import Edit from "./Edit.jsx";
 import View from "./View.jsx";
 //
 import { Prompt } from "react-router";
-import { fetchInterfaceData } from "client/reducer/modules/interface";
+import { fetchInterfaceData } from "@client/reducer/modules/interface";
 import { withRouter } from "react-router-dom";
 import Run from "./Run/Run.jsx";
 
-const plugin = require("client/plugin.js");
+const plugin = require("@client/plugin.js");
 const TabPane = Tabs.TabPane;
 //
 class Content extends Component {

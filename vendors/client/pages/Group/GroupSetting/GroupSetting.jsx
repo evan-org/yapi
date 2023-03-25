@@ -10,10 +10,10 @@ import {
   fetchGroupMsg,
   updateGroupList,
   deleteGroup
-} from "client/reducer/modules/group";
+} from "@client/reducer/modules/group";
 
 const { TextArea } = Input;
-import { trim } from "client/utils/common";
+import { trim } from "@client/utils/common";
 import _ from "underscore";
 import "./GroupSetting.scss";
 

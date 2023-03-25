@@ -21,12 +21,12 @@ import axios from "axios";
 import URL from "url";
 
 const Dragger = Upload.Dragger;
-import { saveImportData } from "client/reducer/modules/interface";
-import { fetchUpdateLogData } from "client/reducer/modules/news";
-import { handleSwaggerUrlData } from "client/reducer/modules/project";
+import { saveImportData } from "@client/reducer/modules/interface";
+import { fetchUpdateLogData } from "@client/reducer/modules/news";
+import { handleSwaggerUrlData } from "@client/reducer/modules/project";
 const Option = Select.Option;
 const confirm = Modal.confirm;
-const plugin = require("client/plugin.js");
+const plugin = require("@client/plugin.js");
 const RadioGroup = Radio.Group;
 const importDataModule = {};
 const exportDataModule = {};

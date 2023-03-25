@@ -10,8 +10,8 @@ const { TextArea } = Input;
 const Search = Input.Search;
 import UsernameAutoComplete from "../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 import GuideBtns from "../../../components/GuideBtns/GuideBtns.jsx";
-import { fetchNewsData } from "client/reducer/modules/news";
-import { fetchGroupList, setCurrGroup, setGroupList, fetchGroupMsg } from "client/reducer/modules/group";
+import { fetchNewsData } from "@client/reducer/modules/news";
+import { fetchGroupList, setCurrGroup, setGroupList, fetchGroupMsg } from "@client/reducer/modules/group";
 import _ from "underscore";
 import "./GroupList.scss";
 

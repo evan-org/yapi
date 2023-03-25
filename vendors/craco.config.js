@@ -97,22 +97,22 @@ module.exports = {
       loaderOptions: (postcssLoaderOptions, { env, paths }) => postcssLoaderOptions
     }
   },*/
-  // style: {
-  //   modules: {
-  //     localIdentName: "[local]___[hash:base64:5]",
-  //   },
-  //   sass: {
-  //     loaderOptions: {
-  //       // Prefer 'sass' (dart-sass) over 'node-sass' if both packages are installed.
-  //       implementation: require("sass"),
-  //       // Workaround for this bug: https://github.com/webpack-contrib/sass-loader/issues/804
-  //       webpackImporter: false,
-  //     },
-  //   },
-  //   postcss: {
-  //     mode: "file",
-  //   },
-  // },
+  style: {
+    modules: {
+      localIdentName: "[local]___[hash:base64:5]",
+    },
+    sass: {
+      loaderOptions: {
+        // Prefer 'sass' (dart-sass) over 'node-sass' if both packages are installed.
+        implementation: require("sass"),
+        // Workaround for this bug: https://github.com/webpack-contrib/sass-loader/issues/804
+        webpackImporter: false,
+      },
+    },
+    //   postcss: {
+    //     mode: "file",
+    //   },
+  },
   eslint: {
     mode: "file",
   },
@@ -122,10 +122,11 @@ module.exports = {
   webpack: {
     // 别名
     alias: {
+      "@": resolve("./client"),
       "src": resolve("./client"),
-      "client": resolve("./client"),
-      "common": resolve("./common"),
-      "exts": resolve("./exts")
+      "@client": resolve("./client"),
+      "@common": resolve("./common"),
+      "@exts": resolve("./exts")
     },
     plugins: {
       add: [
@@ -150,6 +151,10 @@ module.exports = {
           })
         ], [])
       ]
+    },
+    module: {
+      // 独完整的 react.min.js 文件就没有采用模块化，忽略对 react.min.js 文件的递归解析处理
+      noParse: [/node_modules\/jsondiffpatch\/public\/build\/.*js/, /tui-eritor/],
     },
     configure: (webpackConfig, { env, paths }) => {
       paths.appBuild = resolve("./dist");

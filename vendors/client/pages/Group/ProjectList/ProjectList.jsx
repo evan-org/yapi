@@ -8,11 +8,11 @@ import {
   fetchProjectList,
   delProject,
   changeUpdateModal
-} from "client/reducer/modules/project";
+} from "@client/reducer/modules/project";
 import ProjectCard from "../../../components/ProjectCard/ProjectCard.jsx";
 import ErrMsg from "../../../components/ErrMsg/ErrMsg.jsx";
 import { autobind } from "core-decorators";
-import { setBreadcrumb } from "client/reducer/modules/user";
+import { setBreadcrumb } from "@client/reducer/modules/user";
 
 import "./ProjectList.scss";
 

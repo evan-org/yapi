@@ -17,7 +17,7 @@ import {
   Alert
 } from "antd";
 import constants from "../../utils/variable.js";
-import AceEditor from "client/components/AceEditor/AceEditor";
+import AceEditor from "@client/components/AceEditor/AceEditor";
 import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
 import axios from "axios";
@@ -35,7 +35,7 @@ const {
   crossRequest,
   checkNameIsExistInArray
 } = require("common/postmanLib.js");
-const plugin = require("client/plugin.js");
+const plugin = require("@client/plugin.js");
 const createContext = require("common/createContext")
 const HTTP_METHOD = constants.HTTP_METHOD;
 const InputGroup = Input.Group;
