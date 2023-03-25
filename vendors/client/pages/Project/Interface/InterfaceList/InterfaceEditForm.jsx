@@ -12,16 +12,20 @@ import mockEditor from "client/components/AceEditor/mockEditor";
 import AceEditor from "client/components/AceEditor/AceEditor";
 import axios from "axios";
 import { MOCK_SOURCE } from "client/utils/variable";
-import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
+
 const jSchema = require("json-schema-editor-visual");
 const ResBodySchema = jSchema({ lang: "zh_CN", mock: MOCK_SOURCE });
 const ReqBodySchema = jSchema({ lang: "zh_CN", mock: MOCK_SOURCE });
 const TabPane = Tabs.TabPane;
 
-
-require("common/tui-editor/dist/tui-editor.min.css"); // editor ui
-require("common/tui-editor/dist/tui-editor-contents.min.css"); // editor content
-require("./editor.css");
+// import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
+// import "common/tui-editor/dist/tui-editor.min.css"; // editor ui
+// import "common/tui-editor/dist/tui-editor-contents.min.css"; // editor content
+//
+import Editor from "@toast-ui/editor";
+import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
+//
+import "./editor.css";
 
 
 function checkIsJsonSchema(json) {

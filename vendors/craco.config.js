@@ -1,8 +1,9 @@
 const path = require("path");
 const fs = require("fs");
 // const CracoAntDesignPlugin = require("craco-antd");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const CracoLessPlugin = require("craco-less");
-// const webpack = require("webpack");
+const webpack = require("webpack");
 const { whenProd } = require("@craco/craco");
 // const CracoVtkPlugin = require('craco-vtk');
 // 打包gzip
@@ -18,6 +19,7 @@ let commonLib = require("./common/plugin.js");
 // const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 //
 let { exts: systemConfigPlugin } = require("./common/config");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 // const package = require("./package.json");
 // const configPlugins = require("../config.json");
 function createScript(plugin, pathAlias) {
@@ -95,39 +97,51 @@ module.exports = {
       loaderOptions: (postcssLoaderOptions, { env, paths }) => postcssLoaderOptions
     }
   },*/
-  style: {
-    modules: {
-      localIdentName: "[local]___[hash:base64:5]",
-    },
-    sass: {
-      loaderOptions: {
-        // Prefer 'sass' (dart-sass) over 'node-sass' if both packages are installed.
-        implementation: require("sass"),
-        // Workaround for this bug: https://github.com/webpack-contrib/sass-loader/issues/804
-        webpackImporter: false,
-      },
-    },
-    postcss: {
-      mode: "file",
-    },
-  },
+  // style: {
+  //   modules: {
+  //     localIdentName: "[local]___[hash:base64:5]",
+  //   },
+  //   sass: {
+  //     loaderOptions: {
+  //       // Prefer 'sass' (dart-sass) over 'node-sass' if both packages are installed.
+  //       implementation: require("sass"),
+  //       // Workaround for this bug: https://github.com/webpack-contrib/sass-loader/issues/804
+  //       webpackImporter: false,
+  //     },
+  //   },
+  //   postcss: {
+  //     mode: "file",
+  //   },
+  // },
   eslint: {
     mode: "file",
   },
+  // env: {
+  //   mode: "file"
+  // },
   webpack: {
     // 别名
     alias: {
-      "src": resolve("client"),
-      "@": resolve("client"),
-      "client": resolve("client"),
-      "common": resolve("common"),
-      "exts": resolve("exts")
+      "src": resolve("./client"),
+      "client": resolve("./client"),
+      "common": resolve("./common"),
+      "exts": resolve("./exts")
     },
     plugins: {
       add: [
+        // new webpack.DefinePlugin({
+        //   "process.env": process.env
+        // }),
+        new CircularDependencyPlugin({
+          exclude: /node_modules/,
+          include: /src/,
+          failOnError: true,
+          allowAsyncCycles: false,
+          cwd: process.cwd()
+        }),
         // 打压缩包
         ...whenProd(() => [
-          new SimpleProgressWebpackPlugin(),
+          // new SimpleProgressWebpackPlugin(),
           new CompressionWebpackPlugin({
             algorithm: "gzip",
             test: new RegExp("\\.(" + ["js", "css"].join("|") + ")$"),
@@ -140,51 +154,18 @@ module.exports = {
     configure: (webpackConfig, { env, paths }) => {
       paths.appBuild = resolve("./dist");
       paths.appSrc = resolve("./client");
-      paths.appIndexJs = resolve("./client/index.jsx");
-      paths.swSrc = resolve("./client/service-worker.js");
-      paths.testsSetup = resolve("./client/testsSetup.js");
-      paths.proxySetup = resolve("./client/proxySetup.js");
+      paths.appIndexJs = resolve("./client/index.js");
+      // paths.swSrc = resolve("./client/service-worker.js");
+      // paths.testsSetup = resolve("./client/testsSetup.js");
+      // paths.proxySetup = resolve("./client/proxySetup.js");
       // console.log("configure new", paths, webpackConfig);
-      webpackConfig.entry = resolve("./client/index.jsx");
+      webpackConfig.entry = resolve("./client/index.js");
       webpackConfig.output.path = resolve("./dist");
-      webpackConfig.output.publicPath = "./";
-      console.log("configure new", paths);
-      // if (env === "development") {
-      //   webpackConfig.devtool = "source-map";
-      // }
-      //
-      webpackConfig.devtool = false;
-      webpackConfig.optimization = {
-        splitChunks: {
-          chunks: "async",
-          minSize: 40000,
-          maxAsyncRequests: 5, // 最大异步请求数
-          maxInitialRequests: 4, // 页面初始化最大异步请求数
-          automaticNameDelimiter: "~", // 解决命名冲突
-          // name: true值将会自动根据切割之前的代码块和缓存组键值(key)自动分配命名,否则就需要传入一个String或者function.
-          name: true,
-          cacheGroups: {
-            common: {
-              name: "chunk-common",
-              chunks: "all",
-              test: /[\\/]node_modules[\\/](react|react-dom|react-router|redux-saga|dva|react-router-dom|draft-js\/lib|core-js|@antv\/data-set\/build|)[\\/]/,
-              priority: -10,
-            },
-            antd: {
-              name: "chunk-antd",
-              chunks: "all",
-              test: /[\\/]node_modules[\\/](@ant-design|antd|moment|immutable\/dist|rc-calendar\/es|braft-finder\/dist|lodash|rc-tree\/es)[\\/]/,
-              priority: -11,
-            },
-            echarts: {
-              name: "chunk-echarts",
-              chunks: "all",
-              test: /[\\/]node_modules[\\/](echarts)[\\/]/,
-              priority: 10,
-            },
-          }
-        }
+      // webpackConfig.output.publicPath = "/";
+      if (env === "development") {
+        webpackConfig.devtool = "cheap-module-source-map";
       }
+      // webpackConfig.devtool = false;
       //
       console.log("configure new\n\n", webpackConfig);
       return webpackConfig;
@@ -198,72 +179,68 @@ module.exports = {
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-proposal-optional-chaining",
-      ["@babel/transform-runtime"],
+      ["@babel/plugin-proposal-class-properties", { loose: true }],
+      ["@babel/plugin-transform-runtime"],
       [
         "import",
         {
           libraryName: "antd",
           libraryDirectory: "es",
-          style: true,
+          style: "css",
         },
       ],
-      [
-        "babel-plugin-react-css-modules",
-        {
-          generateScopedName: "[local]___[hash:base64:5]",
-          attributeNames: { activeStyleName: "activeClassName" },
-        },
-      ],
-      [
-        "babel-plugin-styled-components",
-        {
-          "displayName": false,
-          "minify": true,
-          "transpileTemplateLiterals": true,
-          "ssr": false,
-          "pure": true
-        }
-      ]
-    ]
-  },
-  devServer: {
-    port: 4000,
-    proxy: [
-      {
-        context: ["/api", "/login"],
-        // 转发端口自定义
-        target: "http://127.0.0.1:3000",
-        ws: true,
-      },
+      // "react-refresh/babel"
     ],
-    allowedHosts: ["localhost", "127.0.0.1"],
-    // host: "0.0.0.0",
-    hot: true,
-    open: false,
-    historyApiFallback: true,
+    loaderOptions: (babelLoaderOptions, { env, paths }) => {
+      console.log("babelLoaderOptions", babelLoaderOptions);
+      return babelLoaderOptions;
+    }
+  },
+  devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {
+    console.log("env, paths, proxy, allowedHost", env, paths, proxy, allowedHost);
+    console.log("devServerConfig", devServerConfig);
+    devServerConfig.proxy = {
+      "/api": {
+        target: "http://127.0.0.1:3000",
+        changeOrigin: true,
+        source: true,
+        pathRewrite: { "^/api": "/", "^/login": "/" }
+      }
+    }
+    return devServerConfig
   },
   plugins: [
     // 配置lessOptions
     {
+      // 配置less支持
       plugin: CracoLessPlugin,
       options: {
-        cssLoaderOptions: {
-          modules: { localIdentName: "[local]_[hash:base64:5]" }
-        },
         lessLoaderOptions: {
           lessOptions: {
-            modifyVars: {
-              "@primary-color": "#1DA57A",
-              "@link-color": "#1DA57A",
-              "@border-radius-base": "2px"
-            },
-            javascriptEnabled: true
+            modifyVars: {},
+            javascriptEnabled: true,
+          },
+        },
+      },
+    },
+    /*  {
+        plugin: CracoLessPlugin,
+        options: {
+          cssLoaderOptions: {
+            modules: { localIdentName: "[local]_[hash:base64:5]" }
+          },
+          lessLoaderOptions: {
+            lessOptions: {
+              modifyVars: {
+                "@primary-color": "#1DA57A",
+                "@link-color": "#1DA57A",
+                "@border-radius-base": "2px"
+              },
+              javascriptEnabled: true
+            }
           }
         }
-      }
-    },
+      },*/
     // {
     //   plugin: CracoLessPlugin,
     //   options: {

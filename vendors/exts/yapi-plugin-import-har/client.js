@@ -1,7 +1,7 @@
 import { message } from "antd";
 import URL from "url";
 const GenerateSchema = require("generate-schema/src/schemas/json.js");
-import { json_parse, unbase64 } from "common/utils";
+import { json_parse, unbase64 } from "../../common/utils";
 
 const transformJsonToSchema = (json) => {
   json = json || {};

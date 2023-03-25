@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PureComponent as Component } from "react";
 import mockEditor from "./mockEditor";
 import PropTypes from "prop-types";
 import "./AceEditor.scss";
@@ -10,18 +10,14 @@ const ModeMap = {
   xml: "ace/mode/xml",
   html: "ace/mode/html"
 };
-
 const defaultStyle = { width: "100%", height: "200px" };
-
 function getMode(mode) {
   return ModeMap[mode] || ModeMap.text;
 }
-
-class AceEditor extends React.PureComponent {
+class AceEditor extends Component {
   constructor(props) {
     super(props);
   }
-
   static propTypes = {
     data: PropTypes.any,
     onChange: PropTypes.func,
@@ -33,7 +29,6 @@ class AceEditor extends React.PureComponent {
     fullScreen: PropTypes.bool,
     insertCode: PropTypes.func
   };
-
   componentDidMount() {
     this.editor = mockEditor({
       container: this.editorElement,
@@ -48,7 +43,6 @@ class AceEditor extends React.PureComponent {
       this.props.callback(this.editor.editor);
     }
   }
-
   componentWillReceiveProps(nextProps) {
     if (!this.editor) {
       return;
@@ -60,11 +54,9 @@ class AceEditor extends React.PureComponent {
       this.editor.editor.clearSelection();
     }
   }
-
   render() {
     return (
-      <div
-        className={this.props.className}
+      <div className={this.props.className}
         style={this.props.className ? undefined : this.props.style || defaultStyle}
         ref={(editor) => {
           this.editorElement = editor;
@@ -73,5 +65,4 @@ class AceEditor extends React.PureComponent {
     );
   }
 }
-
 export default AceEditor;
