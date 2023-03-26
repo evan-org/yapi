@@ -19,13 +19,14 @@ import {
 import constants from "../../constants/variable.js";
 import AceEditor from "client/components/AceEditor/AceEditor";
 import _ from "underscore";
-import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
+import { isJson, deepCopyJson, json5_parse } from "../../common.js";
 import axios from "axios";
 import ModalPostman from "../ModalPostman/index.js";
 import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.js";
 import "./Postman.scss";
-import ProjectEnv from "../../pages/Project/Setting/ProjectEnv/index.js";
+import ProjectEnv from "../../containers/Project/Setting/ProjectEnv/index.js";
 import json5 from "json5";
+
 const { handleParamsValue, ArrayToObject, schemaValidator } = require("common/utils.js");
 const {
   handleParams,
@@ -34,16 +35,12 @@ const {
   crossRequest,
   checkNameIsExistInArray
 } = require("common/postmanLib.js");
-
 const plugin = require("client/plugin.js");
-
 const createContext = require("common/createContext")
-
 const HTTP_METHOD = constants.HTTP_METHOD;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 const Panel = Collapse.Panel;
-
 export const InsertCodeMap = [
   {
     code: "assert.equal(status, 200)",
@@ -70,7 +67,6 @@ export const InsertCodeMap = [
     title: '断言对象 body 不等于 {"code": 0}'
   }
 ];
-
 const ParamsNameComponent = (props) => {
   const { example, desc, name } = props;
   const isNull = !example && !desc;
@@ -88,14 +84,13 @@ const ParamsNameComponent = (props) => {
       )}
     </div>
   );
-
   return (
     <div>
       {isNull ? (
-        <Input disabled value={name} className="key" />
+        <Input disabled value={name} className="key"/>
       ) : (
-        <Tooltip placement="topLeft" title={<TooltipTitle />}>
-          <Input disabled value={name} className="key" />
+        <Tooltip placement="topLeft" title={<TooltipTitle/>}>
+          <Input disabled value={name} className="key"/>
         </Tooltip>
       )}
     </div>
@@ -115,7 +110,6 @@ export default class Run extends Component {
     interfaceId: PropTypes.number.isRequired,
     projectId: PropTypes.number.isRequired
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -137,28 +131,24 @@ export default class Run extends Component {
       ...this.props.data
     };
   }
-
   get testResponseBodyIsHTML() {
     const hd = this.state.test_res_header
     return hd != null &&
       typeof hd === "object" &&
       String(hd["Content-Type"] || hd["content-type"]).indexOf("text/html") !== -1
   }
-
   checkInterfaceData(data) {
     if (!data || typeof data !== "object" || !data._id) {
       return false;
     }
     return true;
   }
-
   // 整合header信息
   handleReqHeader = (value, env) => {
     let index = value
       ? env.findIndex((item) => item.name === value)
       : 0;
     index = index === -1 ? 0 : index;
-
     let req_header = [].concat(this.props.data.req_headers || []);
     let header = [].concat(env[index].header || []);
     header.forEach((item) => {
@@ -173,7 +163,6 @@ export default class Run extends Component {
     req_header = req_header.filter((item) => item && typeof item === "object");
     return req_header;
   };
-
   selectDomain = (value) => {
     let headers = this.handleReqHeader(value, this.state.env);
     this.setState({
@@ -181,12 +170,10 @@ export default class Run extends Component {
       req_headers: headers
     });
   };
-
   async initState(data) {
     if (!this.checkInterfaceData(data)) {
       return null;
     }
-
     const { req_body_other, req_body_type, req_body_is_json_schema } = data;
     let body = req_body_other;
     // 运行时才会进行转换
@@ -209,7 +196,6 @@ export default class Run extends Component {
       });
       body = JSON.stringify(result.data);
     }
-
     let example = {}
     if (this.props.type === "inter") {
       example = ["req_headers", "req_query", "req_body_form"].reduce(
@@ -217,8 +203,8 @@ export default class Run extends Component {
           res[key] = (data[key] || []).map((item) => {
             if (
               item.type !== "file" && // 不是文件类型
-                (item.value == null || item.value === "") && // 初始值为空
-                item.example != null // 有示例值
+              (item.value == null || item.value === "") && // 初始值为空
+              item.example != null // 有示例值
             ) {
               item.value = item.example;
             }
@@ -229,7 +215,6 @@ export default class Run extends Component {
         {}
       )
     }
-
     this.setState(
       {
         ...this.state,
@@ -245,10 +230,8 @@ export default class Run extends Component {
       () => this.props.type === "inter" && this.initEnvState(data.case_env, data.env)
     );
   }
-
   initEnvState(case_env, env) {
     let headers = this.handleReqHeader(case_env, env);
-
     this.setState(
       {
         req_headers: headers,
@@ -264,7 +247,6 @@ export default class Run extends Component {
       }
     );
   }
-
   componentWillMount() {
     this._crossRequestInterval = initCrossRequest((hasPlugin) => {
       this.setState({
@@ -273,11 +255,9 @@ export default class Run extends Component {
     });
     this.initState(this.props.data);
   }
-
   componentWillUnmount() {
     clearInterval(this._crossRequestInterval);
   }
-
   componentWillReceiveProps(nextProps) {
     if (this.checkInterfaceData(nextProps.data) && this.checkInterfaceData(this.props.data)) {
       if (nextProps.data._id !== this.props.data._id) {
@@ -290,30 +270,25 @@ export default class Run extends Component {
       }
     }
   }
-
   handleValue(val, global) {
     let globalValue = ArrayToObject(global);
     return handleParamsValue(val, {
       global: globalValue
     });
   }
-
   onOpenTest = (d) => {
     this.setState({
       test_script: d.text
     });
   };
-
   handleInsertCode = (code) => {
     this.aceEditor.editor.insertCode(code);
   };
-
   handleRequestBody = (d) => {
     this.setState({
       req_body_other: d.text
     });
   };
-
   reqRealInterface = async() => {
     if (this.state.loading === true) {
       this.setState({
@@ -324,18 +299,14 @@ export default class Run extends Component {
     this.setState({
       loading: true
     });
-
     let options = handleParams(this.state, this.handleValue),
       result;
-
-
     await plugin.emitHook("before_request", options, {
       type: this.props.type,
       caseId: options.caseId,
       projectId: this.props.projectId,
       interfaceId: this.props.interfaceId
     });
-
     try {
       options.taskId = this.props.curUid;
       result = await crossRequest(options, options.pre_script || this.state.pre_script, options.after_script || this.state.after_script, createContext(
@@ -343,14 +314,12 @@ export default class Run extends Component {
         this.props.projectId,
         this.props.interfaceId
       ));
-
       await plugin.emitHook("after_request", result, {
         type: this.props.type,
         caseId: options.caseId,
         projectId: this.props.projectId,
         interfaceId: this.props.interfaceId
       });
-
       result = {
         header: result.res.header,
         body: result.res.body,
@@ -358,7 +327,6 @@ export default class Run extends Component {
         statusText: result.res.statusText,
         runTime: result.runTime
       };
-
     } catch (data) {
       result = {
         header: data.header,
@@ -374,7 +342,6 @@ export default class Run extends Component {
     } else {
       return null;
     }
-
     let tempJson = result.body;
     if (tempJson && typeof tempJson === "object") {
       result.body = JSON.stringify(tempJson, null, "  ");
@@ -386,7 +353,6 @@ export default class Run extends Component {
         res_body_type: "json"
       });
     }
-
     // 对 返回值数据结构 和定义的 返回数据结构 进行 格式校验
     let validResult = this.resBodyValidator(this.props.data, result.body);
     if (!validResult.valid) {
@@ -394,7 +360,6 @@ export default class Run extends Component {
     } else {
       this.setState({ test_valid_msg: "" });
     }
-
     this.setState({
       resStatusCode: result.status,
       resStatusText: result.statusText,
@@ -402,26 +367,20 @@ export default class Run extends Component {
       test_res_body: result.body
     });
   };
-
   // 返回数据与定义数据的比较判断
   resBodyValidator = (interfaceData, test_res_body) => {
     const { res_body_type, res_body_is_json_schema, res_body } = interfaceData;
     let validResult = { valid: true };
-
     if (res_body_type === "json" && res_body_is_json_schema) {
       const schema = json5_parse(res_body);
       const params = json5_parse(test_res_body);
       validResult = schemaValidator(schema, params);
     }
-
     return validResult;
   };
-
   changeParam = (name, v, index, key) => {
-
     key = key || "value";
     const pathParam = deepCopyJson(this.state[name]);
-
     pathParam[index][key] = v;
     if (key === "value") {
       pathParam[index].enable = !!v;
@@ -430,7 +389,6 @@ export default class Run extends Component {
       [name]: pathParam
     });
   };
-
   changeBody = (v, index, key) => {
     const bodyForm = deepCopyJson(this.state.req_body_form);
     key = key || "value";
@@ -446,7 +404,6 @@ export default class Run extends Component {
     }
     this.setState({ req_body_form: bodyForm });
   };
-
   // 模态框的相关操作
   showModal = (val, index, type) => {
     let inputValue = "";
@@ -464,7 +421,6 @@ export default class Run extends Component {
       inputValue = this.getInstallValue(val || "", cursurPosition).val;
       // cursurPosition = {row: 1, column: position}
     }
-
     this.setState({
       modalVisible: true,
       inputIndex: index,
@@ -473,7 +429,6 @@ export default class Run extends Component {
       modalType: type
     });
   };
-
   // 点击插入
   handleModalOk = (val) => {
     const { inputIndex, modalType } = this.state;
@@ -482,10 +437,8 @@ export default class Run extends Component {
     } else {
       this.changeInstallParam(modalType, val, inputIndex);
     }
-
     this.setState({ modalVisible: false });
   };
-
   // 根据鼠标位置往req_body中动态插入数据
   changeInstallBody = (type, value) => {
     const pathParam = deepCopyJson(this.state[type]);
@@ -498,12 +451,10 @@ export default class Run extends Component {
       [type]: `${left}${value}${right}`
     });
   };
-
   // 获取截取的字符串
   getInstallValue = (oldValue, cursurPosition) => {
     let left = oldValue.substr(0, cursurPosition);
     let right = oldValue.substr(cursurPosition);
-
     let leftPostion = left.lastIndexOf("{{");
     let leftPostion2 = left.lastIndexOf("}}");
     let rightPostion = right.indexOf("}}");
@@ -521,7 +472,6 @@ export default class Run extends Component {
       val
     };
   };
-
   // 根据鼠标位置动态插入数据
   changeInstallParam = (name, v, index, key) => {
     key = key || "value";
@@ -535,32 +485,27 @@ export default class Run extends Component {
       [name]: pathParam
     });
   };
-
   // 取消参数插入
   handleModalCancel = () => {
     this.setState({ modalVisible: false, cursurPosition: -1 });
   };
-
   // 环境变量模态框相关操作
   showEnvModal = () => {
     this.setState({
       envModalVisible: true
     });
   };
-
   handleEnvOk = (newEnv, index) => {
     this.setState({
       envModalVisible: false,
       case_env: newEnv[index].name
     });
   };
-
   handleEnvCancel = () => {
     this.setState({
       envModalVisible: false
     });
   };
-
   render() {
     const {
       method,
@@ -589,7 +534,6 @@ export default class Run extends Component {
             id={+this.state._id}
           />
         )}
-
         {this.state.envModalVisible && (
           <Modal
             title="环境设置"
@@ -600,11 +544,10 @@ export default class Run extends Component {
             width={800}
             className="env-modal"
           >
-            <ProjectEnv projectId={this.props.data.project_id} onOk={this.handleEnvOk} />
+            <ProjectEnv projectId={this.props.data.project_id} onOk={this.handleEnvOk}/>
           </Modal>
         )}
-        <CheckCrossInstall hasPlugin={hasPlugin} />
-
+        <CheckCrossInstall hasPlugin={hasPlugin}/>
         <div className="url">
           <InputGroup compact style={{ display: "flex" }}>
             <Select disabled value={method} style={{ flexBasis: 60 }}>
@@ -628,7 +571,6 @@ export default class Run extends Component {
                 </Button>
               </Option>
             </Select>
-
             <Input
               disabled
               value={path}
@@ -637,7 +579,6 @@ export default class Run extends Component {
               style={{ flexBasis: 180, flexGrow: 1 }}
             />
           </InputGroup>
-
           <Tooltip
             placement="bottom"
             title={(() => {
@@ -658,7 +599,6 @@ export default class Run extends Component {
               {loading ? "取消" : "发送"}
             </Button>
           </Tooltip>
-
           <Tooltip
             placement="bottom"
             title={() => this.props.type === "inter" ? "保存到测试集" : "更新该用例"}
@@ -668,7 +608,6 @@ export default class Run extends Component {
             </Button>
           </Tooltip>
         </div>
-
         <Collapse defaultActiveKey={["0", "1", "2", "3"]} bordered>
           <Panel
             header="PATH PARAMETERS"
@@ -683,7 +622,7 @@ export default class Run extends Component {
                   >
                     <Input disabled value={item.name} className="key" />
                   </Tooltip> */}
-                <ParamsNameComponent example={item.example} desc={item.desc} name={item.name} />
+                <ParamsNameComponent example={item.example} desc={item.desc} name={item.name}/>
                 <span className="eq-symbol">=</span>
                 <Input
                   value={item.value}
@@ -722,10 +661,10 @@ export default class Run extends Component {
                   >
                     <Input disabled value={item.name} className="key" />
                   </Tooltip> */}
-                <ParamsNameComponent example={item.example} desc={item.desc} name={item.name} />
+                <ParamsNameComponent example={item.example} desc={item.desc} name={item.name}/>
                   &nbsp;
                 {item.required == 1 ? (
-                  <Checkbox className="params-enable" checked disabled />
+                  <Checkbox className="params-enable" checked disabled/>
                 ) : (
                   <Checkbox
                     className="params-enable"
@@ -764,7 +703,7 @@ export default class Run extends Component {
                   >
                     <Input disabled value={item.name} className="key" />
                   </Tooltip> */}
-                <ParamsNameComponent example={item.example} desc={item.desc} name={item.name} />
+                <ParamsNameComponent example={item.example} desc={item.desc} name={item.name}/>
                 <span className="eq-symbol">=</span>
                 <Input
                   value={item.value}
@@ -814,11 +753,10 @@ export default class Run extends Component {
                   </Button>
                   <Tooltip title="高级参数设置只在json字段值中生效">
                     {"  "}
-                    <Icon type="question-circle-o" />
+                    <Icon type="question-circle-o"/>
                   </Tooltip>
                 </div>
               )}
-
               <AceEditor
                 className="pretty-editor"
                 ref={(editor) => (this.aceEditor = editor)}
@@ -828,7 +766,6 @@ export default class Run extends Component {
                 fullScreen
               />
             </div>
-
             {HTTP_METHOD[method].request_body &&
               req_body_type === "form" && (
               <div>
@@ -847,7 +784,7 @@ export default class Run extends Component {
                     />
                         &nbsp;
                     {item.required == 1 ? (
-                      <Checkbox className="params-enable" checked disabled />
+                      <Checkbox className="params-enable" checked disabled/>
                     ) : (
                       <Checkbox
                         className="params-enable"
@@ -895,12 +832,11 @@ export default class Run extends Component {
             {HTTP_METHOD[method].request_body &&
               req_body_type === "file" && (
               <div>
-                <Input type="file" id="single-file" />
+                <Input type="file" id="single-file"/>
               </div>
             )}
           </Panel>
         </Collapse>
-
         <Tabs size="large" defaultActiveKey="res" className="response-tab">
           <Tabs.TabPane tab="Response" key="res">
             <Spin spinning={this.state.loading}>
@@ -918,7 +854,7 @@ export default class Run extends Component {
                 {this.state.resStatusCode + "  " + this.state.resStatusText}
               </h2>
               <div>
-                <a rel="noopener noreferrer"  target="_blank" href="https://juejin.im/post/5c888a3e5188257dee0322af">YApi 新版如何查看 http 请求数据</a>
+                <a rel="noopener noreferrer" target="_blank" href="https://juejin.im/post/5c888a3e5188257dee0322af">YApi 新版如何查看 http 请求数据</a>
               </div>
               {this.state.test_valid_msg && (
                 <Alert
@@ -926,7 +862,7 @@ export default class Run extends Component {
                     <span>
                       Warning &nbsp;
                       <Tooltip title="针对定义为 json schema 的返回数据进行格式校验">
-                        <Icon type="question-circle-o" />
+                        <Icon type="question-circle-o"/>
                       </Tooltip>
                     </span>
                   }
@@ -935,7 +871,6 @@ export default class Run extends Component {
                   description={this.state.test_valid_msg}
                 />
               )}
-
               <div className="container-header-body">
                 <div className="header">
                   <div className="container-title">

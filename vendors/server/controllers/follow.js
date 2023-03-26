@@ -1,7 +1,7 @@
-const yapi = require("../yapi.js");
-const baseController = require("./base.js");
-const followModel = require("../models/follow");
-const projectModel = require("../models/project");
+const yapi = require('../yapi.js');
+const baseController = require('./base.js');
+const followModel = require('../models/follow');
+const projectModel = require('../models/project');
 
 class followController extends baseController {
   constructor(ctx) {
@@ -29,7 +29,7 @@ class followController extends baseController {
     // limit = ctx.request.query.limit || 10;
 
     if (!uid) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "用户id不能为空"));
+      return (ctx.body = yapi.commons.resReturn(null, 400, '用户id不能为空'));
     }
 
     try {
@@ -59,13 +59,13 @@ class followController extends baseController {
       uid = this.getUid();
 
     if (!params.projectid) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
+      return (ctx.body = yapi.commons.resReturn(null, 400, '项目id不能为空'));
     }
 
     let checkRepeat = await this.Model.checkProjectRepeat(uid, params.projectid);
 
     if (checkRepeat == 0) {
-      return (ctx.body = yapi.commons.resReturn(null, 401, "项目未关注"));
+      return (ctx.body = yapi.commons.resReturn(null, 401, '项目未关注'));
     }
 
     try {
@@ -92,19 +92,19 @@ class followController extends baseController {
   async add(ctx) {
     let params = ctx.request.body;
     params = yapi.commons.handleParams(params, {
-      projectid: "number"
+      projectid: 'number'
     });
 
     let uid = this.getUid();
 
     if (!params.projectid) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
+      return (ctx.body = yapi.commons.resReturn(null, 400, '项目id不能为空'));
     }
 
     let checkRepeat = await this.Model.checkProjectRepeat(uid, params.projectid);
 
     if (checkRepeat) {
-      return (ctx.body = yapi.commons.resReturn(null, 401, "项目已关注"));
+      return (ctx.body = yapi.commons.resReturn(null, 401, '项目已关注'));
     }
 
     try {
@@ -118,12 +118,12 @@ class followController extends baseController {
       };
       let result = await this.Model.save(data);
       result = yapi.commons.fieldSelect(result, [
-        "_id",
-        "uid",
-        "projectid",
-        "projectname",
-        "icon",
-        "color"
+        '_id',
+        'uid',
+        'projectid',
+        'projectname',
+        'icon',
+        'color'
       ]);
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {

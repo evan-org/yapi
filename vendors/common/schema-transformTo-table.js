@@ -1,7 +1,7 @@
-const _ = require("underscore");
+const _ = require('underscore');
 let fieldNum = 1;
 
-exports.schemaTransformToTable = (schema) => {
+exports.schemaTransformToTable = schema => {
   try {
     schema = checkJsonSchema(schema);
     let result = Schema(schema, 0);
@@ -17,7 +17,7 @@ exports.schemaTransformToTable = (schema) => {
 function checkJsonSchema(json) {
   let newJson = Object.assign({}, json);
   if (_.isUndefined(json.type) && _.isObject(json.properties)) {
-    newJson.type = "object";
+    newJson.type = 'object';
   }
 
   return newJson;
@@ -25,33 +25,35 @@ function checkJsonSchema(json) {
 
 const mapping = function(data, index) {
   switch (data.type) {
-  case "string":
-    return SchemaString(data);
+    case 'string':
+      return SchemaString(data);
 
-  case "number":
-    return SchemaNumber(data);
+    case 'number':
+      return SchemaNumber(data);
 
-  case "array":
-    return SchemaArray(data, index);
+    case 'array':
+      return SchemaArray(data, index);
 
-  case "object":
-    return SchemaObject(data, index);
+    case 'object':
+      return SchemaObject(data, index);
 
-  case "boolean":
-    return SchemaBoolean(data);
+    case 'boolean':
+      return SchemaBoolean(data);
 
-  case "integer":
-    return SchemaInt(data);
-  default:
-    return SchemaOther(data);
+    case 'integer':
+      return SchemaInt(data);
+    default:
+      return SchemaOther(data);
   }
 };
 
-const ConcatDesc = (title, desc) => [title, desc].join("\n").trim();
+const ConcatDesc = (title, desc) => {
+  return [title, desc].join('\n').trim();
+};
 
 const Schema = (data, key) => {
   let result = mapping(data, key);
-  if (data.type !== "object") {
+  if (data.type !== 'object') {
     let desc = result.desc;
     let d = result.default;
     let children = result.children;
@@ -86,16 +88,16 @@ const SchemaObject = (data, key) => {
     let value = properties[name];
     let copiedState = checkJsonSchema(JSON.parse(JSON.stringify(value)));
 
-    let optionForm = Schema(copiedState, key + "-" + index);
+    let optionForm = Schema(copiedState, key + '-' + index);
     let item = {
       name,
-      key: key + "-" + index,
+      key: key + '-' + index,
       desc: ConcatDesc(copiedState.title, copiedState.description),
       required: required.indexOf(name) != -1
     };
 
-    if (value.type === "object" || (_.isUndefined(value.type) && _.isArray(optionForm))) {
-      item = Object.assign({}, item, { type: "object", children: optionForm });
+    if (value.type === 'object' || (_.isUndefined(value.type) && _.isArray(optionForm))) {
+      item = Object.assign({}, item, { type: 'object', children: optionForm });
       delete item.sub;
     } else {
       item = Object.assign({}, item, optionForm);
@@ -107,7 +109,7 @@ const SchemaObject = (data, key) => {
   return result;
 };
 
-const SchemaString = (data) => {
+const SchemaString = data => {
   let item = {
     desc: ConcatDesc(data.title, data.description),
     default: data.default,
@@ -122,13 +124,13 @@ const SchemaString = (data) => {
 };
 
 const SchemaArray = (data, index) => {
-  data.items = data.items || { type: "string" };
+  data.items = data.items || { type: 'string' };
   let items = checkJsonSchema(data.items);
   let optionForm = mapping(items, index);
   //  处理array嵌套array的问题
-  let children = optionForm;
+  let children =optionForm ;
   if (!_.isArray(optionForm) && !_.isUndefined(optionForm)) {
-    optionForm.key = "array-" + fieldNum++;
+    optionForm.key = 'array-' + fieldNum++;
     children = [optionForm];
   }
 
@@ -141,13 +143,13 @@ const SchemaArray = (data, index) => {
     itemType: items.type,
     children
   };
-  if (items.type === "string") {
+  if (items.type === 'string') {
     item = Object.assign({}, item, { itemFormat: items.format });
   }
   return item;
 };
 
-const SchemaNumber = (data) => {
+const SchemaNumber = data => {
   let item = {
     desc: ConcatDesc(data.title, data.description),
     maximum: data.maximum,
@@ -161,7 +163,7 @@ const SchemaNumber = (data) => {
   return item;
 };
 
-const SchemaInt = (data) => {
+const SchemaInt = data => {
   let item = {
     desc: ConcatDesc(data.title, data.description),
     maximum: data.maximum,
@@ -175,7 +177,7 @@ const SchemaInt = (data) => {
   return item;
 };
 
-const SchemaBoolean = (data) => {
+const SchemaBoolean = data => {
   let item = {
     desc: ConcatDesc(data.title, data.description),
     default: data.default,
@@ -185,7 +187,7 @@ const SchemaBoolean = (data) => {
   return item;
 };
 
-const SchemaOther = (data) => {
+const SchemaOther = data => {
   let item = {
     desc: ConcatDesc(data.title, data.description),
     default: data.default,

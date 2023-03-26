@@ -1,8 +1,8 @@
-import React, { PureComponent as Component } from "react";
-import PropTypes from "prop-types";
-import { Button } from "antd";
-import { connect } from "react-redux";
-import { changeStudyTip, finishStudy } from "../../reducer/modules/user.js";
+import React, { PureComponent as Component } from 'react';
+import PropTypes from 'prop-types';
+import { Button } from 'antd';
+import { connect } from 'react-redux';
+import { changeStudyTip, finishStudy } from '../../reducer/modules/user.js';
 
 @connect(
   null,
@@ -39,7 +39,7 @@ class GuideBtns extends Component {
     return (
       <div className="btn-container">
         <Button className="btn" type="primary" onClick={this.nextStep}>
-          {this.props.isLast ? "完 成" : "下一步"}
+          {this.props.isLast ? '完 成' : '下一步'}
         </Button>
         <Button className="btn" type="dashed" onClick={this.exitGuide}>
           退出指引

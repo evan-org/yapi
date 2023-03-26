@@ -1,9 +1,9 @@
-const yapi = require("../yapi.js");
-const baseModel = require("./base.js");
+const yapi = require('../yapi.js');
+const baseModel = require('./base.js');
 
 class tokenModel extends baseModel {
   getName() {
-    return "token";
+    return 'token';
   }
 
   getSchema() {
@@ -29,7 +29,7 @@ class tokenModel extends baseModel {
       .findOne({
         token: token
       })
-      .select("project_id")
+      .select('project_id')
       .exec();
   }
 

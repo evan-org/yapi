@@ -2,7 +2,7 @@
 const convert2Decimal = (num) => (num > 9 ? num : `0${num}`);
 /**
  * 格式化 年、月、日、时、分、秒
- * @param val {Object or String or Number} 日期对象 或是可new Date的对象或时间戳
+ * @param val {Object | String | Number} 日期对象 或是可new Date的对象或时间戳
  * @return {String} 2017-01-20 20:00:00
  */
 exports.formatDate = (val) => {
@@ -20,3 +20,4 @@ exports.formatDate = (val) => {
     convert2Decimal(date.getSeconds())
   ].join(":")}`;
 };
+

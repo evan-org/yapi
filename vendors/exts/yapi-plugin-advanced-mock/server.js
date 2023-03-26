@@ -8,7 +8,6 @@ const path = require("path");
 const lib = require(path.resolve(yapi.WEBROOT, "common/lib.js"));
 const Mock = require("mockjs");
 const mockExtra = require(path.resolve(yapi.WEBROOT, "common/mock-extra.js"));
-
 function arrToObj(arr) {
   let obj = { "Set-Cookie": [] };
   arr.forEach((item) => {
@@ -18,7 +17,6 @@ function arrToObj(arr) {
   });
   return obj;
 }
-
 module.exports = function() {
   yapi.connect.then(function() {
     let Col = mongoose.connection.db.collection("adv_mock");
@@ -28,7 +26,6 @@ module.exports = function() {
     Col.createIndex({
       project_id: 1
     });
-
     let caseCol = mongoose.connection.db.collection("adv_mock_case");
     caseCol.createIndex({
       interface_id: 1
@@ -37,14 +34,11 @@ module.exports = function() {
       project_id: 1
     });
   });
-
   async function checkCase(ctx, interfaceId) {
     let reqParams = Object.assign({}, ctx.query, ctx.request.body);
     let caseInst = yapi.getInst(caseModel);
-
     // let ip = ctx.ip.match(/\d+.\d+.\d+.\d+/)[0];
     // request.ip
-
     let ip = yapi.commons.getIp(ctx);
     //   数据库信息查询
     // 过滤 开启IP
@@ -55,7 +49,6 @@ module.exports = function() {
         ip: ip
       })
       .select("_id params case_enable");
-
     let matchList = [];
     listWithIp.forEach((item) => {
       let params = item.params;
@@ -63,7 +56,6 @@ module.exports = function() {
         matchList.push(item);
       }
     });
-
     // 其他数据
     if (matchList.length === 0) {
       let list = await caseInst.model
@@ -79,14 +71,12 @@ module.exports = function() {
         }
       });
     }
-
     if (matchList.length > 0) {
       let maxItem = _.max(matchList, (item) => (item.params && Object.keys(item.params).length) || 0);
       return maxItem;
     }
     return null;
   }
-
   async function handleByCase(caseData) {
     let caseInst = yapi.getInst(caseModel);
     let result = await caseInst.get({
@@ -94,7 +84,6 @@ module.exports = function() {
     });
     return result;
   }
-
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: controller,
@@ -117,14 +106,12 @@ module.exports = function() {
       path: "advmock/case/save",
       action: "saveCase"
     });
-
     addRouter({
       controller: controller,
       method: "get",
       path: "advmock/case/get",
       action: "getCase"
     });
-
     addRouter({
       /**
        * 获取期望列表
@@ -134,7 +121,6 @@ module.exports = function() {
       path: "advmock/case/list",
       action: "list"
     });
-
     addRouter({
       /**
        * 删除期望列表
@@ -144,7 +130,6 @@ module.exports = function() {
       path: "advmock/case/del",
       action: "delCase"
     });
-
     addRouter({
       /**
        * 隐藏期望列表
@@ -174,12 +159,10 @@ module.exports = function() {
   this.bindHook("mock_after", async function(context) {
     let interfaceId = context.interfaceData._id;
     let caseData = await checkCase(context.ctx, interfaceId);
-
     // 只有开启高级mock才可用
     if (caseData && caseData.case_enable) {
       // 匹配到高级mock
       let data = await handleByCase(caseData);
-
       context.mockJson = yapi.commons.json_parse(data.res_body);
       try {
         context.mockJson = Mock.mock(
@@ -192,7 +175,6 @@ module.exports = function() {
       } catch (err) {
         yapi.commons.log(err, "error");
       }
-
       context.resHeader = arrToObj(data.headers);
       context.httpCode = data.code;
       context.delay = data.delay;
@@ -200,11 +182,9 @@ module.exports = function() {
     }
     let inst = yapi.getInst(advModel);
     let data = await inst.get(interfaceId);
-
     if (!data || !data.enable || !data.mock_script) {
       return context;
     }
-
     // mock 脚本
     let script = data.mock_script;
     await yapi.commons.handleMockScript(script, context);

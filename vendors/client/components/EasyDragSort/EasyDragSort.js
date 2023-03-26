@@ -1,7 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 /**
  * @author suxiaoxin
@@ -15,10 +15,10 @@ let curDragIndex = null;
 function isDom(obj) {
   return (
     obj &&
-    typeof obj === "object" &&
+    typeof obj === 'object' &&
     obj.nodeType === 1 &&
-    typeof obj.nodeName === "string" &&
-    typeof obj.getAttribute === "function"
+    typeof obj.nodeName === 'string' &&
+    typeof obj.getAttribute === 'function'
   );
 }
 
@@ -45,7 +45,7 @@ export default class EasyDragSort extends React.Component {
       curValue = props.data();
 
       let newValue = arrMove(curValue, from, to);
-      if (typeof props.onChange === "function") {
+      if (typeof props.onChange === 'function') {
         return props.onChange(newValue, from, to);
       }
     };
@@ -54,9 +54,9 @@ export default class EasyDragSort extends React.Component {
         {container.map((item, index) => {
           if (React.isValidElement(item)) {
             return React.cloneElement(item, {
-              draggable: !onlyChild,
-              ref: "x" + index,
-              "data-ref": "x" + index,
+              draggable: onlyChild ? false : true,
+              ref: 'x' + index,
+              'data-ref': 'x' + index,
               onDragStart: function() {
                 curDragIndex = index;
               },
@@ -77,17 +77,17 @@ export default class EasyDragSort extends React.Component {
                   if (el && isDom(el) && el.getAttribute(onlyChild)) {
                     target = el;
                   }
-                  if (el && el.tagName == "DIV" && el.getAttribute("data-ref")) {
+                  if (el && el.tagName == 'DIV' && el.getAttribute('data-ref')) {
                     break;
                   }
                 } while ((el = el.parentNode));
                 if (!el) {
                   return;
                 }
-                let ref = that.refs[el.getAttribute("data-ref")];
+                let ref = that.refs[el.getAttribute('data-ref')];
                 let dom = ReactDOM.findDOMNode(ref);
                 if (dom) {
-                  dom.draggable = !!target.getAttribute(onlyChild);
+                  dom.draggable = target.getAttribute(onlyChild) ? true : false;
                 }
               },
               onDragEnter: function() {
@@ -96,7 +96,7 @@ export default class EasyDragSort extends React.Component {
               },
               onDragEnd: function() {
                 curDragIndex = null;
-                if (typeof props.onDragEnd === "function") {
+                if (typeof props.onDragEnd === 'function') {
                   props.onDragEnd();
                 }
               }

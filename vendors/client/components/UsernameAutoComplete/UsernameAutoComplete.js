@@ -1,7 +1,7 @@
-import React, { PureComponent as Component } from "react";
-import PropTypes from "prop-types";
-import { Select } from "antd";
-import axios from "axios";
+import React, { PureComponent as Component } from 'react';
+import PropTypes from 'prop-types';
+import { Select } from 'antd';
+import axios from 'axios';
 
 const Option = Select.Option;
 
@@ -53,12 +53,12 @@ class UsernameAutoComplete extends Component {
   };
 
   // 搜索回调
-  handleSearch = (value) => {
+  handleSearch = value => {
     const params = { q: value };
     // this.lastFetchId += 1;
     // const fetchId = this.lastFetchId;
     this.setState({ fetching: true });
-    axios.get("/api/user/search", { params }).then((data) => {
+    axios.get('/api/user/search', { params }).then(data => {
       // if (fetchId !== this.lastFetchId) { // for fetch callback order
       //   return;
       // }
@@ -66,7 +66,7 @@ class UsernameAutoComplete extends Component {
       data = data.data.data;
 
       if (data) {
-        data.forEach((v) =>
+        data.forEach(v =>
           userList.push({
             username: v.username,
             id: v.uid
@@ -81,7 +81,7 @@ class UsernameAutoComplete extends Component {
   };
 
   // 选中候选词时
-  handleChange = (value) => {
+  handleChange = value => {
     this.setState({
       dataSource: [],
       // value,
@@ -94,7 +94,7 @@ class UsernameAutoComplete extends Component {
     let { dataSource, fetching } = this.state;
 
     const children = dataSource.map((item, index) => (
-      <Option key={index} value={"" + item.id}>
+      <Option key={index} value={'' + item.id}>
         {item.username}
       </Option>
     ));
@@ -105,11 +105,11 @@ class UsernameAutoComplete extends Component {
     return (
       <Select
         mode="multiple"
-        style={{ width: "100%" }}
+        style={{ width: '100%' }}
         placeholder="请输入用户名"
         filterOption={false}
         optionLabelProp="children"
-        notFoundContent={fetching ? <span style={{ color: "red" }}> 当前用户不存在</span> : null}
+        notFoundContent={fetching ? <span style={{ color: 'red' }}> 当前用户不存在</span> : null}
         onSearch={this.handleSearch}
         onChange={this.handleChange}
       >

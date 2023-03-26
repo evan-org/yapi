@@ -2,43 +2,43 @@
  * @author suxiaoxin
  * @info  mockJs 功能增强脚本
  */
-let strRegex = /\${([a-zA-Z]+)\.?([a-zA-Z0-9_\.]*)\}/i;
-let varSplit = ".";
-let mockSplit = "|";
-let Mock = require("mockjs");
+var strRegex = /\${([a-zA-Z]+)\.?([a-zA-Z0-9_\.]*)\}/i;
+var varSplit = '.';
+var mockSplit = '|';
+var Mock = require('mockjs');
 Mock.Random.extend({
-  timestamp: function() {
-    let time = new Date().getTime() + "";
+  timestamp: function(){
+    var time = new Date().getTime() + '';
     return +time.substr(0, time.length - 3)
   }
 })
 
 function mock(mockJSON, context) {
   context = context || {};
-  let filtersMap = {
+  var filtersMap = {
     regexp: handleRegexp
   };
-  if (!mockJSON || typeof mockJSON !== "object") {
+  if(!mockJSON || typeof mockJSON !== 'object'){
     return mockJSON;
   }
 
   return parse(mockJSON);
 
   function parse(p, c) {
-    if (!c) {
+    if(!c){
       c = Array.isArray(p) ? [] :  {}
     }
 
-    for (let i in p) {
+    for (var i in p) {
       if (!p.hasOwnProperty(i)) {
         continue;
       }
-      if (p[i] && typeof p[i] === "object") {
+      if (p[i] && typeof p[i] === 'object') {
         c[i] = (p[i].constructor === Array) ? [] : {};
         parse(p[i], c[i]);
-      } else if (p[i] && typeof p[i] === "string") {
-        p[i] = handleStr(p[i]);
-        let filters = i.split(mockSplit), newFilters = [].concat(filters);
+      } else if(p[i] && typeof p[i] === 'string'){
+        p[i] = handleStr(p[i]);        
+        var filters = i.split(mockSplit), newFilters = [].concat(filters);
         c[i] = p[i];
         if (filters.length > 1) {
           for (var f = 1, l = filters.length, index; f < l; f++) {
@@ -52,7 +52,7 @@ function mock(mockJSON, context) {
             }
           }
         }
-      } else {
+      }else{
         c[i] = p[i];
       }
     }
@@ -64,26 +64,26 @@ function mock(mockJSON, context) {
   }
 
   function handleStr(str) {
-    if (typeof str !== "string" || str.indexOf("{") === -1 || str.indexOf("}") === -1 || str.indexOf("$") === -1) {
+    if (typeof str !== 'string' || str.indexOf('{') === -1 || str.indexOf('}') === -1 || str.indexOf('$') === -1) {
       return str;
     }
 
     let matchs = str.match(strRegex);
-    if (matchs) {
-      let name = matchs[1] + (matchs[2] ? "." + matchs[2] : "");
-      if (!name) {return str;}
-      let names = name.split(varSplit);
-      let data = context;
-
-      if (typeof context[names[0]] === undefined) {
+    if(matchs){
+      let name = matchs[1] + (matchs[2]? '.' + matchs[2] : '');
+      if(!name) return str;
+      var names = name.split(varSplit);
+      var data = context;
+      
+      if(typeof context[names[0]] === undefined){
         return str;
       }
-      names.forEach(function(n) {
-        if (data === "") {return "";}
+      names.forEach(function (n) {
+        if (data === '') return '';
         if (n in data) {
           data = data[n];
         } else {
-          data = "";
+          data = '';
         }
       });
       return data;

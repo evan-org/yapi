@@ -1,6 +1,6 @@
 import axios from "axios";
 import variable from "../../constants/variable";
-import {htmlFilter} from "../../utils/common";
+import {htmlFilter} from "../../common";
 
 // Actions
 const FETCH_PROJECT_LIST = "yapi/project/FETCH_PROJECT_LIST";
@@ -46,68 +46,68 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-  case GET_CURR_PROJECT: {
-    return {
-      ...state,
-      currProject: action.payload.data.data
-    };
-  }
-
-  case FETCH_PROJECT_LIST: {
-    return {
-      ...state,
-      projectList: action.payload.data.data.list,
-      total: action.payload.data.data.total,
-      userInfo: action.payload.data.data.userinfo
-    };
-  }
-
-  case PROJECT_ADD: {
-    return state;
-  }
-  case PROJECT_DEL: {
-    return state;
-  }
-
-  case GET_TOKEN: {
-    return {
-      ...state,
-      token: action.payload.data.data
-    };
-  }
-
-  case PROJECT_GET_ENV: {
-    return {
-      ...state,
-      projectEnv: action.payload.data.data
-    };
-  }
-  case UPDATE_TOKEN: {
-    return {
-      ...state,
-      token: action.payload.data.data.token
-    };
-  }
-
-  case CHECK_PROJECT_NAME: {
-    return {
-      ...state
-    };
-  }
-  case COPY_PROJECT_MSG: {
-    return {
-      ...state
-    };
-  }
-
-  case GET_SWAGGER_URL_DATA: {
-    return {
-      ...state,
-      swaggerUrlData: action.payload.data.data
+    case GET_CURR_PROJECT: {
+      return {
+        ...state,
+        currProject: action.payload.data.data
+      };
     }
-  }
-  default:
-    return state;
+
+    case FETCH_PROJECT_LIST: {
+      return {
+        ...state,
+        projectList: action.payload.data.data.list,
+        total: action.payload.data.data.total,
+        userInfo: action.payload.data.data.userinfo
+      };
+    }
+
+    case PROJECT_ADD: {
+      return state;
+    }
+    case PROJECT_DEL: {
+      return state;
+    }
+
+    case GET_TOKEN: {
+      return {
+        ...state,
+        token: action.payload.data.data
+      };
+    }
+
+    case PROJECT_GET_ENV: {
+      return {
+        ...state,
+        projectEnv: action.payload.data.data
+      };
+    }
+    case UPDATE_TOKEN: {
+      return {
+        ...state,
+        token: action.payload.data.data.token
+      };
+    }
+
+    case CHECK_PROJECT_NAME: {
+      return {
+        ...state
+      };
+    }
+    case COPY_PROJECT_MSG: {
+      return {
+        ...state
+      };
+    }
+
+    case GET_SWAGGER_URL_DATA: {
+      return {
+        ...state,
+        swaggerUrlData: action.payload.data.data
+      }
+    }
+    default:
+      return state;
   }
 };
 

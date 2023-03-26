@@ -7,7 +7,7 @@ import { Form, Switch, Button, message, Icon, Tooltip, Radio } from "antd";
 import MockCol from "./MockCol/MockCol.js";
 import mockEditor from "../../client/components/AceEditor/mockEditor";
 import constants from "../../client/constants/variable.js";
-//
+
 const FormItem = Form.Item;
 class AdvMock extends Component {
   static propTypes = {
@@ -40,7 +40,7 @@ class AdvMock extends Component {
       }
     });
   };
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.getAdvMockData();
   }
   async getAdvMockData() {
@@ -143,4 +143,4 @@ class AdvMock extends Component {
     );
   }
 }
-module.exports = Form.create()(withRouter(AdvMock));
+export default Form.create()(withRouter(AdvMock));

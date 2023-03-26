@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
 // Actions
-const GET_FOLLOW_LIST = "yapi/follow/GET_FOLLOW_LIST";
-const DEL_FOLLOW = "yapi/follow/DEL_FOLLOW";
-const ADD_FOLLOW = "yapi/follow/ADD_FOLLOW";
+const GET_FOLLOW_LIST = 'yapi/follow/GET_FOLLOW_LIST';
+const DEL_FOLLOW = 'yapi/follow/DEL_FOLLOW';
+const ADD_FOLLOW = 'yapi/follow/ADD_FOLLOW';
 
 // Reducer
 const initialState = {
@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
 export function getFollowList(uid) {
   return {
     type: GET_FOLLOW_LIST,
-    payload: axios.get("/api/follow/list", {
+    payload: axios.get('/api/follow/list', {
       params: { uid }
     })
   };
@@ -35,7 +35,7 @@ export function getFollowList(uid) {
 export function addFollow(param) {
   return {
     type: ADD_FOLLOW,
-    payload: axios.post("/api/follow/add", param)
+    payload: axios.post('/api/follow/add', param)
   };
 }
 
@@ -43,6 +43,6 @@ export function addFollow(param) {
 export function delFollow(id) {
   return {
     type: DEL_FOLLOW,
-    payload: axios.post("/api/follow/del", { projectid: id })
+    payload: axios.post('/api/follow/del', { projectid: id })
   };
 }

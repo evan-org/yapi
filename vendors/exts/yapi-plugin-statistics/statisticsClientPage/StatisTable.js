@@ -1,31 +1,31 @@
-import React from "react";
-import { Table } from "antd";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Table } from 'antd';
+import PropTypes from 'prop-types';
 
 const columns = [
   {
-    title: "Group",
-    dataIndex: "name",
-    key: "name"
+    title: 'Group',
+    dataIndex: 'name',
+    key: 'name'
   },
   {
-    title: "项目",
-    dataIndex: "project",
-    key: "project"
+    title: '项目',
+    dataIndex: 'project',
+    key: 'project'
   },
   {
-    title: "接口",
-    dataIndex: "interface",
-    key: "interface"
+    title: '接口',
+    dataIndex: 'interface',
+    key: 'interface'
   },
   {
-    title: "mock数据",
-    dataIndex: "mock",
-    key: "mock"
+    title: 'mock数据',
+    dataIndex: 'mock',
+    key: 'mock'
   }
 ];
 
-const StatisTable = (props) => {
+const StatisTable = props => {
   const { dataSource } = props;
   return (
     <div className="m-row-table">

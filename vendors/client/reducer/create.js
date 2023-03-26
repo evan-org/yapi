@@ -1,4 +1,4 @@
-import { applyMiddleware, createStore as _createStore } from "redux";
+import { applyMiddleware, legacy_createStore as _createStore } from "redux";
 import promiseMiddleware from "redux-promise";
 import messageMiddleware from "./middleware/messageMiddleware";
 import reducer from "./modules/reducer";
@@ -12,7 +12,7 @@ export default function createStore(initialState = {}) {
   // } else {
   //   finalCreateStore = compose(
   //     applyMiddleware(...middleware),
-  //     window.devToolsExtension ? window.devToolsExtension() : require('../pages/DevTools/DevTools').instrument()
+  //     window.devToolsExtension ? window.devToolsExtension() : require('../containers/DevTools/DevTools').instrument()
   //   )(_createStore);
   // }
 

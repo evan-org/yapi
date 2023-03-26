@@ -1,10 +1,10 @@
-const yapi = require("yapi.js");
-const baseModel = require("models/base.js");
-const  mongoose = require("mongoose");
+const yapi = require('yapi.js');
+const baseModel = require('models/base.js');
+const  mongoose = require('mongoose');
 
 class caseModel extends baseModel {
   getName() {
-    return "adv_mock_case";
+    return 'adv_mock_case';
   }
 
   getSchema() {
@@ -32,7 +32,7 @@ class caseModel extends baseModel {
     return this.model.findOne(data);
   }
 
-  list(id) {
+  list(id){
     return this.model.find({
       interface_id: id
     })
@@ -44,7 +44,7 @@ class caseModel extends baseModel {
     });
   }
 
-  delByProjectId(project_id) {
+  delByProjectId(project_id){
     return this.model.remove({
       project_id: project_id
     })
@@ -65,7 +65,7 @@ class caseModel extends baseModel {
     }, data)
   }
 
-  del(id) {
+  del(id){
     return this.model.remove({
       _id: id
     })
