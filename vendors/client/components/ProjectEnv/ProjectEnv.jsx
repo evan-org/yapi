@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "./index.scss";
+import styles from "./ProjectEnv.module.scss";
 import { Icon, Layout, Tooltip, message, Row, Popconfirm } from "antd";
 
 const { Content, Sider } = Layout;
-import ProjectEnvContent from "./ProjectEnvContent.js";
+import ProjectEnvContent from "./ProjectEnvContent.jsx";
 import { connect } from "react-redux";
 import { updateEnv, getProject, getEnv } from "../../reducer/modules/project";
-import EasyDragSort from "../EasyDragSort/EasyDragSort.js";
+import EasyDragSort from "../EasyDragSort/EasyDragSort.jsx";
 
 @connect(
   (state) => ({
@@ -166,7 +166,7 @@ class ProjectEnv extends Component {
       </Row>
     ));
     return (
-      <div className="m-env-panel">
+      <div className={styles.projectEnvPanel}>
         <Layout className="project-env">
           <Sider width={195} style={{ background: "#fff" }}>
             <div style={{ height: "100%", borderRight: 0 }}>

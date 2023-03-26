@@ -1,9 +1,8 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { Icon } from "antd";
-import "./ErrMsg.scss";
+import styles from "./ErrMsg.module.scss";
 import { withRouter } from "react-router";
-
 /**
  * 错误信息提示
  *
@@ -15,7 +14,6 @@ import { withRouter } from "react-router";
  *
  *
  */
-
 /**
  * 标题
  * 一般用于描述错误信息名称
@@ -29,7 +27,6 @@ class ErrMsg extends Component {
   constructor(props) {
     super(props);
   }
-
   static propTypes = {
     type: PropTypes.string,
     history: PropTypes.object,
@@ -37,7 +34,6 @@ class ErrMsg extends Component {
     desc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     opration: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
   };
-
   render() {
     let { type, title, desc, opration } = this.props;
     let icon = "frown-o";
@@ -80,8 +76,8 @@ class ErrMsg extends Component {
       }
     }
     return (
-      <div className="err-msg">
-        <Icon type={icon} className="icon" />
+      <div className={styles.ErrMsg}>
+        <Icon type={icon} className="icon"/>
         <p className="title">{title}</p>
         <p className="desc">{desc}</p>
         <p className="opration">{opration}</p>
@@ -89,5 +85,4 @@ class ErrMsg extends Component {
     );
   }
 }
-
 export default ErrMsg;

@@ -16,7 +16,7 @@ import {
 import PropTypes from "prop-types";
 import { fetchGroupMsg } from "../../../../reducer/modules/group";
 import { connect } from "react-redux";
-import ErrMsg from "../../../../components/ErrMsg/ErrMsg.js";
+import ErrMsg from "../../../../components/ErrMsg/ErrMsg.jsx";
 import { fetchGroupMemberList } from "../../../../reducer/modules/group.js";
 import {
   fetchProjectList,

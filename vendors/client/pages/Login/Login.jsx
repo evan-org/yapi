@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from "react";
 import LoginWrap from "./components/LoginWrap";
 import { Row, Col, Card } from "antd";
-import LogoSVG from "../../components/LogoSVG/index.js";
+import LogoSVG from "../../components/LogoSVG/LogoSVG.jsx";
 import styles from "./Login.module.scss";
 
 class Login extends Component {

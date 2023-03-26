@@ -1,37 +1,10 @@
-import "./Footer.scss";
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
-import { Row, Col } from "antd";
-import { Icon } from "antd";
-
+import { Row, Col, Icon } from "antd";
+//
+import styles from "./Footer.module.scss";
+//
 const version = "1.0.0" // process.env.version;
-class Footer extends Component {
-  constructor(props) {
-    super(props);
-  }
-  static propTypes = {
-    footList: PropTypes.array
-  };
-  render() {
-    return (
-      <div className="footer-wrapper">
-        <Row className="footer-container">
-          {this.props.footList.map(function(item, i) {
-            return (
-              <FootItem
-                key={i}
-                linkList={item.linkList}
-                title={item.title}
-                iconType={item.iconType}
-              />
-            );
-          })}
-        </Row>
-      </div>
-    );
-  }
-}
-
 class FootItem extends Component {
   constructor(props) {
     super(props);
@@ -45,23 +18,22 @@ class FootItem extends Component {
     return (
       <Col span={6}>
         <h4 className="title">
-          {this.props.iconType ? <Icon type={this.props.iconType} className="icon" /> : ""}
+          {this.props.iconType ? <Icon type={this.props.iconType} className="icon"/> : ""}
           {this.props.title}
         </h4>
-        {this.props.linkList.map(function(item, i) {
-          return (
+        {
+          this.props.linkList.map((item, i) => (
             <p key={i}>
               <a href={item.itemLink} className="link">
                 {item.itemTitle}
               </a>
             </p>
-          );
-        })}
+          ))
+        }
       </Col>
     );
   }
 }
-
 Footer.defaultProps = {
   footList: [
     {
@@ -113,5 +85,31 @@ Footer.defaultProps = {
     }
   ]
 };
-
+//
+class Footer extends Component {
+  constructor(props) {
+    super(props);
+  }
+  static propTypes = {
+    footList: PropTypes.array
+  };
+  render() {
+    return (
+      <div className={styles.FooterWrapper}>
+        <Row className="footer-container">
+          {this.props.footList.map(function(item, i) {
+            return (
+              <FootItem
+                key={i}
+                linkList={item.linkList}
+                title={item.title}
+                iconType={item.iconType}
+              />
+            );
+          })}
+        </Row>
+      </div>
+    );
+  }
+}
 export default Footer;

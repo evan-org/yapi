@@ -1,6 +1,5 @@
-import React from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
-
 import PropTypes from "prop-types";
 
 /**
@@ -11,7 +10,6 @@ import PropTypes from "prop-types";
  * </EasyDragSot>
  */
 let curDragIndex = null;
-
 function isDom(obj) {
   return (
     obj &&
@@ -21,8 +19,7 @@ function isDom(obj) {
     typeof obj.getAttribute === "function"
   );
 }
-
-export default class EasyDragSort extends React.Component {
+export default class EasyDragSort extends Component {
   static propTypes = {
     children: PropTypes.array,
     onChange: PropTypes.func,
@@ -30,7 +27,6 @@ export default class EasyDragSort extends React.Component {
     data: PropTypes.func,
     onlyChild: PropTypes.string
   };
-
   render() {
     const that = this;
     const props = this.props;
@@ -41,9 +37,7 @@ export default class EasyDragSort extends React.Component {
         return;
       }
       let curValue;
-
       curValue = props.data();
-
       let newValue = arrMove(curValue, from, to);
       if (typeof props.onChange === "function") {
         return props.onChange(newValue, from, to);
@@ -85,6 +79,7 @@ export default class EasyDragSort extends React.Component {
                   return;
                 }
                 let ref = that.refs[el.getAttribute("data-ref")];
+                // eslint-disable-next-line react/no-find-dom-node
                 let dom = ReactDOM.findDOMNode(ref);
                 if (dom) {
                   dom.draggable = !!target.getAttribute(onlyChild);
@@ -108,7 +103,6 @@ export default class EasyDragSort extends React.Component {
     );
   }
 }
-
 function arrMove(arr, fromIndex, toIndex) {
   arr = [].concat(arr);
   let item = arr.splice(fromIndex, 1)[0];

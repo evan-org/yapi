@@ -1,14 +1,14 @@
-let ace = require("brace"),
-  Mock = require("mockjs");
+const ace = require("brace");
+const Mock = require("mockjs");
 require("brace/mode/javascript");
 require("brace/mode/json");
 require("brace/mode/xml");
 require("brace/mode/html");
 require("brace/theme/xcode");
 require("brace/ext/language_tools.js");
+//
 let json5 = require("json5");
 const MockExtra = require("common/mock-extra.js");
-
 let langTools = ace.acequire("ace/ext/language_tools"),
   wordList = [
     { name: "字符串", mock: "@string" },
@@ -59,7 +59,6 @@ let langTools = ace.acequire("ace/ext/language_tools"),
     { name: "打乱数组", mock: "@shuffle" },
     { name: "协议", mock: "@protocol" }
   ];
-
 let dom = ace.acequire("ace/lib/dom");
 ace.acequire("ace/commands/default_commands").commands.push({
   name: "Toggle Fullscreen",
@@ -73,7 +72,6 @@ ace.acequire("ace/commands/default_commands").commands.push({
     }
   }
 });
-
 function run(options) {
   let editor, mockEditor, rhymeCompleter;
   function handleJson(json) {
@@ -102,7 +100,6 @@ function run(options) {
   data = options.data || "";
   options.readOnly = options.readOnly || false;
   options.fullScreen = options.fullScreen || false;
-
   editor = ace.edit(container);
   editor.$blockScrolling = Infinity;
   editor.getSession().setMode("ace/mode/javascript");
@@ -131,7 +128,6 @@ function run(options) {
       editor.session.insert(pos, code);
     }
   };
-
   function formatJson(json) {
     try {
       return JSON.stringify(JSON.parse(json), null, 2);
@@ -139,7 +135,6 @@ function run(options) {
       return json;
     }
   }
-
   function handleData(data) {
     data = data || "";
     if (typeof data === "string") {
@@ -150,7 +145,6 @@ function run(options) {
       return "" + data;
     }
   }
-
   rhymeCompleter = {
     identifierRegexps: [/[@]/],
     getCompletions: function(editor, session, pos, prefix, callback) {
@@ -166,13 +160,10 @@ function run(options) {
       );
     }
   };
-
   langTools.addCompleter(rhymeCompleter);
   mockEditor.setValue(handleData(data));
   handleJson(editor.getValue());
-
   editor.clearSelection();
-
   editor.getSession().on("change", () => {
     handleJson(editor.getValue());
     if (typeof options.onChange === "function") {
@@ -182,7 +173,6 @@ function run(options) {
   });
   return mockEditor;
 }
-
 /**
  * mockEditor({
       container: 'req_body_json', //dom的id

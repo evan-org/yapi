@@ -33,8 +33,8 @@ const {
   checkNameIsExistInArray
 } = require("common/postmanLib.js");
 const { handleParamsValue, json_parse, ArrayToObject } = require("common/utils.js");
-import CaseEnv from "client/components/CaseEnv";
-import Label from "../../../../components/Label/Label.js";
+import CaseEnv from "client/components/CaseEnv/CaseEnv";
+import Label from "../../../../components/Label/Label.jsx";
 
 const Option = Select.Option;
 const createContext = require("common/createContext")

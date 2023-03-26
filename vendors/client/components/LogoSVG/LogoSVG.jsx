@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const LogoSVG = (props) => {
+function LogoSVG(props) {
   let length = props.length;
   return (
     <svg className="svg" width={length} height={length} viewBox="0 0 64 64" version="1.1">
@@ -9,10 +9,10 @@ const LogoSVG = (props) => {
       <desc>Created with Sketch.</desc>
       <defs>
         <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
-          <stop stopColor="#FFFFFF" offset="0%" />
-          <stop stopColor="#F2F2F2" offset="100%" />
+          <stop stopColor="#FFFFFF" offset="0%"/>
+          <stop stopColor="#F2F2F2" offset="100%"/>
         </linearGradient>
-        <circle id="path-2" cx="31.9988602" cy="31.9988602" r="2.92886048" />
+        <circle id="path-2" cx="31.9988602" cy="31.9988602" r="2.92886048"/>
         <filter
           x="-85.4%"
           y="-68.3%"
@@ -21,8 +21,8 @@ const LogoSVG = (props) => {
           filterUnits="objectBoundingBox"
           id="filter-3"
         >
-          <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1" />
-          <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1" />
+          <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+          <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
           <feColorMatrix
             values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.159703351 0"
             type="matrix"
@@ -33,7 +33,7 @@ const LogoSVG = (props) => {
       <g id="首页" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="大屏幕">
           <g id="Icon">
-            <circle id="Oval-1" fill="url(#linearGradient-1)" cx="32" cy="32" r="32" />
+            <circle id="Oval-1" fill="url(#linearGradient-1)" cx="32" cy="32" r="32"/>
             <path
               d="M36.7078009,31.8054514 L36.7078009,51.7110548 C36.7078009,54.2844537 34.6258634,56.3695395 32.0579205,56.3695395 C29.4899777,56.3695395 27.4099998,54.0704461 27.4099998,51.7941246 L27.4099998,31.8061972 C27.4099998,29.528395 29.4909575,27.218453 32.0589004,27.230043 C34.6268432,27.241633 36.7078009,29.528395 36.7078009,31.8054514 Z"
               id="blue"
@@ -55,18 +55,16 @@ const LogoSVG = (props) => {
               transform="translate(23.392199, 27.040878) rotate(-60.000000) translate(-23.392199, -27.040878) "
             />
             <g id="inner-round">
-              <use fill="black" fillOpacity="1" filter="url(#filter-3)" xlinkHref="#path-2" />
-              <use fill="#F7F7F7" fillRule="evenodd" xlinkHref="#path-2" />
+              <use fill="black" fillOpacity="1" filter="url(#filter-3)" xlinkHref="#path-2"/>
+              <use fill="#F7F7F7" fillRule="evenodd" xlinkHref="#path-2"/>
             </g>
           </g>
         </g>
       </g>
     </svg>
   );
-};
-
+}
 LogoSVG.propTypes = {
   length: PropTypes.any
 };
-
 export default LogoSVG;

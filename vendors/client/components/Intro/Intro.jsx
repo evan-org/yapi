@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Icon } from "antd";
-import "./Intro.scss";
+import styles from "./Intro.module.scss";
 import { OverPack } from "rc-scroll-anim";
 import TweenOne from "rc-tween-one";
 import QueueAnim from "rc-queue-anim";
@@ -52,7 +52,7 @@ class Intro extends React.PureComponent {
       one: { x: "-=30", opacity: 0, type: "from" }
     };
     return (
-      <div className="intro-container">
+      <div className={styles.IntroContainer}>
         <OverPack playScale="0.3">
           <TweenOne
             animation={animType.one}

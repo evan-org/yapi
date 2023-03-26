@@ -5,7 +5,7 @@ import { Row, Col } from "antd";
 import { getFollowList } from "../../reducer/modules/follow";
 import { setBreadcrumb } from "../../reducer/modules/user";
 import ProjectCard from "../../components/ProjectCard/ProjectCard.js";
-import ErrMsg from "../../components/ErrMsg/ErrMsg.js";
+import ErrMsg from "../../components/ErrMsg/ErrMsg.jsx";
 //
 import styles from "./Follows.module.scss";
 @connect(

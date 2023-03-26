@@ -5,7 +5,7 @@ import { autobind } from "core-decorators";
 import { Row, Col, Button, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 import ProjectCard from "../../../../components/ProjectCard/ProjectCard.js";
-import ErrMsg from "../../../../components/ErrMsg/ErrMsg.js";
+import ErrMsg from "../../../../components/ErrMsg/ErrMsg.jsx";
 //
 import { addProject, fetchProjectList, delProject, } from "../../../../reducer/modules/project";
 import { setBreadcrumb } from "../../../../reducer/modules/user";

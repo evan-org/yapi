@@ -21,9 +21,9 @@ import AceEditor from "client/components/AceEditor/AceEditor";
 import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
 import axios from "axios";
-import ModalPostman from "../ModalPostman/index.js";
+import ModalPostman from "../ModalPostman/ModalPostman.jsx";
 import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.jsx";
-import ProjectEnv from "../ProjectEnv/index.js";
+import ProjectEnv from "../ProjectEnv/ProjectEnv.jsx";
 import json5 from "json5";
 import styles from "./Postman.module.scss";
 

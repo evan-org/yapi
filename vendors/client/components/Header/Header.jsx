@@ -6,13 +6,13 @@ import { Icon, Layout, Menu, Dropdown, message, Tooltip, Popover, Tag } from "an
 import { checkLoginState, logoutActions, loginTypeAction } from "../../reducer/modules/user";
 import { changeMenuItem } from "../../reducer/modules/menu";
 // import { withRouter } from "react-router";
-import Srch from "./Search/Search";
+import Search from "./Search/Search";
 //
 import styles from "./Header.module.scss";
 //
-import LogoSVG from "../LogoSVG/index.js";
-import Breadcrumb from "../Breadcrumb/Breadcrumb.js";
-import GuideBtns from "../GuideBtns/GuideBtns.js";
+import LogoSVG from "../LogoSVG/LogoSVG.jsx";
+import Breadcrumb from "../Breadcrumb/Breadcrumb.jsx";
+import GuideBtns from "../GuideBtns/GuideBtns.jsx";
 
 const plugin = require("client/plugin.js");
 let HeaderMenu = {
@@ -108,7 +108,7 @@ function ToolUser(props) {
   return (
     <ul>
       <li className="toolbar-li item-search">
-        <Srch groupList={props.groupList}/>
+        <Search groupList={props.groupList}/>
       </li>
       <Popover
         overlayClassName="popover-index"
