@@ -1,32 +1,32 @@
-import test from "ava";
+import test from 'ava';
 import {
   handleParamsValue,
   schemaValidator
-} from "../../common/utils.js";
+} from '../../common/utils.js';
 
 
-test("handleParamsValue", (t) => {
-  const json = JSON.stringify({
-    t: 1,
-    obj: {
-      name: "dd",
-      value: "vvvv"
-    }
-  })
+test('handleParamsValue', t => {
+    const json = JSON.stringify({
+      t: 1,
+      obj: {
+        name: "dd",
+        value: "vvvv"
+      }
+    })
 
 
-  t.is(handleParamsValue(" aaaa | length"), "aaaa | length");
-  t.is(handleParamsValue("{{aaaa |upper }}"), "AAAA")
-  t.is(handleParamsValue(json), json)
-  t.is(handleParamsValue("   {{ dkkdjf }}"), "dkkdjf")
-  t.is(handleParamsValue("   {{ dkkdjf | upper | kkk }}"), "{{ dkkdjf | upper | kkk }}")
-  t.is(handleParamsValue("aaa   {{ aaaa | upper }} bbbb"), "aaa   AAAA bbbb")
-  t.is(handleParamsValue("aaa   {{ aaaa | upper }} bbbb,aaa   {{ aaaa | upper }} bbbb"), "aaa   AAAA bbbb,aaa   AAAA bbbb")
-  t.is(handleParamsValue("{{aaaa | length}}"), 4);
-  t.is(handleParamsValue("{{4444 | number}}"), 4444);
+    t.is(handleParamsValue(" aaaa | length"), 'aaaa | length');
+    t.is(handleParamsValue("{{aaaa |upper }}"), 'AAAA')
+    t.is(handleParamsValue(json), json)
+    t.is(handleParamsValue('   {{ dkkdjf }}'), 'dkkdjf')
+    t.is(handleParamsValue('   {{ dkkdjf | upper | kkk }}'), '{{ dkkdjf | upper | kkk }}')
+    t.is(handleParamsValue('aaa   {{ aaaa | upper }} bbbb'), 'aaa   AAAA bbbb')
+    t.is(handleParamsValue('aaa   {{ aaaa | upper }} bbbb,aaa   {{ aaaa | upper }} bbbb'), 'aaa   AAAA bbbb,aaa   AAAA bbbb')
+    t.is(handleParamsValue("{{aaaa | length}}"), 4);
+    t.is(handleParamsValue("{{4444 | number}}"), 4444);
 });
 
-test("schemaValidator", (t) => {
+test('schemaValidator', t => {
   const schema1 = {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
@@ -56,7 +56,7 @@ test("schemaValidator", (t) => {
 
   t.is(schemaValidator(schema1, data1).valid, true);
 
-  const schema2 = {
+  const schema2 ={
     "type": "object",
     "required": [
       "id",

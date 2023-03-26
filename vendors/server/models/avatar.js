@@ -1,9 +1,9 @@
-const yapi = require("../yapi.js");
-const baseModel = require("./base.js");
+const yapi = require('../yapi.js');
+const baseModel = require('./base.js');
 
 class avatarModel extends baseModel {
   getName() {
-    return "avatar";
+    return 'avatar';
   }
 
   getSchema() {

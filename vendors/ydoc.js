@@ -8,10 +8,10 @@ module.exports = {
   "pluginsConfig": {
     "import-asset": {
       "css": "web.css"
-    }
+    } 
   },
-  version: require("./package.json").version,
-  markdownIt: function(md) {
-    md.use(require("markdown-it-include"), __dirname)
+  version: require('./package.json').version,
+  markdownIt: function(md){
+    md.use(require('markdown-it-include'), __dirname)
   }
 }

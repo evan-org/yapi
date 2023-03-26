@@ -12,6 +12,7 @@ var fs = require('fs');
 var package = require('./package.json');
 var yapi = require('./server/yapi');
 var isWin = require('os').platform() === 'win32'
+
 var compressPlugin = new CompressionPlugin({
   asset: '[path].gz[query]',
   algorithm: 'gzip',
@@ -19,6 +20,7 @@ var compressPlugin = new CompressionPlugin({
   threshold: 10240,
   minRatio: 0.8
 });
+
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === 'node_modules') {
@@ -30,9 +32,11 @@ function createScript(plugin, pathAlias) {
     plugin.name
   }/client.js'),options: ${options}}`;
 }
+
 function initPlugins(configPlugin) {
   configPlugin = require('../config.json').plugins;
   var systemConfigPlugin = require('./common/config.js').exts;
+
   var scripts = [];
   if (configPlugin && Array.isArray(configPlugin) && configPlugin.length) {
     configPlugin = commonLib.initPlugins(configPlugin, 'plugin');
@@ -42,16 +46,20 @@ function initPlugins(configPlugin) {
       }
     });
   }
+
   systemConfigPlugin = commonLib.initPlugins(systemConfigPlugin, 'ext');
   systemConfigPlugin.forEach(plugin => {
     if (plugin.client && plugin.enable) {
       scripts.push(createScript(plugin, 'exts'));
     }
   });
+
   scripts = 'module.exports = {' + scripts.join(',') + '}';
   fs.writeFileSync('client/plugin-module.js', scripts);
 }
+
 initPlugins();
+
 module.exports = {
   plugins: [
     {
@@ -114,6 +122,7 @@ module.exports = {
             break;
           default:
         }
+
         baseConfig.plugins.push(
           new this.webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(ENV_PARAMS),
@@ -121,28 +130,34 @@ module.exports = {
             'process.env.versionNotify': yapi.WEBCONFIG.versionNotify
           })
         );
+
         //初始化配置
         baseConfig.devtool = 'cheap-module-eval-source-map';
         baseConfig.context = path.resolve(__dirname, './client');
         baseConfig.resolve.alias.client = '/client';
         baseConfig.resolve.alias.common = '/common';
+
         baseConfig.resolve.alias.exts = '/exts';
+
         // baseConfig.resolve.alias.react = 'anujs';
         // baseConfig.resolve.alias['react-dom'] = 'anujs';
+
         baseConfig.output.prd.path = 'static/prd';
         baseConfig.output.prd.publicPath = '';
         baseConfig.output.prd.filename = '[name]@[chunkhash][ext]';
+
         baseConfig.module.noParse = /node_modules\/jsondiffpatch\/public\/build\/.*js/;
         baseConfig.module.loaders.push({
           test: /\.less$/,
           loader: ykit.ExtractTextPlugin.extract(
             require.resolve('style-loader'),
             require.resolve('css-loader') +
-            '?sourceMap!' +
-            require.resolve('less-loader') +
-            '?sourceMap'
+              '?sourceMap!' +
+              require.resolve('less-loader') +
+              '?sourceMap'
           )
         });
+
         baseConfig.module.loaders.push({
           test: /.(gif|jpg|jpeg|png|woff|woff2|eot|ttf|svg)$/,
           loader: 'url-loader',
@@ -151,24 +166,28 @@ module.exports = {
             name: ['[path][name].[ext]?[sha256#base64:8]']
           }
         });
+
         baseConfig.module.loaders.push({
           test: /\.(sass|scss)$/,
           loader: ykit.ExtractTextPlugin.extract(
             require.resolve('css-loader') +
-            '?sourceMap!' +
-            require.resolve('sass-loader') +
-            '?sourceMap'
+              '?sourceMap!' +
+              require.resolve('sass-loader') +
+              '?sourceMap'
           )
         });
+
         baseConfig.module.preLoaders.push({
           test: /\.(js|jsx)$/,
           exclude: /tui-editor|node_modules|google-diff.js/,
           loader: 'eslint-loader'
         });
+
         baseConfig.module.preLoaders.push({
           test: /\.json$/,
           loader: 'json-loader'
         });
+
         if (this.env == 'prd') {
           baseConfig.plugins.push(
             new this.webpack.optimize.UglifyJsPlugin({

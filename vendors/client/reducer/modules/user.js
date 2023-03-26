@@ -1,15 +1,15 @@
-import axios from "axios";
+import axios from 'axios';
 
 // Actions
-const LOGIN = "yapi/user/LOGIN";
-const LOGIN_OUT = "yapi/user/LOGIN_OUT";
-const LOGIN_TYPE = "yapi/user/LOGIN_TYPE";
-const GET_LOGIN_STATE = "yapi/user/GET_LOGIN_STATE";
-const REGISTER = "yapi/user/REGISTER";
-const SET_BREADCRUMB = "yapi/user/SET_BREADCRUMB";
-const CHANGE_STUDY_TIP = "yapi/user/CHANGE_STUDY_TIP";
-const FINISH_STUDY = "yapi/user/FINISH_STUDY";
-const SET_IMAGE_URL = "yapi/user/SET_IMAGE_URL";
+const LOGIN = 'yapi/user/LOGIN';
+const LOGIN_OUT = 'yapi/user/LOGIN_OUT';
+const LOGIN_TYPE = 'yapi/user/LOGIN_TYPE';
+const GET_LOGIN_STATE = 'yapi/user/GET_LOGIN_STATE';
+const REGISTER = 'yapi/user/REGISTER';
+const SET_BREADCRUMB = 'yapi/user/SET_BREADCRUMB';
+const CHANGE_STUDY_TIP = 'yapi/user/CHANGE_STUDY_TIP';
+const FINISH_STUDY = 'yapi/user/FINISH_STUDY';
+const SET_IMAGE_URL = 'yapi/user/SET_IMAGE_URL';
 
 // Reducer
 const LOADING_STATUS = 0;
@@ -22,11 +22,11 @@ const initialState = {
   isLDAP: false,
   userName: null,
   uid: null,
-  email: "",
+  email: '',
   loginState: LOADING_STATUS,
-  loginWrapActiveKey: "1",
-  role: "",
-  type: "",
+  loginWrapActiveKey: '1',
+  role: '',
+  type: '',
   // breadcrumb: [{
   //   name: 'name',
   //   href: 'group'
@@ -36,7 +36,7 @@ const initialState = {
   breadcrumb: [],
   studyTip: 0,
   study: false,
-  imageUrl: ""
+  imageUrl: ''
 };
 
 export default (state = initialState, action) => {
@@ -78,8 +78,8 @@ export default (state = initialState, action) => {
         loginState: GUEST_STATUS,
         userName: null,
         uid: null,
-        role: "",
-        type: ""
+        role: '',
+        type: ''
       };
     }
     case LOGIN_TYPE: {
@@ -119,7 +119,7 @@ export default (state = initialState, action) => {
       };
     }
     case SET_IMAGE_URL: {
-    // console.log('state', state);
+      // console.log('state', state);
       return {
         ...state,
         imageUrl: action.data
@@ -134,21 +134,21 @@ export default (state = initialState, action) => {
 export function checkLoginState() {
   return {
     type: GET_LOGIN_STATE,
-    payload: axios.get("/api/user/status")
+    payload: axios.get('/api/user/status')
   };
 }
 
 export function loginActions(data) {
   return {
     type: LOGIN,
-    payload: axios.post("/api/user/login", data)
+    payload: axios.post('/api/user/login', data)
   };
 }
 
 export function loginLdapActions(data) {
   return {
     type: LOGIN,
-    payload: axios.post("/api/user/login_by_ldap", data)
+    payload: axios.post('/api/user/login_by_ldap', data)
   };
 }
 
@@ -161,14 +161,14 @@ export function regActions(data) {
   };
   return {
     type: REGISTER,
-    payload: axios.post("/api/user/reg", param)
+    payload: axios.post('/api/user/reg', param)
   };
 }
 
 export function logoutActions() {
   return {
     type: LOGIN_OUT,
-    payload: axios.get("/api/user/logout")
+    payload: axios.get('/api/user/logout')
   };
 }
 
@@ -202,6 +202,6 @@ export function changeStudyTip() {
 export function finishStudy() {
   return {
     type: FINISH_STUDY,
-    payload: axios.get("/api/user/up_study")
+    payload: axios.get('/api/user/up_study')
   };
 }

@@ -1,43 +1,54 @@
-import React, { Component } from "react";
-import { message } from "antd";
-import { connect } from "react-redux";
-import axios from "axios";
-import PropTypes from "prop-types";
-import "./index.scss";
-import { timeago } from "../../../common/utils";
-import { Link } from "react-router-dom";
-import WikiView from "./View.js";
-import WikiEditor from "./Editor.js";
-//
+import React, { Component } from 'react';
+import { message } from 'antd';
+import { connect } from 'react-redux';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import './index.scss';
+import { timeago } from '../../../common/utils';
+import { Link } from 'react-router-dom';
+import WikiView from './View.js';
+import WikiEditor from './Editor.js';
+
+@connect(
+  state => {
+    return {
+      projectMsg: state.project.currProject
+    };
+  },
+  {}
+)
 class WikiPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isEditor: false,
       isUpload: true,
-      desc: "",
-      markdown: "",
+      desc: '',
+      markdown: '',
       notice: props.projectMsg.switch_notice,
-      status: "INIT",
-      editUid: "",
-      editName: "",
+      status: 'INIT',
+      editUid: '',
+      editName: '',
       curdata: null
     };
   }
+
   static propTypes = {
     match: PropTypes.object,
     projectMsg: PropTypes.object
   };
+
   async componentDidMount() {
     const currProjectId = this.props.match.params.id;
     await this.handleData({ project_id: currProjectId });
     this.handleConflict();
   }
+
   componentWillUnmount() {
     // willUnmount
     try {
-      if (this.state.status === "CLOSE") {
-        this.WebSocket.send("end");
+      if (this.state.status === 'CLOSE') {
+        this.WebSocket.send('end');
         this.WebSocket.close();
       }
     } catch (e) {
@@ -47,9 +58,9 @@ class WikiPage extends Component {
   // 结束编辑websocket
   endWebSocket = () => {
     try {
-      if (this.state.status === "CLOSE") {
+      if (this.state.status === 'CLOSE') {
         const sendEnd = () => {
-          this.WebSocket.send("end");
+          this.WebSocket.send('end');
         };
         this.handleWebsocketAccidentClose(sendEnd);
       }
@@ -57,25 +68,27 @@ class WikiPage extends Component {
       return null;
     }
   };
+
   // 处理多人编辑冲突问题
   handleConflict = () => {
     // console.log(location)
-    let domain = location.hostname + (location.port !== "" ? ":" + location.port : "");
+    let domain = location.hostname + (location.port !== '' ? ':' + location.port : '');
     let s;
-    // 因后端 node 仅支持 ws， 暂不支持 wss
-    let wsProtocol = location.protocol === "https:" ? "wss" : "ws";
+    //因后端 node 仅支持 ws， 暂不支持 wss
+    let wsProtocol = location.protocol === 'https:' ? 'wss' : 'ws';
     s = new WebSocket(
       wsProtocol +
-      "://" +
-      domain +
-      "/api/ws_plugin/wiki_desc/solve_conflict?id=" +
-      this.props.match.params.id
+        '://' +
+        domain +
+        '/api/ws_plugin/wiki_desc/solve_conflict?id=' +
+        this.props.match.params.id
     );
     s.onopen = () => {
       this.WebSocket = s;
-      s.send("start");
+      s.send('start');
     };
-    s.onmessage = (e) => {
+
+    s.onmessage = e => {
       let result = JSON.parse(e.data);
       if (result.errno === 0) {
         // 更新
@@ -91,30 +104,32 @@ class WikiPage extends Component {
         // 新建
         this.setState({
           isEditor: !this.state.isEditor,
-          status: "CLOSE"
+          status: 'CLOSE'
         });
       } else {
         this.setState({
           editUid: result.data.uid,
           editName: result.data.username,
-          status: "EDITOR"
+          status: 'EDITOR'
         });
       }
     };
+
     s.onerror = () => {
       this.setState({
-        status: "CLOSE"
+        status: 'CLOSE'
       });
-      console.warn("websocket 连接失败，将导致多人编辑同一个接口冲突。");
+      console.warn('websocket 连接失败，将导致多人编辑同一个接口冲突。');
     };
   };
+
   // 点击编辑按钮 发送 websocket 获取数据
   onEditor = () => {
     // this.WebSocket.send('editor');
     const sendEditor = () => {
-      this.WebSocket.send("editor");
+      this.WebSocket.send('editor');
     };
-    this.handleWebsocketAccidentClose(sendEditor, (status) => {
+    this.handleWebsocketAccidentClose(sendEditor, status => {
       // 如果websocket 启动不成功用户依旧可以对wiki 进行编辑
       if (!status) {
         this.setState({
@@ -123,13 +138,14 @@ class WikiPage extends Component {
       }
     });
   };
+
   // 处理websocket  意外断开问题
   handleWebsocketAccidentClose = (fn, callback) => {
     // websocket 是否启动
     if (this.WebSocket) {
       // websocket 断开
       if (this.WebSocket.readyState !== 1) {
-        message.error("websocket 链接失败，请重新刷新页面");
+        message.error('websocket 链接失败，请重新刷新页面');
       } else {
         fn();
       }
@@ -138,9 +154,10 @@ class WikiPage extends Component {
       callback(false);
     }
   };
+
   //  获取数据
-  handleData = async(params) => {
-    let result = await axios.get("/api/plugin/wiki_desc/get", { params });
+  handleData = async params => {
+    let result = await axios.get('/api/plugin/wiki_desc/get', { params });
     if (result.data.errcode === 0) {
       const data = result.data.data;
       if (data) {
@@ -156,8 +173,9 @@ class WikiPage extends Component {
       message.error(`请求数据失败： ${result.data.errmsg}`);
     }
   };
+
   // 数据上传
-  onUpload = async(desc, markdown) => {
+  onUpload = async (desc, markdown) => {
     const currProjectId = this.props.match.params.id;
     let option = {
       project_id: currProjectId,
@@ -165,7 +183,7 @@ class WikiPage extends Component {
       markdown,
       email_notice: this.state.notice
     };
-    let result = await axios.post("/api/plugin/wiki_desc/up", option);
+    let result = await axios.post('/api/plugin/wiki_desc/up', option);
     if (result.data.errcode === 0) {
       await this.handleData({ project_id: currProjectId });
       this.setState({ isEditor: false });
@@ -180,19 +198,22 @@ class WikiPage extends Component {
     this.setState({ isEditor: false });
     this.endWebSocket();
   };
+
   // 邮件通知
-  onEmailNotice = (e) => {
+  onEmailNotice = e => {
     this.setState({
       notice: e.target.checked
     });
   };
+
   render() {
     const { isEditor, username, editorTime, notice, uid, status, editUid, editName } = this.state;
     const editorEable =
-      this.props.projectMsg.role === "admin" ||
-      this.props.projectMsg.role === "owner" ||
-      this.props.projectMsg.role === "dev";
-    const isConflict = status === "EDITOR";
+      this.props.projectMsg.role === 'admin' ||
+      this.props.projectMsg.role === 'owner' ||
+      this.props.projectMsg.role === 'dev';
+    const isConflict = status === 'EDITOR';
+
     return (
       <div className="g-row">
         <div className="m-panel wiki-content">
@@ -230,9 +251,5 @@ class WikiPage extends Component {
     );
   }
 }
-export default connect(
-  (state) => ({
-    projectMsg: state.project.currProject
-  }),
-  {}
-)(WikiPage);
+
+export default WikiPage;
