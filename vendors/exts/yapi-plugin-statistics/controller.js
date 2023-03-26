@@ -1,18 +1,18 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-const baseController = require('controllers/base.js');
-const statisMockModel = require('./statisMockModel.js');
-const groupModel = require('models/group.js');
-const projectModel = require('models/project.js');
-const interfaceModel = require('models/interface.js');
-const interfaceCaseModel = require('models/interfaceCase.js');
+const baseController = require("controllers/base.js");
+const statisMockModel = require("./statisMockModel.js");
+const groupModel = require("models/group.js");
+const projectModel = require("models/project.js");
+const interfaceModel = require("models/interface.js");
+const interfaceCaseModel = require("models/interfaceCase.js");
 
-const yapi = require('yapi.js');
-const config = require('./index.js');
-const commons = require('./util.js');
-const os = require('os');
-let cpu = require('cpu-load');
+const yapi = require("yapi.js");
+const config = require("./index.js");
+const commons = require("./util.js");
+const os = require("os");
+let cpu = require("cpu-load");
 
 class statisMockController extends baseController {
   constructor(ctx) {
@@ -63,8 +63,8 @@ class statisMockController extends baseController {
       let mockCount = await this.Model.getTotalCount();
       let mockDateList = [];
 
-      if (!this.getRole() === 'admin') {
-        return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
+      if (!this.getRole() === "admin") {
+        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
       }
       //  默认时间是30 天为一周期
       let dateInterval = commons.getDateRange();
@@ -85,12 +85,12 @@ class statisMockController extends baseController {
    */
   async getSystemStatus(ctx) {
     try {
-      let mail = '';
+      let mail = "";
       if (yapi.WEBCONFIG.mail && yapi.WEBCONFIG.mail.enable) {
         mail = await this.checkEmail();
         // return ctx.body = yapi.commons.resReturn(result);
       } else {
-        mail = '未配置';
+        mail = "未配置";
       }
 
       let load = (await this.cupLoad()) * 100;
@@ -117,12 +117,12 @@ class statisMockController extends baseController {
   checkEmail() {
     return new Promise((resolve, reject) => {
       let result = {};
-      yapi.mail.verify(error => {
+      yapi.mail.verify((error) => {
         if (error) {
-          result = '不可用';
+          result = "不可用";
           resolve(result);
         } else {
-          result = '可用';
+          result = "可用";
           resolve(result);
         }
       });

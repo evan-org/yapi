@@ -1,31 +1,31 @@
 // Actions
-const FETCH_ADD_INTERFACE_INPUT = 'yapi/addInterface/FETCH_ADD_INTERFACE_INPUT';
-const FETCH_ADD_INTERFACE_TAG_VALUE = 'yapi/addInterface/FETCH_ADD_INTERFACE_TAG_VALUE';
-const FETCH_ADD_INTERFACE_HEADER_VALUE = 'yapi/addInterface/FETCH_ADD_INTERFACE_HEADER_VALUE';
-const ADD_INTERFACE_SEQ_HEADER = 'yapi/addInterface/ADD_INTERFACE_SEQ_HEADER';
-const DELETE_INTERFACE_SEQ_HEADER = 'yapi/addInterface/DELETE_INTERFACE_SEQ_HEADER';
-const GET_INTERFACE_REQ_PARAMS = 'yapi/addInterface/GET_INTERFACE_REQ_PARAMS';
-const GET_INTERFACE_RES_PARAMS = 'yapi/addInterface/GET_INTERFACE_RES_PARAMS';
-const PUSH_INTERFACE_NAME = 'yapi/addInterface/PUSH_INTERFACE_NAME';
-const PUSH_INTERFACE_METHOD = 'yapi/addInterface/PUSH_INTERFACE_METHOD';
-const FETCH_INTERFACE_PROJECT = 'yapi/addInterface/FETCH_INTERFACE_PROJECT';
-const ADD_INTERFACE_CLIPBOARD = 'yapi/addInterface/ADD_INTERFACE_CLIPBOARD';
+const FETCH_ADD_INTERFACE_INPUT = "yapi/addInterface/FETCH_ADD_INTERFACE_INPUT";
+const FETCH_ADD_INTERFACE_TAG_VALUE = "yapi/addInterface/FETCH_ADD_INTERFACE_TAG_VALUE";
+const FETCH_ADD_INTERFACE_HEADER_VALUE = "yapi/addInterface/FETCH_ADD_INTERFACE_HEADER_VALUE";
+const ADD_INTERFACE_SEQ_HEADER = "yapi/addInterface/ADD_INTERFACE_SEQ_HEADER";
+const DELETE_INTERFACE_SEQ_HEADER = "yapi/addInterface/DELETE_INTERFACE_SEQ_HEADER";
+const GET_INTERFACE_REQ_PARAMS = "yapi/addInterface/GET_INTERFACE_REQ_PARAMS";
+const GET_INTERFACE_RES_PARAMS = "yapi/addInterface/GET_INTERFACE_RES_PARAMS";
+const PUSH_INTERFACE_NAME = "yapi/addInterface/PUSH_INTERFACE_NAME";
+const PUSH_INTERFACE_METHOD = "yapi/addInterface/PUSH_INTERFACE_METHOD";
+const FETCH_INTERFACE_PROJECT = "yapi/addInterface/FETCH_INTERFACE_PROJECT";
+const ADD_INTERFACE_CLIPBOARD = "yapi/addInterface/ADD_INTERFACE_CLIPBOARD";
 
 // Reducer
 const initialState = {
-  interfaceName: '',
-  url: '',
-  method: 'GET',
+  interfaceName: "",
+  url: "",
+  method: "GET",
   // 默认请求头部有一条数据
   seqGroup: [
     {
       id: 0,
-      name: '',
-      value: ''
+      name: "",
+      value: ""
     }
   ],
-  reqParams: '',
-  resParams: '',
+  reqParams: "",
+  resParams: "",
   project: {},
   clipboard: () => {}
 };
@@ -93,7 +93,7 @@ export default (state = initialState, action) => {
 };
 
 // Action Creators
-import axios from 'axios';
+import axios from "axios";
 
 export function pushInputValue(value) {
   return {
@@ -161,7 +161,7 @@ export function pushInterfaceMethod(value) {
 export function fetchInterfaceProject(id) {
   return {
     type: FETCH_INTERFACE_PROJECT,
-    payload: axios.get('/api/project/get', { params: { id } })
+    payload: axios.get("/api/project/get", { params: { id } })
   };
 }
 

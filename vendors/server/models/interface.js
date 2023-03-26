@@ -1,9 +1,9 @@
-const yapi = require('../yapi.js');
-const baseModel = require('./base.js');
+const yapi = require("../yapi.js");
+const baseModel = require("./base.js");
 
 class interfaceModel extends baseModel {
   getName() {
-    return 'interface';
+    return "interface";
   }
 
   getSchema() {
@@ -15,12 +15,12 @@ class interfaceModel extends baseModel {
       project_id: { type: Number, required: true },
       catid: { type: Number, required: true },
       edit_uid: { type: Number, default: 0 },
-      status: { type: String, enum: ['undone', 'done'], default: 'undone' },
+      status: { type: String, enum: ["undone", "done"], default: "undone" },
       desc: String,
       markdown: String,
       add_time: Number,
       up_time: Number,
-      type: { type: String, enum: ['static', 'var'], default: 'static' },
+      type: { type: String, enum: ["static", "var"], default: "static" },
       query_path: {
         path: String,
         params: [
@@ -38,8 +38,8 @@ class interfaceModel extends baseModel {
           desc: String,
           required: {
             type: String,
-            enum: ['1', '0'],
-            default: '1'
+            enum: ["1", "0"],
+            default: "1"
           }
         }
       ],
@@ -51,8 +51,8 @@ class interfaceModel extends baseModel {
           desc: String,
           required: {
             type: String,
-            enum: ['1', '0'],
-            default: '1'
+            enum: ["1", "0"],
+            default: "1"
           }
         }
       ],
@@ -65,27 +65,27 @@ class interfaceModel extends baseModel {
       ],
       req_body_type: {
         type: String,
-        enum: ['form', 'json', 'text', 'file', 'raw']
+        enum: ["form", "json", "text", "file", "raw"]
       },
       req_body_is_json_schema: { type: Boolean, default: false },
       req_body_form: [
         {
           name: String,
-          type: { type: String, enum: ['text', 'file'] },
+          type: { type: String, enum: ["text", "file"] },
           example: String,
           value: String,
           desc: String,
           required: {
             type: String,
-            enum: ['1', '0'],
-            default: '1'
+            enum: ["1", "0"],
+            default: "1"
           }
         }
       ],
       req_body_other: String,
       res_body_type: {
         type: String,
-        enum: ['json', 'text', 'xml', 'raw', 'json-schema']
+        enum: ["json", "text", "xml", "raw", "json-schema"]
       },
       res_body: String,
       res_body_is_json_schema: { type: Boolean, default: false },
@@ -116,7 +116,7 @@ class interfaceModel extends baseModel {
       .findOne({
         _id: id
       })
-      .select('path method uid title project_id cat_id status ')
+      .select("path method uid title project_id cat_id status ")
       .exec();
   }
 
@@ -124,10 +124,10 @@ class interfaceModel extends baseModel {
     return this.model
       .find({
         project_id: project_id,
-        type: 'var',
+        type: "var",
         method: method
       })
-      .select('_id path')
+      .select("_id path")
       .exec();
   }
 
@@ -135,7 +135,7 @@ class interfaceModel extends baseModel {
     return this.model
       .find({
         project_id: project_id,
-        'query_path.path': path,
+        "query_path.path": path,
         method: method
       })
       .exec();
@@ -144,7 +144,7 @@ class interfaceModel extends baseModel {
   getByPath(project_id, path, method, select) {
     select =
       select ||
-      '_id title uid path method project_id catid edit_uid status add_time up_time type query_path req_query req_headers req_params req_body_type req_body_form req_body_other res_body_type custom_field_value res_body res_body_is_json_schema req_body_is_json_schema';
+      "_id title uid path method project_id catid edit_uid status add_time up_time type query_path req_query req_headers req_params req_body_type req_body_form req_body_other res_body_type custom_field_value res_body res_body_is_json_schema req_body_is_json_schema";
     return this.model
       .find({
         project_id: project_id,
@@ -171,7 +171,7 @@ class interfaceModel extends baseModel {
 
   list(project_id, select) {
     select =
-      select || '_id title uid path method project_id catid edit_uid status add_time up_time';
+      select || "_id title uid path method project_id catid edit_uid status add_time up_time";
     return this.model
       .find({
         project_id: project_id
@@ -192,7 +192,7 @@ class interfaceModel extends baseModel {
       .skip((page - 1) * limit)
       .limit(limit)
       .select(
-        '_id title uid path method project_id catid api_opened edit_uid status add_time up_time tag'
+        "_id title uid path method project_id catid api_opened edit_uid status add_time up_time tag"
       )
       .exec();
   }
@@ -206,14 +206,14 @@ class interfaceModel extends baseModel {
       .exec();
   }
 
-  //获取全部接口信息
+  // 获取全部接口信息
   getInterfaceListCount() {
     return this.model.countDocuments({});
   }
 
   listByCatid(catid, select) {
     select =
-      select || '_id title uid path method project_id catid edit_uid status add_time up_time index tag';
+      select || "_id title uid path method project_id catid edit_uid status add_time up_time index tag";
     return this.model
       .find({
         catid: catid
@@ -234,7 +234,7 @@ class interfaceModel extends baseModel {
       .skip((page - 1) * limit)
       .limit(limit)
       .select(
-        '_id title uid path method project_id catid edit_uid api_opened status add_time up_time, index, tag'
+        "_id title uid path method project_id catid edit_uid api_opened status add_time up_time, index, tag"
       )
       .exec();
   }
@@ -248,14 +248,14 @@ class interfaceModel extends baseModel {
       .skip((page - 1) * limit)
       .limit(limit)
       .select(
-        '_id title uid path method project_id catid edit_uid api_opened status add_time up_time, index, tag'
+        "_id title uid path method project_id catid edit_uid api_opened status add_time up_time, index, tag"
       )
       .exec();
   }
 
   listByInterStatus(catid, status) {
     let option = {};
-    if (status === 'open') {
+    if (status === "open") {
       option = {
         catid: catid,
         api_opened: true
@@ -317,7 +317,7 @@ class interfaceModel extends baseModel {
         custom_field_value: value
       })
       .select(
-        'title uid path method edit_uid status desc add_time up_time type query_path req_query req_headers req_params req_body_type req_body_form req_body_other res_body_type custom_field_value'
+        "title uid path method edit_uid status desc add_time up_time type query_path req_query req_headers req_params req_body_type req_body_form req_body_other res_body_type custom_field_value"
       )
       .exec();
   }
@@ -341,8 +341,8 @@ class interfaceModel extends baseModel {
     return this.model
       .find({
         $or: [
-          { 'title': new RegExp(keyword, 'ig') },
-          { 'path': new RegExp(keyword, 'ig') }
+          { "title": new RegExp(keyword, "ig") },
+          { "path": new RegExp(keyword, "ig") }
         ]
       })
       .limit(10);

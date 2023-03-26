@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Icon, Row, Col, Input } from 'antd';
-import './ProjectTag.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Icon, Row, Col, Input } from "antd";
+import "./ProjectTag.scss";
 
 
 class ProjectTag extends Component {
@@ -12,19 +12,19 @@ class ProjectTag extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tag: [{ name: '', desc: '' }]
+      tag: [{ name: "", desc: "" }]
     };
   }
 
   initState(curdata) {
     let tag = [
       {
-        name: '',
-        desc: ''
+        name: "",
+        desc: ""
       }
     ];
     if (curdata && curdata.length !== 0) {
-      curdata.forEach(item => {
+      curdata.forEach((item) => {
         tag.unshift(item);
       });
     }
@@ -45,8 +45,8 @@ class ProjectTag extends Component {
     newValue[name] = [].concat(this.state[name]);
     newValue[name][index][label] = val;
     let nextData = this.state[name][index + 1];
-    if (!(nextData && typeof nextData === 'object')) {
-      let data = { name: '', desc: '' };
+    if (!(nextData && typeof nextData === "object")) {
+      let data = { name: "", desc: "" };
       newValue[name] = [].concat(this.state[name], data);
     }
     this.setState(newValue);
@@ -55,9 +55,7 @@ class ProjectTag extends Component {
   delHeader = (key, name) => {
     let curValue = this.state[name];
     let newValue = {};
-    newValue[name] = curValue.filter((val, index) => {
-      return index !== key;
-    });
+    newValue[name] = curValue.filter((val, index) => index !== key);
     this.setState(newValue);
   };
 
@@ -76,24 +74,24 @@ class ProjectTag extends Component {
             <Input
               placeholder={`请输入 ${name} 名称`}
               // style={{ width: '200px' }}
-              value={item.name || ''}
-              onChange={e => this.addHeader(e.target.value, index, name, 'name')}
+              value={item.name || ""}
+              onChange={(e) => this.addHeader(e.target.value, index, name, "name")}
             />
           </Col>
           <Col span={12}>
             <Input
               placeholder="请输入tag 描述信息"
-              style={{ width: '90%', marginRight: 8 }}
-              onChange={e => this.handleChange(e.target.value, index, name, 'desc')}
-              value={item.desc || ''}
+              style={{ width: "90%", marginRight: 8 }}
+              onChange={(e) => this.handleChange(e.target.value, index, name, "desc")}
+              value={item.desc || ""}
             />
           </Col>
-          <Col span={2} className={index === length ? ' tag-last-row' : null}>
+          <Col span={2} className={index === length ? " tag-last-row" : null}>
             {/* 新增的项中，只有最后一项没有有删除按钮 */}
             <Icon
               className="dynamic-delete-button delete"
               type="delete"
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 this.delHeader(index, name);
               }}
@@ -105,9 +103,7 @@ class ProjectTag extends Component {
 
     return (
       <div className="project-tag">
-        {this.state.tag.map((item, index) => {
-          return commonTpl(item, index, 'tag');
-        })}
+        {this.state.tag.map((item, index) => commonTpl(item, index, "tag"))}
       </div>
     );
   }

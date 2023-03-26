@@ -1,8 +1,8 @@
-const defaultTheme = require('./defaultTheme.js');
+const defaultTheme = require("./defaultTheme.js");
 
 function json_format(json) {
-  if (json && typeof json === 'object') {
-    return JSON.stringify(json, null, '   ');
+  if (json && typeof json === "object") {
+    return JSON.stringify(json, null, "   ");
   }
   return json;
 }
@@ -13,8 +13,8 @@ module.exports = function renderToHtml(reports) {
 };
 
 function createHtml(reports) {
-  let mdTemplate = ``;
-  let left = ``;
+  let mdTemplate = "";
+  let left = "";
   reports.list.map((item, index) => {
     mdTemplate += baseHtml(index, item.name, item.path, item.status);
     mdTemplate += validHtml(item.validRes);
@@ -27,7 +27,7 @@ function createHtml(reports) {
 }
 
 function createHtml5(left, tp, msg, runTime) {
-  let message = ``;
+  let message = "";
   if (msg.failedNum === 0) {
     message += `<div>一共 <span class="success">${
       msg.successNum
@@ -38,7 +38,7 @@ function createHtml5(left, tp, msg, runTime) {
     }</span> 个验证通过， ${msg.failedNum} 个未通过(${runTime})</div>`;
   }
 
-  //html5模板
+  // html5模板
   let html = `<!DOCTYPE html>
   <html>
   <head>
@@ -74,9 +74,9 @@ function createHtml5(left, tp, msg, runTime) {
 }
 
 function requestHtml(url, headers, params) {
-  headers = json_format(headers, null, '   ');
+  headers = json_format(headers, null, "   ");
   params = json_format(params);
-  let html = ``;
+  let html = "";
   html += `
   <div>
     <h3>Request</h3>
@@ -91,7 +91,7 @@ function requestHtml(url, headers, params) {
      <pre>${headers}</pre>
     </div>
    </div>`
-    : ``;
+    : "";
 
   html += params
     ? ` <div class="row case-report">
@@ -100,17 +100,17 @@ function requestHtml(url, headers, params) {
     <pre>${params}</pre>
    </div>
    </div>`
-    : ``;
-  html += `</div>`;
+    : "";
+  html += "</div>";
 
   return html;
 }
 
 function reponseHtml(res_header, res_body) {
-  res_header = json_format(res_header, null, '   ');
-  res_body = json_format(res_body, null, '   ');
-  let html = ``;
-  html += `<div><h3>Reponse</h3>`;
+  res_header = json_format(res_header, null, "   ");
+  res_body = json_format(res_body, null, "   ");
+  let html = "";
+  html += "<div><h3>Reponse</h3>";
 
   html += res_header
     ? `
@@ -120,7 +120,7 @@ function reponseHtml(res_header, res_body) {
     <pre>${res_header}</pre>
    </div>
   </div>`
-    : ``;
+    : "";
 
   html += res_body
     ? ` <div class="row case-report">
@@ -129,18 +129,16 @@ function reponseHtml(res_header, res_body) {
    <pre>${res_body}</pre>
   </div>
  </div>`
-    : ``;
+    : "";
 
-  html += `</div>`;
+  html += "</div>";
 
   return html;
 }
 
 function validHtml(validRes) {
   if (validRes && Array.isArray(validRes)) {
-    validRes = validRes.map((item, index) => {
-      return `<div key=${index}>${item.message}</div>`;
-    });
+    validRes = validRes.map((item, index) => `<div key=${index}>${item.message}</div>`);
   }
   let html = `
   <div>
@@ -188,19 +186,19 @@ function leftHtml(index, name, code) {
 }
 
 function codeHtml(code) {
-  let codeHtml = ``;
+  let codeHtml = "";
   switch (code) {
     case 0:
-      codeHtml += `<div title="验证通过" class="status status-ok"><i class="icon icon-check-circle"></i></div>`;
+      codeHtml += "<div title=\"验证通过\" class=\"status status-ok\"><i class=\"icon icon-check-circle\"></i></div>";
       break;
     case 400:
-      codeHtml += `<div title="请求异常" class="status status-ko"><i class="icon icon-close-circle"></i></div>`;
+      codeHtml += "<div title=\"请求异常\" class=\"status status-ko\"><i class=\"icon icon-close-circle\"></i></div>";
       break;
     case 1:
-      codeHtml += `<div title="验证失败" class="status status-warning"><i class="icon icon-warning-circle"></i></div>`;
+      codeHtml += "<div title=\"验证失败\" class=\"status status-warning\"><i class=\"icon icon-warning-circle\"></i></div>";
       break;
     default:
-      codeHtml += `<div title="验证通过" class="status status-warning"><i class="icon icon-warning-circle"></i></div>`;
+      codeHtml += "<div title=\"验证通过\" class=\"status status-warning\"><i class=\"icon icon-warning-circle\"></i></div>";
       break;
   }
   return codeHtml;

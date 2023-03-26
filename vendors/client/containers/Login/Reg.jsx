@@ -1,24 +1,22 @@
-import React, { PureComponent as Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Form, Button, Input, Icon, message } from 'antd';
-import { regActions } from '../../reducer/modules/user';
-import { withRouter } from 'react-router';
+import React, { PureComponent as Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Form, Button, Input, Icon, message } from "antd";
+import { regActions } from "../../reducer/modules/user";
+import { withRouter } from "react-router";
 const FormItem = Form.Item;
 const formItemStyle = {
-  marginBottom: '.16rem'
+  marginBottom: ".16rem"
 };
 
 const changeHeight = {
-  height: '.42rem'
+  height: ".42rem"
 };
 
 @connect(
-  state => {
-    return {
-      loginData: state.user
-    };
-  },
+  (state) => ({
+    loginData: state.user
+  }),
   {
     regActions
   }
@@ -38,15 +36,15 @@ class Reg extends Component {
     regActions: PropTypes.func
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const form = this.props.form;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.regActions(values).then(res => {
+        this.props.regActions(values).then((res) => {
           if (res.payload.data.errcode == 0) {
-            this.props.history.replace('/group');
-            message.success('注册成功! ');
+            this.props.history.replace("/group");
+            message.success("注册成功! ");
           }
         });
       }
@@ -55,8 +53,8 @@ class Reg extends Component {
 
   checkPassword = (rule, value, callback) => {
     const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('两次输入的密码不一致啊!');
+    if (value && value !== form.getFieldValue("password")) {
+      callback("两次输入的密码不一致啊!");
     } else {
       callback();
     }
@@ -65,7 +63,7 @@ class Reg extends Component {
   checkConfirm = (rule, value, callback) => {
     const form = this.props.form;
     if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
+      form.validateFields(["confirm"], { force: true });
     }
     callback();
   };
@@ -76,8 +74,8 @@ class Reg extends Component {
       <Form onSubmit={this.handleSubmit}>
         {/* 用户名 */}
         <FormItem style={formItemStyle}>
-          {getFieldDecorator('userName', {
-            rules: [{ required: true, message: '请输入用户名!' }]
+          {getFieldDecorator("userName", {
+            rules: [{ required: true, message: "请输入用户名!" }]
           })(
             <Input
               style={changeHeight}
@@ -89,11 +87,11 @@ class Reg extends Component {
 
         {/* Emaiil */}
         <FormItem style={formItemStyle}>
-          {getFieldDecorator('email', {
+          {getFieldDecorator("email", {
             rules: [
               {
                 required: true,
-                message: '请输入email!',
+                message: "请输入email!",
                 pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$/
               }
             ]
@@ -108,11 +106,11 @@ class Reg extends Component {
 
         {/* 密码 */}
         <FormItem style={formItemStyle}>
-          {getFieldDecorator('password', {
+          {getFieldDecorator("password", {
             rules: [
               {
                 required: true,
-                message: '请输入密码!'
+                message: "请输入密码!"
               },
               {
                 validator: this.checkConfirm
@@ -130,11 +128,11 @@ class Reg extends Component {
 
         {/* 密码二次确认 */}
         <FormItem style={formItemStyle}>
-          {getFieldDecorator('confirm', {
+          {getFieldDecorator("confirm", {
             rules: [
               {
                 required: true,
-                message: '请再次输入密码密码!'
+                message: "请再次输入密码密码!"
               },
               {
                 validator: this.checkPassword

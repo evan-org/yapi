@@ -1,9 +1,9 @@
 // Actions
-const CHANGE_MENU_ITEM = 'yapi/menu/CHANGE_MENU_ITEM';
+const CHANGE_MENU_ITEM = "yapi/menu/CHANGE_MENU_ITEM";
 
 // Reducer
 const initialState = {
-  curKey: '/' + window.location.hash.split('/')[1]
+  curKey: "/" + window.location.hash.split("/")[1]
 };
 
 export default (state = initialState, action) => {

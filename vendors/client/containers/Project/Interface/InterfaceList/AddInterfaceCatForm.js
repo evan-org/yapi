@@ -1,9 +1,9 @@
-import React, { PureComponent as Component } from 'react';
-import PropTypes from 'prop-types';
-import { Form, Input, Button } from 'antd';
+import React, { PureComponent as Component } from "react";
+import PropTypes from "prop-types";
+import { Form, Input, Button } from "antd";
 const FormItem = Form.Item;
 function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
+  return Object.keys(fieldsError).some((field) => fieldsError[field]);
 }
 class AddInterfaceForm extends Component {
   static propTypes = {
@@ -12,7 +12,7 @@ class AddInterfaceForm extends Component {
     onCancel: PropTypes.func,
     catdata: PropTypes.object
   };
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -37,24 +37,24 @@ class AddInterfaceForm extends Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <FormItem {...formItemLayout} label="分类名">
-          {getFieldDecorator('name', {
+          {getFieldDecorator("name", {
             rules: [
               {
                 required: true,
-                message: '请输入分类名称!'
+                message: "请输入分类名称!"
               }
             ],
             initialValue: this.props.catdata ? this.props.catdata.name || null : null
           })(<Input placeholder="分类名称" />)}
         </FormItem>
         <FormItem {...formItemLayout} label="备注">
-          {getFieldDecorator('desc', {
+          {getFieldDecorator("desc", {
             initialValue: this.props.catdata ? this.props.catdata.desc || null : null
           })(<Input placeholder="备注" />)}
         </FormItem>
 
         <FormItem className="catModalfoot" wrapperCol={{ span: 24, offset: 8 }}>
-          <Button onClick={this.props.onCancel} style={{ marginRight: '10px' }}>
+          <Button onClick={this.props.onCancel} style={{ marginRight: "10px" }}>
             取消
           </Button>
           <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>

@@ -1,9 +1,9 @@
-const baseController = require('controllers/base.js');
-const advModel = require('./advMockModel.js');
-const yapi = require('yapi.js');
-const caseModel = require('./caseModel.js');
-const userModel = require('models/user.js');
-const config = require('./index.js');
+const baseController = require("controllers/base.js");
+const advModel = require("./advMockModel.js");
+const yapi = require("yapi.js");
+const caseModel = require("./caseModel.js");
+const userModel = require("models/user.js");
+const config = require("./index.js");
 
 class advMockController extends baseController {
   constructor(ctx) {
@@ -17,7 +17,7 @@ class advMockController extends baseController {
     let id = ctx.query.interface_id;
     let mockData = await this.Model.get(id);
     if (!mockData) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, 'mock脚本不存在'));
+      return (ctx.body = yapi.commons.resReturn(null, 408, "mock脚本不存在"));
     }
     return (ctx.body = yapi.commons.resReturn(mockData));
   }
@@ -25,25 +25,25 @@ class advMockController extends baseController {
   async upMock(ctx) {
     let params = ctx.request.body;
     try {
-      let auth = await this.checkAuth(params.project_id, 'project', 'edit');
+      let auth = await this.checkAuth(params.project_id, "project", "edit");
 
       if (!auth) {
-        return (ctx.body = yapi.commons.resReturn(null, 40033, '没有权限'));
+        return (ctx.body = yapi.commons.resReturn(null, 40033, "没有权限"));
       }
 
       if (!params.interface_id) {
-        return (ctx.body = yapi.commons.resReturn(null, 408, '缺少interface_id'));
+        return (ctx.body = yapi.commons.resReturn(null, 408, "缺少interface_id"));
       }
       if (!params.project_id) {
-        return (ctx.body = yapi.commons.resReturn(null, 408, '缺少project_id'));
+        return (ctx.body = yapi.commons.resReturn(null, 408, "缺少project_id"));
       }
 
       let data = {
         interface_id: params.interface_id,
-        mock_script: params.mock_script || '',
+        mock_script: params.mock_script || "",
         project_id: params.project_id,
         uid: this.getUid(),
-        enable: params.enable === true ? true : false
+        enable: params.enable === true
       };
       let result;
       let mockData = await this.Model.get(data.interface_id);
@@ -62,7 +62,7 @@ class advMockController extends baseController {
     try {
       let id = ctx.query.interface_id;
       if (!id) {
-        return (ctx.body = yapi.commons.resReturn(null, 400, '缺少 interface_id'));
+        return (ctx.body = yapi.commons.resReturn(null, 400, "缺少 interface_id"));
       }
       let result = await this.caseModel.list(id);
       for (let i = 0, len = result.length; i < len; i++) {
@@ -82,7 +82,7 @@ class advMockController extends baseController {
   async getCase(ctx) {
     let id = ctx.query.id;
     if (!id) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, '缺少 id'));
+      return (ctx.body = yapi.commons.resReturn(null, 400, "缺少 id"));
     }
     let result = await this.caseModel.get({
       _id: id
@@ -95,14 +95,14 @@ class advMockController extends baseController {
     let params = ctx.request.body;
 
     if (!params.interface_id) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, '缺少interface_id'));
+      return (ctx.body = yapi.commons.resReturn(null, 408, "缺少interface_id"));
     }
     if (!params.project_id) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, '缺少project_id'));
+      return (ctx.body = yapi.commons.resReturn(null, 408, "缺少project_id"));
     }
 
     if (!params.res_body) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, '请输入 Response Body'));
+      return (ctx.body = yapi.commons.resReturn(null, 408, "请输入 Response Body"));
     }
 
     let data = {
@@ -123,7 +123,7 @@ class advMockController extends baseController {
     data.code = isNaN(data.code) ? 200 : +data.code;
     data.delay = isNaN(data.delay) ? 0 : +data.delay;
     if (config.httpCodes.indexOf(data.code) === -1) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, '非法的 httpCode'));
+      return (ctx.body = yapi.commons.resReturn(null, 408, "非法的 httpCode"));
     }
 
     let findRepeat, findRepeatParams;
@@ -133,9 +133,9 @@ class advMockController extends baseController {
       ip_enable: data.ip_enable
     };
 
-    if (data.params && typeof data.params === 'object' && Object.keys(data.params).length > 0) {
+    if (data.params && typeof data.params === "object" && Object.keys(data.params).length > 0) {
       for (let i in data.params) {
-        findRepeatParams['params.' + i] = data.params[i];
+        findRepeatParams["params." + i] = data.params[i];
       }
     }
 
@@ -146,7 +146,7 @@ class advMockController extends baseController {
     findRepeat = await this.caseModel.get(findRepeatParams);
 
     if (findRepeat && findRepeat._id !== params.id) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, '已存在的期望'));
+      return (ctx.body = yapi.commons.resReturn(null, 400, "已存在的期望"));
     }
 
     let result;
@@ -162,7 +162,7 @@ class advMockController extends baseController {
   async delCase(ctx) {
     let id = ctx.request.body.id;
     if (!id) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, '缺少 id'));
+      return (ctx.body = yapi.commons.resReturn(null, 408, "缺少 id"));
     }
     let result = await this.caseModel.del(id);
     return (ctx.body = yapi.commons.resReturn(result));
@@ -172,7 +172,7 @@ class advMockController extends baseController {
     let id = ctx.request.body.id;
     let enable = ctx.request.body.enable;
     if (!id) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, '缺少 id'));
+      return (ctx.body = yapi.commons.resReturn(null, 408, "缺少 id"));
     }
     let data = {
       id,
