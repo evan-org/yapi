@@ -1,8 +1,10 @@
 .Login {
+  height: calc(100vh - 240px);
   :global {
     .login-container {
-      min-height: calc(100vh - 240px);
-      padding-bottom: .6rem;
+      .container {
+        // margin: 55px 0;
+      }
     }
     .login-form-button {
       background-image: linear-gradient(to right, #6d69fe 0%, #48a0fa 100%) !important;
@@ -30,7 +32,6 @@
       }
     }
     .card-login {
-      margin-top: 1.6rem;
       margin-bottom: 1.6rem;
       border-radius: .04rem;
       position: relative;
