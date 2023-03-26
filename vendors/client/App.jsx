@@ -1,43 +1,31 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import { Home, Group, Project, Follows, AddProject, Login } from "./containers/index";
-import { Alert } from "antd";
+//
+import Layout from "./layout/Layout";
+//
 import User from "./containers/User/User.js";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
-import Loading from "./components/Loading/Loading";
 import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
+//
 import { checkLoginState } from "./reducer/modules/user";
 import { requireAuthentication } from "./components/AuthenticatedComponent";
-import Notify from "./components/Notify/Notify";
+//
 import "./styles/App.scss";
 import "./styles/theme.less";
 
 const plugin = require("client/plugin.js");
 const LOADING_STATUS = 0;
-function AlertContent() {
-  const ua = window.navigator.userAgent,
-    isChrome = ua.indexOf("Chrome") && window.chrome;
-  if (!isChrome) {
-    return (
-      <Alert
-        style={{ zIndex: 99 }}
-        message={"YApi 的接口测试等功能仅支持 Chrome 浏览器，请使用 Chrome 浏览器获得完整功能。"}
-        banner
-        closable
-      />
-    );
-  } else {
-    return null
-  }
-}
+//
 const AppRoute = {
   home: {
     path: "/",
     component: Home
+  },
+  login: {
+    path: "/login",
+    component: Login
   },
   group: {
     path: "/group",
@@ -58,22 +46,17 @@ const AppRoute = {
   addProject: {
     path: "/add-project",
     component: AddProject
-  },
-  login: {
-    path: "/login",
-    component: Login
   }
 };
 // 增加路由钩子
 plugin.emitHook("app_route", AppRoute);
 function App(props) {
-  console.log(props);
   console.log(process.env);
-  // const [login, setLogin] = useState(LOADING_STATUS);
   //
   useEffect(() => {
-    checkLoginState()
-  }, [])
+    checkLoginState();
+  }, []);
+  //
   const showConfirm = (msg, callback) => {
     // 自定义 window.confirm
     // http://reacttraining.cn/web/api/BrowserRouter/getUserConfirmation-func
@@ -82,57 +65,27 @@ function App(props) {
     const root = ReactDOM.createRoot(container);
     root.render(<MyPopConfirm msg={msg} callback={callback}/>);
   };
-  function RouteList({ status, curUserRole, loginState }) {
-    let r;
-    if (status === LOADING_STATUS) {
-      return <Loading visible/>;
-    } else {
-      r = (
-        <Router getUserConfirmation={showConfirm}>
-          <div className="g-main">
-            <div className="router-main">
-              {curUserRole === "admin" && <Notify/>}
-              <AlertContent/>
-              {loginState !== 1 ? <Header/> : null}
-              <div className="router-container">
-                {Object.keys(AppRoute).map((key) => {
-                  let item = AppRoute[key];
-                  return key === "login" ? (
-                    <Route key={key} path={item.path} component={item.component}/>
-                  ) : key === "home" ? (
-                    <Route key={key} exact path={item.path} component={item.component}/>
-                  ) : (
-                    <Route
-                      key={key}
-                      path={item.path}
-                      component={requireAuthentication(item.component)}
-                    />
-                  );
-                })}
-              </div>
-              {/* <div className="router-container">
-                <Route exact path="/" component={Home} />
-                <Route path="/group" component={requireAuthentication(Group)} />
-                <Route path="/project/:id" component={requireAuthentication(Project)} />
-                <Route path="/user" component={requireAuthentication(User)} />
-                <Route path="/follow" component={requireAuthentication(Follows)} />
-                <Route path="/add-project" component={requireAuthentication(AddProject)} />
-                <Route path="/login" component={Login} />
-                {/* <Route path="/statistic" component={statisticsPage} /> */}
-              {/* </div> */}
-            </div>
-            <Footer/>
-          </div>
-        </Router>
-      );
-    }
-    return r;
-  }
-  return (<RouteList/>)
+  //
+  return (
+    <Router getUserConfirmation={showConfirm}>
+      <Layout {...props}>
+        <div className="app-container">
+          {Object.keys(AppRoute).map((key) => {
+            let item = AppRoute[key];
+            return ["login", "home"].includes(key) ? (
+              <Route key={key} exact path={item.path} component={item.component}/>
+            ) : (
+              <Route key={key} path={item.path} component={requireAuthentication(item.component)}/>
+            );
+          })}
+        </div>
+      </Layout>
+    </Router>
+  )
 }
 export default connect(
   (state) => ({
-    loginState: state.user.loginState,
+    loginState: state.user.loginState ?? false,
     curUserRole: state.user.role
   }),
   {

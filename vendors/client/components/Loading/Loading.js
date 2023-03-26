@@ -1,8 +1,8 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import style from "./Loading.module.scss";
 
-export default class Loading extends React.PureComponent {
+export default class Loading extends Component {
   static defaultProps = {
     visible: false
   };
@@ -20,16 +20,16 @@ export default class Loading extends React.PureComponent {
     return (
       <div className={style.Loading}>
         <div className="loading-box" style={{ display: this.state.show ? "flex" : "none" }}>
-          <div className="loading-box-bg" />
+          <div className="loading-box-bg"/>
           <div className="loading-box-inner">
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
+            <div/>
+            <div/>
+            <div/>
+            <div/>
+            <div/>
+            <div/>
+            <div/>
+            <div/>
           </div>
         </div>
       </div>
