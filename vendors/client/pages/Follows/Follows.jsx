@@ -2,12 +2,14 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Row, Col } from "antd";
-import { getFollowList } from "../../reducer/modules/follow";
-import { setBreadcrumb } from "../../reducer/modules/user";
 import ProjectCard from "../../components/ProjectCard/ProjectCard.js";
 import ErrMsg from "../../components/ErrMsg/ErrMsg.jsx";
 //
+import { getFollowList } from "../../reducer/modules/follow";
+import { setBreadcrumb } from "../../reducer/modules/user";
+//
 import styles from "./Follows.module.scss";
+
 @connect(
   (state) => ({
     data: state.follow.data,
