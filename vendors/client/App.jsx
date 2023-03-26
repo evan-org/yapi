@@ -13,7 +13,8 @@ import { checkLoginState } from "./reducer/modules/user";
 import { requireAuthentication } from "./components/AuthenticatedComponent";
 //
 import "./styles/App.scss";
-import "./styles/theme.less";
+//
+import "./styles/antd-ui/theme.less";
 
 const plugin = require("client/plugin.js");
 const LOADING_STATUS = 0;
@@ -85,7 +86,7 @@ function App(props) {
 }
 export default connect(
   (state) => ({
-    loginState: state.user.loginState ?? false,
+    loginState: state.user.loginState ?? 1,
     curUserRole: state.user.role
   }),
   {

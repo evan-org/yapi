@@ -28,7 +28,7 @@ function Layout(props) {
   const [visible, setVisible] = useState(true);
   //
   useEffect(() => {
-    console.log("layout挂载中");
+    console.log("layout挂载中", loginState);
     setTimeout(() => {
       setVisible(false);
     }, 1000)
@@ -38,7 +38,8 @@ function Layout(props) {
       <Loading visible={visible}/>
       {curUserRole === "admin" && <Notify/>}
       <AlertContent/>
-      {loginState !== 1 ? <Header/> : null}
+      {loginState !== 0 ? <Header/> : null}
+      {/**/}
       {props.children}
       <Footer/>
     </div>
