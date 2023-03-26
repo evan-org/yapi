@@ -2,7 +2,7 @@ import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Input, Button, message, Icon, Card, Alert, Modal, Switch, Row, Col, Tooltip } from "antd";
-import { fetchNewsData } from "../../../reducer/modules/news.js";
+import { fetchNewsData } from "../../../../reducer/modules/news.js";
 import {
   changeGroupMsg,
   fetchGroupList,
@@ -10,9 +10,9 @@ import {
   fetchGroupMsg,
   updateGroupList,
   deleteGroup
-} from "../../../reducer/modules/group.js";
+} from "../../../../reducer/modules/group.js";
 const { TextArea } = Input;
-import { trim } from "../../../common.js";
+import { trim } from "../../../../common.js";
 import _ from "underscore";
 import "./GroupSetting.scss";
 const confirm = Modal.confirm;

@@ -8,7 +8,7 @@ import {
   delProject,
   // changeUpdateModal,
   // changeTableLoading
-} from "../../../reducer/modules/project";
+} from "../../../../reducer/modules/project";
 
 const { TextArea } = Input;
 const FormItem = Form.Item;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import GroupList from "./GroupList/GroupList.js";
-import ProjectList from "./ProjectList/ProjectList.js";
-import MemberList from "./MemberList/MemberList.js";
-import GroupLog from "./GroupLog/GroupLog.js";
-import GroupSetting from "./GroupSetting/GroupSetting.js";
+import GroupList from "./components/GroupList/GroupList.js";
+import ProjectList from "./components/ProjectList/ProjectList.js";
+import MemberList from "./components/MemberList/MemberList.js";
+import GroupLog from "./components/GroupLog/GroupLog.js";
+import GroupSetting from "./components/GroupSetting/GroupSetting.js";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
