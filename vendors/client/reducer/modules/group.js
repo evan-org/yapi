@@ -139,13 +139,16 @@ export function fetchGroupList() {
     payload: axios.get("/api/group/list")
   };
 }
-export function setCurrGroup(group) {
-  return {
-    type: SET_CURR_GROUP,
-    payload: axios.request({
-      url: "/api/group/get",
-      method: "GET",
-      params: { id: group._id }
-    })
-  };
+export function setCurrGroup(group, time) {
+  if (group && group._id) {
+    return {
+      type: SET_CURR_GROUP,
+      payload: axios.request({
+        url: "/api/group/get",
+        method: "GET",
+        params: { id: group._id }
+      })
+    };
+  }
+  // console.log("setCurrGroup ==========>", time);
 }

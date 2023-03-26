@@ -1,29 +1,27 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Tree } from 'antd';
-import { connect } from 'react-redux';
-import { fetchVariableParamsList } from '../../reducer/modules/interfaceCol.js';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Tree } from "antd";
+import { connect } from "react-redux";
+import { fetchVariableParamsList } from "../../reducer/modules/interfaceCol.js";
 
 const TreeNode = Tree.TreeNode;
-const CanSelectPathPrefix = 'CanSelectPath-';
+const CanSelectPathPrefix = "CanSelectPath-";
 
 function deleteLastObject(str) {
   return str
-    .split('.')
+    .split(".")
     .slice(0, -1)
-    .join('.');
+    .join(".");
 }
 
 function deleteLastArr(str) {
-  return str.replace(/\[.*?\]/g, '');
+  return str.replace(/\[.*?\]/g, "");
 }
 
 @connect(
-  state => {
-    return {
-      currColId: state.interfaceCol.currColId
-    };
-  },
+  (state) => ({
+    currColId: state.interfaceCol.currColId
+  }),
   {
     fetchVariableParamsList
   }
@@ -60,13 +58,11 @@ class VariablesSelect extends Component {
     const { currColId, fetchVariableParamsList, clickValue } = this.props;
     let result = await fetchVariableParamsList(currColId);
     let records = result.payload.data.data;
-    this.records = records.sort((a, b) => {
-      return a.index - b.index;
-    });
+    this.records = records.sort((a, b) => a.index - b.index);
     this.handleRecordsData(this.props.id);
 
     if (clickValue) {
-      let isArrayParams = clickValue.lastIndexOf(']') === clickValue.length - 1;
+      let isArrayParams = clickValue.lastIndexOf("]") === clickValue.length - 1;
       let key = isArrayParams ? deleteLastArr(clickValue) : deleteLastObject(clickValue);
       this.setState({
         expandedKeys: [key],
@@ -76,13 +72,13 @@ class VariablesSelect extends Component {
     }
   }
 
-  async componentWillReceiveProps(nextProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.records && nextProps.id && this.id !== nextProps.id) {
       this.handleRecordsData(nextProps.id);
     }
   }
 
-  handleSelect = key => {
+  handleSelect = (key) => {
     this.setState({
       selectedKeys: [key]
     });
@@ -96,19 +92,19 @@ class VariablesSelect extends Component {
     }
   };
 
-  onExpand = keys => {
+  onExpand = (keys) => {
     this.setState({ expandedKeys: keys });
   };
 
   render() {
-    const pathSelctByTree = (data, elementKeyPrefix = '$', deepLevel = 0) => {
+    const pathSelctByTree = (data, elementKeyPrefix = "$", deepLevel = 0) => {
       let keys = Object.keys(data);
       let TreeComponents = keys.map((key, index) => {
         let item = data[key],
           casename;
         if (deepLevel === 0) {
-          elementKeyPrefix = '$';
-          elementKeyPrefix = elementKeyPrefix + '.' + item._id;
+          elementKeyPrefix = "$";
+          elementKeyPrefix = elementKeyPrefix + "." + item._id;
           casename = item.casename;
           item = {
             params: item.params,
@@ -117,15 +113,15 @@ class VariablesSelect extends Component {
         } else if (Array.isArray(data)) {
           elementKeyPrefix =
             index === 0
-              ? elementKeyPrefix + '[' + key + ']'
-              : deleteLastArr(elementKeyPrefix) + '[' + key + ']';
+              ? elementKeyPrefix + "[" + key + "]"
+              : deleteLastArr(elementKeyPrefix) + "[" + key + "]";
         } else {
           elementKeyPrefix =
             index === 0
-              ? elementKeyPrefix + '.' + key
-              : deleteLastObject(elementKeyPrefix) + '.' + key;
+              ? elementKeyPrefix + "." + key
+              : deleteLastObject(elementKeyPrefix) + "." + key;
         }
-        if (item && typeof item === 'object') {
+        if (item && typeof item === "object") {
           const isDisable = Array.isArray(item) && item.length === 0;
           return (
             <TreeNode key={elementKeyPrefix} disabled={isDisable} title={casename || key}>

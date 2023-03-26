@@ -39,7 +39,7 @@ export default class MockCol extends Component {
   constructor(props) {
     super(props);
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const interfaceId = this.props.match.params.actionId;
     this.props.fetchMockCol(interfaceId);
   }

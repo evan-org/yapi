@@ -1,6 +1,7 @@
 import { message } from "antd";
 
 export default () => (next) => (action) => {
+  console.log("messageMiddleware =====>", action);
   if (!action) {
     return;
   }
