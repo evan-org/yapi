@@ -51,7 +51,7 @@ export default (state = initialState, action) => {
 
 // Action Creators
 import axios from "axios";
-import variable from "../../constants/variable";
+import variable from "../../utils/variable";
 
 export function fetchNewsData(typeid, type, page, limit, selectValue) {
   let param = {

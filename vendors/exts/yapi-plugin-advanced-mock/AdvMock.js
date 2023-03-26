@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import { Form, Switch, Button, message, Icon, Tooltip, Radio } from "antd";
 import MockCol from "./MockCol/MockCol.js";
 import mockEditor from "../../client/components/AceEditor/utils/mockEditor";
-import constants from "../../client/constants/variable.js";
+import constants from "../../client/utils/variable.js";
 
 const FormItem = Form.Item;
 class AdvMock extends Component {

@@ -1,5 +1,5 @@
 const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("./utils");
-const constants = require("../client/constants/variable.js");
+const constants = require("../client/utils/variable.js");
 const _ = require("underscore");
 const URL = require("url");
 const utils = require("./power-string.js").utils;

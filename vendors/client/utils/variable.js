@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   PAGE_LIMIT: 10, // 默认每页展示10条数据
   NAME_LIMIT: 100, // 限制名称的字符长度(中文算两个长度)
   HTTP_METHOD: {
@@ -128,7 +128,7 @@ module.exports = {
     { name: "id", mock: "@id" },
     { name: "guid", mock: "@guid" },
     { name: "当前时间", mock: "@now" },
-    { name: "时间戳", mock: "@timestamp"},
+    { name: "时间戳", mock: "@timestamp" },
     { name: "日期", mock: "@date" },
     { name: "时间", mock: "@time" },
     { name: "日期时间", mock: "@datetime" },

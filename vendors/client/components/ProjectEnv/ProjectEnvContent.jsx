@@ -5,7 +5,7 @@ import { Icon, Row, Col, Form, Input, Select, Button, AutoComplete, Tooltip } fr
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-import constants from "client/constants/variable.js";
+import constants from "client/utils/variable.js";
 
 const initMap = {
   header: [

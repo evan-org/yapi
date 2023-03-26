@@ -32,7 +32,7 @@ import { withRouter } from "react-router";
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
-import constants from "../../../../constants/variable.js";
+import constants from "../../../../utils/variable.js";
 const confirm = Modal.confirm;
 import { nameLengthLimit, entries, trim, htmlFilter } from "../../../../utils/common";
 import "../Setting.scss";

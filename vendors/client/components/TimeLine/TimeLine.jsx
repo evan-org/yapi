@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { formatTime } from "../../utils/common.js";
 import showDiffMsg from "../../../common/diff-view.js";
-import variable from "../../constants/variable";
+import variable from "../../utils/variable";
 import { Link } from "react-router-dom";
 //
 import { fetchNewsData, fetchMoreNews } from "../../reducer/modules/news.js";
