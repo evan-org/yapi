@@ -2,11 +2,13 @@ import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Button, message } from 'antd';
+
 const FormItem = Form.Item;
-import './project-request.scss';
 import AceEditor from 'client/components/AceEditor/AceEditor';
 import { updateProjectScript, getProject } from '../../../../reducer/modules/project';
-
+//
+import styles from './ProjectRequest.module.scss';
+//
 @connect(
   state => {
     return {
@@ -26,15 +28,13 @@ export default class ProjectRequest extends Component {
     getProject: PropTypes.func,
     projectId: PropTypes.number
   };
-
   UNSAFE_componentWillMount() {
     this.setState({
       pre_script: this.props.projectMsg.pre_script,
       after_script: this.props.projectMsg.after_script
     });
   }
-
-  handleSubmit = async () => {
+  handleSubmit = async() => {
     let result = await this.props.updateProjectScript({
       id: this.props.projectId,
       pre_script: this.state.pre_script,
@@ -47,7 +47,6 @@ export default class ProjectRequest extends Component {
       message.success('保存失败, ' + result.payload.data.errmsg);
     }
   };
-
   render() {
     const formItemLayout = {
       labelCol: {
@@ -59,7 +58,6 @@ export default class ProjectRequest extends Component {
         sm: { span: 16 }
       }
     };
-
     const tailFormItemLayout = {
       wrapperCol: {
         xs: {
@@ -72,11 +70,9 @@ export default class ProjectRequest extends Component {
         }
       }
     };
-
     const { pre_script, after_script } = this.state;
-
     return (
-      <div className="project-request">
+      <div className={styles.ProjectRequest}>
         <Form onSubmit={this.handleSubmit}>
           <FormItem {...formItemLayout} label="Pre-request Script(请求参数处理脚本)">
             <AceEditor

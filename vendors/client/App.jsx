@@ -6,7 +6,7 @@ import { Home, Group, Project, Follows, AddProject, Login } from "./containers/i
 //
 import Layout from "./layout/Layout";
 //
-import User from "./containers/User/User.js";
+import User from "./containers/User/User.jsx";
 import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 //
 import { checkLoginState } from "./reducer/modules/user";
