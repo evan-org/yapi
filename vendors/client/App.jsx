@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { connect } from "react-redux";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import { Home, Group, Project, Follows, AddProject, Login } from "./containers/index";

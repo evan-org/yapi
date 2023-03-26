@@ -12,11 +12,6 @@ const sassResourcesLoader = require("craco-sass-resources-loader");
 // const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 // const smp = new SpeedMeasurePlugin();
 //
-// let isWin = require("os").platform() === "win32";
-let commonLib = require("./common/plugin.js");
-// const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
-//
-let { exts: systemConfigPlugin } = require("./common/config");
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === "node_modules") {
@@ -24,6 +19,8 @@ function createScript(plugin, pathAlias) {
   }
   return `"${plugin.name}" : {module: require('${pathAlias}/yapi-plugin-${plugin.name}/client.js'),options: ${options}}`;
 }
+let { exts: systemConfigPlugin } = require("./common/config");
+const commonLib = require("./common/plugin.js");
 function initPlugins(configPlugin) {
   configPlugin = require("../config.json").plugins;
   let scripts = [];
@@ -45,6 +42,7 @@ function initPlugins(configPlugin) {
   fs.writeFileSync(resolve("./client/plugin-module.js"), scripts);
 }
 initPlugins();
+//
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
