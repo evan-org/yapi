@@ -4,7 +4,6 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import {
   fetchInterfaceColList,
-  fetchInterfaceCaseList,
   setColData,
   fetchCaseList,
   fetchCaseData
@@ -55,9 +54,7 @@ const ColModalForm = Form.create()(props => {
   },
   {
     fetchInterfaceColList,
-    fetchInterfaceCaseList,
     fetchCaseData,
-    // fetchInterfaceListMenu,
     fetchCaseList,
     setColData,
     fetchProjectList
@@ -69,8 +66,6 @@ export default class InterfaceColMenu extends Component {
     match: PropTypes.object,
     interfaceColList: PropTypes.array,
     fetchInterfaceColList: PropTypes.func,
-    fetchInterfaceCaseList: PropTypes.func,
-    // fetchInterfaceListMenu: PropTypes.func,
     fetchCaseList: PropTypes.func,
     fetchCaseData: PropTypes.func,
     setColData: PropTypes.func,
@@ -246,7 +241,7 @@ export default class InterfaceColMenu extends Component {
     let data = caseData.payload.data.data;
     data = JSON.parse(JSON.stringify(data));
     data.casename=`${data.casename}_copy`
-    delete data._id 
+    delete data._id
     const res = await axios.post('/api/col/add_case',data);
       if (!res.data.errcode) {
         message.success('克隆用例成功');
@@ -494,7 +489,7 @@ export default class InterfaceColMenu extends Component {
       list = list.filter(item => {
 
         item.caseList = item.caseList.filter(inter => {
-          if (inter.casename.indexOf(this.state.filterValue) === -1 
+          if (inter.casename.indexOf(this.state.filterValue) === -1
           && inter.path.indexOf(this.state.filterValue) === -1
           ) {
             return false;

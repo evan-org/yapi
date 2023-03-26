@@ -122,6 +122,7 @@
     "yapi-plugin-qsso": "^1.1.0"
   },
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.21.2",
     "@craco/craco": "~6.4.5",
     "@types/ldapjs": "^2.2.5",
     "@types/node": "^18.15.5",

@@ -159,7 +159,7 @@ module.exports = {
       }
       // webpackConfig.devtool = false;
       //
-      console.log("configure new\n\n", JSON.stringify(webpackConfig.module.rules));
+      console.log("configure new\n\n", webpackConfig);
       return webpackConfig;
       // return smp.wrap(webpackConfig);
     }
@@ -167,11 +167,12 @@ module.exports = {
   babel: {
     presets: [
       "@babel/preset-react",
-      ["@babel/preset-env", { modules: "commonjs" }]
+      ["@babel/preset-env", { modules: "auto" }]
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
       ["@babel/plugin-proposal-class-properties"],
+      "@babel/plugin-transform-modules-commonjs",
       ["@babel/plugin-transform-runtime"],
       [
         "import",
@@ -191,7 +192,6 @@ module.exports = {
       ...devServerConfig,
       publicPath: "/",
       host: "localhost",
-      public: "localhost",
       overlay: true,
       port: 4000,
       hot: true,
