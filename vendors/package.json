@@ -3,6 +3,7 @@
   "homepage": "/",
   "version": "1.11.0",
   "description": "YAPI",
+  "type": "commonjs",
   "scripts": {
     "dev:vite": "vite",
     "build:vite": "tsc && vite build",

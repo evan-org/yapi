@@ -1,9 +1,9 @@
-import Header from "../layout/components/Header/Header.jsx";
 import Home from "./Home/Home.jsx";
 import Login from "./Login/Login.jsx";
 import Group from "./Group/Group.jsx";
 import Project from "./Project/Project.jsx";
 import Follows from "./Follows/Follows.jsx";
 import AddProject from "./AddProject/AddProject.jsx";
+import User from "client/pages/User/User";
 
-export { Header, Home, Login, Group, Project, Follows, AddProject };
+export { User, Home, Login, Group, Project, Follows, AddProject };

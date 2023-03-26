@@ -7,7 +7,6 @@ import { withRouter } from "react-router";
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
-
 const formItemStyle = {
   marginBottom: ".16rem"
 };
@@ -103,27 +102,11 @@ class LoginForm extends Component {
         </FormItem>
         {/* 密码 */}
         <FormItem style={formItemStyle}>
-          {getFieldDecorator("password", {
-            rules: [{ required: true, message: "请输入密码!" }]
-          })(
-            <Input
-              style={changeHeight}
-              prefix={<Icon type="lock" style={{ fontSize: 13 }}/>}
-              type="password"
-              placeholder="Password"
-            />
-          )}
+          {getFieldDecorator("password", { rules: [{ required: true, message: "请输入密码!" }] })(<Input style={changeHeight} prefix={<Icon type="lock" style={{ fontSize: 13 }}/>} type="password" placeholder="Password"/>)}
         </FormItem>
         {/* 登录按钮 */}
         <FormItem style={formItemStyle}>
-          <Button
-            style={changeHeight}
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-          >
-            登录
-          </Button>
+          <Button style={changeHeight} type="primary" htmlType="submit" className="login-form-button">登录</Button>
         </FormItem>
         {/* <div className="qsso-breakline">
           <span className="qsso-breakword">或</span>

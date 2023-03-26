@@ -2,60 +2,26 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { connect } from "react-redux";
 import { Route, BrowserRouter as Router } from "react-router-dom";
-import { Home, Group, Project, Follows, AddProject, Login } from "./pages/index";
 //
 import Layout from "./layout/Layout";
+import { AppRoute } from "client/router";
+// const RouterList = Object.keys(AppRoute);
+import { requireAuthentication } from "./components/AuthenticatedComponent";
 //
-import User from "./pages/User/User.jsx";
 import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 //
 import { checkLoginState } from "./reducer/modules/user";
-import { requireAuthentication } from "./components/AuthenticatedComponent";
 //
 import "./styles/App.scss";
-//
 import "./styles/antd-ui/theme.less";
-
-const plugin = require("client/plugin.js");
-const LOADING_STATUS = 0;
 //
-const AppRoute = {
-  home: {
-    path: "/",
-    component: Home
-  },
-  login: {
-    path: "/login",
-    component: Login
-  },
-  group: {
-    path: "/group",
-    component: Group
-  },
-  project: {
-    path: "/project/:id",
-    component: Project
-  },
-  user: {
-    path: "/user",
-    component: User
-  },
-  follow: {
-    path: "/follow",
-    component: Follows
-  },
-  addProject: {
-    path: "/add-project",
-    component: AddProject
-  }
-};
+const plugin = require("client/plugin.js");
 // 增加路由钩子
 plugin.emitHook("app_route", AppRoute);
 function App(props) {
   console.log(process.env);
   //
   useEffect(() => {
-    checkLoginState();
   }, []);
   //
   const showConfirm = (msg, callback) => {
