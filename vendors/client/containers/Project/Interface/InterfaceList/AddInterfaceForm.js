@@ -1,16 +1,16 @@
-import React, { PureComponent as Component } from 'react'
-import PropTypes from 'prop-types'
-import { Form, Input, Select, Button } from 'antd';
+import React, { PureComponent as Component } from "react"
+import PropTypes from "prop-types"
+import { Form, Input, Select, Button } from "antd";
 
-import constants from '../../../../constants/variable.js'
-import { handleApiPath, nameLengthLimit } from '../../../../common.js'
+import constants from "../../../../constants/variable.js"
+import { handleApiPath, nameLengthLimit } from "../../../../utils/common.js"
 const HTTP_METHOD = constants.HTTP_METHOD;
 const HTTP_METHOD_KEYS = Object.keys(HTTP_METHOD);
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
+  return Object.keys(fieldsError).some((field) => fieldsError[field]);
 }
 
 
@@ -42,15 +42,13 @@ class AddInterfaceForm extends Component {
   }
   render() {
     const { getFieldDecorator, getFieldsError } = this.props.form;
-    const prefixSelector = getFieldDecorator('method', {
-      initialValue: 'GET'
+    const prefixSelector = getFieldDecorator("method", {
+      initialValue: "GET"
     })(
       <Select style={{ width: 75 }}>
-        {HTTP_METHOD_KEYS.map(item => {
-          return <Option key={item} value={item}>{item}</Option>
-        })}
+        {HTTP_METHOD_KEYS.map((item) => <Option key={item} value={item}>{item}</Option>)}
       </Select>
-      );
+    );
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -70,38 +68,36 @@ class AddInterfaceForm extends Component {
           {...formItemLayout}
           label="接口分类"
         >
-          {getFieldDecorator('catid', {
-            initialValue: this.props.catid ? this.props.catid + '' : this.props.catdata[0]._id + ''
+          {getFieldDecorator("catid", {
+            initialValue: this.props.catid ? this.props.catid + "" : this.props.catdata[0]._id + ""
           })(
             <Select>
-              {this.props.catdata.map(item => {
-                return <Option key={item._id} value={item._id + ""}>{item.name}</Option>
-              })}
+              {this.props.catdata.map((item) => <Option key={item._id} value={item._id + ""}>{item.name}</Option>)}
             </Select>
-            )}
+          )}
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="接口名称"
         >
-          {getFieldDecorator('title', {
-            rules: nameLengthLimit('接口')
+          {getFieldDecorator("title", {
+            rules: nameLengthLimit("接口")
           })(
             <Input placeholder="接口名称" />
-            )}
+          )}
         </FormItem>
 
         <FormItem
           {...formItemLayout}
           label="接口路径"
         >
-          {getFieldDecorator('path', {
+          {getFieldDecorator("path", {
             rules: [{
-              required: true, message: '请输入接口路径!'
+              required: true, message: "请输入接口路径!"
             }]
           })(
             <Input onBlur={this.handlePath} addonBefore={prefixSelector} placeholder="/path" />
-            )}
+          )}
         </FormItem>
         <FormItem
           {...formItemLayout}

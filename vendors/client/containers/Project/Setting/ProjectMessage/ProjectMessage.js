@@ -34,7 +34,7 @@ const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
 import constants from "../../../../constants/variable.js";
 const confirm = Modal.confirm;
-import { nameLengthLimit, entries, trim, htmlFilter } from "../../../../common";
+import { nameLengthLimit, entries, trim, htmlFilter } from "../../../../utils/common";
 import "../Setting.scss";
 import _ from "underscore";
 import ProjectTag from "./ProjectTag.js";

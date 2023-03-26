@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { formatTime } from '../../../client/common.js';
+import { formatTime } from '../../../client/utils/common.js';
 import { Form, Switch, Button, Icon, Tooltip, message, Input, Select } from 'antd';
 import { handleSwaggerUrlData } from '../../../client/reducer/modules/project';
 
