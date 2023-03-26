@@ -1,9 +1,9 @@
-const yapi = require("../yapi.js");
-const baseModel = require("./base.js");
+const yapi = require('../yapi.js');
+const baseModel = require('./base.js');
 
 class interfaceCol extends baseModel {
   getName() {
-    return "interface_col";
+    return 'interface_col';
   }
 
   getSchema() {
@@ -15,13 +15,13 @@ class interfaceCol extends baseModel {
       add_time: Number,
       up_time: Number,
       index: { type: Number, default: 0 },
-      test_report: { type: String, default: "{}" },
+      test_report: { type: String, default: '{}' },
       checkHttpCodeIs200: {
-        type: Boolean,
+        type:Boolean,
         default: false
       },
       checkResponseSchema: {
-        type: Boolean,
+        type:Boolean,
         default: false
       },
       checkResponseField: {
@@ -76,7 +76,7 @@ class interfaceCol extends baseModel {
       .find({
         project_id: project_id
       })
-      .select("name uid project_id desc add_time up_time, index")
+      .select('name uid project_id desc add_time up_time, index')
       .exec();
   }
 

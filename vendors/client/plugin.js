@@ -251,7 +251,7 @@ function bindHook(name, listener) {
   if (!name) {
     throw new Error("缺少hookname");
   }
-  if (!(name in hooks)) {
+  if (name in hooks === false) {
     throw new Error("不存在的hookname");
   }
   if (hooks[name].mulit === true) {

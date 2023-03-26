@@ -1,22 +1,34 @@
-import React, { PureComponent as Component } from "react"
-import PropTypes from "prop-types"
-import { connect } from "react-redux";
-import { getToken } from "../../../client/reducer/modules/project.js";
-//
-import "./Services.scss";
+import React, { PureComponent as Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux';
+import { getToken } from '../../../client/reducer/modules/project.js'
 
-//
-class Services extends Component {
+
+import './Services.scss';
+
+@connect(
+  state => {
+    return {
+      token: state.project.token
+    }
+  },
+  {
+    getToken
+  }
+)
+export default class Services extends Component {
   static propTypes = {
     projectId: PropTypes.string,
     token: PropTypes.string,
     getToken: PropTypes.func
   }
+
   async componentDidMount() {
     const id = this.props.projectId;
     await this.props.getToken(id);
+    
   }
-  render() {
+  render () {
     const id = this.props.projectId;
     return (
       <div className="project-services">
@@ -33,7 +45,7 @@ class Services extends Component {
             <pre>{`
   {
     "url": "yapi-swagger.json",
-    "remoteUrl": "${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ""}/api/open/plugin/export-full?type=json&pid=${id}&status=all&token=${this.props.token}",
+    "remoteUrl": "${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ''}/api/open/plugin/export-full?type=json&pid=${id}&status=all&token=${this.props.token}",
     "type": "yapi",
     "swaggerParser": {}
   }
@@ -45,7 +57,7 @@ class Services extends Component {
   `}</pre>
             <pre>{`
   {
-    "url": "${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ""}/api/open/plugin/export-full?type=json&pid=${id}&status=all&token=${this.props.token}",
+    "url": "${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ''}/api/open/plugin/export-full?type=json&pid=${id}&status=all&token=${this.props.token}",
     "type": "yapi",
     "swaggerParser": {}
   }
@@ -62,11 +74,3 @@ class Services extends Component {
     );
   }
 }
-export default connect(
-  (state) => ({
-    token: state.project.token
-  }),
-  {
-    getToken
-  }
-)(Services);

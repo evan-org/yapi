@@ -61,7 +61,6 @@ function invade(target, name, callback) {
   });
 }
 let isWin = require("os").platform() === "win32";
-
 //
 module.exports = {
   // reactScriptsVersion: "react-scripts",
@@ -119,9 +118,9 @@ module.exports = {
     alias: {
       "@": resolve("./client"),
       "src": resolve("./client"),
-      "@client": resolve("./client"),
-      "@common": resolve("./common"),
-      "@exts": resolve("./exts")
+      "client": resolve("./client"),
+      "common": resolve("./common"),
+      "exts": resolve("./exts")
     },
     plugins: {
       add: [
@@ -154,6 +153,7 @@ module.exports = {
       // webpackConfig.output.publicPath = "/";
       if (env === "development") {
         webpackConfig.devtool = "cheap-module-source-map";
+        console.log("当前是开发环境", env, "devtool:", "cheap-module-source-map");
       }
       // webpackConfig.devtool = false;
       //
@@ -165,7 +165,7 @@ module.exports = {
   babel: {
     presets: [
       "@babel/preset-react",
-      ["@babel/preset-env"]
+      ["@babel/preset-env", { modules: "commonjs" }]
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
@@ -178,42 +178,45 @@ module.exports = {
           libraryDirectory: "es",
           style: "css",
         },
-      ],
-      // "react-refresh/babel"
+      ]
     ],
-    loaderOptions: (babelLoaderOptions, { env, paths }) => {
-      console.log("babelLoaderOptions", babelLoaderOptions);
-      return babelLoaderOptions;
-    }
+    loaderOptions: (babelLoaderOptions, { env, paths }) =>
+      // console.log("babelLoaderOptions", babelLoaderOptions);
+      babelLoaderOptions
   },
   devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {
-    console.log("env, paths, proxy, allowedHost", env, paths, proxy, allowedHost);
-    console.log("devServerConfig", devServerConfig);
-    devServerConfig.static.publicPath.push(resolve("/"));
-    devServerConfig.proxy = {
-      "/api": {
-        target: "http://127.0.0.1:3000",
+    devServerConfig = {
+      ...devServerConfig,
+      publicPath: "/",
+      host: "localhost",
+      public: "localhost",
+      overlay: true,
+      port: 4000,
+      hot: true,
+      proxy: [{
+        context: ["/api", "/login"],
+        // 转发端口自定义
+        target: "http://127.0.0.1:3030",
         changeOrigin: true,
-        source: true,
-        pathRewrite: { "^/api": "/", "^/login": "/" }
-      }
+        ws: true,
+      }]
     }
     return devServerConfig
   },
   plugins: [
     // 配置lessOptions
-    {
-      // 配置less支持
-      plugin: CracoLessPlugin,
-      options: {
-        lessLoaderOptions: {
-          lessOptions: {
-            modifyVars: {},
-            javascriptEnabled: true,
-          },
-        },
-      },
-    },
+    // {
+    //   // 配置less支持
+    //   plugin: CracoLessPlugin,
+    //   options: {
+    //     lessLoaderOptions: {
+    //       lessOptions: {
+    //         modifyVars: {},
+    //         javascriptEnabled: true,
+    //       },
+    //     },
+    //   },
+    // },
     /*  {
         plugin: CracoLessPlugin,
         options: {
