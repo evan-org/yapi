@@ -13,7 +13,7 @@ import {
   changeMemberRole
 } from "../../../../reducer/modules/group.js";
 import ErrMsg from "../../../../components/ErrMsg/ErrMsg.jsx";
-import UsernameAutoComplete from "../../../../components/UsernameAutoComplete/UsernameAutoComplete.js";
+import UsernameAutoComplete from "../../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 const Option = Select.Option;
 
 function arrayAddKey(arr) {

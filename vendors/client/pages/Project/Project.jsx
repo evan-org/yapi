@@ -2,7 +2,7 @@ import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Route, Switch, Redirect, matchPath } from 'react-router-dom';
-import { Subnav } from '../../components/index';
+import { SubNav } from '../../components/index';
 import Interface from './Interface/Interface.jsx';
 import Activity from './Activity/Activity.jsx';
 import Setting from './Setting/Setting.jsx';
@@ -147,7 +147,7 @@ export default class Project extends Component {
 
     return (
       <div>
-        <Subnav default={defaultName} data={subnavData} />
+        <SubNav default={defaultName} data={subnavData} />
         <Switch>
           <Redirect exact from="/project/:id" to={`/project/${match.params.id}/interface/api`} />
           {/* <Route path={routers.activity.path} component={Activity} />

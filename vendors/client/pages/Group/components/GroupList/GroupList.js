@@ -8,7 +8,7 @@ import { withRouter } from "react-router-dom";
 
 const { TextArea } = Input;
 const Search = Input.Search;
-import UsernameAutoComplete from "../../../../components/UsernameAutoComplete/UsernameAutoComplete.js";
+import UsernameAutoComplete from "../../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 import GuideBtns from "../../../../components/GuideBtns/GuideBtns.jsx";
 import { fetchNewsData } from "../../../../reducer/modules/news.js";
 import { fetchGroupList, setCurrGroup, fetchGroupMsg } from "../../../../reducer/modules/group.js";

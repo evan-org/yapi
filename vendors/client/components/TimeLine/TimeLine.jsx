@@ -6,42 +6,39 @@ import { formatTime } from "../../utils/common.js";
 import showDiffMsg from "../../../common/diff-view.js";
 import variable from "../../constants/variable";
 import { Link } from "react-router-dom";
+//
 import { fetchNewsData, fetchMoreNews } from "../../reducer/modules/news.js";
 import { fetchInterfaceList } from "../../reducer/modules/interface.js";
 import ErrMsg from "../ErrMsg/ErrMsg.jsx";
+//
+import { timeago } from "../../../common/utils.js";
+//
 const jsondiffpatch = require("jsondiffpatch/dist/jsondiffpatch.umd.js");
 const formattersHtml = jsondiffpatch.formatters.html;
 import "jsondiffpatch/dist/formatters-styles/annotated.css";
 import "jsondiffpatch/dist/formatters-styles/html.css";
-import "./TimeLine.scss";
-import { timeago } from "../../../common/utils.js";
-
+//
+import styles from "./TimeLine.module.scss";
 // const Option = AutoComplete.Option;
 const { Option, OptGroup } = AutoComplete;
-
 const AddDiffView = (props) => {
   const { title, content, className } = props;
-
   if (!content) {
     return null;
   }
-
   return (
     <div className={className}>
       <h3 className="title">{title}</h3>
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <div dangerouslySetInnerHTML={{ __html: content }}/>
     </div>
   );
 };
-
 AddDiffView.propTypes = {
   title: PropTypes.string,
   content: PropTypes.string,
   className: PropTypes.string
 };
-
 // timeago(new Date().getTime() - 40);
-
 @connect(
   (state) => ({
     newsData: state.news.newsData,
@@ -67,7 +64,6 @@ class TimeTree extends Component {
     type: PropTypes.string,
     fetchInterfaceList: PropTypes.func
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -79,10 +75,8 @@ class TimeTree extends Component {
     };
     this.curSelectValue = "";
   }
-
   getMore() {
     const that = this;
-
     if (this.props.curpage <= this.props.newsData.total) {
       this.setState({ loading: true });
       this.props
@@ -101,27 +95,23 @@ class TimeTree extends Component {
         });
     }
   }
-
   handleCancel = () => {
     this.setState({
       visible: false
     });
   };
-
   UNSAFE_componentWillMount() {
     this.props.fetchNewsData(this.props.typeid, this.props.type, 1, 10);
     if (this.props.type === "project") {
       this.getApiList();
     }
   }
-
   openDiff = (data) => {
     this.setState({
       curDiffData: data,
       visible: true
     });
   };
-
   async getApiList() {
     let result = await this.props.fetchInterfaceList({
       project_id: this.props.typeid,
@@ -131,15 +121,12 @@ class TimeTree extends Component {
       apiList: result.payload.data.data.list
     });
   }
-
   handleSelectApi = (selectValue) => {
     this.curSelectValue = selectValue;
     this.props.fetchNewsData(this.props.typeid, this.props.type, 1, 10, selectValue);
   };
-
   render() {
     let data = this.props.newsData ? this.props.newsData.list : [];
-
     const curDiffData = this.state.curDiffData;
     let logType = {
       project: "项目",
@@ -149,7 +136,6 @@ class TimeTree extends Component {
       user: "用户",
       other: "其他"
     };
-
     const children = this.state.apiList.map((item) => {
       let methodColor = variable.METHOD_COLOR[item.method ? item.method.toLowerCase() : "get"];
       return (
@@ -163,13 +149,11 @@ class TimeTree extends Component {
         </Option>
       );
     });
-
     children.unshift(
       <Option value="" key="all">
         选择全部
       </Option>
     );
-
     if (data && data.length) {
       data = data.map((item, i) => {
         let interfaceDiff = false;
@@ -181,7 +165,7 @@ class TimeTree extends Component {
           <Timeline.Item
             dot={
               <Link to={`/user/profile/${item.uid}`}>
-                <Avatar src={`/api/user/avatar?uid=${item.uid}`} />
+                <Avatar src={`/api/user/avatar?uid=${item.uid}`}/>
               </Link>
             }
             key={i}
@@ -192,7 +176,7 @@ class TimeTree extends Component {
               <span className="logtype">{logType[item.type]}动态</span>
               <span className="logtime">{formatTime(item.add_time)}</span>
             </div>
-            <span className="logcontent" dangerouslySetInnerHTML={{ __html: item.content }} />
+            <span className="logcontent" dangerouslySetInnerHTML={{ __html: item.content }}/>
             <div style={{ padding: "10px 0 0 10px" }}>
               {interfaceDiff && <Button onClick={() => this.openDiff(item.data)}>改动详情</Button>}
             </div>
@@ -211,30 +195,16 @@ class TimeTree extends Component {
         </a>
       );
     if (this.state.loading) {
-      pending = <Spin />;
+      pending = <Spin/>;
     }
     let diffView = showDiffMsg(jsondiffpatch, formattersHtml, curDiffData);
-
     return (
       <section className="news-timeline">
-        <Modal
-          style={{ minWidth: "800px" }}
-          title="Api 改动日志"
-          visible={this.state.visible}
-          footer={null}
-          onCancel={this.handleCancel}
-        >
+        <Modal style={{ minWidth: "800px" }} title="Api 改动日志" visible={this.state.visible} footer={null} onCancel={this.handleCancel}>
           <i>注： 绿色代表新增内容，红色代表删除内容</i>
-          <div className="project-interface-change-content">
-            {diffView.map((item, index) => (
-              <AddDiffView
-                className="item-content"
-                title={item.title}
-                key={index}
-                content={item.content}
-              />
-            ))}
-            {diffView.length === 0 && <ErrMsg type="noChange" />}
+          <div className={styles.ProjectInterfaceChangeContent}>
+            {diffView.map((item, index) => <AddDiffView className="item-content" title={item.title} key={index} content={item.content}/>)}
+            {diffView.length === 0 && <ErrMsg type="noChange"/>}
           </div>
         </Modal>
         {this.props.type === "project" && (
@@ -247,7 +217,9 @@ class TimeTree extends Component {
                 placeholder="Select Api"
                 optionLabelProp="title"
                 filterOption={(inputValue, options) => {
-                  if (options.props.value == "") {return true;}
+                  if (options.props.value == "") {
+                    return true;
+                  }
                   if (
                     options.props.path.indexOf(inputValue) !== -1 ||
                     options.props.title.indexOf(inputValue) !== -1
@@ -273,11 +245,10 @@ class TimeTree extends Component {
             {data}
           </Timeline>
         ) : (
-          <ErrMsg type="noData" />
+          <ErrMsg type="noData"/>
         )}
       </section>
     );
   }
 }
-
 export default TimeTree;

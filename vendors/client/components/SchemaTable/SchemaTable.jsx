@@ -4,8 +4,7 @@ import json5 from "json5";
 import PropTypes from "prop-types";
 import { schemaTransformToTable } from "../../../common/schema-transformTo-table.js";
 import _ from "underscore";
-import "./index.scss";
-
+//
 const messageMap = {
   desc: "备注",
   default: "实例",
@@ -23,7 +22,6 @@ const messageMap = {
   itemFormat: "format",
   mock: "mock"
 };
-
 const columns = [
   {
     title: "名称",
@@ -43,7 +41,6 @@ const columns = [
       ) : (
         <span>{text}</span>
       )
-
   },
   {
     title: "是否必须",
@@ -76,12 +73,10 @@ const columns = [
     width: 180,
     render: (text, record) => {
       let result = text || record;
-
       return Object.keys(result).map((item, index) => {
         let name = messageMap[item];
         let value = result[item];
         let isShow = !_.isUndefined(result[item]) && !_.isUndefined(name);
-
         return (
           isShow && (
             <p key={index}>
@@ -94,16 +89,13 @@ const columns = [
     }
   }
 ];
-
 class SchemaTable extends Component {
   static propTypes = {
     dataSource: PropTypes.string
   };
-
   constructor(props) {
     super(props);
   }
-
   render() {
     let product;
     try {
@@ -116,7 +108,7 @@ class SchemaTable extends Component {
     }
     let data = schemaTransformToTable(product);
     data = _.isArray(data) ? data : [];
-    return <Table bordered size="small" pagination={false} dataSource={data} columns={columns} />;
+    return <Table bordered size="small" pagination={false} dataSource={data} columns={columns}/>;
   }
 }
 export default SchemaTable;

@@ -3,9 +3,11 @@ import NewsTimeline from "./NewsTimeline/NewsTimeline";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import SubNav from "../../components/SubNav/SubNav.jsx";
+//
 import { Button } from "antd";
 import { getMockUrl } from "../../reducer/modules/news.js";
-import Subnav from "../../components/Subnav/Subnav.js";
+
 
 @connect(
   (state) => ({
@@ -53,7 +55,7 @@ class News extends Component {
     ];
     return (
       <div>
-        <Subnav default={"动态"} data={subNavList}/>
+        <SubNav default={"动态"} data={subNavList}/>
         <div className="g-row">
           <section className="news-box m-panel">
             <div className="logHead">

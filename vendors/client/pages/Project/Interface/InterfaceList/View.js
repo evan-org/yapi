@@ -10,7 +10,7 @@ import ErrMsg from "../../../../components/ErrMsg/ErrMsg.jsx";
 import variable from "../../../../constants/variable";
 import constants from "../../../../constants/variable.js";
 import copy from "copy-to-clipboard";
-import SchemaTable from "../../../../components/SchemaTable/SchemaTable.js";
+import SchemaTable from "../../../../components/SchemaTable/SchemaTable.jsx";
 
 const HTTP_METHOD = constants.HTTP_METHOD;
 
