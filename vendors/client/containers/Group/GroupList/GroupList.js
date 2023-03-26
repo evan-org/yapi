@@ -1,10 +1,11 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Icon, Modal, Input, message,Spin,  Row, Menu, Col, Popover, Tooltip } from 'antd';
+import { Icon, Modal, Input, message, Spin, Row, Menu, Col, Popover, Tooltip } from 'antd';
 import { autobind } from 'core-decorators';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+
 const { TextArea } = Input;
 const Search = Input.Search;
 import UsernameAutoComplete from '../../../components/UsernameAutoComplete/UsernameAutoComplete.js';
@@ -13,11 +14,10 @@ import { fetchNewsData } from '../../../reducer/modules/news.js';
 import {
   fetchGroupList,
   setCurrGroup,
-  setGroupList,
+  // setGroupList,
   fetchGroupMsg
 } from '../../../reducer/modules/group.js';
 import _ from 'underscore';
-
 import './GroupList.scss';
 
 const tip = (
@@ -29,7 +29,6 @@ const tip = (
     </p>
   </div>
 );
-
 @connect(
   state => ({
     groupList: state.group.groupList,
@@ -42,7 +41,7 @@ const tip = (
   {
     fetchGroupList,
     setCurrGroup,
-    setGroupList,
+    // setGroupList,
     fetchNewsData,
     fetchGroupMsg
   }
@@ -54,7 +53,7 @@ export default class GroupList extends Component {
     currGroup: PropTypes.object,
     fetchGroupList: PropTypes.func,
     setCurrGroup: PropTypes.func,
-    setGroupList: PropTypes.func,
+    // setGroupList: PropTypes.func,
     match: PropTypes.object,
     history: PropTypes.object,
     curUserRole: PropTypes.string,
@@ -64,7 +63,6 @@ export default class GroupList extends Component {
     fetchNewsData: PropTypes.func,
     fetchGroupMsg: PropTypes.func
   };
-
   state = {
     addGroupModalVisible: false,
     newGroupName: '',
@@ -74,11 +72,9 @@ export default class GroupList extends Component {
     groupList: [],
     owner_uids: []
   };
-
   constructor(props) {
     super(props);
   }
-
   async componentWillMount() {
     const groupId = !isNaN(this.props.match.params.groupId)
       ? parseInt(this.props.match.params.groupId)
@@ -101,7 +97,6 @@ export default class GroupList extends Component {
     this.setState({ groupList: this.props.groupList });
     this.props.setCurrGroup(currGroup);
   }
-
   @autobind
   showModal() {
     this.setState({
@@ -145,12 +140,10 @@ export default class GroupList extends Component {
       message.error(res.data.errmsg);
     } else {
       await this.props.fetchGroupList();
-
       this.setState({ groupList: this.props.groupList });
       const currGroup = _.find(this.props.groupList, group => {
         return +group._id === +id;
       });
-
       this.props.setCurrGroup(currGroup);
       // this.props.setCurrGroup({ group_name, group_desc, _id: id });
       this.props.fetchGroupMsg(this.props.currGroup._id);
@@ -165,7 +158,6 @@ export default class GroupList extends Component {
   inputNewGroupDesc(e) {
     this.setState({ newGroupDesc: e.target.value });
   }
-
   @autobind
   selectGroup(e) {
     const groupId = e.key;
@@ -177,14 +169,12 @@ export default class GroupList extends Component {
     this.props.history.replace(`${currGroup._id}`);
     this.props.fetchNewsData(groupId, 'group', 1, 10);
   }
-
   @autobind
   onUserSelect(uids) {
     this.setState({
       owner_uids: uids
     });
   }
-
   @autobind
   searchGroup(e, value) {
     const v = value || e.target.value;
@@ -197,7 +187,6 @@ export default class GroupList extends Component {
       });
     }
   }
-
   componentWillReceiveProps(nextProps) {
     // GroupSetting 组件设置的分组信息，通过redux同步到左侧分组菜单中
     if (this.props.groupList !== nextProps.groupList) {
@@ -206,26 +195,23 @@ export default class GroupList extends Component {
       });
     }
   }
-
   render() {
     const { currGroup } = this.props;
     return (
       <div className="m-group">
-        {!this.props.study ? <div className="study-mask" /> : null}
+        {!this.props.study ? <div className="study-mask"/> : null}
         <div className="group-bar">
           <div className="curr-group">
             <div className="curr-group-name">
               <span className="name">{currGroup.group_name}</span>
               <Tooltip title="添加分组">
                 <a className="editSet">
-                  <Icon className="btn" type="folder-add" onClick={this.showModal} />
+                  <Icon className="btn" type="folder-add" onClick={this.showModal}/>
                 </a>
               </Tooltip>
-            
             </div>
             <div className="curr-group-desc">简介: {currGroup.group_desc}</div>
           </div>
-
           <div className="group-operate">
             <div className="search">
               <Search
@@ -239,7 +225,7 @@ export default class GroupList extends Component {
             marginTop: 20,
             display: 'flex',
             justifyContent: 'center'
-          }} />}
+          }}/>}
           <Menu
             className="group-list"
             mode="inline"
@@ -254,10 +240,10 @@ export default class GroupList extends Component {
                     className="group-item"
                     style={{ zIndex: this.props.studyTip === 0 ? 3 : 1 }}
                   >
-                    <Icon type="user" />
+                    <Icon type="user"/>
                     <Popover
                       overlayClassName="popover-index"
-                      content={<GuideBtns />}
+                      content={<GuideBtns/>}
                       title={tip}
                       placement="right"
                       visible={this.props.studyTip === 0 && !this.props.study}
@@ -269,7 +255,7 @@ export default class GroupList extends Component {
               } else {
                 return (
                   <Menu.Item key={`${group._id}`} className="group-item">
-                    <Icon type="folder-open" />
+                    <Icon type="folder-open"/>
                     {group.group_name}
                   </Menu.Item>
                 );
@@ -290,7 +276,7 @@ export default class GroupList extends Component {
                 <div className="label">分组名：</div>
               </Col>
               <Col span="15">
-                <Input placeholder="请输入分组名称" onChange={this.inputNewGroupName} />
+                <Input placeholder="请输入分组名称" onChange={this.inputNewGroupName}/>
               </Col>
             </Row>
             <Row gutter={6} className="modal-input">
@@ -298,7 +284,7 @@ export default class GroupList extends Component {
                 <div className="label">简介：</div>
               </Col>
               <Col span="15">
-                <TextArea rows={3} placeholder="请输入分组描述" onChange={this.inputNewGroupDesc} />
+                <TextArea rows={3} placeholder="请输入分组描述" onChange={this.inputNewGroupDesc}/>
               </Col>
             </Row>
             <Row gutter={6} className="modal-input">
@@ -306,7 +292,7 @@ export default class GroupList extends Component {
                 <div className="label">组长：</div>
               </Col>
               <Col span="15">
-                <UsernameAutoComplete callbackState={this.onUserSelect} />
+                <UsernameAutoComplete callbackState={this.onUserSelect}/>
               </Col>
             </Row>
           </Modal>
