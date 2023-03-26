@@ -1,8 +1,8 @@
-const baseModel = require("./base.js");
+const baseModel = require('./base.js');
 
 class userModel extends baseModel {
   getName() {
-    return "user";
+    return 'user';
   }
 
   getSchema() {
@@ -24,7 +24,7 @@ class userModel extends baseModel {
       role: String,
       add_time: Number,
       up_time: Number,
-      type: { type: String, enum: ["site", "third"], default: "site" } // site用户是网站注册用户, third是第三方登录过来的用户
+      type: { type: String, enum: ['site', 'third'], default: 'site' } //site用户是网站注册用户, third是第三方登录过来的用户
     };
   }
 
@@ -42,8 +42,8 @@ class userModel extends baseModel {
   list() {
     return this.model
       .find()
-      .select("_id username email role type  add_time up_time study")
-      .exec(); // 显示id name email role
+      .select('_id username email role type  add_time up_time study')
+      .exec(); //显示id name email role
   }
 
   findByUids(uids) {
@@ -51,7 +51,7 @@ class userModel extends baseModel {
       .find({
         _id: { $in: uids }
       })
-      .select("_id username email role type  add_time up_time study")
+      .select('_id username email role type  add_time up_time study')
       .exec();
   }
 
@@ -63,7 +63,7 @@ class userModel extends baseModel {
       .sort({ _id: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .select("_id username email role type  add_time up_time study")
+      .select('_id username email role type  add_time up_time study')
       .exec();
   }
 
@@ -100,7 +100,7 @@ class userModel extends baseModel {
     return this.model
       .find(
         {
-          $or: [{ email: new RegExp(keyword, "i") }, { username: new RegExp(keyword, "i") }]
+          $or: [{ email: new RegExp(keyword, 'i') }, { username: new RegExp(keyword, 'i') }]
         },
         {
           passsalt: 0,

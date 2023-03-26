@@ -1,16 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Button, Checkbox } from "antd";
-//
-// import Editor from "../../../common/tui-editor/dist/tui-editor-Editor-all.min.js";
-// import "../../../common/tui-editor/dist/tui-editor.min.css";// editor ui
-// import "../../../common/tui-editor/dist/tui-editor-contents.min.css";// editor content
-import Editor from "@toast-ui/editor";
-import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Button, Checkbox } from 'antd';
+import Editor from 'common/tui-editor/dist/tui-editor-Editor-all.min.js';
+require('common/tui-editor/dist/tui-editor.min.css'); // editor ui
+require('common/tui-editor/dist/tui-editor-contents.min.css'); // editor content
 class WikiEditor extends Component {
   constructor(props) {
     super(props);
   }
+
   static propTypes = {
     isConflict: PropTypes.bool,
     onUpload: PropTypes.func,
@@ -19,19 +17,22 @@ class WikiEditor extends Component {
     onEmailNotice: PropTypes.func,
     desc: PropTypes.string
   };
+
   componentDidMount() {
     this.editor = new Editor({
-      el: document.querySelector("#desc"),
-      initialEditType: "wysiwyg",
-      height: "500px",
+      el: document.querySelector('#desc'),
+      initialEditType: 'wysiwyg',
+      height: '500px',
       initialValue: this.props.desc
     });
   }
+
   onUpload = () => {
     let desc = this.editor.getHtml();
     let markdown = this.editor.getMarkdown();
     this.props.onUpload(desc, markdown);
   };
+
   render() {
     const { isConflict, onCancel, notice, onEmailNotice } = this.props;
     return (
@@ -39,7 +40,7 @@ class WikiEditor extends Component {
         <div
           id="desc"
           className="wiki-editor"
-          style={{ display: !isConflict ? "block" : "none" }}
+          style={{ display: !isConflict ? 'block' : 'none' }}
         />
         <div className="wiki-title wiki-up">
           <Button
@@ -62,4 +63,5 @@ class WikiEditor extends Component {
     );
   }
 }
+
 export default WikiEditor;

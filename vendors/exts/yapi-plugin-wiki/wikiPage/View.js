@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Button } from "antd";
-import { Link } from "react-router-dom";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Button } from 'antd';
+import { Link } from 'react-router-dom';
 
-const WikiView = (props) => {
+const WikiView = props => {
   const { editorEable, onEditor, uid, username, editorTime, desc } = props;
   return (
     <div className="wiki-view-content">
@@ -13,10 +13,10 @@ const WikiView = (props) => {
         </Button>
         {username && (
           <div className="wiki-user">
-            由{" "}
+            由{' '}
             <Link className="user-name" to={`/user/profile/${uid || 11}`}>
               {username}
-            </Link>{" "}
+            </Link>{' '}
             修改于 {editorTime}
           </div>
         )}

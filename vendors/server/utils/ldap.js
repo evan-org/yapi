@@ -1,38 +1,56 @@
-const ldap = require("ldapjs");
-const yapi = require("../yapi.js");
-//
-exports.ldapQuery = (username, password) =>
+const ldap = require('ldapjs');
+const yapi = require('../yapi.js');
+const util = require('util');
+
+exports.ldapQuery = (username, password) => {
   // const deferred = Q.defer();
-  new Promise((resolve, reject) => {
+
+  return new Promise((resolve, reject) => {
     const { ldapLogin } = yapi.WEBCONFIG;
+
     //  使用ldapjs库创建一个LDAP客户端
     const client = ldap.createClient({
       url: ldapLogin.server
     });
-    //
-    client.once("error", (err) => {
-      if (err) {reject({ type: false, message: `once: ${err}` });}
+
+    client.once('error', err => {
+      if (err) {
+        let msg = {
+          type: false,
+          message: `once: ${err}`
+        };
+        reject(msg);
+      }
     });
     // 注册事件处理函数
     const ldapSearch = (err, search) => {
       const users = [];
       if (err) {
-        reject({ type: false, message: `ldapSearch: ${err}` });
+        let msg = {
+          type: false,
+          message: `ldapSearch: ${err}`
+        };
+        reject(msg);
       }
       // 查询结果事件响应
-      search.on("searchEntry", (entry) => {
+      search.on('searchEntry', entry => {
         if (entry) {
           // 获取查询对象
           users.push(entry.object);
         }
       });
       // 查询错误事件
-      search.on("error", (error) => {
-        if (error) {
-          reject({ type: false, message: `searchErr: ${error}` });
+      search.on('error', e => {
+        if (e) {
+          let msg = {
+            type: false,
+            message: `searchErr: ${e}`
+          };
+          reject(msg);
         }
       });
-      search.on("searchReference", (referral) => {
+
+      search.on('searchReference', referral => {
         // if (referral) {
         //   let msg = {
         //     type: false,
@@ -40,21 +58,34 @@ exports.ldapQuery = (username, password) =>
         //   };
         //   reject(msg);
         // }
-        console.log("referral: " + referral.uris.join());
+        console.log('referral: ' + referral.uris.join());
       });
       // 查询结束
-      search.on("end", () => {
+      search.on('end', () => {
         if (users.length > 0) {
-          client.bind(users[0].dn, password, (error) => {
-            if (error) {
-              reject({ type: false, message: `用户名或密码不正确: ${error}` });
+          client.bind(users[0].dn, password, e => {
+            if (e) {
+              let msg = {
+                type: false,
+                message: `用户名或密码不正确: ${e}`
+              };
+              reject(msg);
             } else {
-              resolve({ type: true, message: "验证成功", info: users[0] });
+              let msg = {
+                type: true,
+                message: `验证成功`,
+                info: users[0]
+              };
+              resolve(msg);
             }
             client.unbind();
           });
         } else {
-          reject({ type: false, message: "用户名不存在" });
+          let msg = {
+            type: false,
+            message: `用户名不存在`
+          };
+          reject(msg);
           client.unbind();
         }
       });
@@ -64,12 +95,16 @@ exports.ldapQuery = (username, password) =>
     // 第二个参数： 用户密码
     return new Promise((resolve, reject) => {
       if (ldapLogin.bindPassword) {
-        client.bind(ldapLogin.baseDn, ldapLogin.bindPassword, (err) => {
+        client.bind(ldapLogin.baseDn, ldapLogin.bindPassword, err => {
           if (err) {
-            reject({ type: false, message: `LDAP server绑定失败: ${err}` });
-          } else {
-            resolve();
+            let msg = {
+              type: false,
+              message: `LDAP server绑定失败: ${err}`
+            };
+            reject(msg);
           }
+
+          resolve();
         });
       } else {
         resolve();
@@ -80,19 +115,20 @@ exports.ldapQuery = (username, password) =>
       // 处理可以自定义filter
       let customFilter;
       if (/^(&|\|)/gi.test(searchStandard)) {
-        customFilter = searchStandard.replace(/%s/g, username);
+        customFilter = searchStandard.replace(/%s/g,username);
       } else {
         customFilter = `${searchStandard}=${username}`;
       }
       const opts = {
         // filter: `(${searchStandard}=${username})`,
         filter: `(${customFilter})`,
-        scope: "sub"
+        scope: 'sub'
       };
+
       // 开始查询
       // 第一个参数： 查询基础路径，代表在查询用户信息将在这个路径下进行，该路径由根结点开始
       // 第二个参数： 查询选项
       client.search(searchDn, opts, ldapSearch);
     });
-  })
-
+  });
+};

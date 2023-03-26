@@ -1,6 +1,6 @@
 // Actions
-const FETCH_NEWS_DATA = "yapi/news/FETCH_NEWS_DATA";
-const FETCH_MORE_NEWS = "yapi/news/FETCH_MORE_NEWS";
+const FETCH_NEWS_DATA = 'yapi/news/FETCH_NEWS_DATA';
+const FETCH_MORE_NEWS = 'yapi/news/FETCH_MORE_NEWS';
 // Reducer
 const initialState = {
   newsData: {
@@ -50,8 +50,8 @@ export default (state = initialState, action) => {
 };
 
 // Action Creators
-import axios from "axios";
-import variable from "../../utils/variable";
+import axios from 'axios';
+import variable from '../../constants/variable';
 
 export function fetchNewsData(typeid, type, page, limit, selectValue) {
   let param = {
@@ -64,7 +64,7 @@ export function fetchNewsData(typeid, type, page, limit, selectValue) {
 
   return {
     type: FETCH_NEWS_DATA,
-    payload: axios.get("/api/log/list", {
+    payload: axios.get('/api/log/list', {
       params: param
     })
   };
@@ -79,7 +79,7 @@ export function fetchMoreNews(typeid, type, page, limit, selectValue) {
   }
   return {
     type: FETCH_MORE_NEWS,
-    payload: axios.get("/api/log/list", {
+    payload: axios.get('/api/log/list', {
       params: param
     })
   };
@@ -88,14 +88,14 @@ export function fetchMoreNews(typeid, type, page, limit, selectValue) {
 export function getMockUrl(project_id) {
   const params = { id: project_id };
   return {
-    type: "",
-    payload: axios.get("/api/project/get", { params: params })
+    type: '',
+    payload: axios.get('/api/project/get', { params: params })
   };
 }
 
 export function fetchUpdateLogData(params) {
   return {
-    type: "",
-    payload: axios.post("/api/log/list_by_update", params)
+    type: '',
+    payload: axios.post('/api/log/list_by_update', params)
   };
 }

@@ -1,20 +1,20 @@
-const yapi = require("./yapi.js");
-const plugin_path = yapi.path.join(yapi.WEBROOT, "node_modules");
-const plugin_system_path = yapi.path.join(yapi.WEBROOT, "exts");
-const initPlugins = require("../common/plugin.js").initPlugins;
-let extConfig = require("../common/config.js").exts;
+const yapi = require('./yapi.js');
+const plugin_path = yapi.path.join(yapi.WEBROOT, 'node_modules');
+const plugin_system_path = yapi.path.join(yapi.WEBROOT, 'exts');
+const initPlugins = require('../common/plugin.js').initPlugins;
+var extConfig = require('../common/config.js').exts;
 
 /**
  * 钩子配置
  */
-let hooks = {
+var hooks = {
   /**
    * 第三方sso登录钩子，暂只支持设置一个
    * @param ctx
    * @return 必需返回一个 promise 对象，resolve({username: '', email: ''})
    */
   third_login: {
-    type: "single",
+    type: 'single',
     listener: null
   },
   /**
@@ -22,7 +22,7 @@ let hooks = {
    * @param data 接口的详细信息
    */
   interface_add: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -30,7 +30,7 @@ let hooks = {
    * @param data 接口id
    */
   interface_del: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -38,7 +38,7 @@ let hooks = {
    * @param id 接口id
    */
   interface_update: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -46,7 +46,7 @@ let hooks = {
    * @param list 返回接口的数据列表
    */
   interface_list: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -54,7 +54,7 @@ let hooks = {
    * @param data 接口的详细信息
    */
   interface_get: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -62,7 +62,7 @@ let hooks = {
    * @param id 项目id
    */
   project_add: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -70,7 +70,7 @@ let hooks = {
    * @param id 项目id
    */
   project_up: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -78,7 +78,7 @@ let hooks = {
    * @param id 项目id
    */
   project_get: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -86,7 +86,7 @@ let hooks = {
    * @param id 项目id
    */
   project_del: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -96,12 +96,12 @@ let hooks = {
      *  projectData: project,
         interfaceData: interfaceData,
         ctx: ctx,
-        mockJson: res
+        mockJson: res 
      * }
-     *
+     * 
      */
   export_markdown: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -111,12 +111,12 @@ let hooks = {
      *  projectData: project,
         interfaceData: interfaceData,
         ctx: ctx,
-        mockJson: res
+        mockJson: res 
      * }
-     *
+     * 
      */
   mock_after: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -142,7 +142,7 @@ let hooks = {
    * }
    */
   add_router: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
   /**
@@ -168,39 +168,39 @@ let hooks = {
    * }
    */
   add_ws_router: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
 
   import_data: {
-    type: "multi",
+    type: 'multi',
     listener: []
   },
 
   /**
    * addNoticePlugin(config)
-   *
+   * 
    * config.weixin = {
    *    title: 'wechat',
    *    hander: (emails, title, content)=> {...}
    * }
    */
-  addNotice: {
-    type: "multi",
+  addNotice:{
+    type: 'multi',
     listener: []
   }
 };
 
 function bindHook(name, listener) {
-  if (!name) {throw new Error("缺少hookname");}
+  if (!name) throw new Error('缺少hookname');
   if (name in hooks === false) {
-    throw new Error("不存在的hookname");
+    throw new Error('不存在的hookname');
   }
-  if (hooks[name].type === "multi") {
+  if (hooks[name].type === 'multi') {
     hooks[name].listener.push(listener);
   } else {
-    if (typeof hooks[name].listener === "function") {
-      throw new Error("重复绑定singleHook(" + name + "), 请检查");
+    if (typeof hooks[name].listener === 'function') {
+      throw new Error('重复绑定singleHook(' + name + '), 请检查');
     }
     hooks[name].listener = listener;
   }
@@ -212,9 +212,9 @@ function bindHook(name, listener) {
  * @return promise
  */
 function emitHook(name) {
-  if (hooks[name] && typeof hooks[name] === "object") {
+  if (hooks[name] && typeof hooks[name] === 'object') {
     let args = Array.prototype.slice.call(arguments, 1);
-    if (hooks[name].type === "single" && typeof hooks[name].listener === "function") {
+    if (hooks[name].type === 'single' && typeof hooks[name].listener === 'function') {
       return Promise.resolve(hooks[name].listener.apply(yapi, args));
     }
     let promiseAll = [];
@@ -232,42 +232,42 @@ yapi.bindHook = bindHook;
 yapi.emitHook = emitHook;
 yapi.emitHookSync = emitHook;
 
-let pluginsConfig = initPlugins(yapi.WEBCONFIG.plugins, "plugin");
-pluginsConfig.forEach((plugin) => {
-  if (!plugin || plugin.enable === false || plugin.server === false) {return null;}
+let pluginsConfig = initPlugins(yapi.WEBCONFIG.plugins, 'plugin');
+pluginsConfig.forEach(plugin => {
+  if (!plugin || plugin.enable === false || plugin.server === false) return null;
 
   if (
     !yapi.commons.fileExist(
-      yapi.path.join(plugin_path, "yapi-plugin-" + plugin.name + "/server.js")
+      yapi.path.join(plugin_path, 'yapi-plugin-' + plugin.name + '/server.js')
     )
   ) {
     throw new Error(`config.json配置了插件${plugin},但plugins目录没有找到此插件，请安装此插件`);
   }
   let pluginModule = require(yapi.path.join(
     plugin_path,
-    "yapi-plugin-" + plugin.name + "/server.js"
+    'yapi-plugin-' + plugin.name + '/server.js'
   ));
   pluginModule.call(yapi, plugin.options);
 });
 
-extConfig = initPlugins(extConfig, "ext");
+extConfig = initPlugins(extConfig, 'ext');
 
-extConfig.forEach((plugin) => {
-  if (!plugin || plugin.enable === false || plugin.server === false) {return null;}
+extConfig.forEach(plugin => {
+  if (!plugin || plugin.enable === false || plugin.server === false) return null;
 
   if (
     !yapi.commons.fileExist(
-      yapi.path.join(plugin_system_path, "yapi-plugin-" + plugin.name + "/server.js")
+      yapi.path.join(plugin_system_path, 'yapi-plugin-' + plugin.name + '/server.js')
     )
   ) {
     throw new Error(`config.json配置了插件${plugin},但plugins目录没有找到此插件，请安装此插件`);
   }
   let pluginModule = require(yapi.path.join(
     plugin_system_path,
-    "yapi-plugin-" + plugin.name + "/server.js"
+    'yapi-plugin-' + plugin.name + '/server.js'
   ));
   pluginModule.call(yapi, plugin.options);
 });
 
-// delete bindHook方法，避免误操作
+//delete bindHook方法，避免误操作
 delete yapi.bindHook;
