@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { connect } from "react-redux";
 import { Route, BrowserRouter as Router } from "react-router-dom";
-import { Home, Group, Project, Follows, AddProject, Login } from "./containers/index";
+import { Home, Group, Project, Follows, AddProject, Login } from "./pages/index";
 //
 import Layout from "./layout/Layout";
 //
-import User from "./containers/User/User.jsx";
+import User from "./pages/User/User.jsx";
 import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 //
 import { checkLoginState } from "./reducer/modules/user";
