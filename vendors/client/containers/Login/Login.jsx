@@ -14,6 +14,7 @@ class Login extends Component {
           <div className="m-bg-mask m-bg-mask2"/>
           <div className="m-bg-mask m-bg-mask3"/>
         </div>
+        {/**/}
         <div className="login-container">
           <div className="container">
             <Row type="flex" justify="center">

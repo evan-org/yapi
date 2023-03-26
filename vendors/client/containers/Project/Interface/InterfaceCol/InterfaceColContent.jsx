@@ -19,11 +19,11 @@ import * as Table from "reactabular-table";
 import * as dnd from "reactabular-dnd";
 import * as resolve from "table-resolver";
 import axios from "axios";
-import CaseReport from "./CaseReport.js";
+import CaseReport from "./CaseReport.jsx";
 import _ from "underscore";
-import { initCrossRequest } from "client/components/Postman/CheckCrossInstall.js";
+import { initCrossRequest } from "client/components/Postman/CheckCrossInstall.jsx";
 import produce from "immer";
-import { InsertCodeMap } from "client/components/Postman/Postman.js"
+import { InsertCodeMap } from "client/components/Postman/Postman.jsx"
 
 const plugin = require("client/plugin.js");
 const {

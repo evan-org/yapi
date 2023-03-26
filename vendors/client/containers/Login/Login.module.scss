@@ -3,7 +3,16 @@
   :global {
     .login-container {
       .container {
-        // margin: 55px 0;
+        display: inline-block;
+        margin-top: 20vh;
+        width: 100%;
+        div {
+          cursor: grab;
+          margin-bottom: 10px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
       }
     }
     .login-form-button {

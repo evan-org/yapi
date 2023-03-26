@@ -6,7 +6,7 @@ import { Subnav } from '../../components/index';
 import { fetchGroupMsg } from '../../reducer/modules/group';
 import { setBreadcrumb } from '../../reducer/modules/user';
 import { getProject } from '../../reducer/modules/project';
-import Interface from './Interface/Interface.js';
+import Interface from './Interface/Interface.jsx';
 import Activity from './Activity/Activity.js';
 import Setting from './Setting/Setting.js';
 import Loading from '../../components/Loading/Loading';
@@ -149,7 +149,7 @@ export default class Project extends Component {
         <Switch>
           <Redirect exact from="/project/:id" to={`/project/${match.params.id}/interface/api`} />
           {/* <Route path={routers.activity.path} component={Activity} />
-          
+
           <Route path={routers.setting.path} component={Setting} />
           {this.props.currGroup.type !== 'private' ?
             <Route path={routers.members.path} component={routers.members.component}/>

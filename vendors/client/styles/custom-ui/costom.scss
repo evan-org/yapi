@@ -172,11 +172,6 @@ html, body {
     color: #919191;
   }
 }
-@media (max-width: 768px) {
-  html {
-    width: min-content !important;
-  }
-}
 .tag-status {
   &::before {
     content: '';

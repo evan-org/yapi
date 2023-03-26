@@ -22,10 +22,10 @@ import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
 import axios from "axios";
 import ModalPostman from "../ModalPostman/index.js";
-import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.js";
-import "./Postman.scss";
+import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.jsx";
 import ProjectEnv from "../../containers/Project/Setting/ProjectEnv/index.js";
 import json5 from "json5";
+import styles from "./Postman.module.scss";
 
 const { handleParamsValue, ArrayToObject, schemaValidator } = require("common/utils.js");
 const {
@@ -74,12 +74,12 @@ const ParamsNameComponent = (props) => {
     <div>
       {example && (
         <div>
-            示例： <span className="table-desc">{example}</span>
+          示例： <span className="table-desc">{example}</span>
         </div>
       )}
       {desc && (
         <div>
-            备注： <span className="table-desc">{desc}</span>
+          备注： <span className="table-desc">{desc}</span>
         </div>
       )}
     </div>
@@ -101,7 +101,7 @@ ParamsNameComponent.propTypes = {
   desc: PropTypes.string,
   name: PropTypes.string
 };
-export default class Run extends Component {
+class Postman extends Component {
   static propTypes = {
     data: PropTypes.object, // 接口原有数据
     save: PropTypes.func, // 保存回调方法
@@ -138,10 +138,7 @@ export default class Run extends Component {
       String(hd["Content-Type"] || hd["content-type"]).indexOf("text/html") !== -1
   }
   checkInterfaceData(data) {
-    if (!data || typeof data !== "object" || !data._id) {
-      return false;
-    }
-    return true;
+    return !(!data || typeof data !== "object" || !data._id);
   }
   // 整合header信息
   handleReqHeader = (value, env) => {
@@ -247,6 +244,7 @@ export default class Run extends Component {
       }
     );
   }
+  //
   UNSAFE_componentWillMount() {
     this._crossRequestInterval = initCrossRequest((hasPlugin) => {
       this.setState({
@@ -406,7 +404,7 @@ export default class Run extends Component {
   };
   // 模态框的相关操作
   showModal = (val, index, type) => {
-    let inputValue = "";
+    let inputValue;
     let cursurPosition;
     if (type === "req_body_other") {
       // req_body
@@ -507,23 +505,10 @@ export default class Run extends Component {
     });
   };
   render() {
-    const {
-      method,
-      env,
-      path,
-      req_params = [],
-      req_headers = [],
-      req_query = [],
-      req_body_type,
-      req_body_form = [],
-      loading,
-      case_env,
-      inputValue,
-      hasPlugin
-    } = this.state;
+    const { method, env, path, req_params = [], req_headers = [], req_query = [], req_body_type, req_body_form = [], loading, case_env, inputValue, hasPlugin } = this.state;
     // console.log(env);
     return (
-      <div className="interface-test postman">
+      <div className={styles.Postman}>
         {this.state.modalVisible && (
           <ModalPostman
             visible={this.state.modalVisible}
@@ -542,7 +527,7 @@ export default class Run extends Component {
             onCancel={this.handleEnvCancel}
             footer={null}
             width={800}
-            className="env-modal"
+            className={styles.EnvModal}
           >
             <ProjectEnv projectId={this.props.data.project_id} onOk={this.handleEnvOk}/>
           </Modal>
@@ -579,55 +564,30 @@ export default class Run extends Component {
               style={{ flexBasis: 180, flexGrow: 1 }}
             />
           </InputGroup>
-          <Tooltip
-            placement="bottom"
-            title={(() => {
-              if (hasPlugin) {
-                return "发送请求";
-              } else {
-                return "请安装 cross-request 插件";
-              }
-            })()}
-          >
-            <Button
-              disabled={!hasPlugin}
-              onClick={this.reqRealInterface}
-              type="primary"
-              style={{ marginLeft: 10 }}
-              icon={loading ? "loading" : ""}
-            >
+          <Tooltip placement="bottom" title={(() => {
+            if (hasPlugin) {
+              return "发送请求";
+            } else {
+              return "请安装 cross-request 插件";
+            }
+          })()}>
+            <Button disabled={!hasPlugin} onClick={this.reqRealInterface} type="primary" style={{ marginLeft: 10 }} icon={loading ? "loading" : ""}>
               {loading ? "取消" : "发送"}
             </Button>
           </Tooltip>
-          <Tooltip
-            placement="bottom"
-            title={() => this.props.type === "inter" ? "保存到测试集" : "更新该用例"}
-          >
+          <Tooltip placement="bottom" title={() => this.props.type === "inter" ? "保存到测试集" : "更新该用例"}>
             <Button onClick={this.props.save} type="primary" style={{ marginLeft: 10 }}>
               {this.props.type === "inter" ? "保存" : "更新"}
             </Button>
           </Tooltip>
         </div>
         <Collapse defaultActiveKey={["0", "1", "2", "3"]} bordered>
-          <Panel
-            header="PATH PARAMETERS"
-            key="0"
-            className={req_params.length === 0 ? "hidden" : ""}
-          >
+          <Panel header="PATH PARAMETERS" key="0" className={req_params.length === 0 ? "hidden" : ""}>
             {req_params.map((item, index) => (
               <div key={index} className="key-value-wrap">
-                {/* <Tooltip
-                    placement="topLeft"
-                    title={<TooltipContent example={item.example} desc={item.desc} />}
-                  >
-                    <Input disabled value={item.name} className="key" />
-                  </Tooltip> */}
                 <ParamsNameComponent example={item.example} desc={item.desc} name={item.name}/>
                 <span className="eq-symbol">=</span>
-                <Input
-                  value={item.value}
-                  className="value"
-                  onChange={(e) => this.changeParam("req_params", e.target.value, index)}
+                <Input value={item.value} className="value" onChange={(e) => this.changeParam("req_params", e.target.value, index)}
                   placeholder="参数值"
                   id={`req_params_${index}`}
                   addonAfter={
@@ -635,24 +595,14 @@ export default class Run extends Component {
                       type="edit"
                       onClick={() => this.showModal(item.value, index, "req_params")}
                     />
-                  }
-                />
+                  }/>
               </div>
             ))}
-            <Button
-              style={{ display: "none" }}
-              type="primary"
-              icon="plus"
-              onClick={this.addPathParam}
-            >
+            <Button style={{ display: "none" }} type="primary" icon="plus" onClick={this.addPathParam}>
               添加Path参数
             </Button>
           </Panel>
-          <Panel
-            header="QUERY PARAMETERS"
-            key="1"
-            className={req_query.length === 0 ? "hidden" : ""}
-          >
+          <Panel header="QUERY PARAMETERS" key="1" className={req_query.length === 0 ? "hidden" : ""}>
             {req_query.map((item, index) => (
               <div key={index} className="key-value-wrap">
                 {/* <Tooltip
@@ -662,31 +612,18 @@ export default class Run extends Component {
                     <Input disabled value={item.name} className="key" />
                   </Tooltip> */}
                 <ParamsNameComponent example={item.example} desc={item.desc} name={item.name}/>
-                  &nbsp;
-                {item.required == 1 ? (
+                &nbsp;
+                {[1, "1"].includes(item.required) ? (
                   <Checkbox className="params-enable" checked disabled/>
                 ) : (
-                  <Checkbox
-                    className="params-enable"
-                    checked={item.enable}
-                    onChange={(e) =>
-                      this.changeParam("req_query", e.target.checked, index, "enable")
-                    }
-                  />
+                  <Checkbox className="params-enable" checked={item.enable} onChange={(e) =>
+                    this.changeParam("req_query", e.target.checked, index, "enable")
+                  }/>
                 )}
                 <span className="eq-symbol">=</span>
-                <Input
-                  value={item.value}
-                  className="value"
-                  onChange={(e) => this.changeParam("req_query", e.target.value, index)}
-                  placeholder="参数值"
-                  id={`req_query_${index}`}
-                  addonAfter={
-                    <Icon
-                      type="edit"
-                      onClick={() => this.showModal(item.value, index, "req_query")}
-                    />
-                  }
+                <Input value={item.value} className="value" onChange={(e) => this.changeParam("req_query", e.target.value, index)}
+                  placeholder="参数值" id={`req_query_${index}`}
+                  addonAfter={<Icon type="edit" onClick={() => this.showModal(item.value, index, "req_query")}/>}
                 />
               </div>
             ))}
@@ -705,50 +642,21 @@ export default class Run extends Component {
                   </Tooltip> */}
                 <ParamsNameComponent example={item.example} desc={item.desc} name={item.name}/>
                 <span className="eq-symbol">=</span>
-                <Input
-                  value={item.value}
-                  disabled={!!item.abled}
-                  className="value"
+                <Input value={item.value} disabled={!!item.abled} className="value" placeholder="参数值" id={`req_headers_${index}`}
                   onChange={(e) => this.changeParam("req_headers", e.target.value, index)}
-                  placeholder="参数值"
-                  id={`req_headers_${index}`}
                   addonAfter={
-                    !item.abled && (
-                      <Icon
-                        type="edit"
-                        onClick={() => this.showModal(item.value, index, "req_headers")}
-                      />
-                    )
-                  }
-                />
+                    !item.abled && (<Icon type="edit" onClick={() => this.showModal(item.value, index, "req_headers")}/>)
+                  }/>
               </div>
             ))}
-            <Button style={{ display: "none" }} type="primary" icon="plus" onClick={this.addHeader}>
-              添加Header
-            </Button>
+            <Button style={{ display: "none" }} type="primary" icon="plus" onClick={this.addHeader}>添加Header</Button>
           </Panel>
-          <Panel
-            header={
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Tooltip title="F9 全屏编辑">BODY(F9)</Tooltip>
-              </div>
-            }
-            key="3"
-            className={
-              HTTP_METHOD[method].request_body &&
-              ((req_body_type === "form" && req_body_form.length > 0) || req_body_type !== "form")
-                ? "POST"
-                : "hidden"
-            }
-          >
-            <div
-              style={{ display: checkRequestBodyIsRaw(method, req_body_type) ? "block" : "none" }}
-            >
+          <Panel header={<div style={{ display: "flex", justifyContent: "space-between" }}><Tooltip title="F9 全屏编辑">BODY(F9)</Tooltip></div>}
+            key="3" className={HTTP_METHOD[method].request_body && ((req_body_type === "form" && req_body_form.length > 0) || req_body_type !== "form") ? "POST" : "hidden"}>
+            <div style={{ display: checkRequestBodyIsRaw(method, req_body_type) ? "block" : "none" }}>
               {req_body_type === "json" && (
                 <div className="adv-button">
-                  <Button
-                    onClick={() => this.showModal(this.state.req_body_other, 0, "req_body_other")}
-                  >
+                  <Button onClick={() => this.showModal(this.state.req_body_other, 0, "req_body_other")}>
                     高级参数设置
                   </Button>
                   <Tooltip title="高级参数设置只在json字段值中生效">
@@ -757,14 +665,8 @@ export default class Run extends Component {
                   </Tooltip>
                 </div>
               )}
-              <AceEditor
-                className="pretty-editor"
-                ref={(editor) => (this.aceEditor = editor)}
-                data={this.state.req_body_other}
-                mode={req_body_type === "json" ? null : "text"}
-                onChange={this.handleRequestBody}
-                fullScreen
-              />
+              <AceEditor className="pretty-editor" ref={(editor) => (this.aceEditor = editor)} data={this.state.req_body_other}
+                mode={req_body_type === "json" ? null : "text"} onChange={this.handleRequestBody} fullScreen/>
             </div>
             {HTTP_METHOD[method].request_body &&
               req_body_type === "form" && (
@@ -777,21 +679,13 @@ export default class Run extends Component {
                         >
                           <Input disabled value={item.name} className="key" />
                         </Tooltip> */}
-                    <ParamsNameComponent
-                      example={item.example}
-                      desc={item.desc}
-                      name={item.name}
-                    />
-                        &nbsp;
-                    {item.required == 1 ? (
-                      <Checkbox className="params-enable" checked disabled/>
-                    ) : (
-                      <Checkbox
-                        className="params-enable"
-                        checked={item.enable}
-                        onChange={(e) => this.changeBody(e.target.checked, index, "enable")}
-                      />
-                    )}
+                    <ParamsNameComponent example={item.example} desc={item.desc} name={item.name}/>
+                      &nbsp;
+                    {
+                      [1, "1"].includes(item.required)
+                        ? (<Checkbox className="params-enable" checked disabled/>)
+                        : (<Checkbox className="params-enable" checked={item.enable} onChange={(e) => this.changeBody(e.target.checked, index, "enable")}/>)
+                    }
                     <span className="eq-symbol">=</span>
                     {item.type === "file" ? (
                       "因Chrome最新版安全策略限制，不再支持文件上传"
@@ -803,38 +697,18 @@ export default class Run extends Component {
                     //   className="value"
                     // />
                     ) : (
-                      <Input
-                        value={item.value}
-                        className="value"
+                      <Input value={item.value} className="value" placeholder="参数值" id={`req_body_form_${index}`}
                         onChange={(e) => this.changeBody(e.target.value, index)}
-                        placeholder="参数值"
-                        id={`req_body_form_${index}`}
-                        addonAfter={
-                          <Icon
-                            type="edit"
-                            onClick={() => this.showModal(item.value, index, "req_body_form")}
-                          />
-                        }
-                      />
+                        addonAfter={<Icon type="edit" onClick={() => this.showModal(item.value, index, "req_body_form")}/>}/>
                     )}
                   </div>
                 ))}
-                <Button
-                  style={{ display: "none" }}
-                  type="primary"
-                  icon="plus"
-                  onClick={this.addBody}
-                >
+                <Button style={{ display: "none" }} type="primary" icon="plus" onClick={this.addBody}>
                     添加Form参数
                 </Button>
               </div>
             )}
-            {HTTP_METHOD[method].request_body &&
-              req_body_type === "file" && (
-              <div>
-                <Input type="file" id="single-file"/>
-              </div>
-            )}
+            {HTTP_METHOD[method].request_body && req_body_type === "file" && (<div><Input type="file" id="single-file"/></div>)}
           </Panel>
         </Collapse>
         <Tabs size="large" defaultActiveKey="res" className="response-tab">
@@ -966,3 +840,4 @@ export default class Run extends Component {
     );
   }
 }
+export default Postman

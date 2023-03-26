@@ -3,24 +3,25 @@ import PropTypes from "prop-types";
 import { Tabs, Layout } from "antd";
 import { Route, Switch, matchPath } from "react-router-dom";
 import { connect } from "react-redux";
+
 const { Content, Sider } = Layout;
-
-import "./interface.scss";
-
+import styles from "./Interface.module.scss";
+// InterfaceList
 import InterfaceMenu from "./InterfaceList/InterfaceMenu.js";
 import InterfaceList from "./InterfaceList/InterfaceList.js";
 import InterfaceContent from "./InterfaceList/InterfaceContent.js";
-
-import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.js";
-import InterfaceColContent from "./InterfaceCol/InterfaceColContent.js";
-import InterfaceCaseContent from "./InterfaceCol/InterfaceCaseContent.js";
-import { getProject } from "../../../reducer/modules/project";
+// InterfaceCol
+import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.jsx";
+import InterfaceColContent from "./InterfaceCol/InterfaceColContent.jsx";
+import InterfaceCaseContent from "./InterfaceCol/InterfaceCaseContent.jsx";
+//
+import { getProject } from "../../../reducer/modules/project.js";
 import { setColData } from "../../../reducer/modules/interfaceCol.js";
+//
 const contentRouter = {
   path: "/project/:id/interface/:action/:actionId",
   exact: true
 };
-
 const InterfaceRoute = (props) => {
   let C;
   if (props.match.params.action === "api") {
@@ -42,12 +43,10 @@ const InterfaceRoute = (props) => {
   }
   return <C {...props} />;
 };
-
 InterfaceRoute.propTypes = {
   match: PropTypes.object,
   history: PropTypes.object
 };
-
 @connect(
   (state) => ({
     isShowCol: state.interfaceCol.isShowCol
@@ -67,14 +66,12 @@ class Interface extends Component {
     setColData: PropTypes.func
     // fetchInterfaceColList: PropTypes.func
   };
-
   constructor(props) {
     super(props);
     // this.state = {
     //   curkey: this.props.match.params.action === 'api' ? 'api' : 'colOrCase'
     // }
   }
-
   onChange = (action) => {
     let params = this.props.match.params;
     if (action === "colOrCase") {
@@ -92,41 +89,26 @@ class Interface extends Component {
     const { action } = this.props.match.params;
     // const activeKey = this.state.curkey;
     const activeKey = action === "api" ? "api" : "colOrCase";
-
     return (
-      <Layout style={{ minHeight: "calc(100vh - 156px)", marginLeft: "24px", marginTop: "24px" }}>
+      <Layout className={styles.Interface} style={{ minHeight: "calc(100vh - 156px)", marginLeft: "24px", marginTop: "24px" }}>
         <Sider style={{ height: "100%" }} width={300}>
           <div className="left-menu">
             <Tabs type="card" className="tabs-large" activeKey={activeKey} onChange={this.onChange}>
-              <Tabs.TabPane tab="接口列表" key="api" />
-              <Tabs.TabPane tab="测试集合" key="colOrCase" />
+              <Tabs.TabPane tab="接口列表" key="api"/>
+              <Tabs.TabPane tab="测试集合" key="colOrCase"/>
             </Tabs>
-            {activeKey === "api" ? (
-              <InterfaceMenu
-                router={matchPath(this.props.location.pathname, contentRouter)}
-                projectId={this.props.match.params.id}
-              />
-            ) : (
-              <InterfaceColMenu
-                router={matchPath(this.props.location.pathname, contentRouter)}
-                projectId={this.props.match.params.id}
-              />
-            )}
+            {activeKey === "api"
+              ? <InterfaceMenu router={matchPath(this.props.location.pathname, contentRouter)} projectId={this.props.match.params.id}/>
+              : <InterfaceColMenu router={matchPath(this.props.location.pathname, contentRouter)} projectId={this.props.match.params.id}/>
+            }
           </div>
         </Sider>
         <Layout>
-          <Content
-            style={{
-              height: "100%",
-              margin: "0 24px 0 16px",
-              overflow: "initial",
-              backgroundColor: "#fff"
-            }}
-          >
+          <Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
             <div className="right-content">
               <Switch>
-                <Route exact path="/project/:id/interface/:action" component={InterfaceRoute} />
-                <Route {...contentRouter} component={InterfaceRoute} />
+                <Route exact path="/project/:id/interface/:action" component={InterfaceRoute}/>
+                <Route {...contentRouter} component={InterfaceRoute}/>
               </Switch>
             </div>
           </Content>
@@ -135,5 +117,4 @@ class Interface extends Component {
     );
   }
 }
-
 export default Interface;
