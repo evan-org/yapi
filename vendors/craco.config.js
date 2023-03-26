@@ -62,7 +62,6 @@ function invade(target, name, callback) {
     }
   });
 }
-let isWin = require("os").platform() === "win32";
 //
 module.exports = {
   reactScriptsVersion: "react-scripts",
@@ -125,7 +124,7 @@ module.exports = {
       noParse: [/node_modules\/jsondiffpatch\/public\/build\/.*js/, /tui-eritor/],
     },
     configure: (webpackConfig, { env, paths }) => {
-      paths.appBuild = resolve("./dist");
+      paths.appBuild = resolve("./example/client");
       paths.appSrc = resolve("./client");
       paths.appIndexJs = resolve("./client/index.js");
       paths.swSrc = resolve("./client/service-worker.js");
@@ -150,7 +149,7 @@ module.exports = {
       //
       webpackConfig.output = {
         ...webpackConfig.output,
-        path: path.resolve(__dirname, "dist"), // 修改打包输出文件目录 两步都要写
+        path: path.resolve(__dirname, "./example/client"), // 修改打包输出文件目录 两步都要写
         publicPath: whenProd(() => "/", "/"), // 静态资源publicpath
       }
       if (env === "development") {
