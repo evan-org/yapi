@@ -1,12 +1,13 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { autobind } from "core-decorators";
 import { Row, Col, Button, Tooltip } from "antd";
 import { Link } from "react-router-dom";
-import { addProject, fetchProjectList, delProject, } from "../../../../reducer/modules/project";
 import ProjectCard from "../../../../components/ProjectCard/ProjectCard.js";
 import ErrMsg from "../../../../components/ErrMsg/ErrMsg.js";
-import { autobind } from "core-decorators";
+//
+import { addProject, fetchProjectList, delProject, } from "../../../../reducer/modules/project";
 import { setBreadcrumb } from "../../../../reducer/modules/user";
 import "./ProjectList.scss";
 

@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Modal, Form, Input, Icon, Tooltip, Select, message, Button, Row, Col } from "antd";
 import {
-  updateProject,
-  fetchProjectList,
-  delProject,
+  updateProject, fetchProjectList, delProject,
   // changeUpdateModal,
   // changeTableLoading
 } from "../../../../reducer/modules/project";
@@ -105,13 +103,13 @@ class UpDateModal extends Component {
         updateProject(assignValue)
           .then((res) => {
             if (res.payload.data.errcode == 0) {
-              // changeUpdateModal(false, -1);
+            // changeUpdateModal(false, -1);
               message.success("修改成功! ");
               fetchProjectList(currGroup._id).then(() => {
-                // changeTableLoading(false);
+              // changeTableLoading(false);
               });
             } else {
-              // changeTableLoading(false);
+            // changeTableLoading(false);
               message.error(res.payload.data.errmsg);
             }
           })

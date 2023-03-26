@@ -12,7 +12,7 @@ import { Tabs, Layout, Spin } from "antd";
 import { fetchNewsData } from "../../reducer/modules/news.js";
 import { setCurrGroup } from "../../reducer/modules/group";
 //
-import "./Group.scss";
+import styles from "./Group.module.scss";
 import axios from "axios";
 //
 function GroupSider() {
@@ -82,7 +82,7 @@ function Group(props) {
     return <Spin/>
   }
   return (
-    <div className="projectGround">
+    <div className={styles.Group}>
       <Switch>
         <Redirect exact from="/group" to={"/group/" + groupId}/>
         <Route path="/group/:groupId" render={() => groupId !== -1 ? <GroupContent {...props}/> : null}/>

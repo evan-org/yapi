@@ -6,6 +6,7 @@ import { addProject } from "../../reducer/modules/project.js";
 import { fetchGroupList } from "../../reducer/modules/group.js";
 import { autobind } from "core-decorators";
 import { setBreadcrumb } from "../../reducer/modules/user";
+//
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -13,7 +14,6 @@ const RadioGroup = Radio.Group;
 import { pickRandomProperty, handlePath, nameLengthLimit } from "../../utils/common";
 import constants from "../../constants/variable.js";
 import { withRouter } from "react-router";
-import "./Addproject.scss";
 
 const formItemLayout = {
   labelCol: {
@@ -28,7 +28,6 @@ const formItemLayout = {
   },
   className: "form-item"
 };
-
 @connect(
   (state) => ({
     groupList: state.group.groupList,
@@ -58,14 +57,12 @@ class ProjectList extends Component {
     setBreadcrumb: PropTypes.func,
     fetchGroupList: PropTypes.func
   };
-
   handlePath = (e) => {
     let val = e.target.value;
     this.props.form.setFieldsValue({
       basepath: handlePath(val)
     });
   };
-
   // 确认添加项目
   @autobind
   handleOk(e) {
@@ -86,7 +83,6 @@ class ProjectList extends Component {
       }
     });
   }
-
   async UNSAFE_componentWillMount() {
     this.props.setBreadcrumb([{ name: "新建项目" }]);
     if (!this.props.currGroup._id) {
@@ -100,7 +96,6 @@ class ProjectList extends Component {
     });
     this.setState({ groupList: this.props.groupList });
   }
-
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -110,9 +105,8 @@ class ProjectList extends Component {
             <FormItem {...formItemLayout} label="项目名称">
               {getFieldDecorator("name", {
                 rules: nameLengthLimit("项目")
-              })(<Input />)}
+              })(<Input/>)}
             </FormItem>
-
             <FormItem {...formItemLayout} label="所属分组">
               {getFieldDecorator("group", {
                 initialValue: this.state.currGroupId + "",
@@ -138,16 +132,14 @@ class ProjectList extends Component {
                 </Select>
               )}
             </FormItem>
-
-            <hr className="breakline" />
-
+            <hr className="breakline"/>
             <FormItem
               {...formItemLayout}
               label={
                 <span>
                   基本路径&nbsp;
                   <Tooltip title="接口基本路径，为空是根路径">
-                    <Icon type="question-circle-o" />
+                    <Icon type="question-circle-o"/>
                   </Tooltip>
                 </span>
               }
@@ -159,9 +151,8 @@ class ProjectList extends Component {
                     message: "请输入项目基本路径"
                   }
                 ]
-              })(<Input onBlur={this.handlePath} />)}
+              })(<Input onBlur={this.handlePath}/>)}
             </FormItem>
-
             <FormItem {...formItemLayout} label="描述">
               {getFieldDecorator("desc", {
                 rules: [
@@ -171,9 +162,8 @@ class ProjectList extends Component {
                     max: 144
                   }
                 ]
-              })(<TextArea rows={4} />)}
+              })(<TextArea rows={4}/>)}
             </FormItem>
-
             <FormItem {...formItemLayout} label="权限">
               {getFieldDecorator("project_type", {
                 rules: [
@@ -185,10 +175,10 @@ class ProjectList extends Component {
               })(
                 <RadioGroup>
                   <Radio value="private" className="radio">
-                    <Icon type="lock" />私有<br />
+                    <Icon type="lock"/>私有<br/>
                     <span className="radio-desc">只有组长和项目开发者可以索引并查看项目信息</span>
                   </Radio>
-                  <br />
+                  <br/>
                   {/* <Radio value="public" className="radio">
                     <Icon type="unlock" />公开<br />
                     <span className="radio-desc">任何人都可以索引并查看项目信息</span>
@@ -209,5 +199,4 @@ class ProjectList extends Component {
     );
   }
 }
-
 export default Form.create()(ProjectList);
