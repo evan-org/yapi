@@ -119,9 +119,9 @@ module.exports = {
     alias: {
       "@": resolve("./client"),
       "src": resolve("./client"),
-      "@client": resolve("./client"),
-      "@common": resolve("./common"),
-      "@exts": resolve("./exts")
+      "client": resolve("./client"),
+      "common": resolve("./common"),
+      "exts": resolve("./exts")
     },
     plugins: {
       add: [
@@ -165,7 +165,7 @@ module.exports = {
   babel: {
     presets: [
       "@babel/preset-react",
-      ["@babel/preset-env"]
+      ["@babel/preset-env", {modules: "commonjs"}]
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
@@ -188,32 +188,39 @@ module.exports = {
   },
   devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {
     console.log("env, paths, proxy, allowedHost", env, paths, proxy, allowedHost);
-    console.log("devServerConfig", devServerConfig);
-    devServerConfig.static.publicPath.push(resolve("/"));
+    devServerConfig.publicPath = "/";
+
     devServerConfig.proxy = {
-      "/api": {
-        target: "http://127.0.0.1:3000",
-        changeOrigin: true,
-        source: true,
-        pathRewrite: { "^/api": "/", "^/login": "/" }
-      }
+      context: ["/api", "/login"],
+      // 转发端口自定义
+      target: "http://127.0.0.1:3030",
+      ws: true,
     }
+    /*
+    *
+    *  {
+        context: ["/api", "/login"],
+        // 转发端口自定义
+        target: "http://127.0.0.1:3030",
+        ws: true,
+      },*/
+    console.log("devServerConfig", devServerConfig);
     return devServerConfig
   },
   plugins: [
     // 配置lessOptions
-    {
-      // 配置less支持
-      plugin: CracoLessPlugin,
-      options: {
-        lessLoaderOptions: {
-          lessOptions: {
-            modifyVars: {},
-            javascriptEnabled: true,
-          },
-        },
-      },
-    },
+    // {
+    //   // 配置less支持
+    //   plugin: CracoLessPlugin,
+    //   options: {
+    //     lessLoaderOptions: {
+    //       lessOptions: {
+    //         modifyVars: {},
+    //         javascriptEnabled: true,
+    //       },
+    //     },
+    //   },
+    // },
     /*  {
         plugin: CracoLessPlugin,
         options: {

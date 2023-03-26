@@ -11,7 +11,7 @@ hooks = {
    * 第三方登录 //可参考 yapi-plugin-qsso 插件
    */
   third_login: {
-    type: 'component',
+    type: "component",
     mulit: false,
     listener: null
   },
@@ -24,7 +24,7 @@ hooks = {
    * importDataModule = {};
    */
   import_data: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
@@ -41,7 +41,7 @@ hooks = {
    * }
    */
   export_data: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
@@ -67,7 +67,7 @@ hooks = {
     }
    */
   interface_tab: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
@@ -76,13 +76,13 @@ hooks = {
    * 可以用插件针对某个接口的请求头或者数据进行修改或者记录
   */
   before_request: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
   /**
    * 在运行页面或单个测试也里每次发送完成后调用
-   * 返回值为响应原始值 + 
+   * 返回值为响应原始值 +
    * {
    *   type: 'inter' | 'case',
    *   projectId: string,
@@ -90,7 +90,7 @@ hooks = {
    * }
   */
   after_request: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
@@ -98,13 +98,13 @@ hooks = {
    * 在测试集里运行每次发送请求前调用
   */
   before_col_request: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
   /**
    * 在测试集里运行每次发送请求后调用
-   * 返回值为响应原始值 + 
+   * 返回值为响应原始值 +
    * {
    *   type: 'col',
    *   caseId: string,
@@ -113,7 +113,7 @@ hooks = {
    * }
   */
   after_col_request: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
@@ -153,7 +153,7 @@ hooks = {
 };
    */
   header_menu: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
@@ -197,20 +197,20 @@ hooks = {
 };
    */
   app_route: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
   /*
    * 添加 reducer
    * @param Object reducerModules
-   * 
+   *
    * @info
-   * importDataModule = {}; 
+   * importDataModule = {};
    */
 
   add_reducer: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
@@ -218,7 +218,7 @@ hooks = {
   /*
    * 添加 subnav 钩子
    * @param Object reducerModules
-   * 
+   *
    *  let routers = {
       interface: { name: '接口', path: "/project/:id/interface/:action", component:Interface },
       activity: { name: '动态', path: "/project/:id/activity", component:  Activity},
@@ -228,20 +228,20 @@ hooks = {
     }
    */
   sub_nav: {
-    type: 'listener',
+    type: "listener",
     mulit: true,
     listener: []
   },
   /*
    * 添加项目设置 nav
    * @param Object routers
-   * 
+   *
    *  let routers = {
       interface: { name: 'xxx', component: Xxx },
     }
    */
-  sub_setting_nav:{
-    type: 'listener',
+  sub_setting_nav: {
+    type: "listener",
     mulit: true,
     listener: []
   }
@@ -249,10 +249,10 @@ hooks = {
 
 function bindHook(name, listener) {
   if (!name) {
-    throw new Error('缺少hookname');
+    throw new Error("缺少hookname");
   }
   if (name in hooks === false) {
-    throw new Error('不存在的hookname');
+    throw new Error("不存在的hookname");
   }
   if (hooks[name].mulit === true) {
     hooks[name].listener.push(listener);
@@ -263,24 +263,24 @@ function bindHook(name, listener) {
 
 function emitHook(name, ...args) {
   if (!hooks[name]) {
-    throw new Error('不存在的hook name');
+    throw new Error("不存在的hook name");
   }
   let hook = hooks[name];
-  if (hook.mulit === true && hook.type === 'listener') {
+  if (hook.mulit === true && hook.type === "listener") {
     if (Array.isArray(hook.listener)) {
       let promiseAll = [];
-      hook.listener.forEach(item => {
-        if (typeof item === 'function') {
+      hook.listener.forEach((item) => {
+        if (typeof item === "function") {
           promiseAll.push(Promise.resolve(item.call(pluginModule, ...args)));
         }
       });
       return Promise.all(promiseAll);
     }
-  } else if (hook.mulit === false && hook.type === 'listener') {
-    if (typeof hook.listener === 'function') {
+  } else if (hook.mulit === false && hook.type === "listener") {
+    if (typeof hook.listener === "function") {
       return Promise.resolve(hook.listener.call(pluginModule, ...args));
     }
-  } else if (hook.type === 'component') {
+  } else if (hook.type === "component") {
     return hook.listener;
   }
 }
@@ -292,14 +292,14 @@ pluginModule = {
 };
 let pluginModuleList;
 try {
-  pluginModuleList = require('./plugin-module.js');
+  pluginModuleList = require("./plugin-module.js");
 } catch (err) {
   pluginModuleList = {};
 }
 
-Object.keys(pluginModuleList).forEach(plugin => {
-  if (!pluginModuleList[plugin]) return null;
-  if (pluginModuleList[plugin] && typeof pluginModuleList[plugin].module === 'function') {
+Object.keys(pluginModuleList).forEach((plugin) => {
+  if (!pluginModuleList[plugin]) {return null;}
+  if (pluginModuleList[plugin] && typeof pluginModuleList[plugin].module === "function") {
     pluginModuleList[plugin].module.call(pluginModule, pluginModuleList[plugin].options);
   }
 });
