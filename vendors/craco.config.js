@@ -126,25 +126,21 @@ module.exports = {
     configure: (webpackConfig, { env, paths }) => {
       paths.appBuild = resolve("./example/client");
       paths.appSrc = resolve("./client");
-      paths.appIndexJs = resolve("./client/index.js");
+      paths.appIndexJs = resolve("./client/index.jsx");
       paths.swSrc = resolve("./client/service-worker.js");
       paths.testsSetup = resolve("./client/testsSetup.js");
       paths.proxySetup = resolve("./client/proxySetup.js");
-      webpackConfig.entry = resolve("./client/index.js");
+      webpackConfig.entry = resolve("./client/index.jsx");
       //
-      const { isFound, match } = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
-      if (isFound) {
+      const resolveUrlLoader = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
+      const babels = getLoader(webpackConfig, loaderByName("babel-loader"));
+      if (babels.isFound) {
+        babels.match.loader.include = resolve("./client");
+      }
+      console.log(babels);
+      if (resolveUrlLoader.isFound) {
         removeLoaders(webpackConfig, loaderByName("resolve-url-loader"));
-        // console.log(match, webpackConfig.module.rules[1].oneOf);
-        // const { isFound, match } = getLoader(match.p, loaderByName("resolve-url-loader"));
-        // match.parent.forEach((e) => {
-        //   console.log(e);
-        //   if (typeof e === "object" && e.loader.indexOf("resolve-url-loader") > -1) {
-        //     e.options.root = resolve("./client");
-        //   }
-        // })
-        // webpackConfig.module.rules[index].loader.options.root = resolve("./client");
-        // match.loader.options.root = resolve("./client");
+        // resolveUrlLoader.match.loader.options.root = null;
       }
       //
       webpackConfig.output = {
@@ -170,7 +166,7 @@ module.exports = {
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
-      ["@babel/plugin-proposal-class-properties"],
+      ["@babel/plugin-proposal-class-properties", { loose: true }],
       "@babel/plugin-transform-modules-commonjs",
       ["@babel/plugin-transform-runtime"],
       [
