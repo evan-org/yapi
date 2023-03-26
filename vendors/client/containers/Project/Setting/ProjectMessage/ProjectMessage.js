@@ -1,4 +1,4 @@
-import React, { PureComponent as Component } from 'react';
+import React, { PureComponent as Component } from "react";
 import {
   Form,
   Input,
@@ -15,29 +15,29 @@ import {
   Alert,
   Modal,
   Popover
-} from 'antd';
-import PropTypes from 'prop-types';
+} from "antd";
+import PropTypes from "prop-types";
 import {
   updateProject,
   delProject,
   getProject,
   upsetProject
-} from '../../../../reducer/modules/project';
-import { fetchGroupMsg } from '../../../../reducer/modules/group';
-import { fetchGroupList } from '../../../../reducer/modules/group.js';
-import { setBreadcrumb } from '../../../../reducer/modules/user';
-import { connect } from 'react-redux';
+} from "../../../../reducer/modules/project";
+import { fetchGroupMsg } from "../../../../reducer/modules/group";
+import { fetchGroupList } from "../../../../reducer/modules/group.js";
+import { setBreadcrumb } from "../../../../reducer/modules/user";
+import { connect } from "react-redux";
 const { TextArea } = Input;
-import { withRouter } from 'react-router';
+import { withRouter } from "react-router";
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
-import constants from '../../../../constants/variable.js';
+import constants from "../../../../constants/variable.js";
 const confirm = Modal.confirm;
-import { nameLengthLimit, entries, trim, htmlFilter } from '../../../../common';
-import '../Setting.scss';
-import _ from 'underscore';
-import ProjectTag from './ProjectTag.js';
+import { nameLengthLimit, entries, trim, htmlFilter } from "../../../../common";
+import "../Setting.scss";
+import _ from "underscore";
+import ProjectTag from "./ProjectTag.js";
 // layout
 const formItemLayout = {
   labelCol: {
@@ -50,20 +50,18 @@ const formItemLayout = {
     xs: { span: 24 },
     sm: { span: 14 }
   },
-  className: 'form-item'
+  className: "form-item"
 };
 
 const Option = Select.Option;
 
 @connect(
-  state => {
-    return {
-      projectList: state.project.projectList,
-      groupList: state.group.groupList,
-      projectMsg: state.project.currProject,
-      currGroup: state.group.currGroup
-    };
-  },
+  (state) => ({
+    projectList: state.project.projectList,
+    groupList: state.group.groupList,
+    projectMsg: state.project.currProject,
+    currGroup: state.group.currGroup
+  }),
   {
     updateProject,
     delProject,
@@ -79,7 +77,7 @@ class ProjectMessage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      protocol: 'http://',
+      protocol: "http://",
       projectMsg: {},
       showDangerOptions: false
     };
@@ -102,29 +100,25 @@ class ProjectMessage extends Component {
   };
 
   // 确认修改
-  handleOk = e => {
+  handleOk = (e) => {
     e.preventDefault();
     const { form, updateProject, projectMsg, groupList } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
         let { tag } = this.tag.state;
         // let tag = this.refs.tag;
-        tag = tag.filter(val => {
-          return val.name !== '';
-        });
+        tag = tag.filter((val) => val.name !== "");
         let assignValue = Object.assign(projectMsg, values, { tag });
 
-        values.protocol = this.state.protocol.split(':')[0];
+        values.protocol = this.state.protocol.split(":")[0];
         const group_id = assignValue.group_id;
-        const selectGroup = _.find(groupList, item => {
-          return item._id == group_id;
-        });
+        const selectGroup = _.find(groupList, (item) => item._id == group_id);
 
         updateProject(assignValue)
-          .then(res => {
+          .then((res) => {
             if (res.payload.data.errcode == 0) {
               this.props.getProject(this.props.projectId);
-              message.success('修改成功! ');
+              message.success("修改成功! ");
 
               // 如果如果项目所在的分组位置发生改变
               this.props.fetchGroupMsg(group_id);
@@ -133,7 +127,7 @@ class ProjectMessage extends Component {
               this.props.setBreadcrumb([
                 {
                   name: selectGroup.group_name,
-                  href: '/group/' + group_id
+                  href: "/group/" + group_id
                 },
                 {
                   name: projectName
@@ -147,23 +141,23 @@ class ProjectMessage extends Component {
     });
   };
 
-  tagSubmit = tag => {
+  tagSubmit = (tag) => {
     this.tag = tag;
   };
 
   showConfirm = () => {
     let that = this;
     confirm({
-      title: '确认删除 ' + that.props.projectMsg.name + ' 项目吗？',
+      title: "确认删除 " + that.props.projectMsg.name + " 项目吗？",
       content: (
-        <div style={{ marginTop: '10px', fontSize: '13px', lineHeight: '25px' }}>
+        <div style={{ marginTop: "10px", fontSize: "13px", lineHeight: "25px" }}>
           <Alert
             message="警告：此操作非常危险,会删除该项目下面所有接口，并且无法恢复!"
             type="warning"
             banner
           />
-          <div style={{ marginTop: '16px' }}>
-            <p style={{ marginBottom: '8px' }}>
+          <div style={{ marginTop: "16px" }}>
+            <p style={{ marginBottom: "8px" }}>
               <b>请输入项目名称确认此操作:</b>
             </p>
             <Input id="project_name" size="large" />
@@ -171,39 +165,39 @@ class ProjectMessage extends Component {
         </div>
       ),
       onOk() {
-        let groupName = trim(document.getElementById('project_name').value);
+        let groupName = trim(document.getElementById("project_name").value);
         if (that.props.projectMsg.name !== groupName) {
-          message.error('项目名称有误');
+          message.error("项目名称有误");
           return new Promise((resolve, reject) => {
-            reject('error');
+            reject("error");
           });
         } else {
-          that.props.delProject(that.props.projectId).then(res => {
+          that.props.delProject(that.props.projectId).then((res) => {
             if (res.payload.data.errcode == 0) {
-              message.success('删除成功!');
-              that.props.history.push('/group/' + that.props.projectMsg.group_id);
+              message.success("删除成功!");
+              that.props.history.push("/group/" + that.props.projectMsg.group_id);
             }
           });
         }
       },
-      iconType: 'delete',
+      iconType: "delete",
       onCancel() {}
     });
   };
 
   // 修改项目头像的背景颜色
-  changeProjectColor = e => {
+  changeProjectColor = (e) => {
     const { _id, color, icon } = this.props.projectMsg;
-    this.props.upsetProject({ id: _id, color: e.target.value || color, icon }).then(res => {
+    this.props.upsetProject({ id: _id, color: e.target.value || color, icon }).then((res) => {
       if (res.payload.data.errcode === 0) {
         this.props.getProject(this.props.projectId);
       }
     });
   };
   // 修改项目头像的图标
-  changeProjectIcon = e => {
+  changeProjectIcon = (e) => {
     const { _id, color, icon } = this.props.projectMsg;
-    this.props.upsetProject({ id: _id, color, icon: e.target.value || icon }).then(res => {
+    this.props.upsetProject({ id: _id, color, icon: e.target.value || icon }).then((res) => {
       if (res.payload.data.errcode === 0) {
         this.props.getProject(this.props.projectId);
       }
@@ -218,7 +212,7 @@ class ProjectMessage extends Component {
     });
   };
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     await this.props.fetchGroupList();
     await this.props.fetchGroupMsg(this.props.projectMsg.group_id);
   }
@@ -228,9 +222,9 @@ class ProjectMessage extends Component {
     const { projectMsg, currGroup } = this.props;
     const mockUrl =
       location.protocol +
-      '//' +
+      "//" +
       location.hostname +
-      (location.port !== '' ? ':' + location.port : '') +
+      (location.port !== "" ? ":" + location.port : "") +
       `/mock/${projectMsg._id}${projectMsg.basepath}+$接口请求路径`;
     let initFormValues = {};
     const {
@@ -259,31 +253,27 @@ class ProjectMessage extends Component {
     const colorArr = entries(constants.PROJECT_COLOR);
     const colorSelector = (
       <RadioGroup onChange={this.changeProjectColor} value={projectMsg.color} className="color">
-        {colorArr.map((item, index) => {
-          return (
-            <RadioButton
-              key={index}
-              value={item[0]}
-              style={{ backgroundColor: item[1], color: '#fff', fontWeight: 'bold' }}
-            >
-              {item[0] === projectMsg.color ? <Icon type="check" /> : null}
-            </RadioButton>
-          );
-        })}
+        {colorArr.map((item, index) => (
+          <RadioButton
+            key={index}
+            value={item[0]}
+            style={{ backgroundColor: item[1], color: "#fff", fontWeight: "bold" }}
+          >
+            {item[0] === projectMsg.color ? <Icon type="check" /> : null}
+          </RadioButton>
+        ))}
       </RadioGroup>
     );
     const iconSelector = (
       <RadioGroup onChange={this.changeProjectIcon} value={projectMsg.icon} className="icon">
-        {constants.PROJECT_ICON.map(item => {
-          return (
-            <RadioButton key={item} value={item} style={{ fontWeight: 'bold' }}>
-              <Icon type={item} />
-            </RadioButton>
-          );
-        })}
+        {constants.PROJECT_ICON.map((item) => (
+          <RadioButton key={item} value={item} style={{ fontWeight: "bold" }}>
+            <Icon type={item} />
+          </RadioButton>
+        ))}
       </RadioGroup>
     );
-    const selectDisbaled = projectMsg.role === 'owner' || projectMsg.role === 'admin';
+    const selectDisbaled = projectMsg.role === "owner" || projectMsg.role === "admin";
     return (
       <div>
         <div className="m-panel">
@@ -297,7 +287,7 @@ class ProjectMessage extends Component {
                 overlayClassName="change-project-container"
               >
                 <Icon
-                  type={projectMsg.icon || 'star-o'}
+                  type={projectMsg.icon || "star-o"}
                   className="ui-logo"
                   style={{
                     backgroundColor:
@@ -308,7 +298,7 @@ class ProjectMessage extends Component {
             </Col>
             <Col xs={18} sm={15} lg={19} className="setting-intro">
               <h2 className="ui-title">
-                {(currGroup.group_name || '') + ' / ' + (projectMsg.name || '')}
+                {(currGroup.group_name || "") + " / " + (projectMsg.name || "")}
               </h2>
               {/* <p className="ui-desc">{projectMsg.desc}</p> */}
             </Col>
@@ -319,18 +309,18 @@ class ProjectMessage extends Component {
               <span>{this.props.projectMsg._id}</span>
             </FormItem>
             <FormItem {...formItemLayout} label="项目名称">
-              {getFieldDecorator('name', {
+              {getFieldDecorator("name", {
                 initialValue: initFormValues.name,
-                rules: nameLengthLimit('项目')
+                rules: nameLengthLimit("项目")
               })(<Input />)}
             </FormItem>
             <FormItem {...formItemLayout} label="所属分组">
-              {getFieldDecorator('group_id', {
-                initialValue: initFormValues.group_id + '',
+              {getFieldDecorator("group_id", {
+                initialValue: initFormValues.group_id + "",
                 rules: [
                   {
                     required: true,
-                    message: '请选择项目所属的分组!'
+                    message: "请选择项目所属的分组!"
                   }
                 ]
               })(
@@ -355,12 +345,12 @@ class ProjectMessage extends Component {
                 </span>
               }
             >
-              {getFieldDecorator('basepath', {
+              {getFieldDecorator("basepath", {
                 initialValue: initFormValues.basepath,
                 rules: [
                   {
                     required: false,
-                    message: '请输入基本路径! '
+                    message: "请输入基本路径! "
                   }
                 ]
               })(<Input />)}
@@ -381,7 +371,7 @@ class ProjectMessage extends Component {
             </FormItem>
 
             <FormItem {...formItemLayout} label="描述">
-              {getFieldDecorator('desc', {
+              {getFieldDecorator("desc", {
                 initialValue: initFormValues.desc,
                 rules: [
                   {
@@ -416,8 +406,8 @@ class ProjectMessage extends Component {
                 </span>
               }
             >
-              {getFieldDecorator('strice', {
-                valuePropName: 'checked',
+              {getFieldDecorator("strice", {
+                valuePropName: "checked",
                 initialValue: initFormValues.strice
               })(<Switch checkedChildren="开" unCheckedChildren="关" />)}
             </FormItem>
@@ -432,20 +422,20 @@ class ProjectMessage extends Component {
                 </span>
               }
             >
-              {getFieldDecorator('is_json5', {
-                valuePropName: 'checked',
+              {getFieldDecorator("is_json5", {
+                valuePropName: "checked",
                 initialValue: initFormValues.is_json5
               })(<Switch checkedChildren="开" unCheckedChildren="关" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="默认开启消息通知">
-              {getFieldDecorator('switch_notice', {
-                valuePropName: 'checked',
+              {getFieldDecorator("switch_notice", {
+                valuePropName: "checked",
                 initialValue: initFormValues.switch_notice
               })(<Switch checkedChildren="开" unCheckedChildren="关" />)}
             </FormItem>
 
             <FormItem {...formItemLayout} label="权限">
-              {getFieldDecorator('project_type', {
+              {getFieldDecorator("project_type", {
                 rules: [
                   {
                     required: true
@@ -459,11 +449,11 @@ class ProjectMessage extends Component {
                     <span className="radio-desc">只有组长和项目开发者可以索引并查看项目信息</span>
                   </Radio>
                   <br />
-                  {projectMsg.role === 'admin' && <Radio value="public" className="radio">
+                  {projectMsg.role === "admin" && <Radio value="public" className="radio">
                     <Icon type="unlock" />公开<br />
                     <span className="radio-desc">任何人都可以索引并查看项目信息</span>
                   </Radio>}
-                  
+
                 </RadioGroup>
               )}
             </FormItem>
@@ -482,18 +472,18 @@ class ProjectMessage extends Component {
           </div>
 
           {/* 只有组长和管理员有权限删除项目 */}
-          {projectMsg.role === 'owner' || projectMsg.role === 'admin' ? (
+          {projectMsg.role === "owner" || projectMsg.role === "admin" ? (
             <div className="danger-container">
               <div className="title">
                 <h2 className="content">
                   <Icon type="exclamation-circle-o" /> 危险操作
                 </h2>
                 <Button onClick={this.toggleDangerOptions}>
-                  查 看<Icon type={this.state.showDangerOptions ? 'up' : 'down'} />
+                  查 看<Icon type={this.state.showDangerOptions ? "up" : "down"} />
                 </Button>
               </div>
               {this.state.showDangerOptions ? (
-                <Card hoverable={true} className="card-danger">
+                <Card hoverable className="card-danger">
                   <div className="card-danger-content">
                     <h3>删除项目</h3>
                     <p>项目一旦删除，将无法恢复数据，请慎重操作！</p>

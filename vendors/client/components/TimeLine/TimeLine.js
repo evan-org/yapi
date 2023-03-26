@@ -1,25 +1,25 @@
-import React, { PureComponent as Component } from 'react';
-import { Timeline, Spin, Row, Col, Tag, Avatar, Button, Modal, AutoComplete } from 'antd';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { formatTime } from '../../common.js';
-import showDiffMsg from '../../../common/diff-view.js';
-import variable from '../../constants/variable';
-import { Link } from 'react-router-dom';
-import { fetchNewsData, fetchMoreNews } from '../../reducer/modules/news.js';
-import { fetchInterfaceList } from '../../reducer/modules/interface.js';
-import ErrMsg from '../ErrMsg/ErrMsg.js';
-const jsondiffpatch = require('jsondiffpatch/dist/jsondiffpatch.umd.js');
+import React, { PureComponent as Component } from "react";
+import { Timeline, Spin, Row, Col, Tag, Avatar, Button, Modal, AutoComplete } from "antd";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { formatTime } from "../../common.js";
+import showDiffMsg from "../../../common/diff-view.js";
+import variable from "../../constants/variable";
+import { Link } from "react-router-dom";
+import { fetchNewsData, fetchMoreNews } from "../../reducer/modules/news.js";
+import { fetchInterfaceList } from "../../reducer/modules/interface.js";
+import ErrMsg from "../ErrMsg/ErrMsg.js";
+const jsondiffpatch = require("jsondiffpatch/dist/jsondiffpatch.umd.js");
 const formattersHtml = jsondiffpatch.formatters.html;
-import 'jsondiffpatch/dist/formatters-styles/annotated.css';
-import 'jsondiffpatch/dist/formatters-styles/html.css';
-import './TimeLine.scss';
-import { timeago } from '../../../common/utils.js';
+import "jsondiffpatch/dist/formatters-styles/annotated.css";
+import "jsondiffpatch/dist/formatters-styles/html.css";
+import "./TimeLine.scss";
+import { timeago } from "../../../common/utils.js";
 
 // const Option = AutoComplete.Option;
 const { Option, OptGroup } = AutoComplete;
 
-const AddDiffView = props => {
+const AddDiffView = (props) => {
   const { title, content, className } = props;
 
   if (!content) {
@@ -43,13 +43,11 @@ AddDiffView.propTypes = {
 // timeago(new Date().getTime() - 40);
 
 @connect(
-  state => {
-    return {
-      newsData: state.news.newsData,
-      curpage: state.news.curpage,
-      curUid: state.user.uid
-    };
-  },
+  (state) => ({
+    newsData: state.news.newsData,
+    curpage: state.news.curpage,
+    curUid: state.user.uid
+  }),
   {
     fetchNewsData,
     fetchMoreNews,
@@ -73,13 +71,13 @@ class TimeTree extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bidden: '',
+      bidden: "",
       loading: false,
       visible: false,
       curDiffData: {},
       apiList: []
     };
-    this.curSelectValue = '';
+    this.curSelectValue = "";
   }
 
   getMore() {
@@ -98,7 +96,7 @@ class TimeTree extends Component {
         .then(function() {
           that.setState({ loading: false });
           if (that.props.newsData.total === that.props.curpage) {
-            that.setState({ bidden: 'logbidden' });
+            that.setState({ bidden: "logbidden" });
           }
         });
     }
@@ -110,14 +108,14 @@ class TimeTree extends Component {
     });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.fetchNewsData(this.props.typeid, this.props.type, 1, 10);
-    if (this.props.type === 'project') {
+    if (this.props.type === "project") {
       this.getApiList();
     }
   }
 
-  openDiff = data => {
+  openDiff = (data) => {
     this.setState({
       curDiffData: data,
       visible: true
@@ -127,14 +125,14 @@ class TimeTree extends Component {
   async getApiList() {
     let result = await this.props.fetchInterfaceList({
       project_id: this.props.typeid,
-      limit: 'all'
+      limit: "all"
     });
     this.setState({
       apiList: result.payload.data.data.list
     });
   }
 
-  handleSelectApi = selectValue => {
+  handleSelectApi = (selectValue) => {
     this.curSelectValue = selectValue;
     this.props.fetchNewsData(this.props.typeid, this.props.type, 1, 10, selectValue);
   };
@@ -144,21 +142,21 @@ class TimeTree extends Component {
 
     const curDiffData = this.state.curDiffData;
     let logType = {
-      project: '项目',
-      group: '分组',
-      interface: '接口',
-      interface_col: '接口集',
-      user: '用户',
-      other: '其他'
+      project: "项目",
+      group: "分组",
+      interface: "接口",
+      interface_col: "接口集",
+      user: "用户",
+      other: "其他"
     };
 
-    const children = this.state.apiList.map(item => {
-      let methodColor = variable.METHOD_COLOR[item.method ? item.method.toLowerCase() : 'get'];
+    const children = this.state.apiList.map((item) => {
+      let methodColor = variable.METHOD_COLOR[item.method ? item.method.toLowerCase() : "get"];
       return (
-        <Option title={item.title} value={item._id + ''} path={item.path} key={item._id}>
-          {item.title}{' '}
+        <Option title={item.title} value={item._id + ""} path={item.path} key={item._id}>
+          {item.title}{" "}
           <Tag
-            style={{ color: methodColor ? methodColor.color : '#cfefdf', backgroundColor: methodColor ? methodColor.bac : '#00a854', border: 'unset' }}
+            style={{ color: methodColor ? methodColor.color : "#cfefdf", backgroundColor: methodColor ? methodColor.bac : "#00a854", border: "unset" }}
           >
             {item.method}
           </Tag>
@@ -176,7 +174,7 @@ class TimeTree extends Component {
       data = data.map((item, i) => {
         let interfaceDiff = false;
         // 去掉了 && item.data.interface_id
-        if (item.data && typeof item.data === 'object') {
+        if (item.data && typeof item.data === "object") {
           interfaceDiff = true;
         }
         return (
@@ -190,19 +188,19 @@ class TimeTree extends Component {
           >
             <div className="logMesHeade">
               <span className="logoTimeago">{timeago(item.add_time)}</span>
-              {/*<span className="logusername"><Link to={`/user/profile/${item.uid}`}><Icon type="user" />{item.username}</Link></span>*/}
+              {/* <span className="logusername"><Link to={`/user/profile/${item.uid}`}><Icon type="user" />{item.username}</Link></span>*/}
               <span className="logtype">{logType[item.type]}动态</span>
               <span className="logtime">{formatTime(item.add_time)}</span>
             </div>
             <span className="logcontent" dangerouslySetInnerHTML={{ __html: item.content }} />
-            <div style={{ padding: '10px 0 0 10px' }}>
+            <div style={{ padding: "10px 0 0 10px" }}>
               {interfaceDiff && <Button onClick={() => this.openDiff(item.data)}>改动详情</Button>}
             </div>
           </Timeline.Item>
         );
       });
     } else {
-      data = '';
+      data = "";
     }
     let pending =
       this.props.newsData.total <= this.props.curpage ? (
@@ -220,7 +218,7 @@ class TimeTree extends Component {
     return (
       <section className="news-timeline">
         <Modal
-          style={{ minWidth: '800px' }}
+          style={{ minWidth: "800px" }}
           title="Api 改动日志"
           visible={this.state.visible}
           footer={null}
@@ -228,30 +226,28 @@ class TimeTree extends Component {
         >
           <i>注： 绿色代表新增内容，红色代表删除内容</i>
           <div className="project-interface-change-content">
-            {diffView.map((item, index) => {
-              return (
-                <AddDiffView
-                  className="item-content"
-                  title={item.title}
-                  key={index}
-                  content={item.content}
-                />
-              );
-            })}
+            {diffView.map((item, index) => (
+              <AddDiffView
+                className="item-content"
+                title={item.title}
+                key={index}
+                content={item.content}
+              />
+            ))}
             {diffView.length === 0 && <ErrMsg type="noChange" />}
           </div>
         </Modal>
-        {this.props.type === 'project' && (
+        {this.props.type === "project" && (
           <Row className="news-search">
             <Col span="3">选择查询的 Api：</Col>
             <Col span="10">
               <AutoComplete
                 onSelect={this.handleSelectApi}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 placeholder="Select Api"
                 optionLabelProp="title"
                 filterOption={(inputValue, options) => {
-                  if (options.props.value == '') return true;
+                  if (options.props.value == "") {return true;}
                   if (
                     options.props.path.indexOf(inputValue) !== -1 ||
                     options.props.title.indexOf(inputValue) !== -1

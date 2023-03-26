@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { Icon, Input, Tooltip } from 'antd';
-import PropTypes from 'prop-types';
-import './Label.scss';
+import React, { Component } from "react";
+import { Icon, Input, Tooltip } from "antd";
+import PropTypes from "prop-types";
+import "./Label.scss";
 
 export default class Label extends Component {
   constructor(props) {
     super(props);
     this.state = {
       inputShow: false,
-      inputValue: ''
+      inputValue: ""
     };
   }
   static propTypes = {
@@ -19,10 +19,10 @@ export default class Label extends Component {
   toggle = () => {
     this.setState({ inputShow: !this.state.inputShow });
   };
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({ inputValue: event.target.value });
   };
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.desc === nextProps.desc) {
       this.setState({
         inputShow: false

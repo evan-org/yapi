@@ -1,15 +1,13 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { changeMenuItem } from '../reducer/modules/menu';
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { changeMenuItem } from "../reducer/modules/menu";
 
 export function requireAuthentication(Component) {
   return @connect(
-    state => {
-      return {
-        isAuthenticated: state.user.isLogin
-      };
-    },
+    (state) => ({
+      isAuthenticated: state.user.isLogin
+    }),
     {
       changeMenuItem
     }
@@ -25,16 +23,16 @@ export function requireAuthentication(Component) {
       history: PropTypes.object,
       changeMenuItem: PropTypes.func
     };
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       this.checkAuth();
     }
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
       this.checkAuth();
     }
     checkAuth() {
       if (!this.props.isAuthenticated) {
-        this.props.history.push('/');
-        this.props.changeMenuItem('/');
+        this.props.history.push("/");
+        this.props.changeMenuItem("/");
       }
     }
     render() {

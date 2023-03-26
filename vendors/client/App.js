@@ -68,6 +68,7 @@ const AppRoute = {
 plugin.emitHook("app_route", AppRoute);
 function App(props) {
   console.log(props);
+  console.log(process.env);
   // const [login, setLogin] = useState(LOADING_STATUS);
   //
   useEffect(() => {
@@ -91,7 +92,7 @@ function App(props) {
           <div className="g-main">
             <div className="router-main">
               {curUserRole === "admin" && <Notify/>}
-              {/* <AlertContent/>*/}
+              <AlertContent/>
               {loginState !== 1 ? <Header/> : null}
               <div className="router-container">
                 {Object.keys(AppRoute).map((key) => {

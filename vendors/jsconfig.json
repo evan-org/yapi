@@ -28,5 +28,5 @@
     }
   },
   "include": ["client","common"],
-  "exclude": ["node_modules", "dist", ".yarn", "docs", "static"]
+  "exclude": ["node_modules", "dist", ".yarn", "docs", "static", "example"]
 }

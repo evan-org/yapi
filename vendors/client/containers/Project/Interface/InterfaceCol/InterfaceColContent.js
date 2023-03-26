@@ -157,7 +157,7 @@ class InterfaceColContent extends Component {
     this.changeCollapseClose();
     this.handleColdata(this.props.currCaseList);
   }
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     const result = await this.props.fetchInterfaceColList(this.props.match.params.id);
     await this.props.getToken(this.props.match.params.id);
     let { currColId } = this.props;
@@ -431,7 +431,7 @@ class InterfaceColContent extends Component {
   handleInsertCode = (code) => {
     this.aceEditor.editor.insertCode(code);
   };
-  async componentWillReceiveProps(nextProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps) {
     let newColId = !isNaN(nextProps.match.params.actionId) ? +nextProps.match.params.actionId : 0;
     if (newColId && ((this.currColId && newColId !== this.currColId) || nextProps.isRander)) {
       this.currColId = newColId;

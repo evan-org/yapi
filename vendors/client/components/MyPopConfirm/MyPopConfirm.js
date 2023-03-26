@@ -1,6 +1,6 @@
-import React, { PureComponent as Component } from 'react';
-import { Modal, Button } from 'antd';
-import PropTypes from 'prop-types';
+import React, { PureComponent as Component } from "react";
+import { Modal, Button } from "antd";
+import PropTypes from "prop-types";
 
 // 嵌入到 BrowserRouter 内部，覆盖掉默认的 window.confirm
 // http://reacttraining.cn/web/api/BrowserRouter/getUserConfirmation-func
@@ -26,7 +26,7 @@ class MyPopConfirm extends Component {
     this.setState({ visible: false });
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this.setState({ visible: true });
   }
 
