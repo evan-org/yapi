@@ -1,9 +1,11 @@
 const path = require("path");
 const fs = require("fs");
-const { whenProd } = require("@craco/craco");
+const { whenProd, getLoader, loaderByName, removeLoaders } = require("@craco/craco");
+const CracoEnvPlugin = require("craco-plugin-env")
 const CracoLessPlugin = require("craco-less");
 // 打包gzip
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
+const sassResourcesLoader = require("craco-sass-resources-loader");
 // 打包进程分析
 // const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
 // 分析打包时间
@@ -63,7 +65,7 @@ function invade(target, name, callback) {
 let isWin = require("os").platform() === "win32";
 //
 module.exports = {
-  // reactScriptsVersion: "react-scripts",
+  reactScriptsVersion: "react-scripts",
   // 配置打包后的文件位置
   /* style: {
     modules: {
@@ -91,29 +93,11 @@ module.exports = {
       loaderOptions: (postcssLoaderOptions, { env, paths }) => postcssLoaderOptions
     }
   },*/
-  style: {
-    // modules: {
-    //   localIdentName: "[local]___[hash:base64:5]",
-    // },
-    sass: {
-      loaderOptions: {
-        // Prefer 'sass' (dart-sass) over 'node-sass' if both packages are installed.
-        implementation: require("sass"),
-        // Workaround for this bug: https://github.com/webpack-contrib/sass-loader/issues/804
-        webpackImporter: true,
-      },
-    },
-    //   postcss: {
-    //     mode: "file",
-    //   },
-  },
-  eslint: {
-    mode: "file",
-  },
   // env: {
   //   mode: "file"
   // },
   webpack: {
+    context: resolve("./client"),
     // 别名
     alias: {
       "@": resolve("./client"),
@@ -147,17 +131,35 @@ module.exports = {
       paths.swSrc = resolve("./client/service-worker.js");
       paths.testsSetup = resolve("./client/testsSetup.js");
       paths.proxySetup = resolve("./client/proxySetup.js");
-      // console.log("configure new", paths, webpackConfig);
       webpackConfig.entry = resolve("./client/index.js");
-      webpackConfig.output.path = resolve("./dist");
-      // webpackConfig.output.publicPath = "/";
+      //
+      const { isFound, match } = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
+      if (isFound) {
+        removeLoaders(webpackConfig, loaderByName("resolve-url-loader"));
+        // console.log(match, webpackConfig.module.rules[1].oneOf);
+        // const { isFound, match } = getLoader(match.p, loaderByName("resolve-url-loader"));
+        // match.parent.forEach((e) => {
+        //   console.log(e);
+        //   if (typeof e === "object" && e.loader.indexOf("resolve-url-loader") > -1) {
+        //     e.options.root = resolve("./client");
+        //   }
+        // })
+        // webpackConfig.module.rules[index].loader.options.root = resolve("./client");
+        // match.loader.options.root = resolve("./client");
+      }
+      //
+      webpackConfig.output = {
+        ...webpackConfig.output,
+        path: path.resolve(__dirname, "dist"), // 修改打包输出文件目录 两步都要写
+        publicPath: whenProd(() => "/", "/"), // 静态资源publicpath
+      }
       if (env === "development") {
         webpackConfig.devtool = "cheap-module-source-map";
         console.log("当前是开发环境", env, "devtool:", "cheap-module-source-map");
       }
       // webpackConfig.devtool = false;
       //
-      console.log("configure new\n\n", webpackConfig);
+      console.log("configure new\n\n", JSON.stringify(webpackConfig.module.rules));
       return webpackConfig;
       // return smp.wrap(webpackConfig);
     }
@@ -169,7 +171,7 @@ module.exports = {
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
-      ["@babel/plugin-proposal-class-properties", { loose: true }],
+      ["@babel/plugin-proposal-class-properties"],
       ["@babel/plugin-transform-runtime"],
       [
         "import",
@@ -194,7 +196,7 @@ module.exports = {
       port: 4000,
       hot: true,
       proxy: [{
-        context: ["/api", "/login"],
+        context: ["/api"],
         // 转发端口自定义
         target: "http://127.0.0.1:3030",
         changeOrigin: true,
@@ -204,65 +206,34 @@ module.exports = {
     return devServerConfig
   },
   plugins: [
+    {
+      plugin: CracoEnvPlugin,
+      options: {
+        variables: {}
+      }
+    },
     // 配置lessOptions
-    // {
-    //   // 配置less支持
-    //   plugin: CracoLessPlugin,
-    //   options: {
-    //     lessLoaderOptions: {
-    //       lessOptions: {
-    //         modifyVars: {},
-    //         javascriptEnabled: true,
-    //       },
-    //     },
-    //   },
-    // },
-    /*  {
-        plugin: CracoLessPlugin,
-        options: {
-          cssLoaderOptions: {
-            modules: { localIdentName: "[local]_[hash:base64:5]" }
+    {
+      // 配置less支持
+      plugin: CracoLessPlugin,
+      options: {
+        lessLoaderOptions: {
+          lessOptions: {
+            modifyVars: {},
+            javascriptEnabled: true,
           },
-          lessLoaderOptions: {
-            lessOptions: {
-              modifyVars: {
-                "@primary-color": "#1DA57A",
-                "@link-color": "#1DA57A",
-                "@border-radius-base": "2px"
-              },
-              javascriptEnabled: true
-            }
-          }
-        }
-      },*/
-    // {
-    //   plugin: CracoLessPlugin,
-    //   options: {
-    //     // additionalData: `@import "${resolve("./client/styles/antd-ui/variables.less")}";`,
-    //     modifyLessRule(lessRule, context) {
-    //       // You have to exclude these file suffixes first,
-    //       // if you want to modify the less module's suffix
-    //       lessRule.exclude = /\.m\.less$/;
-    //       return lessRule;
-    //     },
-    //     modifyLessModuleRule(lessModuleRule, context) {
-    //       // Configure the file suffix
-    //       lessModuleRule.test = /\.m\.less$/;
-    //
-    //       // Configure the generated local ident name.
-    //       const cssLoader = lessModuleRule.use.find(loaderByName("css-loader"));
-    //       cssLoader.options.modules = {
-    //         localIdentName: "[local]_[hash:base64:5]",
-    //       };
-    //       return lessModuleRule;
-    //     },
-    //   },
-    // },
-    // {
-    //   plugin: CracoAntDesignPlugin,
-    //   options: {
-    //     customizeThemeLessPath: resolve("./client/styles/antd-ui/variables.less")
-    //   },
-    // },
-  ]
+        },
+      },
+    },
+    {
+      plugin: sassResourcesLoader,
+      options: {
+        resources: ["./client/styles/mixin.scss"],
+        root: resolve("./client")
+      },
+    }
+  ],
+  eslint: {
+    mode: "file",
+  },
 }

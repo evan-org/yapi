@@ -1,23 +1,23 @@
-const moment = require('moment');
-const constants = require('./constants/variable');
-const Mock = require('mockjs');
-const json5 = require('json5');
-const MockExtra = require('common/mock-extra.js');
+const moment = require("moment");
+const constants = require("./constants/variable");
+const Mock = require("mockjs");
+const json5 = require("json5");
+const MockExtra = require("common/mock-extra.js");
 
 const Roles = {
-  0: 'admin',
-  10: 'owner',
-  20: 'dev',
-  30: 'guest',
-  40: 'member'
+  0: "admin",
+  10: "owner",
+  20: "dev",
+  30: "guest",
+  40: "member"
 };
 
 const roleAction = {
-  manageUserlist: 'admin',
-  changeMemberRole: 'owner',
-  editInterface: 'dev',
-  viewPrivateInterface: 'guest',
-  viewGroup: 'guest'
+  manageUserlist: "admin",
+  changeMemberRole: "owner",
+  editInterface: "dev",
+  viewPrivateInterface: "guest",
+  viewGroup: "guest"
 };
 
 function isJson(json) {
@@ -73,13 +73,9 @@ exports.deepCopyJson = deepCopyJson;
 
 exports.isJson5 = isJson5;
 
-exports.checkAuth = (action, role) => {
-  return Roles[roleAction[action]] <= Roles[role];
-};
+exports.checkAuth = (action, role) => Roles[roleAction[action]] <= Roles[role];
 
-exports.formatTime = timestamp => {
-  return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
-};
+exports.formatTime = (timestamp) => moment.unix(timestamp).format("YYYY-MM-DD HH:mm:ss");
 
 // 防抖函数，减少高频触发的函数执行的频率
 // 请在 constructor 里使用:
@@ -94,7 +90,7 @@ exports.debounce = (func, wait) => {
 };
 
 // 从 Javascript 对象中选取随机属性
-exports.pickRandomProperty = obj => {
+exports.pickRandomProperty = (obj) => {
   let result;
   let count = 0;
   for (let prop in obj) {
@@ -115,39 +111,39 @@ function trim(str) {
     return str;
   }
 
-  str = str + '';
+  str = str + "";
 
-  return str.replace(/(^\s*)|(\s*$)/g, '');
+  return str.replace(/(^\s*)|(\s*$)/g, "");
 }
 
 exports.trim = trim;
 
-exports.handlePath = path => {
+exports.handlePath = (path) => {
   path = trim(path);
   if (!path) {
     return path;
   }
-  if (path === '/') {
-    return '';
+  if (path === "/") {
+    return "";
   }
-  path = path[0] !== '/' ? '/' + path : path;
-  path = path[path.length - 1] === '/' ? path.substr(0, path.length - 1) : path;
+  path = path[0] !== "/" ? "/" + path : path;
+  path = path[path.length - 1] === "/" ? path.substr(0, path.length - 1) : path;
   return path;
 };
 
-exports.handleApiPath = path => {
+exports.handleApiPath = (path) => {
   if (!path) {
-    return '';
+    return "";
   }
   path = trim(path);
-  path = path[0] !== '/' ? '/' + path : path;
+  path = path[0] !== "/" ? "/" + path : path;
   return path;
 };
 
 // 名称限制 constants.NAME_LIMIT 字符
-exports.nameLengthLimit = type => {
+exports.nameLengthLimit = (type) => {
   // 返回字符串长度，汉字计数为2
-  const strLength = str => {
+  const strLength = (str) => {
     let length = 0;
     for (let i = 0; i < str.length; i++) {
       str.charCodeAt(i) > 255 ? (length += 2) : length++;
@@ -162,11 +158,11 @@ exports.nameLengthLimit = type => {
         const len = value ? strLength(value) : 0;
         if (len > constants.NAME_LIMIT) {
           callback(
-            '请输入' + type + '名称，长度不超过' + constants.NAME_LIMIT + '字符(中文算作2字符)!'
+            "请输入" + type + "名称，长度不超过" + constants.NAME_LIMIT + "字符(中文算作2字符)!"
           );
         } else if (len === 0) {
           callback(
-            '请输入' + type + '名称，长度不超过' + constants.NAME_LIMIT + '字符(中文算作2字符)!'
+            "请输入" + type + "名称，长度不超过" + constants.NAME_LIMIT + "字符(中文算作2字符)!"
           );
         } else {
           return callback();
@@ -178,13 +174,13 @@ exports.nameLengthLimit = type => {
 
 // 去除所有html标签只保留文字
 
-exports.htmlFilter = html => {
+exports.htmlFilter = (html) => {
   let reg = /<\/?.+?\/?>/g;
-  return html.replace(reg, '') || '新项目';
+  return html.replace(reg, "") || "新项目";
 };
 
 // 实现 Object.entries() 方法
-exports.entries = obj => {
+exports.entries = (obj) => {
   let res = [];
   for (let key in obj) {
     res.push([key, obj[key]]);
@@ -192,11 +188,11 @@ exports.entries = obj => {
   return res;
 };
 
-exports.getMockText = mockTpl => {
+exports.getMockText = (mockTpl) => {
   try {
-    return JSON.stringify(Mock.mock(MockExtra(json5.parse(mockTpl), {})), null, '  ');
+    return JSON.stringify(Mock.mock(MockExtra(json5.parse(mockTpl), {})), null, "  ");
   } catch (err) {
-    return '';
+    return "";
   }
 };
 /**

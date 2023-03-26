@@ -13,6 +13,8 @@ import MyPopConfirm from './components/MyPopConfirm/MyPopConfirm';
 import { checkLoginState } from './reducer/modules/user';
 import { requireAuthentication } from './components/AuthenticatedComponent';
 import Notify from './components/Notify/Notify';
+import "./styles/App.scss";
+import "./styles/theme.less";
 
 const plugin = require('client/plugin.js');
 
