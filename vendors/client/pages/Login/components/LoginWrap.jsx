@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Tabs } from "antd";
 import LoginForm from "./LoginForm";
-import RegForm from "../Reg";
+import RegForm from "./Reg";
 const TabPane = Tabs.TabPane;
 //
 class LoginWrap extends Component {

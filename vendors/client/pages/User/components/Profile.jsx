@@ -1,9 +1,9 @@
 import React, { PureComponent as Component } from "react";
 import { Row, Col, Input, Button, Select, message, Upload, Tooltip } from "antd";
 import axios from "axios";
-import { formatTime } from "../../utils/common.js";
+import { formatTime } from "../../../utils/common.js";
 import PropTypes from "prop-types";
-import { setBreadcrumb, setImageUrl } from "../../reducer/modules/user";
+import { setBreadcrumb, setImageUrl } from "../../../reducer/modules/user";
 import { connect } from "react-redux";
 
 const EditButton = (props) => {

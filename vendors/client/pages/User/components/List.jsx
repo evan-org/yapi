@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from "react";
-import { formatTime } from "../../utils/common.js";
+import { formatTime } from "../../../utils/common.js";
 import { Link } from "react-router-dom";
-import { setBreadcrumb } from "../../reducer/modules/user";
+import { setBreadcrumb } from "../../../reducer/modules/user";
 // import PropTypes from 'prop-types'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -169,7 +169,7 @@ class List extends Component {
               okText="确定"
               cancelText="取消"
             >
-              <a style={{ display: "block", textAlign: "center" }} href="#">
+              <a style={{ display: "block", textAlign: "center" }} href="User#">
                   删除
               </a>
             </Popconfirm>

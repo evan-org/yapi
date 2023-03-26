@@ -1,5 +1,5 @@
 import Header from "../layout/components/Header/Header.jsx";
-import Home from "./Home/Home.js";
+import Home from "./Home/Home.jsx";
 import Login from "./Login/Login.jsx";
 import Group from "./Group/Group.jsx";
 import Project from "./Project/Project.jsx";

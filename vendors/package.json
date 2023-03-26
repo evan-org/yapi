@@ -162,6 +162,7 @@
     "prettier": "^1.18.2",
     "prop-types": "^15.5.10",
     "redux-devtools-extension": "^2.13.9",
+    "redux-slider-monitor": "^2.0.0-3",
     "sass": "~1.26.12",
     "sass-loader": "~7.0.3",
     "simple-progress-webpack-plugin": "^2.0.0",

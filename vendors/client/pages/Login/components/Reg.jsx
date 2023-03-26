@@ -2,7 +2,8 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Form, Button, Input, Icon, message } from "antd";
-import { regActions } from "../../reducer/modules/user";
+//
+import { regActions } from "../../../reducer/modules/user";
 import { withRouter } from "react-router";
 const FormItem = Form.Item;
 const formItemStyle = {
