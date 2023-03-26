@@ -6,9 +6,9 @@ import styles from "./Search.module.scss";
 import { withRouter } from "react-router";
 import axios from "axios";
 //
-import { setCurrGroup, fetchGroupMsg } from "../../../reducer/modules/group";
-import { changeMenuItem } from "../../../reducer/modules/menu";
-import { fetchInterfaceListMenu } from "../../../reducer/modules/interface";
+import { setCurrGroup, fetchGroupMsg } from "../../../../reducer/modules/group";
+import { changeMenuItem } from "../../../../reducer/modules/menu";
+import { fetchInterfaceListMenu } from "../../../../reducer/modules/interface";
 //
 const Option = AutoComplete.Option;
 @connect(

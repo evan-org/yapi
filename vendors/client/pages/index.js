@@ -1,4 +1,4 @@
-import Header from "../components/Header/Header.jsx";
+import Header from "../layout/components/Header/Header.jsx";
 import Home from "./Home/Home.js";
 import Login from "./Login/Login.jsx";
 import Group from "./Group/Group.jsx";

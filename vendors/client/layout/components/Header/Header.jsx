@@ -3,16 +3,16 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Icon, Layout, Menu, Dropdown, message, Tooltip, Popover, Tag } from "antd";
-import { checkLoginState, logoutActions, loginTypeAction } from "../../reducer/modules/user";
-import { changeMenuItem } from "../../reducer/modules/menu";
+import { checkLoginState, logoutActions, loginTypeAction } from "../../../reducer/modules/user";
+import { changeMenuItem } from "../../../reducer/modules/menu";
 // import { withRouter } from "react-router";
 import Search from "./Search/Search";
 //
 import styles from "./Header.module.scss";
 //
-import LogoSVG from "../LogoSVG/LogoSVG.jsx";
-import Breadcrumb from "../Breadcrumb/Breadcrumb.jsx";
-import GuideBtns from "../GuideBtns/GuideBtns.jsx";
+import LogoSVG from "../../../components/LogoSVG/LogoSVG.jsx";
+import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb.jsx";
+import GuideBtns from "../../../components/GuideBtns/GuideBtns.jsx";
 
 const plugin = require("client/plugin.js");
 let HeaderMenu = {

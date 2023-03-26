@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+//
 import Loading from "../components/Loading/Loading";
-import Footer from "../components/Footer/Footer";
-import Header from "client/components/Header/Header";
+//
+import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
 //
 import styles from "./Layout.module.scss";
 import Notify from "client/components/Notify/Notify";
