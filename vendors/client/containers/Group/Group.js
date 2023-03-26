@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import GroupList from "./GroupList/GroupList.js";
 import ProjectList from "./ProjectList/ProjectList.js";
 import MemberList from "./MemberList/MemberList.js";
@@ -15,101 +15,70 @@ const { Content, Sider } = Layout;
 import { fetchNewsData } from "../../reducer/modules/news.js";
 import { setCurrGroup } from "../../reducer/modules/group";
 import "./Group.scss";
-import axios from "axios"
-
-class Group extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      groupId: -1
-    }
-  }
-  async init() {
+import axios from "axios";
+//
+function GroupContent(props) {
+  return <Layout style={{ minHeight: "calc(100vh - 100px)", marginLeft: "24px", marginTop: "24px" }}>
+    <Sider style={{ height: "100%" }} width={300}>
+      <div className="logo"/>
+      <GroupList/>
+    </Sider>
+    <Layout>
+      <Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
+        <Tabs type="card" className="m-tab tabs-large" style={{ height: "100%" }}>
+          <Tabs.TabPane tab="项目列表" key="1">
+            <ProjectList/>
+          </Tabs.TabPane>
+          {props.currGroup.type === "public" ? (
+            <Tabs.TabPane tab="成员列表" key="2">
+              <MemberList/>
+            </Tabs.TabPane>
+          ) : null}
+          {["admin", "owner", "guest", "dev"].indexOf(props.curUserRoleInGroup) > -1 || props.curUserRole === "admin" ? (
+            <Tabs.TabPane tab="分组动态" key="3">
+              <GroupLog/>
+            </Tabs.TabPane>
+          ) : ("")
+          }
+          {(props.curUserRole === "admin" || props.curUserRoleInGroup === "owner") &&
+          props.currGroup.type !== "private" ? (
+              <Tabs.TabPane tab="分组设置" key="4">
+                <GroupSetting/>
+              </Tabs.TabPane>
+            ) : null}
+        </Tabs>
+      </Content>
+    </Layout>
+  </Layout>
+}
+function Group(props) {
+  const [groupId, setGroupId] = useState(-1);
+  async function init() {
     try {
       let r = await axios.get("/api/group/get_mygroup");
       const group = r.data.data;
       console.log("111111111", group, group._id);
-      this.setState({
-        groupId: group._id
-      });
-      const groupId = group._id;
-      this.props.setCurrGroup(group)
+      setGroupId(group._id);
+      props.setCurrGroup(group)
     } catch (e) {
       console.error(e)
     }
   }
-  componentDidMount() {
-    this.init();
+  useEffect(() => {
+    init();
+  }, []);
+  //
+  if (groupId === -1) {
+    return <Spin/>
   }
-  static propTypes = {
-    fetchNewsData: PropTypes.func,
-    curGroupId: PropTypes.number,
-    curUserRole: PropTypes.string,
-    currGroup: PropTypes.object,
-    curUserRoleInGroup: PropTypes.string,
-    setCurrGroup: PropTypes.func
-  };
-  // onTabClick=(key)=> {
-  //   // if (key == 3) {
-  //   //   this.props.fetchNewsData(this.props.curGroupId, "group", 1, 10)
-  //   // }
-  // }
-  render() {
-    if (this.state.groupId === -1) {
-      return <Spin/>
-    }
-    const GroupContent = (
-      <Layout style={{ minHeight: "calc(100vh - 100px)", marginLeft: "24px", marginTop: "24px" }}>
-        <Sider style={{ height: "100%" }} width={300}>
-          <div className="logo"/>
-          <GroupList/>
-        </Sider>
-        <Layout>
-          <Content
-            style={{
-              height: "100%",
-              margin: "0 24px 0 16px",
-              overflow: "initial",
-              backgroundColor: "#fff"
-            }}
-          >
-            <Tabs type="card" className="m-tab tabs-large" style={{ height: "100%" }}>
-              <TabPane tab="项目列表" key="1">
-                <ProjectList/>
-              </TabPane>
-              {this.props.currGroup.type === "public" ? (
-                <TabPane tab="成员列表" key="2">
-                  <MemberList/>
-                </TabPane>
-              ) : null}
-              {["admin", "owner", "guest", "dev"].indexOf(this.props.curUserRoleInGroup) > -1 ||
-              this.props.curUserRole === "admin" ? (
-                  <TabPane tab="分组动态" key="3">
-                    <GroupLog/>
-                  </TabPane>
-                ) : (
-                  ""
-                )}
-              {(this.props.curUserRole === "admin" || this.props.curUserRoleInGroup === "owner") &&
-              this.props.currGroup.type !== "private" ? (
-                  <TabPane tab="分组设置" key="4">
-                    <GroupSetting/>
-                  </TabPane>
-                ) : null}
-            </Tabs>
-          </Content>
-        </Layout>
-      </Layout>
-    );
-    return (
-      <div className="projectGround">
-        <Switch>
-          <Redirect exact from="/group" to={"/group/" + this.state.groupId}/>
-          <Route path="/group/:groupId" render={() => GroupContent}/>
-        </Switch>
-      </div>
-    );
-  }
+  return (
+    <div className="projectGround">
+      <Switch>
+        <Redirect exact from="/group" to={"/group/" + groupId}/>
+        <Route path="/group/:groupId" render={() => <GroupContent props={props}/>}/>
+      </Switch>
+    </div>
+  );
 }
 export default connect(
   (state) => ({
