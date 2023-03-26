@@ -1,11 +1,11 @@
-const yapi = require('../yapi.js');
-const baseModel = require('./base.js');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const yapi = require("../yapi.js");
+const baseModel = require("./base.js");
+let mongoose = require("mongoose");
+let Schema = mongoose.Schema;
 
 class interfaceCase extends baseModel {
   getName() {
-    return 'interface_case';
+    return "interface_case";
   }
 
   getSchema() {
@@ -48,7 +48,7 @@ class interfaceCase extends baseModel {
       ],
       req_body_other: String,
       test_res_body: String,
-      test_status: { type: String, enum: ['ok', 'invalid', 'error', ''] },
+      test_status: { type: String, enum: ["ok", "invalid", "error", ""] },
       test_res_header: Schema.Types.Mixed,
       mock_verify: { type: Boolean, default: false },
       enable_script: { type: Boolean, default: false },
@@ -61,7 +61,7 @@ class interfaceCase extends baseModel {
     return m.save();
   }
 
-  //获取全部测试接口信息
+  // 获取全部测试接口信息
   getInterfaceCaseListCount() {
     return this.model.countDocuments({});
   }
@@ -75,8 +75,8 @@ class interfaceCase extends baseModel {
   }
 
   list(col_id, select) {
-    select = select || 'casename uid col_id _id index interface_id project_id';
-    if (select === 'all') {
+    select = select || "casename uid col_id _id index interface_id project_id";
+    if (select === "all") {
       return this.model
         .find({
           col_id: col_id

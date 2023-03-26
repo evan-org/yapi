@@ -1,8 +1,8 @@
-const baseModel = require('./base.js');
+const baseModel = require("./base.js");
 
 class followModel extends baseModel {
   getName() {
-    return 'follow';
+    return "follow";
   }
 
   getSchema() {
@@ -23,7 +23,7 @@ class followModel extends baseModel {
    */
 
   save(data) {
-    //关注
+    // 关注
     let saveData = {
       uid: data.uid,
       projectid: data.projectid,
@@ -42,7 +42,7 @@ class followModel extends baseModel {
     });
   }
 
-  delByProjectId(projectid){
+  delByProjectId(projectid) {
     return this.model.remove({
       projectid: projectid
     })

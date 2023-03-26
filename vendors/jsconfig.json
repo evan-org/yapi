@@ -24,9 +24,9 @@
     "emitDecoratorMetadata": true,
     "paths": {
       "common/*": ["common/*"],
-      "@client/*": ["client/*"]
+      "client/*": ["client/*"]
     }
   },
-  "include": ["client","common"],
-  "exclude": ["node_modules", "dist", ".yarn", "docs", "static"]
+  "include": ["client"],
+  "exclude": ["node_modules", "dist", ".yarn", "docs", "static", "example"]
 }

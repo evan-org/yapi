@@ -26,7 +26,7 @@ export default class Services extends Component {
   async componentDidMount() {
     const id = this.props.projectId;
     await this.props.getToken(id);
-    
+
   }
   render () {
     const id = this.props.projectId;
@@ -36,7 +36,7 @@ export default class Services extends Component {
           <div className="token">
             <h5>安装工具</h5>
             <pre>{`
-  npm i sm2tsservice -D
+npm i sm2tsservice -D
   `}</pre>
             <h5>配置【3.2.0及以上版本】</h5>
             <pre>{`

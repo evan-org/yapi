@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Table, Button, message, Popconfirm, Tooltip, Icon } from 'antd';
 import { fetchMockCol } from '../../../client/reducer/modules/mockCol';
-import { formatTime, json5_parse } from '../../../client/common.js';
-import constants from '../../../client/constants/variable.js';
+import { formatTime, json5_parse } from '../../../client/utils/common.js';
+import constants from '../../../client/utils/variable.js';
 import CaseDesModal from './CaseDesModal';
 import _ from 'underscore';
 
@@ -39,7 +39,7 @@ export default class MockCol extends Component {
   constructor(props) {
     super(props);
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const interfaceId = this.props.match.params.actionId;
     this.props.fetchMockCol(interfaceId);
   }

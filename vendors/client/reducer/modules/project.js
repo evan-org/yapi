@@ -1,6 +1,6 @@
 import axios from "axios";
-import variable from "../../constants/variable";
-import {htmlFilter} from "../../common";
+import variable from "../../utils/variable";
+import {htmlFilter} from "../../utils/common";
 
 // Actions
 const FETCH_PROJECT_LIST = "yapi/project/FETCH_PROJECT_LIST";

@@ -1,29 +1,29 @@
-const yapi = require('../yapi.js');
-const baseModel = require('./base.js');
+const yapi = require("../yapi.js");
+const baseModel = require("./base.js");
 
 class projectModel extends baseModel {
   getName() {
-    return 'project';
+    return "project";
   }
 
-  constructor(){
+  constructor() {
     super()
     this.handleEnvNullData = this.handleEnvNullData.bind(this)
   }
 
-  getAuthList(uid){
+  getAuthList(uid) {
     return this.model.find({
       $or: [{
-        'members.uid': uid,
-        project_type: 'private'
+        "members.uid": uid,
+        project_type: "private"
       }, {
         uid,
-        project_type: 'private'
+        project_type: "private"
       }, {
-        project_type: 'public'
+        project_type: "public"
       }]
-    }).select('group_id')
-    .exec();
+    }).select("group_id")
+      .exec();
   }
 
   getSchema() {
@@ -34,11 +34,11 @@ class projectModel extends baseModel {
       switch_notice: { type: Boolean, default: true },
       desc: String,
       group_id: { type: Number, required: true },
-      project_type: { type: String, required: true, enum: ['public', 'private'] },
+      project_type: { type: String, required: true, enum: ["public", "private"] },
       members: [
         {
           uid: Number,
-          role: { type: String, enum: ['owner', 'dev'] },
+          role: { type: String, enum: ["owner", "dev"] },
           username: String,
           email: String,
           email_notice: { type: Boolean, default: true }
@@ -65,12 +65,12 @@ class projectModel extends baseModel {
   updateMember(data) {
     return this.model.update(
       {
-        'members.uid': data.uid
+        "members.uid": data.uid
       },
       {
         $set: {
-          'members.$.username': data.username,
-          'members.$.email': data.email
+          "members.$.username": data.username,
+          "members.$.email": data.email
         }
       }
     );
@@ -81,14 +81,14 @@ class projectModel extends baseModel {
     return m.save();
   }
 
-  handleEnvNullData(data){
+  handleEnvNullData(data) {
     data = data.toObject();
-    data.toObject = ()=> data;
+    data.toObject = () => data;
     let isFix = false;
-    if(Array.isArray(data.env)){
-      data.env = data.env.map(item=>{
-        item.global = item.global.filter(g=>{
-          if(!g || typeof g !== 'object'){
+    if (Array.isArray(data.env)) {
+      data.env = data.env.map((item) => {
+        item.global = item.global.filter((g) => {
+          if (!g || typeof g !== "object") {
             isFix = true;
             return false;
           }
@@ -97,8 +97,8 @@ class projectModel extends baseModel {
         return item;
       })
     }
-    
-    if(isFix){
+
+    if (isFix) {
       this.model.update(
         {
           _id: data._id
@@ -126,21 +126,21 @@ class projectModel extends baseModel {
       .findOne({
         _id: id
       })
-      .select('env')
+      .select("env")
       .exec().then(this.handleEnvNullData);
   }
 
   getProjectWithAuth(group_id, uid) {
     return this.model.countDocuments({
       group_id: group_id,
-      'members.uid': uid
+      "members.uid": uid
     });
   }
 
   getBaseInfo(id, select) {
     select =
       select ||
-      '_id uid name basepath switch_notice desc group_id project_type env icon color add_time up_time pre_script after_script project_mock_script is_mock_open strice is_json5 tag';
+      "_id uid name basepath switch_notice desc group_id project_type env icon color add_time up_time pre_script after_script project_mock_script is_mock_open strice is_json5 tag";
     return this.model
       .findOne({
         _id: id
@@ -176,7 +176,7 @@ class projectModel extends baseModel {
     return this.model
       .find(params)
       .select(
-        '_id uid name basepath switch_notice desc group_id project_type color icon env add_time up_time'
+        "_id uid name basepath switch_notice desc group_id project_type color icon env add_time up_time"
       )
       .sort({ _id: -1 })
       .exec();
@@ -188,7 +188,7 @@ class projectModel extends baseModel {
   }
 
   countWithPublic(group_id) {
-    let params = { group_id: group_id, project_type: 'public' };
+    let params = { group_id: group_id, project_type: "public" };
     return this.model.countDocuments(params);
   }
 
@@ -266,7 +266,7 @@ class projectModel extends baseModel {
   checkMemberRepeat(id, uid) {
     return this.model.countDocuments({
       _id: id,
-      'members.uid': uid
+      "members.uid": uid
     });
   }
 
@@ -274,10 +274,10 @@ class projectModel extends baseModel {
     return this.model.update(
       {
         _id: id,
-        'members.uid': uid
+        "members.uid": uid
       },
       {
-        $set: { 'members.$.role': role }
+        $set: { "members.$.role": role }
       }
     );
   }
@@ -286,10 +286,10 @@ class projectModel extends baseModel {
     return this.model.update(
       {
         _id: id,
-        'members.uid': uid
+        "members.uid": uid
       },
       {
-        $set: { 'members.$.email_notice': notice }
+        $set: { "members.$.email_notice": notice }
       }
     );
   }
@@ -297,7 +297,7 @@ class projectModel extends baseModel {
   search(keyword) {
     return this.model
       .find({
-        name: new RegExp(keyword, 'ig')
+        name: new RegExp(keyword, "ig")
       })
       .limit(10);
   }

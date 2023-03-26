@@ -1,4 +1,3 @@
-@import '../../styles/mixin.scss';
 .card-container {
   position: relative;
   user-select: none;
@@ -56,7 +55,7 @@
     .icon.active {
       color: #fff;
     }
-   
+
   }
 
   // 卡片昨上角按钮
@@ -80,7 +79,7 @@
     .icon.active {
       color: #fff;
     }
-    
+
   }
 }
 .m-card {

@@ -12,11 +12,6 @@ const sassResourcesLoader = require("craco-sass-resources-loader");
 // const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 // const smp = new SpeedMeasurePlugin();
 //
-// let isWin = require("os").platform() === "win32";
-let commonLib = require("./common/plugin.js");
-// const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
-//
-let { exts: systemConfigPlugin } = require("./common/config");
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === "node_modules") {
@@ -24,6 +19,8 @@ function createScript(plugin, pathAlias) {
   }
   return `"${plugin.name}" : {module: require('${pathAlias}/yapi-plugin-${plugin.name}/client.js'),options: ${options}}`;
 }
+let { exts: systemConfigPlugin } = require("./common/config");
+const commonLib = require("./common/plugin.js");
 function initPlugins(configPlugin) {
   configPlugin = require("../config.json").plugins;
   let scripts = [];
@@ -45,6 +42,7 @@ function initPlugins(configPlugin) {
   fs.writeFileSync(resolve("./client/plugin-module.js"), scripts);
 }
 initPlugins();
+//
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
@@ -62,7 +60,6 @@ function invade(target, name, callback) {
     }
   });
 }
-let isWin = require("os").platform() === "win32";
 //
 module.exports = {
   reactScriptsVersion: "react-scripts",
@@ -125,32 +122,28 @@ module.exports = {
       noParse: [/node_modules\/jsondiffpatch\/public\/build\/.*js/, /tui-eritor/],
     },
     configure: (webpackConfig, { env, paths }) => {
-      paths.appBuild = resolve("./dist");
+      paths.appBuild = resolve("./example/client");
       paths.appSrc = resolve("./client");
-      paths.appIndexJs = resolve("./client/index.js");
+      paths.appIndexJs = resolve("./client/index.jsx");
       paths.swSrc = resolve("./client/service-worker.js");
       paths.testsSetup = resolve("./client/testsSetup.js");
       paths.proxySetup = resolve("./client/proxySetup.js");
-      webpackConfig.entry = resolve("./client/index.js");
+      webpackConfig.entry = resolve("./client/index.jsx");
       //
-      const { isFound, match } = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
-      if (isFound) {
+      const resolveUrlLoader = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
+      const babels = getLoader(webpackConfig, loaderByName("babel-loader"));
+      if (babels.isFound) {
+        babels.match.loader.include = resolve("./client");
+      }
+      console.log(babels);
+      if (resolveUrlLoader.isFound) {
         removeLoaders(webpackConfig, loaderByName("resolve-url-loader"));
-        // console.log(match, webpackConfig.module.rules[1].oneOf);
-        // const { isFound, match } = getLoader(match.p, loaderByName("resolve-url-loader"));
-        // match.parent.forEach((e) => {
-        //   console.log(e);
-        //   if (typeof e === "object" && e.loader.indexOf("resolve-url-loader") > -1) {
-        //     e.options.root = resolve("./client");
-        //   }
-        // })
-        // webpackConfig.module.rules[index].loader.options.root = resolve("./client");
-        // match.loader.options.root = resolve("./client");
+        // resolveUrlLoader.match.loader.options.root = null;
       }
       //
       webpackConfig.output = {
         ...webpackConfig.output,
-        path: path.resolve(__dirname, "dist"), // 修改打包输出文件目录 两步都要写
+        path: path.resolve(__dirname, "./example/client"), // 修改打包输出文件目录 两步都要写
         publicPath: whenProd(() => "/", "/"), // 静态资源publicpath
       }
       if (env === "development") {
@@ -171,7 +164,7 @@ module.exports = {
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
-      ["@babel/plugin-proposal-class-properties"],
+      ["@babel/plugin-proposal-class-properties", { loose: true }],
       "@babel/plugin-transform-modules-commonjs",
       ["@babel/plugin-transform-runtime"],
       [

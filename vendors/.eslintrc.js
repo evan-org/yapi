@@ -178,7 +178,7 @@ module.exports = {
     // 要求标识符匹配一个指定的正则表达式
     "id-match": 0,
     // 强制在 JSX 属性中一致地使用双引号或单引号
-    "jsx-quotes": 0,
+    "jsx-quotes": 1,
     // 强制在关键字前后使用一致的空格 (前后腰需要)
     "keyword-spacing": 2,
     // 强制一行的最大长度

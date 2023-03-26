@@ -1,0 +1,11 @@
+.ProjectRequest {
+  background: #fff;
+  padding: 15px;
+  :global {
+    .request-editor {
+      min-height: 300px;
+      margin-top: 10px;
+      background-color: #eee;
+    }
+  }
+}

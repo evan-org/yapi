@@ -1,15 +1,15 @@
-const path = require('path');
-const fs = require('fs-extra');
-const nodemailer = require('nodemailer');
-const config = require('../../config.json');
+const path = require("path");
+const fs = require("fs-extra");
+const nodemailer = require("nodemailer");
+const config = require("../../config.json");
 
 let insts = new Map();
 let mail;
 
-const WEBROOT = path.resolve(__dirname, '..'); //路径
+const WEBROOT = path.resolve(__dirname, ".."); // 路径
 const WEBROOT_SERVER = __dirname;
-const WEBROOT_RUNTIME = path.resolve(__dirname, '../..');
-const WEBROOT_LOG = path.join(WEBROOT_RUNTIME, 'log');
+const WEBROOT_RUNTIME = path.resolve(__dirname, "../..");
+const WEBROOT_LOG = path.join(WEBROOT_RUNTIME, "log");
 const WEBCONFIG = config;
 
 fs.ensureDirSync(WEBROOT_LOG);
@@ -52,5 +52,5 @@ let r = {
   delInst: delInst,
   getInsts: insts
 };
-if (mail) r.mail = mail;
+if (mail) {r.mail = mail;}
 module.exports = r;
