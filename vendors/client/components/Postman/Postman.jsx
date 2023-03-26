@@ -23,7 +23,7 @@ import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
 import axios from "axios";
 import ModalPostman from "../ModalPostman/index.js";
 import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.jsx";
-import ProjectEnv from "../../pages/Project/Setting/ProjectEnv/index.js";
+import ProjectEnv from "../ProjectEnv/index.js";
 import json5 from "json5";
 import styles from "./Postman.module.scss";
 

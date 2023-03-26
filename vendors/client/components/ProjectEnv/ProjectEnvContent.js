@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import "./index.scss";
 import { Icon, Row, Col, Form, Input, Select, Button, AutoComplete, Tooltip } from "antd";
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 import constants from "client/constants/variable.js";
@@ -26,7 +27,6 @@ const initMap = {
     }
   ]
 };
-
 class ProjectEnvContent extends Component {
   static propTypes = {
     projectMsg: PropTypes.object,
@@ -34,7 +34,6 @@ class ProjectEnvContent extends Component {
     onSubmit: PropTypes.func,
     handleEnvInput: PropTypes.func
   };
-
   initState(curdata) {
     let header = [
       {
@@ -48,17 +47,14 @@ class ProjectEnvContent extends Component {
         value: ""
       }
     ];
-
     let global = [
       {
         name: "",
         value: ""
       }
     ];
-
     const curheader = curdata.header;
     const curGlobal = curdata.global;
-
     if (curheader && curheader.length !== 0) {
       curheader.forEach((item) => {
         if (item.name === "Cookie") {
@@ -79,7 +75,6 @@ class ProjectEnvContent extends Component {
         }
       });
     }
-
     if (curGlobal && curGlobal.length !== 0) {
       curGlobal.forEach((item) => {
         global.unshift(item);
@@ -87,7 +82,6 @@ class ProjectEnvContent extends Component {
     }
     return { header, cookie, global };
   }
-
   constructor(props) {
     super(props);
     this.state = Object.assign({}, initMap);
@@ -102,7 +96,6 @@ class ProjectEnvContent extends Component {
     newValue[name] = [].concat(this.state[name], data);
     this.setState(newValue);
   };
-
   delHeader = (key, name) => {
     let curValue = this.props.form.getFieldValue(name);
     let newValue = {};
@@ -110,13 +103,11 @@ class ProjectEnvContent extends Component {
     this.props.form.setFieldsValue(newValue);
     this.setState(newValue);
   };
-
   handleInit(data) {
     this.props.form.resetFields();
     let newValue = this.initState(data);
     this.setState({ ...newValue });
   }
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     let curEnvName = this.props.projectMsg.name;
     let nextEnvName = nextProps.projectMsg.name;
@@ -124,7 +115,6 @@ class ProjectEnvContent extends Component {
       this.handleInit(nextProps.projectMsg);
     }
   }
-
   handleOk = (e) => {
     e.preventDefault();
     const { form, onSubmit, projectMsg } = this.props;
@@ -153,7 +143,6 @@ class ProjectEnvContent extends Component {
       }
     });
   };
-
   render() {
     const { projectMsg } = this.props;
     const { getFieldDecorator } = this.props.form;
@@ -185,7 +174,7 @@ class ProjectEnvContent extends Component {
               {getFieldDecorator("header[" + index + "].value", {
                 validateTrigger: ["onChange", "onBlur"],
                 initialValue: item.value || ""
-              })(<Input placeholder="请输入参数内容" style={{ width: "90%", marginRight: 8 }} />)}
+              })(<Input placeholder="请输入参数内容" style={{ width: "90%", marginRight: 8 }}/>)}
             </FormItem>
           </Col>
           <Col span={2} className={index === headerLength ? " env-last-row" : null}>
@@ -202,7 +191,6 @@ class ProjectEnvContent extends Component {
         </Row>
       );
     };
-
     const commonTpl = (item, index, name) => {
       const length = this.state[name].length - 1;
       return (
@@ -226,7 +214,7 @@ class ProjectEnvContent extends Component {
               {getFieldDecorator(`${name}[${index}].value`, {
                 validateTrigger: ["onChange", "onBlur"],
                 initialValue: item.value || ""
-              })(<Input placeholder="请输入参数内容" style={{ width: "90%", marginRight: 8 }} />)}
+              })(<Input placeholder="请输入参数内容" style={{ width: "90%", marginRight: 8 }}/>)}
             </FormItem>
           </Col>
           <Col span={2} className={index === length ? " env-last-row" : null}>
@@ -243,7 +231,6 @@ class ProjectEnvContent extends Component {
         </Row>
       );
     };
-
     const envTpl = (data) => (
       <div>
         <h3 className="env-label">环境名称</h3>
@@ -324,12 +311,10 @@ class ProjectEnvContent extends Component {
         </FormItem>
         <h3 className="env-label">Header</h3>
         {this.state.header.map((item, index) => headerTpl(item, index))}
-
         <h3 className="env-label">Cookie</h3>
         {this.state.cookie.map((item, index) => commonTpl(item, index, "cookie"))}
-
         <h3 className="env-label">
-            global
+          global
           <a
             target="_blank"
             rel="noopener noreferrer"
@@ -337,14 +322,13 @@ class ProjectEnvContent extends Component {
             style={{ marginLeft: 8 }}
           >
             <Tooltip title="点击查看文档">
-              <Icon type="question-circle-o" style={{fontSize: "13px"}}/>
+              <Icon type="question-circle-o" style={{ fontSize: "13px" }}/>
             </Tooltip>
           </a>
         </h3>
         {this.state.global.map((item, index) => commonTpl(item, index, "global"))}
       </div>
     );
-
     return (
       <div>
         {envTpl(projectMsg)}
