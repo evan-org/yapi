@@ -3,15 +3,17 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Route, Switch, Redirect, matchPath } from 'react-router-dom';
 import { Subnav } from '../../components/index';
-import { fetchGroupMsg } from '../../reducer/modules/group';
-import { setBreadcrumb } from '../../reducer/modules/user';
-import { getProject } from '../../reducer/modules/project';
 import Interface from './Interface/Interface.jsx';
 import Activity from './Activity/Activity.jsx';
-import Setting from './Setting/Setting.js';
+import Setting from './Setting/Setting.jsx';
 import Loading from '../../components/Loading/Loading';
 import ProjectMember from './Setting/ProjectMember/ProjectMember.js';
 import ProjectData from './Setting/ProjectData/ProjectData.js';
+//
+import { fetchGroupMsg } from '../../reducer/modules/group';
+import { setBreadcrumb } from '../../reducer/modules/user';
+import { getProject } from '../../reducer/modules/project';
+//
 const plugin = require('client/plugin.js');
 @connect(
   state => {
