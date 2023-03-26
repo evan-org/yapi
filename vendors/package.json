@@ -137,8 +137,11 @@
     "compression-webpack-plugin": "^1.1.12",
     "conventional-changelog-cli": "^2.1.1",
     "core-decorators": "^0.17.0",
-    "craco-antd": "~2.0.0",
-    "craco-less": "~1.20.0",
+    "craco-antd": "~1.17.0",
+    "craco-less": "~1.17.1",
+    "craco-plugin-env": "^1.0.5",
+    "craco-sass-resources-loader": "^1.1.0",
+    "craco-styled-jsx": "^1.0.1",
     "cross-env": "^5.2.0",
     "eslint": "^7.20.0",
     "eslint-config-standard": "^16.0.2",
@@ -148,15 +151,13 @@
     "eslint-plugin-react": "^7.22.0",
     "ghooks": "^2.0.0",
     "happypack": "^4.0.1",
-    "less": "^2.7.2",
-    "less-loader": "^4.0.5",
     "markdown-it-include": "^1.0.0",
     "nodemon": "^2.0.2",
     "prettier": "^1.18.2",
     "prop-types": "^15.5.10",
     "redux-devtools-extension": "^2.13.9",
-    "sass": "~1.23.7",
-    "sass-loader": "~7.3.1",
+    "sass": "~1.26.12",
+    "sass-loader": "~7.0.3",
     "simple-progress-webpack-plugin": "^2.0.0",
     "speed-measure-webpack-plugin": "^1.5.0",
     "validate-commit-msg": "^2.14.0",
@@ -178,6 +179,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   },
   "packageManager": "yarn@3.2.0"
 }

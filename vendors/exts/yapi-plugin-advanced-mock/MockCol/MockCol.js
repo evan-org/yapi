@@ -4,11 +4,10 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Table, Button, message, Popconfirm, Tooltip, Icon } from 'antd';
-import { fetchMockCol } from 'client/reducer/modules/mockCol';
-import { formatTime } from 'client/common.js';
-import constants from 'client/constants/variable.js';
+import { fetchMockCol } from '../../../client/reducer/modules/mockCol';
+import { formatTime, json5_parse } from '../../../client/common.js';
+import constants from '../../../client/constants/variable.js';
 import CaseDesModal from './CaseDesModal';
-import { json5_parse } from '../../../client/common';
 import _ from 'underscore';
 
 @connect(
@@ -32,24 +31,20 @@ export default class MockCol extends Component {
     fetchMockCol: PropTypes.func,
     currProject: PropTypes.object
   };
-
   state = {
     caseData: {},
     caseDesModalVisible: false,
     isAdd: false
   };
-
   constructor(props) {
     super(props);
   }
-
   componentWillMount() {
     const interfaceId = this.props.match.params.actionId;
     this.props.fetchMockCol(interfaceId);
   }
-
   openModal = (record, isAdd) => {
-    return async () => {
+    return async() => {
       if (this.props.currInterface.res_body_is_json_schema && isAdd) {
         let result = await axios.post('/api/interface/schema2json', {
           schema: json5_parse(this.props.currInterface.res_body),
@@ -65,7 +60,6 @@ export default class MockCol extends Component {
         });
         record.req_body_other = JSON.stringify(result.data);
       }
-
       this.setState({
         isAdd: isAdd,
         caseDesModalVisible: true,
@@ -73,7 +67,6 @@ export default class MockCol extends Component {
       });
     };
   };
-
   handleOk = async caseData => {
     if (!caseData) {
       return null;
@@ -99,7 +92,6 @@ export default class MockCol extends Component {
       }
     });
   };
-
   deleteCase = async id => {
     const interface_id = this.props.match.params.actionId;
     await axios.post('/api/plugin/advmock/case/del', { id }).then(async res => {
@@ -111,11 +103,9 @@ export default class MockCol extends Component {
       }
     });
   };
-
   // mock case 可以设置开启的关闭
-  openMockCase = async (id , enable=true)=> {
+  openMockCase = async(id, enable = true) => {
     const interface_id = this.props.match.params.actionId;
-
     await axios.post('/api/plugin/advmock/case/hide', {
       id,
       enable: !enable
@@ -128,11 +118,9 @@ export default class MockCol extends Component {
       }
     })
   }
-
   render() {
     const { list: data, currInterface } = this.props;
     const { isAdd, caseData, caseDesModalVisible } = this.state;
-
     const role = this.props.currProject.role;
     const isGuest = role === 'guest';
     const initCaseData = {
@@ -145,16 +133,15 @@ export default class MockCol extends Component {
       params: {},
       res_body: currInterface.res_body
     };
-
     let ipFilters = [];
     let ipObj = {};
     let userFilters = [];
     let userObj = {};
     _.isArray(data) &&
-      data.forEach(item => {
-        ipObj[item.ip_enable ? item.ip : ''] = '';
-        userObj[item.username] = '';
-      });
+    data.forEach(item => {
+      ipObj[item.ip_enable ? item.ip : ''] = '';
+      userObj[item.username] = '';
+    });
     ipFilters = Object.keys(Object.assign(ipObj)).map(value => {
       if (!value) {
         value = '无过滤';
@@ -218,7 +205,8 @@ export default class MockCol extends Component {
                     okText="确定"
                     cancelText="取消"
                   >
-                    <Button size="small" onClick={() => {}}>
+                    <Button size="small" onClick={() => {
+                    }}>
                       删除
                     </Button>
                   </Popconfirm>
@@ -234,7 +222,6 @@ export default class MockCol extends Component {
         }
       }
     ];
-
     return (
       <div>
         <div style={{ marginBottom: 8 }}>
@@ -248,11 +235,11 @@ export default class MockCol extends Component {
             style={{ marginLeft: 8 }}
           >
             <Tooltip title="点击查看文档">
-              <Icon type="question-circle-o" />
+              <Icon type="question-circle-o"/>
             </Tooltip>
           </a>
         </div>
-        <Table columns={columns} dataSource={data} pagination={false} rowKey="_id" />
+        <Table columns={columns} dataSource={data} pagination={false} rowKey="_id"/>
         {caseDesModalVisible && (
           <CaseDesModal
             visible={caseDesModalVisible}
