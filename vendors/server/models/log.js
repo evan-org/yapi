@@ -1,11 +1,11 @@
-const yapi = require('../yapi.js');
-const baseModel = require('./base.js');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const yapi = require("../yapi.js");
+const baseModel = require("./base.js");
+let mongoose = require("mongoose");
+let Schema = mongoose.Schema;
 
 class logModel extends baseModel {
   getName() {
-    return 'log';
+    return "log";
   }
 
   getSchema() {
@@ -14,13 +14,13 @@ class logModel extends baseModel {
       typeid: { type: Number, required: true },
       type: {
         type: String,
-        enum: ['user', 'group', 'interface', 'project', 'other', 'interface_col'],
+        enum: ["user", "group", "interface", "project", "other", "interface_col"],
         required: true
       },
       content: { type: String, required: true },
       username: { type: String, required: true },
       add_time: Number,
-      data: Schema.Types.Mixed //用于原始数据存储
+      data: Schema.Types.Mixed // 用于原始数据存储
     };
   }
 
@@ -71,11 +71,11 @@ class logModel extends baseModel {
       typeid: typeid
     };
 
-    if (selectValue === 'wiki') {
-      params['data.type'] = selectValue;
+    if (selectValue === "wiki") {
+      params["data.type"] = selectValue;
     }
     if (selectValue && !isNaN(selectValue)) {
-      params['data.interface_id'] = +selectValue;
+      params["data.interface_id"] = +selectValue;
     }
     return this.model
       .find(params)
@@ -91,11 +91,11 @@ class logModel extends baseModel {
       .find({
         $or: [
           {
-            type: 'project',
+            type: "project",
             typeid: { $in: pidList }
           },
           {
-            type: 'group',
+            type: "group",
             typeid: typeid
           }
         ]
@@ -109,11 +109,11 @@ class logModel extends baseModel {
     return this.model.countDocuments({
       $or: [
         {
-          type: 'project',
+          type: "project",
           typeid: { $in: pidList }
         },
         {
-          type: 'group',
+          type: "group",
           typeid: typeid
         }
       ]
@@ -125,12 +125,12 @@ class logModel extends baseModel {
       typeid: typeid
     };
 
-    if (selectValue === 'wiki') {
-      params['data.type'] = selectValue;
+    if (selectValue === "wiki") {
+      params["data.type"] = selectValue;
     }
 
     if (selectValue && !isNaN(selectValue)) {
-      params['data.interface_id'] = +selectValue;
+      params["data.interface_id"] = +selectValue;
     }
     return this.model.countDocuments(params);
   }
@@ -141,13 +141,13 @@ class logModel extends baseModel {
       typeid: typeid
     };
     if (interfaceId && !isNaN(interfaceId)) {
-      params['data.interface_id'] = +interfaceId;
+      params["data.interface_id"] = +interfaceId;
     }
     return this.model
       .find(params)
       .sort({ add_time: -1 })
       .limit(1)
-      .select('uid content type username typeid add_time')
+      .select("uid content type username typeid add_time")
       .exec();
   }
 }

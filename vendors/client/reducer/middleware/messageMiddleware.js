@@ -1,11 +1,12 @@
-import { message } from 'antd';
+import { message } from "antd";
 
-export default () => next => action => {
+export default () => (next) => (action) => {
+  console.log("messageMiddleware =====>", action);
   if (!action) {
     return;
   }
   if (action.error) {
-    message.error((action.payload && action.payload.message) || '服务器错误');
+    message.error((action.payload && action.payload.message) || "服务器错误");
   } else if (
     action.payload &&
     action.payload.data &&

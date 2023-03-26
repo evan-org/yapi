@@ -1,9 +1,9 @@
-const yapi = require('../yapi.js');
-const baseModel = require('./base.js');
+const yapi = require("../yapi.js");
+const baseModel = require("./base.js");
 
 class groupModel extends baseModel {
   getName() {
-    return 'group';
+    return "group";
   }
 
   getSchema() {
@@ -13,11 +13,11 @@ class groupModel extends baseModel {
       group_desc: String,
       add_time: Number,
       up_time: Number,
-      type: { type: String, default: 'public', enum: ['public', 'private'] },
+      type: { type: String, default: "public", enum: ["public", "private"] },
       members: [
         {
           uid: Number,
-          role: { type: String, enum: ['owner', 'dev'] },
+          role: { type: String, enum: ["owner", "dev"] },
           username: String,
           email: String
         }
@@ -54,12 +54,12 @@ class groupModel extends baseModel {
   updateMember(data) {
     return this.model.update(
       {
-        'members.uid': data.uid
+        "members.uid": data.uid
       },
       {
         $set: {
-          'members.$.username': data.username,
-          'members.$.email': data.email
+          "members.$.username": data.username,
+          "members.$.email": data.email
         }
       },
       { multi: true }
@@ -70,9 +70,9 @@ class groupModel extends baseModel {
     return this.model
       .findOne({
         uid: uid,
-        type: 'private'
+        type: "private"
       })
-      .select('group_name _id group_desc add_time up_time type custom_field1')
+      .select("group_name _id group_desc add_time up_time type custom_field1")
       .exec();
   }
 
@@ -81,7 +81,7 @@ class groupModel extends baseModel {
       .findOne({
         _id: id
       })
-      .select('uid group_name group_desc add_time up_time type custom_field1')
+      .select("uid group_name group_desc add_time up_time type custom_field1")
       .exec();
   }
 
@@ -92,7 +92,7 @@ class groupModel extends baseModel {
   }
   //  分组数量统计
   getGroupListCount() {
-    return this.model.countDocuments({ type: 'public' });
+    return this.model.countDocuments({ type: "public" });
   }
 
   addMember(id, data) {
@@ -122,10 +122,10 @@ class groupModel extends baseModel {
     return this.model.update(
       {
         _id: id,
-        'members.uid': uid
+        "members.uid": uid
       },
       {
-        $set: { 'members.$.role': role }
+        $set: { "members.$.role": role }
       }
     );
   }
@@ -133,39 +133,39 @@ class groupModel extends baseModel {
   checkMemberRepeat(id, uid) {
     return this.model.countDocuments({
       _id: id,
-      'members.uid': uid
+      "members.uid": uid
     });
   }
 
   list() {
     return this.model
       .find({
-        type: 'public'
+        type: "public"
       })
-      .select('group_name _id group_desc add_time up_time type uid custom_field1')
+      .select("group_name _id group_desc add_time up_time type uid custom_field1")
       .exec();
   }
 
-  getAuthList(uid){
+  getAuthList(uid) {
     return this.model.find({
       $or: [{
-        'members.uid': uid,
-        'type': 'public'
+        "members.uid": uid,
+        "type": "public"
       }, {
-        'type': 'public',
+        "type": "public",
         uid
       }]
-    }).select(' _id group_name group_desc add_time up_time type uid custom_field1')
-    .exec();
-    
+    }).select(" _id group_name group_desc add_time up_time type uid custom_field1")
+      .exec();
+
   }
 
-  findByGroups(ids = []){
+  findByGroups(ids = []) {
     return this.model.find({
       _id: {
         $in: ids
       },
-      type: 'public'
+      type: "public"
     })
   }
 
@@ -192,17 +192,17 @@ class groupModel extends baseModel {
   getcustomFieldName(name) {
     return this.model
       .find({
-        'custom_field1.name': name,
-        'custom_field1.enable': true
+        "custom_field1.name": name,
+        "custom_field1.enable": true
       })
-      .select('_id')
+      .select("_id")
       .exec();
   }
 
   search(keyword) {
     return this.model
       .find({
-        group_name: new RegExp(keyword, 'i')
+        group_name: new RegExp(keyword, "i")
       })
       .limit(10);
   }

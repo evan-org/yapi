@@ -1,22 +1,22 @@
-const controller = require('./controller/syncController.js');
-const yapi =require('yapi.js');
-const interfaceSyncUtils = require('./interfaceSyncUtils.js');
+const controller = require("./controller/syncController.js");
+const yapi = require("yapi.js");
+const interfaceSyncUtils = require("./interfaceSyncUtils.js");
 
-module.exports = function () {
+module.exports = function() {
   yapi.getInst(interfaceSyncUtils);
 
-  this.bindHook('add_router', function (addRouter) {
+  this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: controller,
-      method: 'get',
-      path: 'autoSync/get',
-      action: 'getSync'
+      method: "get",
+      path: "autoSync/get",
+      action: "getSync"
     });
     addRouter({
       controller: controller,
-      method: 'post',
-      path: 'autoSync/save',
-      action: 'upSync'
+      method: "post",
+      path: "autoSync/save",
+      action: "upSync"
     });
   });
 

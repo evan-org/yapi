@@ -1,18 +1,18 @@
 /**
  * Created by gxl.gao on 2017/10/25.
  */
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import PropTypes from 'prop-types';
-import './index.scss';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import axios from "axios";
+import PropTypes from "prop-types";
+import "./index.scss";
 // import { withRouter } from 'react-router-dom';
-import { Row, Col, Tooltip, Icon } from 'antd';
-import { setBreadcrumb } from 'client/reducer/modules/user';
-import StatisChart from './StatisChart';
-import StatisTable from './StatisTable';
+import { Row, Col, Tooltip, Icon } from "antd";
+import { setBreadcrumb } from "client/reducer/modules/user";
+import StatisChart from "./StatisChart";
+import StatisTable from "./StatisTable";
 
-const CountOverview = props => (
+const CountOverview = (props) => (
   <Row type="flex" justify="space-start" className="m-row">
     <Col className="gutter-row" span={6}>
       <span>
@@ -36,7 +36,7 @@ const CountOverview = props => (
       <span>
         接口总数
         <Tooltip placement="rightTop" title="统计yapi所有项目中的所有接口总数">
-          {/*<a href="javascript:void(0)" className="m-a-help">?</a>*/}
+          {/* <a href="javascript:void(0)" className="m-a-help">?</a>*/}
           <Icon className="m-help" type="question-circle" />
         </Tooltip>
       </span>
@@ -46,7 +46,7 @@ const CountOverview = props => (
       <span>
         测试接口总数
         <Tooltip placement="rightTop" title="统计yapi所有项目中的所有测试接口总数">
-          {/*<a href="javascript:void(0)" className="m-a-help">?</a>*/}
+          {/* <a href="javascript:void(0)" className="m-a-help">?</a>*/}
           <Icon className="m-help" type="question-circle" />
         </Tooltip>
       </span>
@@ -59,7 +59,7 @@ CountOverview.propTypes = {
   date: PropTypes.object
 };
 
-const StatusOverview = props => (
+const StatusOverview = (props) => (
   <Row type="flex" justify="space-start" className="m-row">
     <Col className="gutter-row" span={6}>
       <span>
@@ -90,7 +90,7 @@ const StatusOverview = props => (
         </Tooltip>
       </span>
       <h2 className="gutter-box">
-        {props.data.freemem} G / {props.data.totalmem} G{' '}
+        {props.data.freemem} G / {props.data.totalmem} G{" "}
       </h2>
     </Col>
     <Col className="gutter-row" span={6}>
@@ -130,18 +130,18 @@ class statisticsPage extends Component {
         interfactCaseCount: 0
       },
       status: {
-        mail: '',
-        systemName: '',
-        totalmem: '',
-        freemem: '',
-        uptime: ''
+        mail: "",
+        systemName: "",
+        totalmem: "",
+        freemem: "",
+        uptime: ""
       },
       dataTotal: []
     };
   }
 
-  async componentWillMount() {
-    this.props.setBreadcrumb([{ name: '系统信息' }]);
+  async UNSAFE_componentWillMount() {
+    this.props.setBreadcrumb([{ name: "系统信息" }]);
     this.getStatisData();
     this.getSystemStatusData();
     this.getGroupData();
@@ -149,7 +149,7 @@ class statisticsPage extends Component {
 
   // 获取统计数据
   async getStatisData() {
-    let result = await axios.get('/api/plugin/statismock/count');
+    let result = await axios.get("/api/plugin/statismock/count");
     if (result.data.errcode === 0) {
       let statisData = result.data.data;
       this.setState({
@@ -161,7 +161,7 @@ class statisticsPage extends Component {
   // 获取系统信息
 
   async getSystemStatusData() {
-    let result = await axios.get('/api/plugin/statismock/get_system_status');
+    let result = await axios.get("/api/plugin/statismock/get_system_status");
     if (result.data.errcode === 0) {
       let statusData = result.data.data;
       this.setState({
@@ -173,12 +173,10 @@ class statisticsPage extends Component {
   // 获取分组详细信息
 
   async getGroupData() {
-    let result = await axios.get('/api/plugin/statismock/group_data_statis');
+    let result = await axios.get("/api/plugin/statismock/group_data_statis");
     if (result.data.errcode === 0) {
       let statusData = result.data.data;
-      statusData.map(item => {
-        return (item['key'] = item.name);
-      });
+      statusData.map((item) => (item["key"] = item.name));
       this.setState({
         dataTotal: statusData
       });
