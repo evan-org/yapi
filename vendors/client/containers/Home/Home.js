@@ -1,15 +1,15 @@
-import './Home.scss';
-import React, { PureComponent as Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Row, Col, Button, Icon, Card } from 'antd';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-import LogoSVG from '../../components/LogoSVG/index.js';
-import { changeMenuItem } from '../../reducer/modules/menu';
-const plugin = require('client/plugin.js');
+import styles from "./Home.module.scss";
+import React, { PureComponent as Component } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { Row, Col, Button, Icon, Card } from "antd";
+import PropTypes from "prop-types";
+import { withRouter } from "react-router";
+import LogoSVG from "../../components/LogoSVG/index.js";
+import { changeMenuItem } from "../../reducer/modules/menu";
+const plugin = require("client/plugin.js");
 
-const ThirdLogin = plugin.emitHook('third_login');
+const ThirdLogin = plugin.emitHook("third_login");
 const HomeGuest = () => (
   <div className="g-body">
     <div className="m-bg">
@@ -60,7 +60,7 @@ const HomeGuest = () => (
           </Col>
           <Col lg={15} xs={0} className="col-img">
             <div className="img-container">
-              
+
             </div>
           </Col>
         </Row>
@@ -281,7 +281,7 @@ const HomeGuest = () => (
     </div>
     <div className="home-section section-manage">
       <div className="container">
-        <Row className="row-card" style={{ marginBottom: '.48rem' }}>
+        <Row className="row-card" style={{ marginBottom: ".48rem" }}>
           <Col lg={7} xs={10} className="section-card">
             <Card>
               <div className="section-block block-first">
@@ -324,7 +324,7 @@ HomeGuest.propTypes = {
 };
 
 @connect(
-  state => ({
+  (state) => ({
     login: state.user.isLogin
   }),
   {
@@ -339,7 +339,7 @@ class Home extends Component {
 
   componentWillMount() {
     if (this.props.login) {
-      this.props.history.push('/group/261');
+      this.props.history.push("/group/261");
     }
   }
 
@@ -351,11 +351,11 @@ class Home extends Component {
     changeMenuItem: PropTypes.func
   };
   toStart = () => {
-    this.props.changeMenuItem('/group');
+    this.props.changeMenuItem("/group");
   };
   render() {
     return (
-      <div className="home-main">
+      <div className={styles.HomeMain}>
         <HomeGuest introList={this.props.introList} />
         <div className="row-tip">
           <div className="container">

@@ -1,10 +1,10 @@
-import './Footer.scss';
-import React, { PureComponent as Component } from 'react';
-import PropTypes from 'prop-types';
-import { Row, Col } from 'antd';
-import { Icon } from 'antd';
+import "./Footer.scss";
+import React, { PureComponent as Component } from "react";
+import PropTypes from "prop-types";
+import { Row, Col } from "antd";
+import { Icon } from "antd";
 
-const version = process.env.version;
+const version = "1.0.0" // process.env.version;
 class Footer extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +45,7 @@ class FootItem extends Component {
     return (
       <Col span={6}>
         <h4 className="title">
-          {this.props.iconType ? <Icon type={this.props.iconType} className="icon" /> : ''}
+          {this.props.iconType ? <Icon type={this.props.iconType} className="icon" /> : ""}
           {this.props.title}
         </h4>
         {this.props.linkList.map(function(item, i) {
@@ -65,36 +65,36 @@ class FootItem extends Component {
 Footer.defaultProps = {
   footList: [
     {
-      title: 'GitHub',
-      iconType: 'github',
+      title: "GitHub",
+      iconType: "github",
       linkList: [
         {
-          itemTitle: 'YApi 源码仓库',
-          itemLink: 'https://github.com/YMFE/yapi'
+          itemTitle: "YApi 源码仓库",
+          itemLink: "https://github.com/YMFE/yapi"
         }
       ]
     },
     {
-      title: '团队',
-      iconType: 'team',
+      title: "团队",
+      iconType: "team",
       linkList: [
         {
-          itemTitle: 'YMFE',
-          itemLink: 'https://ymfe.org'
+          itemTitle: "YMFE",
+          itemLink: "https://ymfe.org"
         }
       ]
     },
     {
-      title: '反馈',
-      iconType: 'aliwangwang-o',
+      title: "反馈",
+      iconType: "aliwangwang-o",
       linkList: [
         {
-          itemTitle: 'Github Issues',
-          itemLink: 'https://github.com/YMFE/yapi/issues'
+          itemTitle: "Github Issues",
+          itemLink: "https://github.com/YMFE/yapi/issues"
         },
         {
-          itemTitle: 'Github Pull Requests',
-          itemLink: 'https://github.com/YMFE/yapi/pulls'
+          itemTitle: "Github Pull Requests",
+          itemLink: "https://github.com/YMFE/yapi/pulls"
         }
       ]
     },
@@ -103,11 +103,11 @@ Footer.defaultProps = {
       linkList: [
         {
           itemTitle: `版本: ${version} `,
-          itemLink: 'https://github.com/YMFE/yapi/blob/master/CHANGELOG.md'
+          itemLink: "https://github.com/YMFE/yapi/blob/master/CHANGELOG.md"
         },
         {
-          itemTitle: '使用文档',
-          itemLink: 'https://hellosean1025.github.io/yapi/'
+          itemTitle: "使用文档",
+          itemLink: "https://hellosean1025.github.io/yapi/"
         }
       ]
     }

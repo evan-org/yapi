@@ -1,35 +1,33 @@
-import React, { PureComponent as Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import axios from 'axios';
-import { Table, Button, Modal, message, Tooltip, Select, Icon } from 'antd';
-import AddInterfaceForm from './AddInterfaceForm';
+import React, { PureComponent as Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import axios from "axios";
+import { Table, Button, Modal, message, Tooltip, Select, Icon } from "antd";
+import AddInterfaceForm from "./AddInterfaceForm";
 import {
   fetchInterfaceListMenu,
   fetchInterfaceList,
   fetchInterfaceCatList
-} from '../../../../reducer/modules/interface.js';
-import { getProject } from '../../../../reducer/modules/project.js';
-import { Link } from 'react-router-dom';
-import variable from '../../../../constants/variable';
-import './Edit.scss';
-import Label from '../../../../components/Label/Label.js';
+} from "../../../../reducer/modules/interface.js";
+import { getProject } from "../../../../reducer/modules/project.js";
+import { Link } from "react-router-dom";
+import variable from "../../../../constants/variable";
+import "./Edit.scss";
+import Label from "../../../../components/Label/Label.js";
 
 const Option = Select.Option;
 const limit = 20;
 
 @connect(
-  state => {
-    return {
-      curData: state.inter.curdata,
-      curProject: state.project.currProject,
-      catList: state.inter.list,
-      totalTableList: state.inter.totalTableList,
-      catTableList: state.inter.catTableList,
-      totalCount: state.inter.totalCount,
-      count: state.inter.count
-    };
-  },
+  (state) => ({
+    curData: state.inter.curdata,
+    curProject: state.project.currProject,
+    catList: state.inter.list,
+    totalTableList: state.inter.totalTableList,
+    catTableList: state.inter.catTableList,
+    totalCount: state.inter.totalCount,
+    count: state.inter.count
+  }),
   {
     fetchInterfaceListMenu,
     fetchInterfaceList,
@@ -66,7 +64,7 @@ class InterfaceList extends Component {
     getProject: PropTypes.func
   };
 
-  handleRequest = async props => {
+  handleRequest = async(props) => {
     const { params } = props.match;
     if (!params.actionId) {
       let projectId = params.id;
@@ -103,14 +101,14 @@ class InterfaceList extends Component {
       desc: desc
     };
 
-    axios.post('/api/interface/up_cat', params).then(async res => {
+    axios.post("/api/interface/up_cat", params).then(async(res) => {
       if (res.data.errcode !== 0) {
         return message.error(res.data.errmsg);
       }
       let project_id = this.props.match.params.id;
       await this.props.getProject(project_id);
       await this.props.fetchInterfaceListMenu(project_id);
-      message.success('接口集合简介更新成功');
+      message.success("接口集合简介更新成功");
     });
   };
 
@@ -141,27 +139,27 @@ class InterfaceList extends Component {
     }
   }
 
-  handleAddInterface = data => {
+  handleAddInterface = (data) => {
     data.project_id = this.props.curProject._id;
-    axios.post('/api/interface/add', data).then(res => {
+    axios.post("/api/interface/add", data).then((res) => {
       if (res.data.errcode !== 0) {
         return message.error(`${res.data.errmsg}, 你可以在左侧的接口列表中对接口进行删改`);
       }
-      message.success('接口添加成功');
+      message.success("接口添加成功");
       let interfaceId = res.data.data._id;
-      this.props.history.push('/project/' + data.project_id + '/interface/api/' + interfaceId);
+      this.props.history.push("/project/" + data.project_id + "/interface/api/" + interfaceId);
       this.props.fetchInterfaceListMenu(data.project_id);
     });
   };
 
-  changeInterfaceCat = async (id, catid) => {
+  changeInterfaceCat = async(id, catid) => {
     const params = {
       id: id,
       catid
     };
-    let result = await axios.post('/api/interface/up', params);
+    let result = await axios.post("/api/interface/up", params);
     if (result.data.errcode === 0) {
-      message.success('修改成功');
+      message.success("修改成功");
       this.handleRequest(this.props);
       this.props.fetchInterfaceListMenu(this.props.curProject._id);
     } else {
@@ -169,21 +167,21 @@ class InterfaceList extends Component {
     }
   };
 
-  changeInterfaceStatus = async value => {
+  changeInterfaceStatus = async(value) => {
     const params = {
-      id: value.split('-')[0],
-      status: value.split('-')[1]
+      id: value.split("-")[0],
+      status: value.split("-")[1]
     };
-    let result = await axios.post('/api/interface/up', params);
+    let result = await axios.post("/api/interface/up", params);
     if (result.data.errcode === 0) {
-      message.success('修改成功');
+      message.success("修改成功");
       this.handleRequest(this.props);
     } else {
       message.error(result.data.errmsg);
     }
   };
 
-  //page change will be processed in handleChange by pagination
+  // page change will be processed in handleChange by pagination
   // changePage = current => {
   //   if (this.state.current !== current) {
   //     this.setState(
@@ -197,34 +195,30 @@ class InterfaceList extends Component {
 
   render() {
     let tag = this.props.curProject.tag;
-    let tagFilter = tag.map(item => {
-      return {text: item.name, value: item.name};
-    });
+    let tagFilter = tag.map((item) => ({text: item.name, value: item.name}));
 
     const columns = [
       {
-        title: '接口名称',
-        dataIndex: 'title',
-        key: 'title',
+        title: "接口名称",
+        dataIndex: "title",
+        key: "title",
         width: 30,
-        render: (text, item) => {
-          return (
-            <Link to={'/project/' + item.project_id + '/interface/api/' + item._id}>
-              <span className="path">{text}</span>
-            </Link>
-          );
-        }
+        render: (text, item) => (
+          <Link to={"/project/" + item.project_id + "/interface/api/" + item._id}>
+            <span className="path">{text}</span>
+          </Link>
+        )
       },
       {
-        title: '接口路径',
-        dataIndex: 'path',
-        key: 'path',
+        title: "接口路径",
+        dataIndex: "path",
+        key: "path",
         width: 50,
         render: (item, record) => {
           const path = this.props.curProject.basepath + item;
           let methodColor =
-            variable.METHOD_COLOR[record.method ? record.method.toLowerCase() : 'get'] ||
-            variable.METHOD_COLOR['get'];
+            variable.METHOD_COLOR[record.method ? record.method.toLowerCase() : "get"] ||
+            variable.METHOD_COLOR["get"];
           return (
             <div>
               <span
@@ -244,45 +238,41 @@ class InterfaceList extends Component {
         }
       },
       {
-        title: '接口分类',
-        dataIndex: 'catid',
-        key: 'catid',
+        title: "接口分类",
+        dataIndex: "catid",
+        key: "catid",
         width: 28,
-        render: (item, record) => {
-          return (
-            <Select
-              value={item + ''}
-              className="select path"
-              onChange={catid => this.changeInterfaceCat(record._id, catid)}
-            >
-              {this.props.catList.map(cat => {
-                return (
-                  <Option key={cat.id + ''} value={cat._id + ''}>
-                    <span>{cat.name}</span>
-                  </Option>
-                );
-              })}
-            </Select>
-          );
-        }
+        render: (item, record) => (
+          <Select
+            value={item + ""}
+            className="select path"
+            onChange={(catid) => this.changeInterfaceCat(record._id, catid)}
+          >
+            {this.props.catList.map((cat) => (
+              <Option key={cat.id + ""} value={cat._id + ""}>
+                <span>{cat.name}</span>
+              </Option>
+            ))}
+          </Select>
+        )
       },
       {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
+        title: "状态",
+        dataIndex: "status",
+        key: "status",
         width: 24,
         render: (text, record) => {
           const key = record.key;
           return (
             <Select
-              value={key + '-' + text}
+              value={key + "-" + text}
               className="select"
               onChange={this.changeInterfaceStatus}
             >
-              <Option value={key + '-done'}>
+              <Option value={key + "-done"}>
                 <span className="tag-status done">已完成</span>
               </Option>
-              <Option value={key + '-undone'}>
+              <Option value={key + "-undone"}>
                 <span className="tag-status undone">未完成</span>
               </Option>
             </Select>
@@ -290,33 +280,31 @@ class InterfaceList extends Component {
         },
         filters: [
           {
-            text: '已完成',
-            value: 'done'
+            text: "已完成",
+            value: "done"
           },
           {
-            text: '未完成',
-            value: 'undone'
+            text: "未完成",
+            value: "undone"
           }
         ],
         onFilter: (value, record) => record.status.indexOf(value) === 0
       },
       {
-        title: 'tag',
-        dataIndex: 'tag',
-        key: 'tag',
+        title: "tag",
+        dataIndex: "tag",
+        key: "tag",
         width: 14,
-        render: text => {
-          let textMsg = text.length > 0 ? text.join('\n') : '未设置';
+        render: (text) => {
+          let textMsg = text.length > 0 ? text.join("\n") : "未设置";
           return <div className="table-desc">{textMsg}</div>;
         },
         filters: tagFilter,
-        onFilter: (value, record) => {
-          return record.tag.indexOf(value) >= 0;
-        }
+        onFilter: (value, record) => record.tag.indexOf(value) >= 0
       }
     ];
-    let intername = '',
-      desc = '';
+    let intername = "",
+      desc = "";
     let cat = this.props.curProject ? this.props.curProject.cat : [];
 
     if (cat) {
@@ -343,7 +331,7 @@ class InterfaceList extends Component {
       total = this.props.count;
     }
 
-    data = data.map(item => {
+    data = data.map((item) => {
       item.key = item._id;
       return item;
     });
@@ -360,21 +348,21 @@ class InterfaceList extends Component {
     // console.log(this.props.curProject.tag)
 
     return (
-      <div style={{ padding: '24px' }}>
-        <h2 className="interface-title" style={{ display: 'inline-block', margin: 0 }}>
-          {intername ? intername : '全部接口'}共 ({total}) 个
+      <div style={{ padding: "24px" }}>
+        <h2 className="interface-title" style={{ display: "inline-block", margin: 0 }}>
+          {intername ? intername : "全部接口"}共 ({total}) 个
         </h2>
 
         <Button
-          style={{ float: 'right' }}
+          style={{ float: "right" }}
           disabled={isDisabled}
           type="primary"
           onClick={() => this.setState({ visible: true })}
         >
           添加接口
         </Button>
-        <div style={{ marginTop: '10px' }}>
-          <Label onChange={value => this.handleChangeInterfaceCat(value, intername)} desc={desc} />
+        <div style={{ marginTop: "10px" }}>
+          <Label onChange={(value) => this.handleChangeInterfaceCat(value, intername)} desc={desc} />
         </div>
         <Table
           className="table-interfacelist"

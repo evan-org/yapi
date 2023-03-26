@@ -61,7 +61,6 @@ function invade(target, name, callback) {
   });
 }
 let isWin = require("os").platform() === "win32";
-
 //
 module.exports = {
   // reactScriptsVersion: "react-scripts",
@@ -154,6 +153,7 @@ module.exports = {
       // webpackConfig.output.publicPath = "/";
       if (env === "development") {
         webpackConfig.devtool = "cheap-module-source-map";
+        console.log("当前是开发环境", env, "devtool:", "cheap-module-source-map");
       }
       // webpackConfig.devtool = false;
       //
@@ -165,7 +165,7 @@ module.exports = {
   babel: {
     presets: [
       "@babel/preset-react",
-      ["@babel/preset-env", {modules: "commonjs"}]
+      ["@babel/preset-env", { modules: "commonjs" }]
     ],
     plugins: [
       ["@babel/plugin-proposal-decorators", { legacy: true }],
@@ -178,33 +178,29 @@ module.exports = {
           libraryDirectory: "es",
           style: "css",
         },
-      ],
-      // "react-refresh/babel"
+      ]
     ],
-    loaderOptions: (babelLoaderOptions, { env, paths }) => {
-      console.log("babelLoaderOptions", babelLoaderOptions);
-      return babelLoaderOptions;
-    }
+    loaderOptions: (babelLoaderOptions, { env, paths }) =>
+      // console.log("babelLoaderOptions", babelLoaderOptions);
+      babelLoaderOptions
   },
   devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {
-    console.log("env, paths, proxy, allowedHost", env, paths, proxy, allowedHost);
-    devServerConfig.publicPath = "/";
-
-    devServerConfig.proxy = {
-      context: ["/api", "/login"],
-      // 转发端口自定义
-      target: "http://127.0.0.1:3030",
-      ws: true,
-    }
-    /*
-    *
-    *  {
+    devServerConfig = {
+      ...devServerConfig,
+      publicPath: "/",
+      host: "localhost",
+      public: "localhost",
+      overlay: true,
+      port: 4000,
+      hot: true,
+      proxy: [{
         context: ["/api", "/login"],
         // 转发端口自定义
         target: "http://127.0.0.1:3030",
+        changeOrigin: true,
         ws: true,
-      },*/
-    console.log("devServerConfig", devServerConfig);
+      }]
+    }
     return devServerConfig
   },
   plugins: [

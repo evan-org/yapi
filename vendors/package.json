@@ -6,7 +6,7 @@
   "scripts": {
     "dev:vite": "vite",
     "build:vite": "tsc && vite build",
-    "start:craco": "craco start -port 4000",
+    "start:craco": "set PORT=5000 && craco start FAST_REFRESH=true",
     "build:craco": "craco build",
     "start:react-scripts": "react-scripts start",
     "build:react-scripts": "react-scripts build",

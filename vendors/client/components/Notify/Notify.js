@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Alert, message } from 'antd';
+import React, { Component } from "react";
+import axios from "axios";
+import { Alert, message } from "antd";
 
 export default class Notify extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newVersion: process.env.version,
-      version: process.env.version
+      newVersion: "1.0.0", // process.env.version,
+      version: "1.0.0" // process.env.version
     };
   }
 
   componentDidMount() {
-    const versions = 'https://www.fastmock.site/mock/1529fa78fa4c4880ad153d115084a940/yapi/versions';
-    axios.get(versions).then(req => {
+    const versions = "https://www.fastmock.site/mock/1529fa78fa4c4880ad153d115084a940/yapi/versions";
+    axios.get(versions).then((req) => {
       if (req.status === 200) {
         this.setState({ newVersion: req.data.data[0] });
       } else {
-        message.error('无法获取新版本信息！');
+        message.error("无法获取新版本信息！");
       }
     });
   }
