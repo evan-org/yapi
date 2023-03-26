@@ -1,5 +1,4 @@
 import React, { PureComponent as Component } from "react";
-import "./Follows.scss";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Row, Col } from "antd";
@@ -7,7 +6,8 @@ import { getFollowList } from "../../reducer/modules/follow";
 import { setBreadcrumb } from "../../reducer/modules/user";
 import ProjectCard from "../../components/ProjectCard/ProjectCard.js";
 import ErrMsg from "../../components/ErrMsg/ErrMsg.js";
-
+//
+import styles from "./Follows.module.scss";
 @connect(
   (state) => ({
     data: state.follow.data,
@@ -30,7 +30,6 @@ class Follows extends Component {
     setBreadcrumb: PropTypes.func,
     uid: PropTypes.number
   };
-
   receiveRes = () => {
     this.props.getFollowList(this.props.uid).then((res) => {
       if (res.payload.data.errcode === 0) {
@@ -40,7 +39,6 @@ class Follows extends Component {
       }
     });
   };
-
   async UNSAFE_componentWillMount() {
     this.props.setBreadcrumb([{ name: "我的关注" }]);
     this.props.getFollowList(this.props.uid).then((res) => {
@@ -51,12 +49,11 @@ class Follows extends Component {
       }
     });
   }
-
   render() {
     let data = this.state.data;
     data = data.sort((a, b) => b.up_time - a.up_time);
     return (
-      <div>
+      <div className={styles.Follows}>
         <div className="g-row" style={{ paddingLeft: "32px", paddingRight: "32px" }}>
           <Row gutter={16} className="follow-box pannel-without-tab">
             {data.length ? (
@@ -70,7 +67,7 @@ class Follows extends Component {
                 </Col>
               ))
             ) : (
-              <ErrMsg type="noFollow" />
+              <ErrMsg type="noFollow"/>
             )}
           </Row>
         </div>
@@ -78,5 +75,4 @@ class Follows extends Component {
     );
   }
 }
-
 export default Follows;

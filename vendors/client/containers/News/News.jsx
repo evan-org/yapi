@@ -1,4 +1,3 @@
-import "./News.scss";
 import React, { PureComponent as Component } from "react";
 import NewsTimeline from "./NewsTimeline/NewsTimeline";
 import { connect } from "react-redux";
@@ -38,25 +37,23 @@ class News extends Component {
     // })
   }
   render() {
+    const subNavList = [
+      {
+        name: "动态",
+        path: "/news"
+      },
+      {
+        name: "测试",
+        path: "/follow"
+      },
+      {
+        name: "设置",
+        path: "/follow"
+      }
+    ];
     return (
       <div>
-        <Subnav
-          default={"动态"}
-          data={[
-            {
-              name: "动态",
-              path: "/news"
-            },
-            {
-              name: "测试",
-              path: "/follow"
-            },
-            {
-              name: "设置",
-              path: "/follow"
-            }
-          ]}
-        />
+        <Subnav default={"动态"} data={subNavList}/>
         <div className="g-row">
           <section className="news-box m-panel">
             <div className="logHead">
