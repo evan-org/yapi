@@ -54,12 +54,12 @@ const routes = [
   { path: "/home", redirectTo: "/" },
   {
     path: "/login",
-    element: lazy(() => import("../pages/auth/login/Login")),
+    element: lazy(() => import("../pages/Login/Login")),
     meta: { title: "首页", auth: false },
   },
   {
     path: "/webview",
-    element: lazy(() => import("../pages/webview/Webview")),
+    element: lazy(() => import("../pages/Webview/Webview")),
     meta: { title: "首页", auth: false },
   },
   {
