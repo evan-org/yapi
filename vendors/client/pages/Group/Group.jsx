@@ -59,7 +59,7 @@ function GroupContent(props) {
   )
 }
 function Group(props) {
-  console.debug("1111111111111111111", props);
+  console.debug("Group 1111111111111111111", props);
   const [groupId, setGroupId] = useState(() => props.curGroupId);
   async function init() {
     try {

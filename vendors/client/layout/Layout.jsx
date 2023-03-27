@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Loading from "../components/Loading/Loading";
-import Notify from "../components/Notify/Notify";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import { Alert } from "antd";
 //
 import styles from "./Layout.module.scss";
 import { Container } from "@mui/material";
+import { withRouter } from "react-router-dom";
 
 function AlertContent() {
   const ua = window.navigator.userAgent,
@@ -26,29 +26,36 @@ function AlertContent() {
 }
 function Layout(props) {
   console.debug("layout =>", props);
-  const { loginState, curUserRole, checkLoginState } = props;
+  const { loginState, curUserRole, checkLoginState, location } = props;
   const [visible, setVisible] = useState(true);
+  const [compute, setCompute] = useState("");
   //
   useEffect(() => {
     (async() => {
       const a = await checkLoginState();
-      console.log("layout挂载中", loginState, a);
+      console.log("layout挂载中", loginState, props);
       setTimeout(() => {
         setVisible(false);
       }, 1000)
     })()
-  }, [])
+  }, []);
+  //
+  useEffect(() => {
+    console.log("location update", location);
+    if (!["", "/", "/login"].includes(location.pathname)) {
+      setCompute(() => styles.compute);
+    }
+  }, [location])
   return (
-    <div className={styles.Layout}>
+    <section className={styles.Layout}>
       <Loading visible={visible}/>
-      {curUserRole === "admin" && <Notify/>}
-      <AlertContent/>
-      {loginState === 2 ? <Header/> : null}
-      <Container class={styles.LayoutContainer} maxWidth={false} sx={{padding: 0}}>
+      {loginState === 2 ? <Header {...props}/> : null}
+      <Container class={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
         {props.children}
       </Container>
       <Footer/>
-    </div>
+      <AlertContent/>
+    </section>
   )
 }
-export default Layout;
+export default withRouter(Layout);

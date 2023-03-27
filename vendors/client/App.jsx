@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { connect } from "react-redux";
-import { Route, BrowserRouter as Router } from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 //
 import Layout from "./layout/Layout";
 import { AppRoute } from "client/router";
@@ -37,14 +37,16 @@ function App(props) {
   return (
     <Router getUserConfirmation={showConfirm}>
       <Layout {...props}>
-        {Object.keys(AppRoute).map((key) => {
-          let item = AppRoute[key];
-          return ["login", "home"].includes(key) ? (
-            <Route key={key} exact path={item.path} component={item.component}/>
-          ) : (
-            <Route key={key} path={item.path} component={requireAuthentication(item.component)}/>
-          );
-        })}
+        <Switch>
+          {Object.keys(AppRoute).map((key) => {
+            let item = AppRoute[key];
+            return ["login", "home"].includes(key) ? (
+              <Route key={key} exact path={item.path} component={item.component}/>
+            ) : (
+              <Route key={key} path={item.path} component={requireAuthentication(item.component)}/>
+            );
+          })}
+        </Switch>
       </Layout>
     </Router>
   )

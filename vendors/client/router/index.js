@@ -17,6 +17,10 @@ export const AppRoute = {
     path: "/project/:id",
     component: Project
   },
+  addProject: {
+    path: "/add-project",
+    component: AddProject
+  },
   user: {
     path: "/user",
     component: User
@@ -24,9 +28,5 @@ export const AppRoute = {
   follow: {
     path: "/follow",
     component: Follows
-  },
-  addProject: {
-    path: "/add-project",
-    component: AddProject
   }
 };

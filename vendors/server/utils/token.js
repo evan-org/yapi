@@ -43,16 +43,16 @@ const defaultSalt = "abcde";
 
 exports.getToken = function getToken(token, uid) {
   if (!token) {throw new Error("token 不能为空")}
-  yapi.WEBCONFIG.passsalt = yapi.WEBCONFIG.passsalt || defaultSalt;
-  return aseEncode(uid + "|" + token, yapi.WEBCONFIG.passsalt)
+  yapi.WEBROOT_CONFIG.passsalt = yapi.WEBROOT_CONFIG.passsalt || defaultSalt;
+  return aseEncode(uid + "|" + token, yapi.WEBROOT_CONFIG.passsalt)
 }
 
 exports.parseToken = function parseToken(token) {
   if (!token) {throw new Error("token 不能为空")}
-  yapi.WEBCONFIG.passsalt = yapi.WEBCONFIG.passsalt || defaultSalt;
+  yapi.WEBROOT_CONFIG.passsalt = yapi.WEBROOT_CONFIG.passsalt || defaultSalt;
   let tokens;
   try {
-    tokens = aseDecode(token, yapi.WEBCONFIG.passsalt)
+    tokens = aseDecode(token, yapi.WEBROOT_CONFIG.passsalt)
   } catch (e) {}
   if (tokens && typeof tokens === "string" && tokens.indexOf("|") > 0) {
     tokens = tokens.split("|")

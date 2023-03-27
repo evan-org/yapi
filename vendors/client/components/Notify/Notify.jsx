@@ -10,7 +10,6 @@ export default class Notify extends Component {
       version: "1.0.0" // process.env.version
     };
   }
-
   componentDidMount() {
     const versions = "https://www.fastmock.site/mock/1529fa78fa4c4880ad153d115084a940/yapi/versions";
     axios.get(versions).then((req) => {
@@ -21,11 +20,10 @@ export default class Notify extends Component {
       }
     });
   }
-
   render() {
     const isShow = this.state.newVersion !== this.state.version;
     return (
-      <div>
+      <>
         {isShow && (
           <Alert
             message={
@@ -45,7 +43,7 @@ export default class Notify extends Component {
             type="info"
           />
         )}
-      </div>
+      </>
     );
   }
 }

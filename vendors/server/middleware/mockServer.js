@@ -20,25 +20,18 @@ function matchApi(apiPath, apiRule) {
   if (apiPaths.length !== apiRules.length) {
     return false;
   }
+  // api路由
   for (let i = 0; i < apiRules.length; i++) {
     if (apiRules[i]) {
       apiRules[i] = apiRules[i].trim();
     } else {
       continue;
     }
-    if (
-      apiRules[i].length > 2 &&
-      apiRules[i][0] === "{" &&
-      apiRules[i][apiRules[i].length - 1] === "}"
-    ) {
+    if (apiRules[i].length > 2 && apiRules[i][0] === "{" && apiRules[i][apiRules[i].length - 1] === "}") {
       pathParams[apiRules[i].substr(1, apiRules[i].length - 2)] = apiPaths[i];
     } else if (apiRules[i].indexOf(":") === 0) {
       pathParams[apiRules[i].substr(1)] = apiPaths[i];
-    } else if (
-      apiRules[i].length > 2 &&
-      apiRules[i].indexOf("{") > -1 &&
-      apiRules[i].indexOf("}") > -1
-    ) {
+    } else if (apiRules[i].length > 2 && apiRules[i].indexOf("{") > -1 && apiRules[i].indexOf("}") > -1) {
       let params = [];
       apiRules[i] = apiRules[i].replace(/\{(.+?)\}/g, function(src, match) {
         params.push(match);
@@ -48,7 +41,7 @@ function matchApi(apiPath, apiRule) {
       if (!apiRules[i].test(apiPaths[i])) {
         return false;
       }
-      let matchs = apiPaths[i].match(apiRules[i]);
+      const matchs = apiPaths[i].match(apiRules[i]);
       params.forEach((item, index) => {
         pathParams[item] = matchs[index + 1];
       });
@@ -135,7 +128,7 @@ function mockValidator(interfaceData, ctx) {
 module.exports = async(ctx, next) => {
   // no used variable 'hostname' & 'config'
   // let hostname = ctx.hostname;
-  // let config = yapi.WEBCONFIG;
+  // let config = yapi.WEBROOT_CONFIG;
   let path = ctx.path;
   let header = ctx.request.header;
   if (path.indexOf("/mock/") !== 0) {

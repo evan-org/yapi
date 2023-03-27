@@ -16,10 +16,9 @@ class followController extends baseController {
    * @method GET
    * @category follow
    * @foldnumber 10
-   * @param {Number} [page] 分页页码
-   * @param {Number} [limit] 分页大小
    * @returns {Object}
    * @example /follow/list
+   * @param ctx
    */
 
   async list(ctx) {
@@ -49,9 +48,9 @@ class followController extends baseController {
    * @method POST
    * @category follow
    * @foldnumber 10
-   * @param {Number} projectid
    * @returns {Object}
    * @example /follow/del
+   * @param ctx
    */
 
   async del(ctx) {
@@ -82,11 +81,9 @@ class followController extends baseController {
    * @method GET
    * @category follow
    * @foldnumber 10
-   * @param {Number} projectid 项目id
-   * @param {String} projectname 项目名
-   * @param {String} icon 项目icon
    * @returns {Object}
    * @example /follow/add
+   * @param ctx
    */
 
   async add(ctx) {

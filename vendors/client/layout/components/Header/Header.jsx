@@ -7,6 +7,7 @@ import { checkLoginState, logoutActions, loginTypeAction } from "../../../reduce
 import { changeMenuItem } from "../../../reducer/modules/menu";
 // import { withRouter } from "react-router";
 import Search from "./Search/Search";
+import Notify from "../../../components/Notify/Notify";
 //
 import styles from "./Header.module.scss";
 //
@@ -201,7 +202,7 @@ ToolUser.propTypes = {
 };
 //
 function HeaderBox(props) {
-  const { studyTip, login, study, user, msg, uid, role, imageUrl } = props;
+  const {curUserRole, studyTip, login, study, user, msg, uid, role, imageUrl } = props;
   const linkTo = (e) => {
     if (e.key !== "/doc") {
       props.changeMenuItem(e.key);
@@ -245,21 +246,24 @@ function HeaderBox(props) {
     });
   };
   return (
-    <Layout.Header className={styles.HeaderBox}>
-      <div className="content g-row">
-        <Link onClick={relieveLink} to="/group" className="logo">
-          <div className="href">
-            <span className="img">
-              <LogoSVG length="32px"/>
-            </span>
+    <header>
+      {curUserRole === "admin" && <Notify/>}
+      <Layout.Header className={styles.HeaderBox}>
+        <div className="content g-row">
+          <Link onClick={relieveLink} to="/group" className="logo">
+            <div className="href">
+              <span className="img">
+                <LogoSVG length="32px"/>
+              </span>
+            </div>
+          </Link>
+          <Breadcrumb/>
+          <div className="user-toolbar" style={{ position: "relative", zIndex: studyTip > 0 ? 3 : 1 }}>
+            {login ? <ToolUser{...props} relieveLink={relieveLink} logout={logout}/> : null}
           </div>
-        </Link>
-        <Breadcrumb/>
-        <div className="user-toolbar" style={{ position: "relative", zIndex: studyTip > 0 ? 3 : 1 }}>
-          {login ? <ToolUser{...props} relieveLink={relieveLink} logout={logout}/> : null}
         </div>
-      </div>
-    </Layout.Header>
+      </Layout.Header>
+    </header>
   )
 }
 export default connect(

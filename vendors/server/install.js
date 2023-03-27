@@ -24,8 +24,8 @@ function setupSql() {
   let userInst = yapi.getInst(userModel);
   let passsalt = yapi.commons.randStr();
   let result = userInst.save({
-    username: yapi.WEBCONFIG.adminAccount.substr(0, yapi.WEBCONFIG.adminAccount.indexOf("@")),
-    email: yapi.WEBCONFIG.adminAccount,
+    username: yapi.WEBROOT_CONFIG.adminAccount.substr(0, yapi.WEBROOT_CONFIG.adminAccount.indexOf("@")),
+    email: yapi.WEBROOT_CONFIG.adminAccount,
     password: yapi.commons.generatePassword("ymfe.org", passsalt),
     passsalt: passsalt,
     role: "admin",
@@ -138,12 +138,12 @@ function setupSql() {
         function() {
           fs.ensureFileSync(yapi.path.join(yapi.WEBROOT_RUNTIME, "init.lock"));
           console.log(
-            `初始化管理员账号成功,账号名："${yapi.WEBCONFIG.adminAccount}"，密码："ymfe.org"`
+            `初始化管理员账号成功,账号名："${yapi.WEBROOT_CONFIG.adminAccount}"，密码："ymfe.org"`
           ); // eslint-disable-line
           process.exit(0);
         },
         function(err) {
-          throw new Error(`初始化管理员账号 "${yapi.WEBCONFIG.adminAccount}" 失败, ${err.message}`); // eslint-disable-line
+          throw new Error(`初始化管理员账号 "${yapi.WEBROOT_CONFIG.adminAccount}" 失败, ${err.message}`); // eslint-disable-line
         }
       );
     })
