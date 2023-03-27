@@ -99,7 +99,7 @@ module.exports = ({ env }) => {
           generateScopedName: "[local]___[hash:base64:5]",
           attributeNames: { activeStyleName: "activeClassName" },
         }],
-        "@babel/plugin-transform-modules-commonjs",
+        ["@babel/plugin-transform-modules-commonjs"],
         ["@babel/plugin-transform-runtime"],
         [
           "import",
@@ -174,7 +174,8 @@ module.exports = ({ env }) => {
         "src": resolve("./client"),
         "client": resolve("./client"),
         "common": resolve("./common"),
-        "exts": resolve("./exts")
+        "exts": resolve("./exts"),
+        "@mui/styled-engine": "@mui/styled-engine-sc",
       },
       plugins: {
         add: [

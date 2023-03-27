@@ -18,6 +18,7 @@ import "./styles/antd-ui/theme.less";
 const plugin = require("client/plugin.js");
 // 增加路由钩子
 plugin.emitHook("app_route", AppRoute);
+//
 function App(props) {
   console.log(process.env);
   //
@@ -36,16 +37,14 @@ function App(props) {
   return (
     <Router getUserConfirmation={showConfirm}>
       <Layout {...props}>
-        <div className="app-container">
-          {Object.keys(AppRoute).map((key) => {
-            let item = AppRoute[key];
-            return ["login", "home"].includes(key) ? (
-              <Route key={key} exact path={item.path} component={item.component}/>
-            ) : (
-              <Route key={key} path={item.path} component={requireAuthentication(item.component)}/>
-            );
-          })}
-        </div>
+        {Object.keys(AppRoute).map((key) => {
+          let item = AppRoute[key];
+          return ["login", "home"].includes(key) ? (
+            <Route key={key} exact path={item.path} component={item.component}/>
+          ) : (
+            <Route key={key} path={item.path} component={requireAuthentication(item.component)}/>
+          );
+        })}
       </Layout>
     </Router>
   )

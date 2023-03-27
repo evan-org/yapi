@@ -1,9 +1,9 @@
+$ball-color: #30a1f2;
+$ball-size: .15rem;
+$ball-margin: .02rem;
+$loader-radius: .25rem;
 .Loading {
   :global {
-    $ball-color: #30a1f2;
-    $ball-size: .15rem;
-    $ball-margin: .02rem;
-    $loader-radius: .25rem;
     @function delay($interval, $count, $index) {
       @return ($index * $interval) - ($interval * $count);
     }
