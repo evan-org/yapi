@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { connect } from "react-redux";
-import { Route, BrowserRouter as Router } from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 //
 import Layout from "./layout/Layout";
-import { AppRoute } from "client/router";
+import { AppRoute } from "client/router/oldIndex";
 // const RouterList = Object.keys(AppRoute);
 import { requireAuthentication } from "./components/AuthenticatedComponent";
 //
@@ -18,6 +18,7 @@ import "./styles/antd-ui/theme.less";
 const plugin = require("client/plugin.js");
 // 增加路由钩子
 plugin.emitHook("app_route", AppRoute);
+//
 function App(props) {
   console.log(process.env);
   //
@@ -36,7 +37,7 @@ function App(props) {
   return (
     <Router getUserConfirmation={showConfirm}>
       <Layout {...props}>
-        <div className="app-container">
+        <Switch>
           {Object.keys(AppRoute).map((key) => {
             let item = AppRoute[key];
             return ["login", "home"].includes(key) ? (
@@ -45,13 +46,14 @@ function App(props) {
               <Route key={key} path={item.path} component={requireAuthentication(item.component)}/>
             );
           })}
-        </div>
+        </Switch>
       </Layout>
     </Router>
   )
 }
 export default connect(
   (state) => ({
+    isLogin: state.user.isLogin,
     loginState: state.user.loginState ?? 1,
     curUserRole: state.user.role
   }),

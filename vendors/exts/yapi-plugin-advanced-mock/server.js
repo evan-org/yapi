@@ -1,6 +1,6 @@
 const controller = require("./controller");
-const advModel = require("./advMockModel.js");
-const caseModel = require("./caseModel.js");
+const advModel = require("./lib/advMockModel.js");
+const caseModel = require("./lib/caseModel.js");
 const yapi = require("yapi.js");
 const mongoose = require("mongoose");
 const _ = require("underscore");
@@ -13,7 +13,9 @@ function arrToObj(arr) {
   arr.forEach((item) => {
     if (item.name === "Set-Cookie") {
       obj["Set-Cookie"].push(item.value);
-    } else {obj[item.name] = item.value;}
+    } else {
+      obj[item.name] = item.value;
+    }
   });
   return obj;
 }

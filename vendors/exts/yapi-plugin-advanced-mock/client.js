@@ -1,4 +1,4 @@
-import AdvMock from "./AdvMock"
+import AdvMock from "./AdvMock/AdvMock"
 import mockCol from "./MockCol/mockColReducer.js"
 
 module.exports = function() {

@@ -24,6 +24,7 @@
     "emitDecoratorMetadata": true,
     "paths": {
       "common/*": ["common/*"],
+      "@/*": ["client/*"],
       "client/*": ["client/*"]
     }
   },

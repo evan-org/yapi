@@ -1,5 +1,5 @@
 import { message } from "antd";
-import run from "./run";
+import run from "./lib/run";
 
 module.exports = function() {
   this.bindHook("import_data", function(importDataModule) {

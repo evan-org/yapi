@@ -80,7 +80,7 @@ class exportController extends baseController {
     try {
       curProject = await this.projectModel.get(pid);
       if (isWiki === "true") {
-        const wikiModel = require("../yapi-plugin-wiki/wikiModel.js");
+        const wikiModel = require("../yapi-plugin-wiki/lib/wikiModel.js");
         wikiData = await yapi.getInst(wikiModel).get(pid);
       }
       ctx.set("Content-Type", "application/octet-stream");

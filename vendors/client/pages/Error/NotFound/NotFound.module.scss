@@ -1,0 +1,17 @@
+@charset "UTF-8";
+.Err404 {
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  :global{
+    .title {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+  }
+}

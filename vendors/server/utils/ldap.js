@@ -6,7 +6,7 @@ exports.ldapQuery = (username, password) =>
 // const deferred = Q.defer();
 
   new Promise((resolve, reject) => {
-    const { ldapLogin } = yapi.WEBCONFIG;
+    const { ldapLogin } = yapi.WEBROOT_CONFIG;
 
     //  使用ldapjs库创建一个LDAP客户端
     const client = ldap.createClient({

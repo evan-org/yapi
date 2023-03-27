@@ -1,18 +1,18 @@
 .Login {
-  height: calc(100vh - 240px);
+  height: 100vh;
+  position: relative;
   :global {
     .login-container {
-      .container {
-        display: inline-block;
-        margin-top: 20vh;
-        width: 100%;
-        div {
-          cursor: grab;
-          margin-bottom: 10px;
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
+      height: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      .MuiCard-root {
+        display: inherit;
+        position: relative;
+        overflow: inherit;
+        margin-top: 24vh;
       }
     }
     .login-form-button {
@@ -41,9 +41,7 @@
       }
     }
     .card-login {
-      margin-bottom: 1.6rem;
-      border-radius: .04rem;
-      position: relative;
+      width: 100%;
       .login-logo {
         font-size: 0;
         position: absolute;
