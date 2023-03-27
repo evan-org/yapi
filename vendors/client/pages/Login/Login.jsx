@@ -17,10 +17,10 @@ function Login(props) {
       <div className="login-container">
         <div className="container">
           <Card className="card-login">
-            <h2 className="login-title">YAPI</h2>
             <div className="login-logo">
               <LogoSVG length="100px"/>
             </div>
+            <h2 className="login-title">YAPI</h2>
             <LoginWrap {...props}/>
           </Card>
         </div>
