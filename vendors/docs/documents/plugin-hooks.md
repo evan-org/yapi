@@ -248,7 +248,7 @@ hooks = {
   },
   follow: {
     path: '/follow',
-    component: Follows
+    component: Follow
   },
   addProject: {
     path: '/add-project',

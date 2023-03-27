@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { useRoutes } from "react-router-dom";
-import { APP_NAME } from "@/config/index.ts";
+import { APP_NAME } from "@/utils/config";
 import Loading from "@/components/loading/Loading.jsx";
 //
 const routes = [
@@ -31,14 +31,14 @@ const routes = [
       {
         path: "/add-project",
         name: "AddProject",
-        element: lazy(() => import("../pages/Group/Group.jsx")),
+        element: lazy(() => import("../pages/AddProject/AddProject.jsx")),
         meta: { title: "查看报告", auth: true }
       },
       //
       {
         path: "/user",
         name: "User",
-        element: lazy(() => import("../pages/Group/Group.jsx")),
+        element: lazy(() => import("../pages/User/User.jsx")),
         meta: { title: "查看报告", auth: true }
       },
       //
@@ -55,17 +55,17 @@ const routes = [
   {
     path: "/login",
     element: lazy(() => import("../pages/Login/Login")),
-    meta: { title: "首页", auth: false },
+    meta: { title: "登录", auth: false },
   },
   {
     path: "/webview",
     element: lazy(() => import("../pages/Webview/Webview")),
-    meta: { title: "首页", auth: false },
+    meta: { title: APP_NAME, auth: false },
   },
   {
     path: "*",
-    element: lazy(() => import("../pages/define/error/notFound/NotFound")),
-    meta: { title: "首页", auth: false },
+    element: lazy(() => import("../pages/Error/NotFound/NotFound")),
+    meta: { title: "什么也没找到", auth: false },
   }
 ];
 // 根据路径获取路由

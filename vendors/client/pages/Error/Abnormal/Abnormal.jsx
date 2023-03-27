@@ -1,6 +1,6 @@
-import React  from 'react';
-import styles from './Abnormal.module.less';
-import nullPng from '@/assets/images/null.png';
+import React  from "react";
+import styles from "./Abnormal.module.less";
+import nullPng from "@/assets/images/null.png";
 function Main() {
   return (
     <div className={styles.Abnormal}>

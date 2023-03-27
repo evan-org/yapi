@@ -1,4 +1,4 @@
-import { AddProject, Follows, Group, Home, Login, Project, User } from "client/pages";
+import { AddProject, Follow, Group, Home, Login, Project, User } from "client/pages";
 
 export const AppRoute = {
   home: {
@@ -27,6 +27,6 @@ export const AppRoute = {
   },
   follow: {
     path: "/follow",
-    component: Follows
+    component: Follow
   }
 };

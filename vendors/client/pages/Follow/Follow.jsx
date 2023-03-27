@@ -10,17 +10,7 @@ import { setBreadcrumb } from "../../reducer/modules/user";
 //
 import styles from "./Follows.module.scss";
 
-@connect(
-  (state) => ({
-    data: state.follow.data,
-    uid: state.user.uid
-  }),
-  {
-    getFollowList,
-    setBreadcrumb
-  }
-)
-class Follows extends Component {
+class Follow extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -77,4 +67,13 @@ class Follows extends Component {
     );
   }
 }
-export default Follows;
+export default connect(
+  (state) => ({
+    data: state.follow.data,
+    uid: state.user.uid
+  }),
+  {
+    getFollowList,
+    setBreadcrumb
+  }
+)(Follow);

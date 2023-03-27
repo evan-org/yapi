@@ -7,14 +7,6 @@ import PropTypes from "prop-types";
 import Profile from "./components/Profile.jsx";
 import { Row } from "antd";
 import styles from "./User.module.scss";
-@connect(
-  (state) => ({
-    curUid: state.user.uid,
-    userType: state.user.type,
-    role: state.user.role
-  }),
-  {}
-)
 class User extends Component {
   static propTypes = {
     match: PropTypes.object,
@@ -38,4 +30,11 @@ class User extends Component {
     );
   }
 }
-export default User;
+export default connect(
+  (state) => ({
+    curUid: state.user.uid,
+    userType: state.user.type,
+    role: state.user.role
+  }),
+  {}
+)(User);
