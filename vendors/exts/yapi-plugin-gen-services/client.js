@@ -1,9 +1,9 @@
-import Services from "./Services/Services.js";
+import GenServicesPage from "./GenServicesPage/GenServicesPage.js";
 
 function genServices(routers) {
   routers["services"] = {
     name: "生成 ts services",
-    component: Services
+    component: GenServicesPage
   }
 }
 

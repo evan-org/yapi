@@ -31,7 +31,7 @@ const tailFormItemLayout = {
     }
   }
 };
-class SwaggerAutoSync extends Component {
+class SwaggerAutoSyncPage extends Component {
   static propTypes = {
     form: PropTypes.object,
     match: PropTypes.object,
@@ -225,4 +225,4 @@ export default connect(
   {
     handleSwaggerUrlData
   }
-)(Form.create()(SwaggerAutoSync));
+)(Form.create()(SwaggerAutoSyncPage));

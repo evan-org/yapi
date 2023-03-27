@@ -1,9 +1,9 @@
-import SwaggerAutoSync from "./SwaggerAutoSync/SwaggerAutoSync.js"
+import SwaggerAutoSyncPage from "./SwaggerAutoSyncPage/SwaggerAutoSyncPage.js"
 
 function hander(routers) {
   routers.test = {
     name: "Swagger自动同步",
-    component: SwaggerAutoSync
+    component: SwaggerAutoSyncPage
   };
 }
 

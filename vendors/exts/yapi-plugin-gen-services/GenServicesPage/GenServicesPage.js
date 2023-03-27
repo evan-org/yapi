@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { getToken } from '../../../client/reducer/modules/project.js'
 
 
-import './Services.scss';
+import './GenServicesPage.scss';
 
 @connect(
   state => {
@@ -16,7 +16,7 @@ import './Services.scss';
     getToken
   }
 )
-export default class Services extends Component {
+export default class GenServicesPage extends Component {
   static propTypes = {
     projectId: PropTypes.string,
     token: PropTypes.string,
