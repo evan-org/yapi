@@ -1,6 +1,6 @@
 const controller = require("./controller/syncController.js");
 const yapi = require("yapi.js");
-const interfaceSyncUtils = require("./interfaceSyncUtils.js");
+const interfaceSyncUtils = require("./lib/interfaceSyncUtils.js");
 
 module.exports = function() {
   yapi.getInst(interfaceSyncUtils);

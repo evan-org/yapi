@@ -5,12 +5,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import PropTypes from "prop-types";
-import "./index.scss";
+import "./StatisticsClientPage.scss";
 // import { withRouter } from 'react-router-dom';
 import { Row, Col, Tooltip, Icon } from "antd";
 import { setBreadcrumb } from "client/reducer/modules/user";
-import StatisChart from "./StatisChart";
-import StatisTable from "./StatisTable";
+import StatisChart from "./lib/StatisticsChart";
+import StatisTable from "./lib/StatisticsTable";
 
 const CountOverview = (props) => (
   <Row type="flex" justify="space-start" className="m-row">

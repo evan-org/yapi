@@ -1,5 +1,5 @@
 const baseController = require("controllers/base.js");
-const wikiModel = require("./wikiModel.js");
+const wikiModel = require("./WikiModel/WikiModel.js");
 const projectModel = require("models/project.js");
 const userModel = require("models/user.js");
 const jsondiffpatch = require("jsondiffpatch");

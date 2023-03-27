@@ -6,7 +6,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { Spin } from "antd";
-class StatisChart extends Component {
+// StatisticsClientPage
+class StatisticsChart extends Component {
   static propTypes = {};
 
   constructor(props) {
@@ -52,11 +53,11 @@ class StatisChart extends Component {
                 data={mockDateList}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
-                <XAxis dataKey="_id" />
-                <YAxis />
-                <CartesianGrid strokeDasharray="7 3" />
-                <Tooltip />
-                <Legend />
+                <XAxis dataKey="_id"/>
+                <YAxis/>
+                <CartesianGrid strokeDasharray="7 3"/>
+                <Tooltip/>
+                <Legend/>
                 <Line
                   name="mock统计值"
                   type="monotone"
@@ -74,4 +75,4 @@ class StatisChart extends Component {
   }
 }
 
-export default StatisChart;
+export default StatisticsChart;

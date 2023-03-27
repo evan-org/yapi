@@ -25,7 +25,7 @@ const columns = [
   }
 ];
 
-const StatisTable = (props) => {
+function StatisticsTable(props) {
   const { dataSource } = props;
   return (
     <div className="m-row-table">
@@ -38,10 +38,10 @@ const StatisTable = (props) => {
       />
     </div>
   );
-};
+}
 
-StatisTable.propTypes = {
+StatisticsTable.propTypes = {
   dataSource: PropTypes.array
 };
 
-export default StatisTable;
+export default StatisticsTable;
