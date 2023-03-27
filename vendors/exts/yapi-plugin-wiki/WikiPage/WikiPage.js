@@ -3,18 +3,13 @@ import { message } from "antd";
 import { connect } from "react-redux";
 import axios from "axios";
 import PropTypes from "prop-types";
-import "./index.scss";
+import "./WikiPage.scss";
+//
 import { timeago } from "../../../common/utils";
 import { Link } from "react-router-dom";
-import WikiView from "./View.js";
-import WikiEditor from "./Editor.js";
-
-@connect(
-  (state) => ({
-    projectMsg: state.project.currProject
-  }),
-  {}
-)
+import WikiView from "./lib/View.js";
+import WikiEditor from "./lib/WikiEditor.js";
+//
 class WikiPage extends Component {
   constructor(props) {
     super(props);
@@ -76,10 +71,10 @@ class WikiPage extends Component {
     let wsProtocol = location.protocol === "https:" ? "wss" : "ws";
     s = new WebSocket(
       wsProtocol +
-        "://" +
-        domain +
-        "/api/ws_plugin/wiki_desc/solve_conflict?id=" +
-        this.props.match.params.id
+      "://" +
+      domain +
+      "/api/ws_plugin/wiki_desc/solve_conflict?id=" +
+      this.props.match.params.id
     );
     s.onopen = () => {
       this.WebSocket = s;
@@ -206,10 +201,7 @@ class WikiPage extends Component {
 
   render() {
     const { isEditor, username, editorTime, notice, uid, status, editUid, editName } = this.state;
-    const editorEable =
-      this.props.projectMsg.role === "admin" ||
-      this.props.projectMsg.role === "owner" ||
-      this.props.projectMsg.role === "dev";
+    const editorEnable = ["editor", "owner", "dev"].includes(this.props.projectMsg.role);
     const isConflict = status === "EDITOR";
 
     return (
@@ -227,7 +219,7 @@ class WikiPage extends Component {
           </div>
           {!isEditor ? (
             <WikiView
-              editorEable={editorEable}
+              editorEable={editorEnable}
               onEditor={this.onEditor}
               uid={uid}
               username={username}
@@ -250,4 +242,9 @@ class WikiPage extends Component {
   }
 }
 
-export default WikiPage;
+export default connect(
+  (state) => ({
+    projectMsg: state.project.currProject
+  }),
+  {}
+)(WikiPage);

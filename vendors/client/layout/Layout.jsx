@@ -6,7 +6,7 @@ import Header from "./components/Header/Header";
 import { Alert } from "antd";
 //
 import styles from "./Layout.module.scss";
-import { Container } from "@mui/system";
+import { Container } from "@mui/material";
 
 function AlertContent() {
   const ua = window.navigator.userAgent,
@@ -43,8 +43,8 @@ function Layout(props) {
       <Loading visible={visible}/>
       {curUserRole === "admin" && <Notify/>}
       <AlertContent/>
-      {loginState !== 0 ? <Header/> : null}
-      <Container maxWidth="sm">
+      {loginState === 2 ? <Header/> : null}
+      <Container class={styles.LayoutContainer} maxWidth={false} sx={{padding: 0}}>
         {props.children}
       </Container>
       <Footer/>

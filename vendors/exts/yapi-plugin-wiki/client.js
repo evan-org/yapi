@@ -1,5 +1,5 @@
-import WikiPage from "./wikiPage/index";
-// const WikiPage = require('./wikiPage/index')
+import WikiPage from "./WikiPage/WikiPage";
+// const WikiPage = require('./WikiPage/index')
 
 module.exports = function() {
   this.bindHook("sub_nav", function(app) {

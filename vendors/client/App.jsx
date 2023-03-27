@@ -51,6 +51,7 @@ function App(props) {
 }
 export default connect(
   (state) => ({
+    isLogin: state.user.isLogin,
     loginState: state.user.loginState ?? 1,
     curUserRole: state.user.role
   }),

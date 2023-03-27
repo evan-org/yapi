@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Button, Checkbox } from "antd";
-import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
-require("common/tui-editor/dist/tui-editor.min.css"); // editor ui
-require("common/tui-editor/dist/tui-editor-contents.min.css"); // editor content
+//
+import Editor from "../../../../common/tui-editor/dist/tui-editor-Editor-all.min.js";
+//
+import styles from "./WikiEditor.module.scss";
+
 class WikiEditor extends Component {
   constructor(props) {
     super(props);
@@ -36,20 +38,10 @@ class WikiEditor extends Component {
   render() {
     const { isConflict, onCancel, notice, onEmailNotice } = this.props;
     return (
-      <div>
-        <div
-          id="desc"
-          className="wiki-editor"
-          style={{ display: !isConflict ? "block" : "none" }}
-        />
+      <div className={styles.Editor}>
+        <div id="desc" className="wiki-editor" style={{ display: !isConflict ? "block" : "none" }}/>
         <div className="wiki-title wiki-up">
-          <Button
-            icon="upload"
-            type="primary"
-            className="upload-btn"
-            disabled={isConflict}
-            onClick={this.onUpload}
-          >
+          <Button icon="upload" type="primary" className="upload-btn" disabled={isConflict} onClick={this.onUpload}>
             更新
           </Button>
           <Button onClick={onCancel} className="upload-btn">
@@ -63,5 +55,5 @@ class WikiEditor extends Component {
     );
   }
 }
-
+//
 export default WikiEditor;

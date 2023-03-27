@@ -13,7 +13,9 @@ function arrToObj(arr) {
   arr.forEach((item) => {
     if (item.name === "Set-Cookie") {
       obj["Set-Cookie"].push(item.value);
-    } else {obj[item.name] = item.value;}
+    } else {
+      obj[item.name] = item.value;
+    }
   });
   return obj;
 }

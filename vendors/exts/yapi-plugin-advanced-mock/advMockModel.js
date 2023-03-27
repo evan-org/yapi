@@ -9,8 +9,8 @@ class advMockModel extends baseModel {
   getSchema() {
     return {
       interface_id: { type: Number, required: true },
-      project_id: {type: Number, required: true},
-      enable: {type: Boolean, default: false},
+      project_id: { type: Number, required: true },
+      enable: { type: Boolean, default: false },
       mock_script: String,
       uid: String,
       up_time: Number

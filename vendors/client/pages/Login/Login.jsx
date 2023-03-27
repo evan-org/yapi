@@ -1,8 +1,8 @@
 import React from "react";
 import LoginWrap from "./components/LoginWrap";
-import { Row, Col, Card } from "antd";
 import LogoSVG from "../../components/LogoSVG/LogoSVG";
 import styles from "./Login.module.scss";
+import { Card } from "@mui/material";
 
 function Login(props) {
   return (
@@ -15,15 +15,15 @@ function Login(props) {
       </div>
       {/**/}
       <div className="login-container">
-        <div className="container">
-          <Card className="card-login">
+        <Card sx={{ width: 440, background: "#fff", padding: "20px" }}>
+          <div className="card-login">
             <div className="login-logo">
               <LogoSVG length="100px"/>
             </div>
             <h2 className="login-title">YAPI</h2>
             <LoginWrap {...props}/>
-          </Card>
-        </div>
+          </div>
+        </Card>
       </div>
     </div>
   );

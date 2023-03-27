@@ -1,17 +1,18 @@
 const path = require("path");
 const fs = require("fs");
-const { whenProd, getLoader, loaderByName, removeLoaders, POSTCSS_MODES } = require("@craco/craco");
-const CracoEnvPlugin = require("craco-plugin-env")
+const { whenProd, getLoader, loaderByName, removeLoaders, POSTCSS_MODES, ESLINT_MODES } = require("@craco/craco");
+const CracoEnvPlugin = require("craco-plugin-env");
 const CracoLessPlugin = require("craco-less");
+// sass plugin 全局注入
+const sassResourcesLoader = require("craco-sass-resources-loader");
 // 打包gzip
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
-const sassResourcesLoader = require("craco-sass-resources-loader");
 // 打包进程分析
-// const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
+const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
 // 分析打包时间
-// const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-// const smp = new SpeedMeasurePlugin();
-//
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
+/* ********************************************************************** */
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === "node_modules") {
@@ -21,7 +22,6 @@ function createScript(plugin, pathAlias) {
 }
 let { exts: systemConfigPlugin } = require("./common/config");
 const commonLib = require("./common/plugin.js");
-const { ESLINT_MODES } = require("@craco/craco/lib/features/webpack/eslint");
 function initPlugins(configPlugin) {
   configPlugin = require("../config.json").plugins;
   let scripts = [];
@@ -43,23 +43,9 @@ function initPlugins(configPlugin) {
   fs.writeFileSync(resolve("./client/plugin-module.js"), scripts);
 }
 initPlugins();
-//
+/* ********************************************************************** */
 function resolve(dir) {
   return path.join(__dirname, dir);
-}
-/**
- * @name invade
- * @param target: 要遍历的对象
- * @param name: 插件名
- * @param callback: 回调函数，第一个参数为该插件对象
- * @return null
- */
-function invade(target, name, callback) {
-  target.forEach((item) => {
-    if (item.constructor.name === name) {
-      callback(item);
-    }
-  });
 }
 //
 module.exports = ({ env }) => {
@@ -181,7 +167,7 @@ module.exports = ({ env }) => {
         add: [
           // 打压缩包
           ...whenProd(() => [
-            // new SimpleProgressWebpackPlugin(),
+            new SimpleProgressWebpackPlugin(),
             new CompressionWebpackPlugin({
               algorithm: "gzip",
               test: new RegExp("\\.(" + ["js", "css"].join("|") + ")$"),
@@ -220,15 +206,18 @@ module.exports = ({ env }) => {
           path: path.resolve(__dirname, "./example/client"), // 修改打包输出文件目录 两步都要写
           publicPath: whenProd(() => "/", "/"), // 静态资源publicpath
         }
+        //
+        console.log("configure new\n\n", webpackConfig);
+        //
         if (env === "development") {
           webpackConfig.devtool = "cheap-module-source-map";
           console.log("当前是开发环境", env, "devtool:", "cheap-module-source-map");
+          return webpackConfig;
         }
-        // webpackConfig.devtool = false;
         //
-        console.log("configure new\n\n", webpackConfig);
-        return webpackConfig;
-        // return smp.wrap(webpackConfig);
+        if (env === "production") {
+          return smp.wrap(webpackConfig);
+        }
       }
     }
   }
