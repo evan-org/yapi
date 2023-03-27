@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Table, Button, message, Popconfirm, Tooltip, Icon } from 'antd';
 import { fetchMockCol } from '../../../client/reducer/modules/mockCol';
 import { formatTime, json5_parse } from '../../../client/utils/common.js';
@@ -22,7 +21,7 @@ import _ from 'underscore';
     fetchMockCol
   }
 )
-@withRouter
+//
 export default class MockCol extends Component {
   static propTypes = {
     list: PropTypes.array,

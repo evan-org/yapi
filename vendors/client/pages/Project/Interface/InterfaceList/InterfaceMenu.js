@@ -15,7 +15,7 @@ import { Input, Icon, Button, Modal, message, Tree, Tooltip } from "antd";
 import AddInterfaceForm from "./AddInterfaceForm";
 import AddInterfaceCatForm from "./AddInterfaceCatForm";
 import axios from "axios";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import produce from "immer";
 import { arrayChangeIndex } from "../../../../utils/common.js";
 
@@ -630,4 +630,4 @@ class InterfaceMenu extends Component {
   }
 }
 
-export default withRouter(InterfaceMenu);
+export default InterfaceMenu;

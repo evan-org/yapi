@@ -1,7 +1,6 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import axios from 'axios';
 import { message } from 'antd';
 import { Postman } from '../../../../../components';
@@ -17,7 +16,6 @@ import './Run.scss';
   currProject: state.project.currProject,
   curUid: state.user.uid
 }))
-@withRouter
 export default class Run extends Component {
   static propTypes = {
     currProject: PropTypes.object,

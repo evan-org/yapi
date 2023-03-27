@@ -1,5 +1,5 @@
 import React, { PureComponent as Component } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Breadcrumb } from "antd";
@@ -9,7 +9,6 @@ import styles from "./Breadcrumb.module.scss";
   (state) => ({
     breadcrumb: state.user.breadcrumb
   }))
-@withRouter
 class BreadcrumbNavigation extends Component {
   constructor(props) {
     super(props);

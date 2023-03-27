@@ -1,7 +1,7 @@
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
-import { checkRouterAuth } from "./index.js";
+import { checkRouterAuth } from "./index.jsx";
 import React, { useEffect, useState } from "react";
-import { changeMeta } from "@/store/action/appAction.ts";
+// import { changeMeta } from "@/store/action/appAction.ts";
 function RouterBeforeEach() {
   const location = useLocation();
   const navigate = useNavigate();

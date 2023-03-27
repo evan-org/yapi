@@ -6,7 +6,6 @@ import Edit from "./Edit.js";
 import View from "./View.js";
 import { Prompt } from "react-router";
 import { fetchInterfaceData } from "../../../../reducer/modules/interface.js";
-import { withRouter } from "react-router-dom";
 import Run from "./Run/Run.js";
 const plugin = require("client/plugin.js");
 
@@ -178,4 +177,4 @@ class Content extends Component {
   }
 }
 
-export default withRouter(Content);
+export default Content;

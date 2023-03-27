@@ -28,7 +28,6 @@ import { fetchGroupList } from "../../../../reducer/modules/group.js";
 import { setBreadcrumb } from "../../../../reducer/modules/user";
 import { connect } from "react-redux";
 const { TextArea } = Input;
-import { withRouter } from "react-router";
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
@@ -72,7 +71,7 @@ const Option = Select.Option;
     setBreadcrumb
   }
 )
-@withRouter
+//
 class ProjectMessage extends Component {
   constructor(props) {
     super(props);

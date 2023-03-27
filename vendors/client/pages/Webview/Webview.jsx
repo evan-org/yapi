@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import styles from "./Webview.module.less";
-import { Toast } from "antd-mobile";
-import { replace } from "lodash";
+import styles from "./Webview.module.scss";
+// import { Toast } from "@mui/material";
 
 function Main() {
   const location = useLocation();
@@ -27,11 +26,11 @@ function Main() {
       window.addEventListener("message", onMessage, false);
       //
     } else {
-      Toast.show({
-        content: "当前链接失效，无法打开页面", duration: 1000, afterClose: () => {
-          history.back();
-        }
-      })
+      // Toast.show({
+      //   content: "当前链接失效，无法打开页面", duration: 1000, afterClose: () => {
+      //     history.back();
+      //   }
+      // })
     }
     return () => {
       window.removeEventListener("message", onMessage);

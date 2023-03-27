@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Icon, Input, AutoComplete } from "antd";
 import styles from "./Search.module.scss";
-import { withRouter } from "react-router";
 import axios from "axios";
 //
 import { setCurrGroup, fetchGroupMsg } from "../../../../reducer/modules/group";
@@ -23,7 +22,6 @@ const Option = AutoComplete.Option;
     fetchInterfaceListMenu
   }
 )
-@withRouter
 class Search extends Component {
   constructor(props) {
     super(props);

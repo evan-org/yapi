@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Form, Button, Input, Icon, message } from "antd";
 //
 import { regActions } from "../../../reducer/modules/user";
-import { withRouter } from "react-router";
 const FormItem = Form.Item;
 const formItemStyle = {
   marginBottom: ".16rem"
@@ -22,7 +21,6 @@ const changeHeight = {
     regActions
   }
 )
-@withRouter
 class Reg extends Component {
   constructor(props) {
     super(props);

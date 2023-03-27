@@ -1,7 +1,6 @@
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { Tooltip, Icon, Input, Button, Row, Col, Spin, Modal, message, Select, Switch } from "antd";
 import {
@@ -73,7 +72,6 @@ function handleReport(json) {
     fetchCaseEnvList
   }
 )
-@withRouter
 @DragDropContext(HTML5Backend)
 class InterfaceColContent extends Component {
   static propTypes = {

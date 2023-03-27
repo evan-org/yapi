@@ -1,6 +1,5 @@
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { fetchInterfaceColList, setColData, fetchCaseList, fetchCaseData } from '../../../../reducer/modules/interfaceCol';
 import { fetchProjectList } from '../../../../reducer/modules/project';
@@ -53,7 +52,6 @@ const ColModalForm = Form.create()(props => {
     fetchProjectList
   }
 )
-@withRouter
 export default class InterfaceColMenu extends Component {
   static propTypes = {
     match: PropTypes.object,

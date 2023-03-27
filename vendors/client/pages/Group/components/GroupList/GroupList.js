@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Icon, Modal, Input, message, Spin, Row, Menu, Col, Popover, Tooltip } from "antd";
 import { autobind } from "core-decorators";
 import axios from "axios";
-import { withRouter } from "react-router-dom";
 
 const { TextArea } = Input;
 const Search = Input.Search;
@@ -40,7 +39,6 @@ const tip = (
     fetchGroupMsg
   }
 )
-@withRouter
 class GroupList extends Component {
   static propTypes = {
     groupList: PropTypes.array,

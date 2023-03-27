@@ -13,7 +13,6 @@ const Option = Select.Option;
 const RadioGroup = Radio.Group;
 import { pickRandomProperty, handlePath, nameLengthLimit } from "../../utils/common";
 import constants from "../../utils/variable.js";
-import { withRouter } from "react-router";
 
 const formItemLayout = {
   labelCol: {
@@ -39,7 +38,6 @@ const formItemLayout = {
     setBreadcrumb
   }
 )
-@withRouter
 class ProjectList extends Component {
   constructor(props) {
     super(props);

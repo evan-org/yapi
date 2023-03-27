@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Modal, Collapse, Row, Col, Input, message, Button, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { withRouter } from 'react-router';
 import { fetchInterfaceColList } from '../../../../../reducer/modules/interfaceCol';
 
 const { TextArea } = Input;
@@ -17,7 +16,7 @@ const Panel = Collapse.Panel;
     fetchInterfaceColList
   }
 )
-@withRouter
+//
 export default class AddColModal extends Component {
   static propTypes = {
     visible: PropTypes.bool,

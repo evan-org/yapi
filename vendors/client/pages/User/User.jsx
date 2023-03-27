@@ -1,7 +1,7 @@
 
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+// import { Route } from "react-router-dom";
 import List from "./components/List.jsx";
 import PropTypes from "prop-types";
 import Profile from "./components/Profile.jsx";
@@ -22,8 +22,8 @@ class User extends Component {
       <div className={styles.Main}>
         <div className="g-doc">
           <Row className="user-box">
-            <Route path={this.props.match.path + "/list"} component={List}/>
-            <Route path={this.props.match.path + "/profile/:uid"} component={Profile}/>
+            {/* <Route path={this.props.match.path + "/list"} component={List}/>
+            <Route path={this.props.match.path + "/profile/:uid"} component={Profile}/>*/}
           </Row>
         </div>
       </div>

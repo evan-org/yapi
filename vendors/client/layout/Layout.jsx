@@ -6,7 +6,9 @@ import { Alert } from "antd";
 //
 import styles from "./Layout.module.scss";
 import { Container } from "@mui/material";
-import { withRouter } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { connect } from "react-redux";
+import { checkLoginState } from "@/reducer/modules/user";
 
 function AlertContent() {
   const ua = window.navigator.userAgent,
@@ -26,9 +28,11 @@ function AlertContent() {
 }
 function Layout(props) {
   console.debug("layout =>", props);
-  const { loginState, curUserRole, checkLoginState, location } = props;
+  // const {} = useR
+  const { loginState, checkLoginState } = props;
   const [visible, setVisible] = useState(true);
   const [compute, setCompute] = useState("");
+  const location = useLocation();
   //
   useEffect(() => {
     (async() => {
@@ -51,11 +55,20 @@ function Layout(props) {
       <Loading visible={visible}/>
       {loginState === 2 ? <Header {...props}/> : null}
       <Container class={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
-        {props.children}
+        <Outlet/>
       </Container>
       <Footer/>
       <AlertContent/>
     </section>
   )
 }
-export default withRouter(Layout);
+export default connect(
+  (state) => ({
+    isLogin: state.user.isLogin,
+    loginState: state.user.loginState ?? 1,
+    curUserRole: state.user.role
+  }),
+  {
+    checkLoginState
+  }
+)(Layout);

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 // import { connect } from 'react-redux'
 import axios from "axios";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
 import { Form, Switch, Button, message, Icon, Tooltip, Radio } from "antd";
 import MockCol from "../MockCol/MockCol.js";
 import mockEditor from "../../../client/components/AceEditor/utils/mockEditor";
@@ -143,4 +142,4 @@ class AdvMock extends Component {
     );
   }
 }
-export default Form.create()(withRouter(AdvMock));
+export default Form.create()(AdvMock);

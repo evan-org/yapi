@@ -6,7 +6,7 @@ import GroupLog from "./components/GroupLog/GroupLog.js";
 import GroupSetting from "./components/GroupSetting/GroupSetting.js";
 //
 import { connect } from "react-redux";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Tabs, Layout, Spin } from "antd";
 //
 import { fetchNewsData } from "../../reducer/modules/news.js";
@@ -83,10 +83,11 @@ function Group(props) {
   }
   return (
     <div className={styles.Group}>
-      <Switch>
+      {/* <Switch>
         <Redirect exact from="/group" to={"/group/" + groupId}/>
         <Route path="/group/:groupId" render={() => groupId !== -1 ? <GroupContent {...props}/> : null}/>
-      </Switch>
+      </Switch>*/}
+      <Outlet/>
     </div>
   );
 }

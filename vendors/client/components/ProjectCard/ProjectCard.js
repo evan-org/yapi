@@ -4,7 +4,6 @@ import { Card, Icon, Tooltip, Modal, Alert, Input, message } from "antd";
 import { connect } from "react-redux";
 import { delFollow, addFollow } from "../../reducer/modules/follow";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router";
 import { debounce } from "../../utils/common";
 import constants from "../../utils/variable.js";
 import produce from "immer";
@@ -25,7 +24,6 @@ const confirm = Modal.confirm;
     copyProjectMsg
   }
 )
-@withRouter
 class ProjectCard extends Component {
   constructor(props) {
     super(props);

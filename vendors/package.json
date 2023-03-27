@@ -3,7 +3,6 @@
   "homepage": "/",
   "version": "1.11.0",
   "description": "YAPI",
-  "type": "commonjs",
   "scripts": {
     "dev:vite": "vite",
     "build:vite": "tsc && vite build",
@@ -102,8 +101,8 @@
     "react-dnd": "^2.5.1",
     "react-dnd-html5-backend": "^2.5.1",
     "react-dom": "~18.2.0",
-    "react-redux": "~7.2.9",
-    "react-router-dom": "^4.3.1",
+    "react-redux": "~8.0.5",
+    "react-router-dom": "^6.9.0",
     "reactabular-dnd": "^8.9.0",
     "reactabular-table": "^8.9.0",
     "recharts": "^1.8.6",

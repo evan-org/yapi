@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { Tabs, Layout } from "antd";
-import { Route, Switch, matchPath } from "react-router-dom";
+import { matchPath } from "react-router-dom";
 import { connect } from "react-redux";
 
 const { Content, Sider } = Layout;
@@ -106,10 +106,10 @@ class Interface extends Component {
         <Layout>
           <Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
             <div className="right-content">
-              <Switch>
+              {/* <Switch>
                 <Route exact path="/project/:id/interface/:action" component={InterfaceRoute}/>
                 <Route {...contentRouter} component={InterfaceRoute}/>
-              </Switch>
+              </Switch>*/}
             </div>
           </Content>
         </Layout>

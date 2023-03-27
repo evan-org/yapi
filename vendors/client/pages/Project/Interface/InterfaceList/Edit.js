@@ -11,7 +11,7 @@ import { getProject } from "../../../../reducer/modules/project.js";
 import axios from "axios";
 import { message, Modal } from "antd";
 import "./Edit.scss";
-import { withRouter, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ProjectTag from "../../Setting/ProjectMessage/ProjectTag.js";
 
 @connect(
@@ -222,4 +222,4 @@ class InterfaceEdit extends Component {
   }
 }
 
-export default withRouter(InterfaceEdit);
+export default InterfaceEdit;

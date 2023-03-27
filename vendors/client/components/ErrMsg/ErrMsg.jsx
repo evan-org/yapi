@@ -2,7 +2,6 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { Icon } from "antd";
 import styles from "./ErrMsg.module.scss";
-import { withRouter } from "react-router";
 /**
  * 错误信息提示
  *
@@ -22,7 +21,6 @@ import { withRouter } from "react-router";
  * @description 一般用于描述错误信息名称
  * @returns {object}
  */
-@withRouter
 class ErrMsg extends Component {
   constructor(props) {
     super(props);

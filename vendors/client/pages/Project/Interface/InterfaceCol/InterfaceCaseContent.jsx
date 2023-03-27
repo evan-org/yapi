@@ -1,7 +1,6 @@
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { message, Tooltip, Input } from "antd";

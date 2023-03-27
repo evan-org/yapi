@@ -1,19 +1,17 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { connect } from "react-redux";
-import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import { useRoutes, RouterProvider } from "react-router-dom";
 //
-import Layout from "./layout/Layout";
-import { AppRoute } from "client/router/oldIndex";
-// const RouterList = Object.keys(AppRoute);
-import { requireAuthentication } from "./components/AuthenticatedComponent";
+// import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 //
-import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
-//
-import { checkLoginState } from "./reducer/modules/user";
+import { routes } from "@/router/index.js";
+// const router = createBrowserRouter(routes);
+// let element = useRoutes(routes);
 //
 import "./styles/App.scss";
 import "./styles/antd-ui/theme.less";
+//
+import { AppRoute } from "@/router/oldIndex";
 //
 const plugin = require("client/plugin.js");
 // 增加路由钩子
@@ -25,39 +23,19 @@ function App(props) {
   useEffect(() => {
   }, []);
   //
-  const showConfirm = (msg, callback) => {
+  /* const showConfirm = (msg, callback) => {
     // 自定义 window.confirm
     // http://reacttraining.cn/web/api/BrowserRouter/getUserConfirmation-func
     let container = document.createElement("div");
     document.body.appendChild(container);
     const root = ReactDOM.createRoot(container);
     root.render(<MyPopConfirm msg={msg} callback={callback}/>);
-  };
+  };*/
   //
   return (
-    <Router getUserConfirmation={showConfirm}>
-      <Layout {...props}>
-        <Switch>
-          {Object.keys(AppRoute).map((key) => {
-            let item = AppRoute[key];
-            return ["login", "home"].includes(key) ? (
-              <Route key={key} exact path={item.path} component={item.component}/>
-            ) : (
-              <Route key={key} path={item.path} component={requireAuthentication(item.component)}/>
-            );
-          })}
-        </Switch>
-      </Layout>
-    </Router>
+    <div>
+      <RouterProvider router={routes}/>
+    </div>
   )
 }
-export default connect(
-  (state) => ({
-    isLogin: state.user.isLogin,
-    loginState: state.user.loginState ?? 1,
-    curUserRole: state.user.role
-  }),
-  {
-    checkLoginState
-  }
-)(App)
+export default App

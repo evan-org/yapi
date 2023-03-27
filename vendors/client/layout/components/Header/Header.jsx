@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { Icon, Layout, Menu, Dropdown, message, Tooltip, Popover, Tag } from "antd";
 import { checkLoginState, logoutActions, loginTypeAction } from "../../../reducer/modules/user";
 import { changeMenuItem } from "../../../reducer/modules/menu";
-// import { withRouter } from "react-router";
 import Search from "./Search/Search";
 import Notify from "../../../components/Notify/Notify";
 //
