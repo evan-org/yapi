@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 //
 import Layout from "./layout/Layout";
-import { AppRoute } from "client/router";
+import { AppRoute } from "client/router/oldIndex";
 // const RouterList = Object.keys(AppRoute);
 import { requireAuthentication } from "./components/AuthenticatedComponent";
 //
