@@ -1,7 +1,7 @@
 const baseController = require("controllers/base.js");
-const advModel = require("./advMockModel.js");
+const advModel = require("./lib/advMockModel.js");
 const yapi = require("yapi.js");
-const caseModel = require("./caseModel.js");
+const caseModel = require("./lib/caseModel.js");
 const userModel = require("models/user.js");
 const config = require("./index.js");
 

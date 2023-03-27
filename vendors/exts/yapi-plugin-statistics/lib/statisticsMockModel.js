@@ -4,7 +4,7 @@
 const yapi = require("yapi.js");
 const baseModel = require("models/base.js");
 
-class statisMockModel extends baseModel {
+class StatisticsMockModel extends baseModel {
   getName() {
     return "statis_mock";
   }
@@ -72,4 +72,4 @@ class statisMockModel extends baseModel {
   }
 }
 
-module.exports = statisMockModel;
+module.exports = StatisticsMockModel;

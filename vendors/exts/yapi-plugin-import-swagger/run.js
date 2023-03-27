@@ -4,7 +4,9 @@ const compareVersions = require("compare-versions");
 
 let SwaggerData, isOAS3;
 function handlePath(path) {
-  if (path === "/") {return path;}
+  if (path === "/") {
+    return path;
+  }
   if (path.charAt(0) != "/") {
     path = "/" + path;
   }
@@ -21,31 +23,33 @@ function openapi2swagger(data) {
       _.each(api.responses, (res) => {
         if (
           res.content &&
-            res.content["application/json"] &&
-            typeof res.content["application/json"] === "object"
+          res.content["application/json"] &&
+          typeof res.content["application/json"] === "object"
         ) {
           Object.assign(res, res.content["application/json"]);
           delete res.content;
         }
         if (
           res.content &&
-            res.content["application/hal+json"] &&
-            typeof res.content["application/hal+json"] === "object"
+          res.content["application/hal+json"] &&
+          typeof res.content["application/hal+json"] === "object"
         ) {
           Object.assign(res, res.content["application/hal+json"]);
           delete res.content;
         }
         if (
           res.content &&
-            res.content["*/*"] &&
-            typeof res.content["*/*"] === "object"
+          res.content["*/*"] &&
+          typeof res.content["*/*"] === "object"
         ) {
           Object.assign(res, res.content["*/*"]);
           delete res.content;
         }
       });
       if (api.requestBody) {
-        if (!api.parameters) {api.parameters = [];}
+        if (!api.parameters) {
+          api.parameters = [];
+        }
         let body = {
           type: "object",
           name: "body",
@@ -190,7 +194,7 @@ function handleSwagger(data, originTags = []) {
   if (data.consumes && Array.isArray(data.consumes)) {
     if (
       data.consumes.indexOf("application/x-www-form-urlencoded") > -1 ||
-        data.consumes.indexOf("multipart/form-data") > -1
+      data.consumes.indexOf("multipart/form-data") > -1
     ) {
       api.req_body_type = "form";
     } else if (data.consumes.indexOf("application/json") > -1) {
@@ -294,7 +298,9 @@ function handleResponse(api) {
   if (codes.length > 0) {
     if (codes.indexOf("200") > -1) {
       curCode = "200";
-    } else {curCode = codes[0];}
+    } else {
+      curCode = codes[0];
+    }
 
     let res = api[curCode];
     if (res && typeof res === "object") {

@@ -1,7 +1,7 @@
 const yapi = require("yapi.js");
 const baseModel = require("models/base.js");
 
-class statisMockModel extends baseModel {
+class wikiModel extends baseModel {
   getName() {
     return "wiki";
   }
@@ -20,6 +20,7 @@ class statisMockModel extends baseModel {
   }
 
   save(data) {
+    // eslint-disable-next-line new-cap
     let m = new this.model(data);
     return m.save();
   }
@@ -53,4 +54,4 @@ class statisMockModel extends baseModel {
   }
 }
 
-module.exports = statisMockModel;
+module.exports = wikiModel;
