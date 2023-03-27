@@ -118,7 +118,6 @@ const generateRouter = (routers) => routers.map((Item) => {
 const asyncRouter = generateRouter(router);
 //
 export const routes = createBrowserRouter([...asyncRouter]);
-console.log(routes, asyncRouter);
 export const checkRouterAuth = (path) => {
   let auth;
   auth = checkAuth(asyncRouter, path)
