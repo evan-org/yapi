@@ -1,10 +1,10 @@
 const baseController = require("controllers/base.js");
 const yapi = require("yapi.js");
-const syncModel = require("../lib/syncModel.js");
+const syncModel = require("./lib/syncModel.js");
 const projectModel = require("models/project.js");
-const interfaceSyncUtils = require("../lib/interfaceSyncUtils.js")
+const interfaceSyncUtils = require("./lib/interfaceSyncUtils.js")
 
-class syncController extends baseController {
+class controller extends baseController {
   constructor(ctx) {
     super(ctx);
     this.syncModel = yapi.getInst(syncModel);
@@ -59,4 +59,4 @@ class syncController extends baseController {
 }
 
 
-module.exports = syncController;
+module.exports = controller;

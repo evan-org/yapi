@@ -1,4 +1,4 @@
-const controller = require("./controller/syncController.js");
+const controller = require("./controller.js");
 const yapi = require("yapi.js");
 const interfaceSyncUtils = require("./lib/interfaceSyncUtils.js");
 

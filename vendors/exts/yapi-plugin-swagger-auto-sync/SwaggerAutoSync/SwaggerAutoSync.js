@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { formatTime } from '../../../client/utils/common.js';
-import { Form, Switch, Button, Icon, Tooltip, message, Input, Select } from 'antd';
-import { handleSwaggerUrlData } from '../../../client/reducer/modules/project';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { formatTime } from "../../../client/utils/common.js";
+import { Form, Switch, Button, Icon, Tooltip, message, Input, Select } from "antd";
+import { handleSwaggerUrlData } from "../../../client/reducer/modules/project";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-import axios from 'axios';
+import axios from "axios";
 // layout
 const formItemLayout = {
   labelCol: {
@@ -20,8 +20,9 @@ const formItemLayout = {
     xs: { span: 24 },
     sm: { span: 12 }
   },
-  className: 'form-item'
+  className: "form-item"
 };
+// tailFormItemLayout
 const tailFormItemLayout = {
   wrapperCol: {
     sm: {
@@ -30,18 +31,7 @@ const tailFormItemLayout = {
     }
   }
 };
-@connect(
-  state => {
-    return {
-      projectMsg: state.project.currProject
-    };
-  },
-  {
-    handleSwaggerUrlData
-  }
-)
-@Form.create()
-export default class ProjectInterfaceSync extends Component {
+class ProjectInterfaceSync extends Component {
   static propTypes = {
     form: PropTypes.object,
     match: PropTypes.object,
@@ -68,9 +58,9 @@ export default class ProjectInterfaceSync extends Component {
     form.validateFields(async(err, values) => {
       if (!err) {
         let assignValue = Object.assign(params, values);
-        await axios.post('/api/plugin/autoSync/save', assignValue).then(res => {
+        await axios.post("/api/plugin/autoSync/save", assignValue).then((res) => {
           if (res.data.errcode === 0) {
-            message.success('保存成功');
+            message.success("保存成功");
           } else {
             message.error(res.data.errmsg);
           }
@@ -79,28 +69,30 @@ export default class ProjectInterfaceSync extends Component {
     });
   };
   validSwaggerUrl = async(rule, value, callback) => {
-    if (!value) return;
+    if (!value) {
+      return;
+    }
     try {
       await this.props.handleSwaggerUrlData(value);
     } catch (e) {
-      callback('swagger地址不正确');
+      callback("swagger地址不正确");
     }
     callback()
   }
   UNSAFE_componentWillMount() {
-    //查询同步任务
+    // 查询同步任务
     this.setState({
       sync_data: {}
     });
-    //默认每份钟同步一次,取一个随机数
+    // 默认每份钟同步一次,取一个随机数
     this.setState({
-      random_corn: '*/2 * * * *'
+      random_corn: "*/2 * * * *"
     });
     this.getSyncData();
   }
   async getSyncData() {
     let projectId = this.props.projectMsg._id;
-    let result = await axios.get('/api/plugin/autoSync/get?project_id=' + projectId);
+    let result = await axios.get("/api/plugin/autoSync/get?project_id=" + projectId);
     if (result.data.errcode === 0) {
       if (result.data.data) {
         this.setState({
@@ -110,7 +102,7 @@ export default class ProjectInterfaceSync extends Component {
     }
   }
   // 是否开启
-  onChange = v => {
+  onChange = (v) => {
     let sync_data = this.state.sync_data;
     sync_data.is_sync_open = v;
     this.setState({
@@ -118,10 +110,12 @@ export default class ProjectInterfaceSync extends Component {
     });
   };
   sync_cronCheck(rule, value, callback) {
-    if (!value) return;
+    if (!value) {
+      return;
+    }
     value = value.trim();
     if (value.split(/ +/).length > 5) {
-      callback('不支持秒级别的设置，建议使用 "*/10 * * * *" ,每隔10分钟更新')
+      callback("不支持秒级别的设置，建议使用 \"*/10 * * * *\" ,每隔10分钟更新")
     }
     callback()
   }
@@ -149,30 +143,30 @@ export default class ProjectInterfaceSync extends Component {
                 <Tooltip
                   title={
                     <div>
-                      <h3 style={{ color: 'white' }}>普通模式</h3>
+                      <h3 style={{ color: "white" }}>普通模式</h3>
                       <p>不导入已存在的接口</p>
                       <br/>
-                      <h3 style={{ color: 'white' }}>智能合并</h3>
+                      <h3 style={{ color: "white" }}>智能合并</h3>
                       <p>
                         已存在的接口，将合并返回数据的 response，适用于导入了 swagger
                         数据，保留对数据结构的改动
                       </p>
                       <br/>
-                      <h3 style={{ color: 'white' }}>完全覆盖</h3>
+                      <h3 style={{ color: "white" }}>完全覆盖</h3>
                       <p>不保留旧数据，完全使用新数据，适用于接口定义完全交给后端定义</p>
                     </div>
                   }
                 >
                   <Icon type="question-circle-o"/>
-                </Tooltip>{' '}
+                </Tooltip>{" "}
               </span>
             }>
-              {getFieldDecorator('sync_mode', {
+              {getFieldDecorator("sync_mode", {
                 initialValue: this.state.sync_data.sync_mode,
                 rules: [
                   {
                     required: true,
-                    message: '请选择同步方式!'
+                    message: "请选择同步方式!"
                   }
                 ]
               })(
@@ -184,26 +178,26 @@ export default class ProjectInterfaceSync extends Component {
               )}
             </FormItem>
             <FormItem {...formItemLayout} label="项目的swagger json地址">
-              {getFieldDecorator('sync_json_url', {
+              {getFieldDecorator("sync_json_url", {
                 rules: [
                   {
                     required: true,
-                    message: '输入swagger地址'
+                    message: "输入swagger地址"
                   },
                   {
                     validator: this.validSwaggerUrl
                   }
                 ],
-                validateTrigger: 'onBlur',
+                validateTrigger: "onBlur",
                 initialValue: this.state.sync_data.sync_json_url
               })(<Input/>)}
             </FormItem>
             <FormItem {...formItemLayout} label={<span>类cron风格表达式(默认10分钟更新一次)&nbsp;<a href="https://blog.csdn.net/shouldnotappearcalm/article/details/89469047">参考</a></span>}>
-              {getFieldDecorator('sync_cron', {
+              {getFieldDecorator("sync_cron", {
                 rules: [
                   {
                     required: true,
-                    message: '输入node-schedule的类cron表达式!'
+                    message: "输入node-schedule的类cron表达式!"
                   },
                   {
                     validator: this.sync_cronCheck
@@ -223,3 +217,12 @@ export default class ProjectInterfaceSync extends Component {
     );
   }
 }
+//
+export default connect(
+  (state) => ({
+    projectMsg: state.project.currProject
+  }),
+  {
+    handleSwaggerUrlData
+  }
+)(Form.create()(ProjectInterfaceSync));
