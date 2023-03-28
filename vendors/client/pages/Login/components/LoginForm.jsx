@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Form, Button, Input, Icon, message, Radio } from "antd";
 import { loginActions, loginLdapActions } from "../../../reducer/modules/user";
+import { useNavigate } from "react-router-dom";
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -12,16 +13,6 @@ const formItemStyle = {
 const changeHeight = {
   height: ".42rem"
 };
-@connect(
-  (state) => ({
-    loginData: state.user,
-    isLDAP: state.user.isLDAP
-  }),
-  {
-    loginActions,
-    loginLdapActions
-  }
-)
 class LoginForm extends Component {
   constructor(props) {
     super(props);
@@ -38,20 +29,22 @@ class LoginForm extends Component {
   };
   handleSubmit = (e) => {
     e.preventDefault();
+    const navigate = useNavigate();
+    //
     const form = this.props.form;
     form.validateFields((err, values) => {
       if (!err) {
         if (this.props.isLDAP && this.state.loginType === "ldap") {
           this.props.loginLdapActions(values).then((res) => {
             if (res.payload.data.errcode == 0) {
-              this.props.history.replace("/group");
+              navigate({ pathname: "/group" }, { replace: true });
               message.success("登录成功! ");
             }
           });
         } else {
           this.props.loginActions(values).then((res) => {
             if (res.payload.data.errcode == 0) {
-              this.props.history.replace("/group");
+              navigate({ pathname: "/group" }, { replace: true });
               message.success("登录成功! ");
             }
           });
@@ -114,4 +107,13 @@ class LoginForm extends Component {
     );
   }
 }
-export default Form.create()(LoginForm);
+export default connect(
+  (state) => ({
+    loginData: state.user,
+    isLDAP: state.user.isLDAP
+  }),
+  {
+    loginActions,
+    loginLdapActions
+  }
+)(Form.create()(LoginForm));

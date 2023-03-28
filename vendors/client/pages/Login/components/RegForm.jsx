@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Form, Button, Input, Icon, message } from "antd";
 //
 import { regActions } from "../../../reducer/modules/user";
+
 const FormItem = Form.Item;
 const formItemStyle = {
   marginBottom: ".16rem"
@@ -13,15 +14,7 @@ const changeHeight = {
   height: ".42rem"
 };
 
-@connect(
-  (state) => ({
-    loginData: state.user
-  }),
-  {
-    regActions
-  }
-)
-class Reg extends Component {
+class RegForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,12 +71,11 @@ class Reg extends Component {
           })(
             <Input
               style={changeHeight}
-              prefix={<Icon type="user" style={{ fontSize: 13 }} />}
+              prefix={<Icon type="user" style={{ fontSize: 13 }}/>}
               placeholder="Username"
             />
           )}
         </FormItem>
-
         {/* Emaiil */}
         <FormItem style={formItemStyle}>
           {getFieldDecorator("email", {
@@ -97,12 +89,11 @@ class Reg extends Component {
           })(
             <Input
               style={changeHeight}
-              prefix={<Icon type="mail" style={{ fontSize: 13 }} />}
+              prefix={<Icon type="mail" style={{ fontSize: 13 }}/>}
               placeholder="Email"
             />
           )}
         </FormItem>
-
         {/* 密码 */}
         <FormItem style={formItemStyle}>
           {getFieldDecorator("password", {
@@ -118,13 +109,12 @@ class Reg extends Component {
           })(
             <Input
               style={changeHeight}
-              prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
+              prefix={<Icon type="lock" style={{ fontSize: 13 }}/>}
               type="password"
               placeholder="Password"
             />
           )}
         </FormItem>
-
         {/* 密码二次确认 */}
         <FormItem style={formItemStyle}>
           {getFieldDecorator("confirm", {
@@ -140,13 +130,12 @@ class Reg extends Component {
           })(
             <Input
               style={changeHeight}
-              prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
+              prefix={<Icon type="lock" style={{ fontSize: 13 }}/>}
               type="password"
               placeholder="Confirm Password"
             />
           )}
         </FormItem>
-
         {/* 注册按钮 */}
         <FormItem style={formItemStyle}>
           <Button
@@ -162,5 +151,11 @@ class Reg extends Component {
     );
   }
 }
-const RegForm = Form.create()(Reg);
-export default RegForm;
+export default connect(
+  (state) => ({
+    loginData: state.user
+  }),
+  {
+    regActions
+  }
+)(Form.create()(RegForm));

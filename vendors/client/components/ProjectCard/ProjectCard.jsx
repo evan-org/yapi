@@ -2,28 +2,17 @@ import "./ProjectCard.scss";
 import React, { PureComponent as Component } from "react";
 import { Card, Icon, Tooltip, Modal, Alert, Input, message } from "antd";
 import { connect } from "react-redux";
-import { delFollow, addFollow } from "../../reducer/modules/follow";
 import PropTypes from "prop-types";
-import { debounce } from "../../utils/common";
 import constants from "../../utils/variable.js";
 import produce from "immer";
+//
+import { debounce } from "../../utils/common";
 import { getProject, checkProjectName, copyProjectMsg } from "../../reducer/modules/project";
+import { delFollow, addFollow } from "../../reducer/modules/follow";
 import { trim } from "../../utils/common.js";
+
 const confirm = Modal.confirm;
 
-@connect(
-  (state) => ({
-    uid: state.user.uid,
-    currPage: state.project.currPage
-  }),
-  {
-    delFollow,
-    addFollow,
-    getProject,
-    checkProjectName,
-    copyProjectMsg
-  }
-)
 class ProjectCard extends Component {
   constructor(props) {
     super(props);
@@ -81,7 +70,7 @@ class ProjectCard extends Component {
             <p>
               <b>项目名称:</b>
             </p>
-            <Input id="project_name" placeholder="项目名称" />
+            <Input id="project_name" placeholder="项目名称"/>
           </div>
         </div>
       ),
@@ -94,7 +83,8 @@ class ProjectCard extends Component {
         that.copy(projectName);
       },
       iconType: "copy",
-      onCancel() {}
+      onCancel() {
+      }
     });
   };
 
@@ -163,7 +153,7 @@ class ProjectCard extends Component {
         {isShow && (
           <div className="copy-btns" onClick={this.showConfirm}>
             <Tooltip placement="rightTop" title="复制项目">
-              <Icon type="copy" className="icon" />
+              <Icon type="copy" className="icon"/>
             </Tooltip>
           </div>
         )}
@@ -172,4 +162,16 @@ class ProjectCard extends Component {
   }
 }
 
-export default ProjectCard;
+export default connect(
+  (state) => ({
+    uid: state.user.uid,
+    currPage: state.project.currPage
+  }),
+  {
+    delFollow,
+    addFollow,
+    getProject,
+    checkProjectName,
+    copyProjectMsg
+  }
+)(ProjectCard);

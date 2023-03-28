@@ -1,4 +1,4 @@
-import React, {lazy, Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import { APP_NAME } from "@/utils/config";
 import Loading from "@/components/Loading/Loading.jsx";
 import { createBrowserRouter } from "react-router-dom";
@@ -26,14 +26,27 @@ const router = [
         meta: { title: APP_NAME, auth: false },
       },
       //
-      /* {
+      {
         path: "/group",
         name: "Group",
         element: lazy(() => import("../pages/Group/Group.jsx")),
-        meta: { title: "查看报告", auth: true }
+        meta: { title: "我的项目组", auth: true },
+        children: [
+          {
+            index: true,
+            element: lazy(() => import("../pages/Error/NotFound/NotFound.jsx")),
+            meta: { title: "我的项目组", auth: false },
+          },
+          {
+            path: ":groupId",
+            name: "GroupContent",
+            element: lazy(() => import("../pages/Group/GroupContent/GroupContent.jsx")),
+            meta: { title: "我的项目组", auth: true }
+          }
+        ]
       },
       //
-      {
+      /* {
         path: "/project/:id",
         name: "Project",
         element: lazy(() => import("../pages/Project/Project.jsx")),

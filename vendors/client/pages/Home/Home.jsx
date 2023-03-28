@@ -1,7 +1,7 @@
 import styles from "./Home.module.scss";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Row, Col, Button, Icon, Card } from "antd";
 import PropTypes from "prop-types";
 import LogoSVG from "../../components/LogoSVG/LogoSVG.jsx";
@@ -324,11 +324,12 @@ HomeGuest.propTypes = {
 };
 //
 function Home(props) {
-  const { isLogin, history } = props;
+  const { isLogin } = props;
+  const navigation = useNavigate();
   useEffect(() => {
     console.log("home", props);
     if (isLogin) {
-      history.replace("/group");
+      navigation({ pathname: "/group" });
     }
   }, [isLogin])
   const toStart = () => {

@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Tabs } from "antd";
+//
 import LoginForm from "./LoginForm";
-import RegForm from "./Reg";
+import RegForm from "./RegForm";
 
 const TabPane = Tabs.TabPane;
 //
