@@ -85,7 +85,7 @@ module.exports = ({ env }) => {
           generateScopedName: "[local]___[hash:base64:5]",
           attributeNames: { activeStyleName: "activeClassName" },
         }],
-        ["@babel/plugin-transform-modules-commonjs"],
+        // ["@babel/plugin-transform-modules-commonjs"],
         ["@babel/plugin-transform-runtime"],
         [
           "import",
@@ -210,8 +210,9 @@ module.exports = ({ env }) => {
         console.log("configure new\n\n", webpackConfig);
         //
         if (env === "development") {
-          webpackConfig.devtool = "cheap-module-source-map";
-          console.log("当前是开发环境", env, "devtool:", "cheap-module-source-map");
+          // webpackConfig.devtool = "cheap-module-source-map";
+          webpackConfig.devtool = "source-map";
+          console.log("当前是开发环境", env, "devtool:", webpackConfig.devtool);
           return webpackConfig;
         }
         //

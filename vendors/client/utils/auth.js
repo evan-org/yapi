@@ -5,7 +5,7 @@ import {
   authAction_patient,
   authAction_token,
   authAction_userInfo
-} from "@/store/action/authAction"
+} from "@/reducer/action/authAction"
 // 退出登录
 export function authLogout() {
   removeToken();

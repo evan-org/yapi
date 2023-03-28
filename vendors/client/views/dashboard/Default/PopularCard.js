@@ -9,7 +9,7 @@ import { Avatar, Button, CardActions, CardContent, Divider, Grid, Menu, MenuItem
 import BajajAreaChartCard from "./BajajAreaChartCard";
 import MainCard from "@/components/ui-component/cards/MainCard";
 import SkeletonPopularCard from "@/components/ui-component/cards/Skeleton/PopularCard";
-import { gridSpacing } from "store/constant";
+import { gridSpacing } from "@/reducer/constant";
 
 // assets
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";

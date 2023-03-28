@@ -11,7 +11,7 @@ import Breadcrumbs from "@/components/ui-component/extended/Breadcrumbs";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Customization from "../Customization";
-import navigation from "../../components/menu-items/index";
+import navigation from "../menu-items";
 import { drawerWidth } from "@/reducer/constant";
 import { SET_MENU } from "@/reducer/actions";
 

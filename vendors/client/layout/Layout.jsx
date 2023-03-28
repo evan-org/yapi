@@ -9,7 +9,7 @@ import { Container } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkLoginState } from "@/reducer/modules/user";
-
+//
 function AlertContent() {
   const ua = window.navigator.userAgent,
     isChrome = ua.indexOf("Chrome") && window.chrome;
