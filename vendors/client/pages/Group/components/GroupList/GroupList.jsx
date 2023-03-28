@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Icon, Modal, Input, message, Spin, Row, Menu, Col, Popover, Tooltip } from "antd";
-import { autobind } from "core-decorators";
 import axios from "axios";
 //
 import UsernameAutoComplete from "@/components/UsernameAutoComplete/UsernameAutoComplete.jsx";
@@ -28,7 +27,41 @@ const tip = (
   </div>
 );
 //
-
+function AddGroupModal(props) {
+  const {
+    addGroupModalVisible, inputNewGroupName, inputNewGroupDesc,
+    hideModal, setOwner_uids, addGroup
+  } = props;
+  const onUserSelect = (uids) => setOwner_uids(uids);
+  return (
+    <Modal title="添加分组" visible={addGroupModalVisible} onOk={addGroup} onCancel={hideModal} className="add-group-modal">
+      <Row gutter={6} className="modal-input">
+        <Col span={5}>
+          <div className="label">分组名：</div>
+        </Col>
+        <Col span={15}>
+          <Input placeholder="请输入分组名称" onChange={inputNewGroupName}/>
+        </Col>
+      </Row>
+      <Row gutter={6} className="modal-input">
+        <Col span={5}>
+          <div className="label">简介：</div>
+        </Col>
+        <Col span={15}>
+          <TextArea rows={3} placeholder="请输入分组描述" onChange={inputNewGroupDesc}/>
+        </Col>
+      </Row>
+      <Row gutter={6} className="modal-input">
+        <Col span={5}>
+          <div className="label">组长：</div>
+        </Col>
+        <Col span={15}>
+          <UsernameAutoComplete callbackState={onUserSelect}/>
+        </Col>
+      </Row>
+    </Modal>
+  )
+}
 //
 function GroupList(props) {
   //
@@ -39,10 +72,10 @@ function GroupList(props) {
   //
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDesc, setNewGroupDesc] = useState("");
+  const [owner_uids, setOwner_uids] = useState([]);
   //
   const [currGroupName, setCurrGroupName] = useState("");
   const [currGroupDesc, setCurrGroupDesc] = useState("");
-  const [owner_uids, setOwner_uids] = useState([]);
   //
   const navigate = useNavigate();
   const { groupId: paramsGroupId } = useParams();
@@ -135,10 +168,6 @@ function GroupList(props) {
     fetchNewsData(groupId, "group", 1, 10);
   }
   //
-  const onUserSelect = (uids) => {
-    setOwner_uids(uids);
-  }
-  //
   const searchGroup = (e, value) => {
     const v = value || e.target.value;
     console.log(v);
@@ -150,37 +179,6 @@ function GroupList(props) {
     //     groupList: groupList.filter((group) => new RegExp(v, "i").test(group.group_name))
     //   });
     // }
-  }
-  //
-  function AddGroupModal() {
-    return (
-      <Modal title="添加分组" visible={addGroupModalVisible} onOk={addGroup} onCancel={hideModal} className="add-group-modal">
-        <Row gutter={6} className="modal-input">
-          <Col span={5}>
-            <div className="label">分组名：</div>
-          </Col>
-          <Col span={15}>
-            <Input placeholder="请输入分组名称" onChange={inputNewGroupName}/>
-          </Col>
-        </Row>
-        <Row gutter={6} className="modal-input">
-          <Col span={5}>
-            <div className="label">简介：</div>
-          </Col>
-          <Col span={15}>
-            <TextArea rows={3} placeholder="请输入分组描述" onChange={inputNewGroupDesc}/>
-          </Col>
-        </Row>
-        <Row gutter={6} className="modal-input">
-          <Col span={5}>
-            <div className="label">组长：</div>
-          </Col>
-          <Col span={15}>
-            <UsernameAutoComplete callbackState={onUserSelect}/>
-          </Col>
-        </Row>
-      </Modal>
-    )
   }
   //
   return (
@@ -200,8 +198,7 @@ function GroupList(props) {
         </div>
         <div className="group-operate">
           <div className="search">
-            <Search placeholder="搜索分类" onChange={(e) => searchGroup(e)}
-              onSearch={(v) => searchGroup(null, v)}/>
+            <Search placeholder="搜索分类" onChange={(e) => searchGroup(e)} onSearch={(v) => searchGroup(null, v)}/>
           </div>
         </div>
         {groupList.length === 0 && <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/>}
@@ -231,7 +228,16 @@ function GroupList(props) {
         </Menu>
       </div>
       {/*  */}
-      <AddGroupModal/>
+      <AddGroupModal {...{
+        addGroupModalVisible,
+        setAddGroupModalVisible,
+        addGroup,
+        editGroup,
+        hideModal,
+        setOwner_uids,
+        inputNewGroupName,
+        inputNewGroupDesc
+      }}/>
     </div>
   )
 }

@@ -1,7 +1,15 @@
+.Header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99;
+}
 .HeaderBox {
-  height: .56rem;
-  line-height: .56rem;
+  height: 55px;
+  line-height: 55px;
   padding: 0;
+  background-color: #0d1b3e;
   :global {
     .nav-tooltip {
       color: red;
@@ -16,9 +24,9 @@
     .logo {
       position: relative;
       float: left;
-      line-height: .56rem;
-      height: .56rem;
-      width: 56px;
+      line-height: 55px;
+      height: 55px;
+      width: 55px;
       border-right: 1px solid #55616d;
       border-left: 1px solid #55616d;
       background-color: inherit;
@@ -66,6 +74,9 @@
       height: .54rem;
       display: flex;
       align-items: center;
+      ul {
+        margin: 0;
+      }
       .item-search {
         width: 2rem;
       }

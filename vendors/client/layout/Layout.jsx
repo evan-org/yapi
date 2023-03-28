@@ -52,13 +52,13 @@ function Layout(props) {
   }, [location])
   return (
     <section className={styles.Layout}>
-      <Loading visible={visible}/>
       {loginState === 2 ? <Header {...props}/> : null}
       <Container class={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
         <Outlet/>
       </Container>
-      <Footer/>
+      {loginState !== 2 ? <Footer {...props}/> : null}
       <AlertContent/>
+      <Loading visible={visible}/>
     </section>
   )
 }

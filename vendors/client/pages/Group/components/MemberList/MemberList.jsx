@@ -3,19 +3,17 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Table, Select, Button, Modal, Row, Col, message, Popconfirm } from "antd";
 import { Link } from "react-router-dom";
-import "./MemberList.scss";
+import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
+import UsernameAutoComplete from "@/components/UsernameAutoComplete/UsernameAutoComplete.jsx";
+//
+
 import { autobind } from "core-decorators";
-import {
-  fetchGroupMemberList,
-  fetchGroupMsg,
-  addMember,
-  delMember,
-  changeMemberRole
-} from "../../../../reducer/modules/group.js";
-import ErrMsg from "../../../../components/ErrMsg/ErrMsg.jsx";
-import UsernameAutoComplete from "../../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx";
+import { fetchGroupMemberList, fetchGroupMsg, addMember, delMember, changeMemberRole } from "@/reducer/modules/group";
+
 const Option = Select.Option;
 
+import "./MemberList.scss";
+//
 function arrayAddKey(arr) {
   return arr.map((item, index) => ({
     ...item,
@@ -235,7 +233,7 @@ class MemberList extends Component {
                   okText="确定"
                   cancelText=""
                 >
-                  <Button type="danger" icon="delete" className="btn-danger" />
+                  <Button type="danger" icon="delete" className="btn-danger"/>
                   {/* <Icon type="delete" className="btn-danger"/> */}
                 </Popconfirm>
               </div>
@@ -282,15 +280,15 @@ class MemberList extends Component {
           >
             <Row gutter={6} className="modal-input">
               <Col span="5">
-                <div className="label usernamelabel">用户名: </div>
+                <div className="label usernamelabel">用户名:</div>
               </Col>
               <Col span="15">
-                <UsernameAutoComplete callbackState={this.onUserSelect} />
+                <UsernameAutoComplete callbackState={this.onUserSelect}/>
               </Col>
             </Row>
             <Row gutter={6} className="modal-input">
               <Col span="5">
-                <div className="label usernameauth">权限: </div>
+                <div className="label usernameauth">权限:</div>
               </Col>
               <Col span="15">
                 <Select defaultValue="dev" className="select" onChange={this.changeNewMemberRole}>
@@ -308,7 +306,7 @@ class MemberList extends Component {
           columns={columns}
           dataSource={userinfo}
           pagination={false}
-          locale={{ emptyText: <ErrMsg type="noMemberInGroup" /> }}
+          locale={{ emptyText: <ErrMsg type="noMemberInGroup"/> }}
         />
       </div>
     );

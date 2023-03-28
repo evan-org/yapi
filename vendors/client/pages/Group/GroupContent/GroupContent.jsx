@@ -1,9 +1,9 @@
 import React from "react";
 
 import ProjectList from "../components/ProjectList/ProjectList.jsx";
-import MemberList from "../components/MemberList/MemberList";
-import GroupLog from "../components/GroupLog/GroupLog";
-import GroupSetting from "../components/GroupSetting/GroupSetting";
+import MemberList from "../components/MemberList/MemberList.jsx";
+import GroupLog from "../components/GroupLog/GroupLog.jsx";
+import GroupSetting from "../components/GroupSetting/GroupSetting.jsx";
 //
 import { Tabs } from "antd";
 import { connect } from "react-redux";

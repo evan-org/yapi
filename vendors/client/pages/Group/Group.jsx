@@ -52,16 +52,12 @@ function Group(props) {
     return <Spin/>
   }
   return (
-    <div className={styles.Group}>
-      <Layout style={{ minHeight: "calc(100vh - 100px)", marginLeft: "24px", marginTop: "24px" }}>
-        <GroupSider/>
-        <Layout>
-          <Layout.Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
-            <Outlet/>
-          </Layout.Content>
-        </Layout>
-      </Layout>
-    </div>
+    <Layout className={styles.Group}>
+      <GroupSider/>
+      <Layout.Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
+        <Outlet/>
+      </Layout.Content>
+    </Layout>
   );
 }
 export default connect(

@@ -245,9 +245,9 @@ function HeaderBox(props) {
     });
   };
   return (
-    <header>
+    <header className={styles.Header}>
       {curUserRole === "admin" && <Notify/>}
-      <Layout.Header className={styles.HeaderBox}>
+      <div className={styles.HeaderBox}>
         <div className="content g-row">
           <Link onClick={relieveLink} to="/group" className="logo">
             <div className="href">
@@ -261,7 +261,7 @@ function HeaderBox(props) {
             {login ? <ToolUser{...props} relieveLink={relieveLink} logout={logout}/> : null}
           </div>
         </div>
-      </Layout.Header>
+      </div>
     </header>
   )
 }
