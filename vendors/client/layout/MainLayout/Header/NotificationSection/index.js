@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 // material-ui
 import { useTheme } from "@mui/material/styles";
 import {
@@ -20,18 +19,14 @@ import {
   Typography,
   useMediaQuery
 } from "@mui/material";
-
 // third-party
 import PerfectScrollbar from "react-perfect-scrollbar";
-
 // project imports
 import MainCard from "@/components/ui-component/cards/MainCard";
 import Transitions from "@/components/ui-component/extended/Transitions";
 import NotificationList from "./NotificationList";
-
 // assets
 import { IconBell } from "@tabler/icons";
-
 // notification status options
 const status = [
   {
@@ -51,31 +46,25 @@ const status = [
     label: "Other"
   }
 ];
-
 // ==============================|| NOTIFICATION ||============================== //
-
 const NotificationSection = () => {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down("md"));
-
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   /**
-     * anchorRef is used on different componets and specifying one type leads to other components throwing an error
-     * */
+   * anchorRef is used on different componets and specifying one type leads to other components throwing an error
+   * */
   const anchorRef = useRef(null);
-
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
     setOpen(false);
   };
-
   const prevOpen = useRef(open);
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
@@ -83,11 +72,11 @@ const NotificationSection = () => {
     }
     prevOpen.current = open;
   }, [open]);
-
   const handleChange = (event) => {
-    if (event?.target.value) {setValue(event?.target.value);}
+    if (event?.target.value) {
+      setValue(event?.target.value);
+    }
   };
-
   return (
     <>
       <Box
@@ -119,7 +108,7 @@ const NotificationSection = () => {
             onClick={handleToggle}
             color="inherit"
           >
-            <IconBell stroke={1.5} size="1.3rem" />
+            <IconBell stroke={1.5} size="1.3rem"/>
           </Avatar>
         </ButtonBase>
       </Box>
@@ -164,7 +153,7 @@ const NotificationSection = () => {
                         </Grid>
                         <Grid item>
                           <Typography component={Link} to="#" variant="subtitle2" color="primary">
-                                                        Mark as all read
+                            Mark as all read
                           </Typography>
                         </Grid>
                       </Grid>
@@ -195,17 +184,17 @@ const NotificationSection = () => {
                             </Box>
                           </Grid>
                           <Grid item xs={12} p={0}>
-                            <Divider sx={{ my: 0 }} />
+                            <Divider sx={{ my: 0 }}/>
                           </Grid>
                         </Grid>
-                        <NotificationList />
+                        <NotificationList/>
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
-                  <Divider />
+                  <Divider/>
                   <CardActions sx={{ p: 1.25, justifyContent: "center" }}>
                     <Button size="small" disableElevation>
-                                            View All
+                      View All
                     </Button>
                   </CardActions>
                 </MainCard>
@@ -217,5 +206,4 @@ const NotificationSection = () => {
     </>
   );
 };
-
 export default NotificationSection;

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { forwardRef, useEffect } from "react";
+import React, { forwardRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // material-ui
@@ -39,7 +39,9 @@ const NavItem = ({ item, level }) => {
   }
   const itemHandler = (id) => {
     dispatch({ type: MENU_OPEN, id });
-    if (matchesSM) {dispatch({ type: SET_MENU, opened: false });}
+    if (matchesSM) {
+      dispatch({ type: SET_MENU, opened: false });
+    }
   };
   // active menu item on page load
   useEffect(() => {

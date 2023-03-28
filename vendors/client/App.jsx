@@ -11,7 +11,7 @@ import themes from "@/themes";
 //
 import ThemeRoutes, { routes } from "@/router/index.js";
 //
-import "./styles/App.scss";
+// import "./styles/App.scss";
 import "./styles/antd-ui/theme.less";
 //
 import { AppRoute } from "@/router/oldIndex";
@@ -39,7 +39,9 @@ function App(props) {
       <ThemeProvider theme={themes(customization)}>
         <ConfigProvider locale={zhCN}>
           <CssBaseline/>
-          <ThemeRoutes/>
+          <NavigationScroll>
+            <ThemeRoutes/>
+          </NavigationScroll>
         </ConfigProvider>
       </ThemeProvider>
     </StyledEngineProvider>

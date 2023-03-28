@@ -1,7 +1,8 @@
+import React from "react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 
 // material-ui
 import { useTheme } from "@mui/material/styles";

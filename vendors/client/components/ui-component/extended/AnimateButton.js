@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { forwardRef } from "react";
 // third-party
-import { motion, useCycle } from "framer-motion";
+import { motion, useCycle } from "framer-motion/dist/framer-motion";
 // ==============================|| ANIMATION BUTTON ||============================== //
 // eslint-disable-next-line react/display-name
 const AnimateButton = forwardRef(({ children, type, direction, offset, scale }, ref) => {
