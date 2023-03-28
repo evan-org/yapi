@@ -7,8 +7,8 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { Row, Col, Tooltip, Icon } from "antd";
 import { setBreadcrumb } from "../../../client/reducer/modules/user";
-import StatisChart from "./lib/StatisticsChart";
-import StatisTable from "./lib/StatisticsTable";
+import StatisChart from "./StatisticsChart/StatisticsChart";
+import StatisTable from "./StatisticsTable/StatisticsTable";
 import "./StatisticsClientPage.scss";
 
 function CountOverview(props) {

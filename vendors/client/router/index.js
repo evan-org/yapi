@@ -46,6 +46,32 @@ const router = [
         ]
       },
       //
+      {
+        path: "/user",
+        name: "User",
+        element: lazy(() => import("../pages/User/User.jsx")),
+        meta: { title: "个人中心", auth: true },
+        children: [
+          {
+            index: true,
+            element: lazy(() => import("../pages/Error/NotFound/NotFound.jsx")),
+            meta: { title: "加载中", auth: false },
+          },
+          {
+            path: "/profile",
+            name: "User",
+            element: lazy(() => import("../pages/User/Profile/Profile.jsx")),
+            meta: { title: "个人中心", auth: true }
+          },
+          {
+            path: "/list",
+            name: "User",
+            element: lazy(() => import("../pages/User/List/List.jsx")),
+            meta: { title: "个人中心", auth: true }
+          }
+        ]
+      },
+      //
       /* {
         path: "/project/:id",
         name: "Project",
@@ -57,13 +83,6 @@ const router = [
         path: "/add-project",
         name: "AddProject",
         element: lazy(() => import("../pages/AddProject/AddProject.jsx")),
-        meta: { title: "查看报告", auth: true }
-      },
-      //
-      {
-        path: "/user",
-        name: "User",
-        element: lazy(() => import("../pages/User/User.jsx")),
         meta: { title: "查看报告", auth: true }
       },
       //

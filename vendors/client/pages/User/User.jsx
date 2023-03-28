@@ -1,11 +1,9 @@
 
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
-// import { Route } from "react-router-dom";
-import List from "./components/List.jsx";
+import {Outlet} from "react-router-dom"
 import PropTypes from "prop-types";
-import Profile from "./components/Profile.jsx";
-import { Row } from "antd";
+//
 import styles from "./User.module.scss";
 class User extends Component {
   static propTypes = {
@@ -20,12 +18,7 @@ class User extends Component {
   render() {
     return (
       <div className={styles.Main}>
-        <div className="g-doc">
-          <Row className="user-box">
-            {/* <Route path={this.props.match.path + "/list"} component={List}/>
-            <Route path={this.props.match.path + "/profile/:uid"} component={Profile}/>*/}
-          </Row>
-        </div>
+        <Outlet/>
       </div>
     );
   }
