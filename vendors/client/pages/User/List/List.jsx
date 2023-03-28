@@ -10,14 +10,6 @@ import axios from "axios";
 
 const Search = Input.Search;
 const limit = 20;
-@connect(
-  (state) => ({
-    curUserRole: state.user.role
-  }),
-  {
-    setBreadcrumb
-  }
-)
 class List extends Component {
   constructor(props) {
     super(props);
@@ -41,11 +33,9 @@ class List extends Component {
       this.getUserList
     );
   };
-
   getUserList() {
     axios.get("/api/user/list?page=" + this.state.current + "&limit=" + limit).then((res) => {
       let result = res.data;
-
       if (result.errcode === 0) {
         let list = result.data.list;
         let total = result.data.count;
@@ -61,55 +51,37 @@ class List extends Component {
       }
     });
   }
-
   componentDidMount() {
     this.getUserList();
   }
-
   confirm = (uid) => {
-    axios
-      .post("/api/user/del", {
-        id: uid
-      })
-      .then(
-        (res) => {
-          if (res.data.errcode === 0) {
-            message.success("已删除此用户");
-            let userlist = this.state.data;
-            userlist = userlist.filter((item) => item._id != uid);
-            this.setState({
-              data: userlist
-            });
-          } else {
-            message.error(res.data.errmsg);
-          }
-        },
-        (err) => {
-          message.error(err.message);
-        }
-      );
+    axios.post("/api/user/del", { id: uid }).then((res) => {
+      if (res.data.errcode === 0) {
+        message.success("已删除此用户");
+        let userlist = this.state.data;
+        userlist = userlist.filter((item) => item._id != uid);
+        this.setState({
+          data: userlist
+        });
+      } else {
+        message.error(res.data.errmsg);
+      }
+    }).catch((err) => {
+      message.error(err.message);
+    })
   };
-
   async UNSAFE_componentWillMount() {
     this.props.setBreadcrumb([{ name: "用户管理" }]);
   }
-
   handleSearch = (value) => {
     let params = { q: value };
     if (params.q !== "") {
       axios.get("/api/user/search", { params }).then((data) => {
         let userList = [];
-
         data = data.data.data;
         if (data) {
-          data.forEach((v) =>
-            userList.push({
-              ...v,
-              _id: v.uid
-            })
-          );
+          userList = data.map((v) => ({ ...v, _id: v.uid }));
         }
-
         this.setState({
           data: userList,
           isSearch: true
@@ -122,7 +94,6 @@ class List extends Component {
       });
     }
   };
-
   render() {
     const role = this.props.curUserRole;
     let data = [];
@@ -177,47 +148,36 @@ class List extends Component {
         )
       }
     ];
-
-    columns = columns.filter((item) => {
-      if (item.key === "action" && role !== "admin") {
-        return false;
-      }
-      return true;
-    });
-
+    columns = columns.filter((item) => !(item.key === "action" && role !== "admin"));
+    //
     const pageConfig = {
       total: this.state.total,
       pageSize: limit,
       current: this.state.current,
       onChange: this.changePage
     };
-
     const defaultPageConfig = {
       total: this.state.data.length,
       pageSize: limit,
       current: 1
     };
-
     return (
       <section className="user-table">
         <div className="user-search-wrapper">
           <h2 style={{ marginBottom: "10px" }}>用户总数：{this.state.total}位</h2>
-          <Search
-            onChange={(e) => this.handleSearch(e.target.value)}
-            onSearch={this.handleSearch}
-            placeholder="请输入用户名"
-          />
+          <Search onChange={(e) => this.handleSearch(e.target.value)} onSearch={this.handleSearch} placeholder="请输入用户名"/>
         </div>
-        <Table
-          bordered
-          rowKey={(record) => record._id}
-          columns={columns}
-          pagination={this.state.isSearch ? defaultPageConfig : pageConfig}
-          dataSource={data}
-        />
+        <Table bordered rowKey={(record) => record._id} columns={columns} pagination={this.state.isSearch ? defaultPageConfig : pageConfig}
+          dataSource={data}/>
       </section>
     );
   }
 }
-
-export default List;
+export default connect(
+  (state) => ({
+    curUserRole: state.user.role
+  }),
+  {
+    setBreadcrumb
+  }
+)(List);

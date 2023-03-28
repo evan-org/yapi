@@ -1,5 +1,4 @@
-import React, { createContext, PureComponent as Component, useContext, useEffect } from "react";
-import { Prop } from "react-dom";
+import React, { createContext, PureComponent as Component, useContext, useState, useEffect } from "react";
 import { Row, Col, Input, Button, Select, message, Upload, Tooltip } from "antd";
 import axios from "axios";
 import { formatTime } from "@/utils/common";
@@ -15,28 +14,14 @@ const EditButton = (props) => {
     if (admin) {
       return null;
     }
-    return (
-      <Button
-        icon="edit"
-        onClick={() => {
-          onClick(name, true);
-        }}
-      >
-        修改
-      </Button>
-    );
+    return (<Button icon="edit" onClick={() => {
+      onClick(name, true);
+    }}>修改</Button>);
   } else if (isAdmin) {
     // 管理员
-    return (
-      <Button
-        icon="edit"
-        onClick={() => {
-          onClick(name, true);
-        }}
-      >
-        修改
-      </Button>
-    );
+    return (<Button icon="edit" onClick={() => {
+      onClick(name, true)
+    }}>修改</Button>);
   } else {
     return null;
   }
@@ -48,7 +33,6 @@ EditButton.propTypes = {
   name: PropTypes.string,
   admin: PropTypes.bool
 };
-
 @connect(
   (state) => ({
     url: state.user.imageUrl
@@ -70,7 +54,6 @@ class AvatarUpload extends Component {
     axios
       .post("/api/user/upload_avatar", { basecode: basecode })
       .then(() => {
-      // this.setState({ imageUrl: basecode });
         this.props.setImageUrl(basecode);
       })
       .catch((e) => {
@@ -117,7 +100,6 @@ class AvatarUpload extends Component {
     );
   }
 }
-
 function beforeUpload(file) {
   const isJPG = file.type === "image/jpeg";
   const isPNG = file.type === "image/png";
@@ -128,257 +110,115 @@ function beforeUpload(file) {
   if (!isLt2M) {
     message.error("图片必须小于 200kb!");
   }
-
   return (isPNG || isJPG) && isLt2M;
 }
-
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
 }
-
-const PropsContext = createContext(null);
 //
-function UserNameEdit({ usernameEdit, userType, userinfo }) {
+const PropsContext = createContext(null);
+// 用户名修改
+function UserNameEdit() {
+  const [edit, setEdit] = useState(false);
+  const [value, setValue] = useState("");
+  const { defineUserInfo, updateUserinfo, userinfo, userType, curRole, curUid } = useContext(PropsContext);
+  //
+  const onSubmit = () => {
+    updateUserinfo({ "username": value }).then((e) => {
+      setEdit(false);
+    });
+  }
   // 用户名信息修改
-  if (usernameEdit === false) {
+  if (edit === false) {
     return (<div>
       <span className="text">{userinfo.username}</span>&nbsp;&nbsp;
-      {/* <span className="text-button"  onClick={() => { this.handleEdit('usernameEdit', true) }}><Icon type="edit" />修改</span>*/}
-      {/* {btn} */}
       {/* 站点登陆才能编辑 */}
-      {userType && (
-        <EditButton
-          userType={userType}
-          isOwner={userinfo.uid === this.props.curUid}
-          isAdmin={this.props.curRole === "admin"}
-          onClick={this.handleEdit}
-          name="usernameEdit"
-        />
-      )}
+      {userType && (<EditButton userType={userType} isOwner={userinfo.uid === curUid} isAdmin={curRole === "admin"} onClick={() => setEdit(true)} name="usernameEdit"/>)}
     </div>);
-  } else {
-    return (
-      <div>
-        <Input value={_userinfo.username} name="username" onChange={this.changeUserinfo}
-          placeholder="用户名"/>
-        <Button.Group className="edit-buttons">
-          <Button className="edit-button" onClick={() => {
-            this.handleEdit("usernameEdit", false);
-          }}
-          >
-            取消
-          </Button>
-          <Button
-            className="edit-button"
-            onClick={() => {
-              this.updateUserinfo("username");
-            }}
-            type="primary"
-          >
-            确定
-          </Button>
-        </Button.Group>
-      </div>
-    );
   }
+  //
+  return (<div>
+    <Input defaultValue={defineUserInfo.username} value={value} name="username" onChange={(e) => setValue(e.target.value)} placeholder="用户名"/>
+    <Button.Group className="edit-buttons">
+      <Button className="edit-button" onClick={() => setEdit(false)}>取消</Button>
+      <Button className="edit-button" onClick={onSubmit} type="primary">确定</Button>
+    </Button.Group>
+  </div>);
 }
-
 // 邮箱信息修改
-function EmailEdit({ emailEdit }) {
-  if (emailEdit === false) {
+function EmailEdit() {
+  const [edit, setEdit] = useState(false);
+  const [value, setValue] = useState("");
+  const { defineUserInfo, userType, curRole, curUid, userinfo, updateUserinfo } = useContext(PropsContext);
+  //
+  const onSubmit = () => {
+    updateUserinfo({ "email": value }).then((e) => {
+      setEdit(false);
+    });
+  }
+  //
+  if (edit === false) {
     return (
       <div>
         <span className="text">{userinfo.email}</span>&nbsp;&nbsp;
-        {/* <span className="text-button" onClick={() => { this.handleEdit('emailEdit', true) }} ><Icon type="edit" />修改</span>*/}
-        {/* {btn} */}
-        {/* 站点登陆才能编辑 */}
         {userType && (
-          <EditButton
-            admin={userinfo.role === "admin"}
-            isOwner={userinfo.uid === this.props.curUid}
-            isAdmin={this.props.curRole === "admin"}
-            onClick={this.handleEdit}
-            name="emailEdit"
-          />
+          <EditButton admin={userinfo.role === "admin"}
+            isOwner={userinfo.uid === curUid}
+            isAdmin={curRole === "admin"}
+            onClick={() => setEdit(true)} name="emailEdit"/>
         )}
       </div>
     );
-  } else {
-    return (
-      <div>
-        <Input
-          placeholder="Email"
-          value={_userinfo.email}
-          name="email"
-          onChange={this.changeUserinfo}
-        />
-        <ButtonGroup className="edit-buttons">
-          <Button
-            className="edit-button"
-            onClick={() => {
-              this.handleEdit("emailEdit", false);
-            }}
-          >
-            取消
-          </Button>
-          <Button
-            className="edit-button"
-            type="primary"
-            onClick={() => {
-              this.updateUserinfo("email");
-            }}
-          >
-            确定
-          </Button>
-        </ButtonGroup>
-      </div>
-    );
   }
+  return (
+    <div>
+      <Input placeholder="Email" defaultValue={defineUserInfo.email} value={value} name="email" onChange={(e) => setValue(e.target.value)}/>
+      <Button.Group className="edit-buttons">
+        <Button className="edit-button" onClick={() => setEdit(false)}>取消</Button>
+        <Button className="edit-button" type="primary" onClick={onSubmit}>确定</Button>
+      </Button.Group>
+    </div>
+  );
 }
-
 // 角色
-function RoleEdit({ roleEdit }) {
-  if (roleEdit) {
+function RoleEdit() {
+  const { defineUserInfo, userinfo, updateUserinfo } = useContext(PropsContext);
+  const [edit, setEdit] = useState(false);
+  const [value, setValue] = useState(() => defineUserInfo.role);
+  //
+  const roles = [{ name: "管理员", role: "admin" }, { name: "会员", role: "member" }];
+  //
+  const changeRole = (value) => {
+    console.log(value);
+    updateUserinfo({ "role": value }).then((e) => {
+      setEdit(false);
+    });
+  }
+  //
+  if (edit) {
     return (
       <div>
         <span className="text">{roles[userinfo.role]}</span>&nbsp;&nbsp;
       </div>
     );
-  } else {
-    return (
-      <Select defaultValue={_userinfo.role} onChange={this.changeRole} style={{ width: 150 }}>
-        <Option value="admin">管理员</Option>
-        <Option value="member">会员</Option>
-      </Select>
-    );
   }
+  return (
+    <Select value={value} onChange={changeRole} style={{ width: 150 }}>
+      {roles.map((item) => (<Select.Option key={item.role} value={item.role}>{item.name}</Select.Option>))}
+    </Select>
+  );
 }
-
+// 修改密码
 function SecureEdit() {
-  const { secureEdit, userType, handleEdit, curRole, userinfo } = useContext(PropsContext);
-  if (secureEdit === false) {
-    if (userType) {
-      return (
-        <Button icon="edit" onClick={() => {
-          handleEdit("secureEdit", true)
-        }}>修改
-        </Button>
-      );
-    }
-    return null
-  } else {
-    return (
-      <div>
-        <Input
-          style={{ display: curRole === "admin" && userinfo.role !== "admin" ? "none" : "" }}
-          placeholder="旧的密码"
-          type="password"
-          name="old_password"
-          id="old_password"
-        />
-        <Input placeholder="新的密码" type="password" name="password" id="password"/>
-        <Input placeholder="确认密码" type="password" name="verify_pass" id="verify_pass"/>
-        <ButtonGroup className="edit-buttons">
-          <Button className="edit-button" onClick={() => {
-            handleEdit("secureEdit", false);
-          }}>
-            取消
-          </Button>
-          <Button className="edit-button" onClick={updatePassword} type="primary">
-            确定
-          </Button>
-        </ButtonGroup>
-      </div>
-    );
-  }
-}
-//
-function Profile(props) {
-  /*
-  usernameEdit: false,
-      emailEdit: false,
-      secureEdit: false,
-      roleEdit: false,
-      userinfo: {}
-  *  */
-  const { curUid, userType, curRole, setBreadcrumb } = props;
-  const [userinfo, setUserinfo] = useState({});
-  const [defineUserInfo, setDefineUserInfo] = useState({});
-  const [usernameEdit, setUsernameEdit] = useState(false);
-  const [emailEdit, setEmailEdit] = useState(false);
-  const [roleEdit, setRoleEdit] = useState(false);
-  const [secureEdit, setSecureEdit] = useState(false);
-  const { uid } = useParams();
-  //
-  useEffect(() => {
-    getUserInfo(uid);
-  }, []);
-
-  const handleEdit = (key, val) => {
-    let s = {};
-    s[key] = val;
-    this.setState(s);
-  };
-
-  const getUserInfo = async(id) => {
-    try {
-      const res = await axios.get("/api/user/find?id=" + id);
-      setUserinfo(() => res?.data?.data ?? {});
-      setDefineUserInfo(res.data.data);
-      if (curUid === +id) {
-        setBreadcrumb([{ name: res.data.data.username }]);
-      } else {
-        setBreadcrumb([{ name: "管理: " + res.data.data.username }]);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const updateUserinfo = async(name) => {
-    try {
-      let value = defineUserInfo[name];
-      let params = { uid: userinfo.uid };
-      params[name] = value;
-      const res = await axios.post("/api/user/update", params);
-      let data = res.data;
-      if (data.errcode === 0) {
-        const _userinfo = userinfo;
-        _userinfo[name] = value;
-        setUserinfo(_userinfo);
-        handleEdit(name + "Edit", false);
-        message.success("更新用户信息成功");
-      } else {
-        message.error(data.errmsg);
-      }
-    } catch (err) {
-      message.error(err?.message);
-    }
-  };
-
-  const changeUserinfo = (e) => {
-    let dom = e.target;
-    let name = dom.getAttribute("name");
-    let value = dom.value;
-    setDefineUserInfo(() => ({
-      ...defineUserInfo,
-      [name]: value
-    }));
-  };
-
-  const changeRole = (val) => {
-    let _userinfo = userinfo;
-    _userinfo.role = val;
-    setUserinfo(_userinfo);
-    updateUserinfo("role");
-  };
-
+  const { userType, setSecureEdit, curUid, curRole, userinfo } = useContext(PropsContext);
+  const [edit, setEdit] = useState(false);
   const updatePassword = async() => {
-    let old_password = document.getElementById("old_password").value;
-    let password = document.getElementById("password").value;
-    let verify_pass = document.getElementById("verify_pass").value;
+    const old_password = document.getElementById("old_password").value;
+    const password = document.getElementById("password").value;
+    const verify_pass = document.getElementById("verify_pass").value;
+    //
     if (password !== verify_pass) {
       return message.error("两次输入的密码不一样");
     }
@@ -391,7 +231,7 @@ function Profile(props) {
       const res = await axios.post("/api/user/change_password", params);
       const data = res.data;
       if (data.errcode === 0) {
-        handleEdit("secureEdit", false);
+        setSecureEdit(false);
         message.success("修改密码成功");
         if (curUid === userinfo.uid) {
           location.reload();
@@ -404,70 +244,145 @@ function Profile(props) {
     }
   };
   //
+  if (edit === false) {
+    if (userType) {
+      return (
+        <Button icon="edit" onClick={() => setEdit(true)}>修改</Button>
+      );
+    }
+    return null
+  }
   return (
-    <PropsContext.Provider value={{ userinfo, usernameEdit, emailEdit, roleEdit, secureEdit }}>
+    <div>
+      <Input style={{ display: curRole === "admin" && userinfo.role !== "admin" ? "none" : "" }} placeholder="旧的密码" type="password" name="old_password" id="old_password"/>
+      <Input placeholder="新的密码" type="password" name="password" id="password"/>
+      <Input placeholder="确认密码" type="password" name="verify_pass" id="verify_pass"/>
+      <Button.Group className="edit-buttons">
+        <Button className="edit-button" onClick={() => setEdit(false)}>取消</Button>
+        <Button className="edit-button" onClick={updatePassword} type="primary">确定</Button>
+      </Button.Group>
+    </div>
+  );
+}
+//
+function Profile(props) {
+  const { curUid, userType, curRole, setBreadcrumb } = props;
+  const [userinfo, setUserinfo] = useState({});
+  const [defineUserInfo, setDefineUserInfo] = useState({});
+  const { uid } = useParams();
+  //
+  useEffect(() => {
+    getUserInfo(uid);
+  }, []);
+  const getUserInfo = async(id) => {
+    try {
+      const res = await axios.get("/api/user/find?id=" + id);
+      setUserinfo(res.data.data);
+      setDefineUserInfo(res.data.data);
+      if (curUid === +id) {
+        setBreadcrumb([{ name: res.data.data.username }]);
+      } else {
+        setBreadcrumb([{ name: "管理: " + res.data.data.username }]);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const updateUserinfo = async(name) => {
+    try {
+      let value = defineUserInfo[name];
+      let params = { uid: userinfo.uid };
+      params[name] = value;
+      const res = await axios.post("/api/user/update", params);
+      let data = res.data;
+      if (data.errcode === 0) {
+        const defineUserInfo = userinfo;
+        defineUserInfo[name] = value;
+        setUserinfo(defineUserInfo);
+        message.success("更新用户信息成功");
+        return true;
+      } else {
+        message.error(data.errmsg);
+        return Promise.reject(data.errmsg);
+      }
+    } catch (err) {
+      message.error(err?.message);
+      return Promise.reject(err?.message);
+    }
+  };
+  //
+  return (
+    <PropsContext.Provider value={{ curUid, userType, curRole, setBreadcrumb, updateUserinfo, userinfo, defineUserInfo }}>
       <div className="user-profile">
         <div className="user-item-body">
-          {userinfo.uid === curUid ? (
-            <h3>个人设置</h3>
-          ) : (
-            <h3>{userinfo.username} 资料设置</h3>
-          )}
+          {userinfo.uid === curUid ? (<h3>个人设置</h3>) : (<h3>{userinfo.username} 资料设置</h3>)}
           <Row className="avatarCon" type="flex" justify="start">
             <Col span={24}>
-              {userinfo.uid === curUid ? (
-                <AvatarUpload uid={userinfo.uid}>点击上传头像</AvatarUpload>
-              ) : (
-                <div className="avatarImg">
-                  <img src={`/api/user/avatar?uid=${userinfo.uid}`} alt=""/>
-                </div>
-              )}
+              {
+                userinfo.uid === curUid ? (
+                  <AvatarUpload uid={userinfo.uid}>点击上传头像</AvatarUpload>
+                ) : (
+                  <div className="avatarImg">
+                    <img src={`/api/user/avatar?uid=${userinfo.uid}`} alt=""/>
+                  </div>
+                )
+              }
             </Col>
           </Row>
+          {/**/}
           <Row className="user-item" type="flex" justify="start">
             <div className="maoboli"/>
             <Col span={4}>用户id</Col>
             <Col span={12}>{userinfo.uid}</Col>
           </Row>
+          {/**/}
           <Row className="user-item" type="flex" justify="start">
             <div className="maoboli"/>
             <Col span={4}>用户名</Col>
             <Col span={12}><UserNameEdit/></Col>
           </Row>
+          {/**/}
           <Row className="user-item" type="flex" justify="start">
             <div className="maoboli"/>
             <Col span={4}>Email</Col>
             <Col span={12}><EmailEdit/></Col>
           </Row>
-          <Row className="user-item" style={{ display: this.props.curRole === "admin" ? "" : "none" }} type="flex" justify="start">
+          {/**/}
+          <Row className="user-item" style={{ display: curRole === "admin" ? "" : "none" }} type="flex" justify="start">
             <div className="maoboli"/>
             <Col span={4}>角色</Col>
             <Col span={12}><RoleEdit/></Col>
           </Row>
-          <Row className="user-item" style={{ display: this.props.curRole === "admin" ? "" : "none" }} type="flex" justify="start">
+          {/**/}
+          <Row className="user-item" style={{ display: curRole === "admin" ? "" : "none" }} type="flex" justify="start">
             <div className="maoboli"/>
             <Col span={4}>登陆方式</Col>
             <Col span={12}>{userinfo.type === "site" ? "站点登陆" : "第三方登陆"}</Col>
           </Row>
+          {/**/}
           <Row className="user-item" type="flex" justify="start">
             <div className="maoboli"/>
             <Col span={4}>创建账号时间</Col>
             <Col span={12}>{formatTime(userinfo.add_time)}</Col>
           </Row>
+          {/**/}
           <Row className="user-item" type="flex" justify="start">
             <div className="maoboli"/>
             <Col span={4}>更新账号时间</Col>
             <Col span={12}>{formatTime(userinfo.up_time)}</Col>
           </Row>
-          {userType ? (
-            <Row className="user-item" type="flex" justify="start">
-              <div className="maoboli"/>
-              <Col span={4}>密码</Col>
-              <Col span={12}><SecureEdit/></Col>
-            </Row>
-          ) : (
-            ""
-          )}
+          {/**/}
+          {
+            userType ? (
+              <Row className="user-item" type="flex" justify="start">
+                <div className="maoboli"/>
+                <Col span={4}>密码</Col>
+                <Col span={12}><SecureEdit/></Col>
+              </Row>
+            ) : (
+              ""
+            )
+          }
         </div>
       </div>
     </PropsContext.Provider>

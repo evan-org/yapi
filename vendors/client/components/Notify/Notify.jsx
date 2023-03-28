@@ -1,13 +1,34 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Alert, message } from "antd";
+function isUpgrade(current_version, compare_version = "6.0.0") {
+  let compare_version_array = compare_version.split(".");
+  let current_version_array = current_version.split(".");
+  let is_upgrade = true;
+  if (compare_version_array.length === 3 && current_version_array.length === 3) {
+    for (let i = 0; i < compare_version_array.length; i++) {
+      if (parseInt(compare_version_array[i]) < parseInt(current_version_array[i])) {
+        is_upgrade = true;
+        break;
+      } else {
+        if (parseInt(compare_version_array[i]) === parseInt(current_version_array[i])) {
+          continue;
+        } else {
+          is_upgrade = false;
+          break;
+        }
+      }
+    }
+  }
+  return is_upgrade;
+}
 
 export default class Notify extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newVersion: "1.0.0", // process.env.version,
-      version: "1.0.0" // process.env.version
+      newVersion: "2.0.0", // process.env.version,
+      version: "2.0.0" // process.env.version
     };
   }
   componentDidMount() {

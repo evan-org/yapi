@@ -47,6 +47,7 @@
     "@mui/styled-engine-sc": "^5.11.11",
     "@mui/styles": "^5.11.13",
     "@mui/system": "^5.11.14",
+    "@mui/x-data-grid": "^6.0.3",
     "@toast-ui/editor": "^3.2.2",
     "ajv": "^5.5.1",
     "ajv-i18n": "^2.2.0",

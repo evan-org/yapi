@@ -246,7 +246,7 @@ function HeaderBox(props) {
   };
   return (
     <header className={styles.Header}>
-      {curUserRole === "admin" && <Notify/>}
+      {/* {curUserRole === "admin" && <Notify/>}*/}
       <div className={styles.HeaderBox}>
         <div className="content g-row">
           <Link onClick={relieveLink} to="/group" className="logo">

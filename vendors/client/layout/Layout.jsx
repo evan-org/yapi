@@ -53,7 +53,7 @@ function Layout(props) {
   return (
     <section className={styles.Layout}>
       {loginState === 2 ? <Header {...props}/> : null}
-      <Container class={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
+      <Container className={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
         <Outlet/>
       </Container>
       {loginState !== 2 ? <Footer {...props}/> : null}

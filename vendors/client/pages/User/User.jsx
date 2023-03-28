@@ -4,11 +4,16 @@ import { Outlet } from "react-router-dom"
 import PropTypes from "prop-types";
 //
 import styles from "./User.module.scss";
+import { Container, Card } from "@mui/material";
 
 function User() {
   return (
     <div className={styles.Main}>
-      <Outlet/>
+      <Container fixed>
+        <Card variant="outlined">
+          <Outlet/>
+        </Card>
+      </Container>
     </div>
   )
 }

@@ -3,9 +3,9 @@
   height: 100%;
 }
 .LayoutContainer {
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   position: relative;
   &.compute {
-    min-height: calc(100vh - 55px);
+    min-height: calc(100vh - 100px);
   }
 }
