@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ButtonBase } from "@mui/material";
 
 // project imports
-import config from "config.json";
+import config from "@/config";
 import Logo from "@/components/ui-component/Logo";
 import { MENU_OPEN } from "@/reducer/actions";
 

@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { APP_NAME } from "@/utils/config";
 import Loading from "@/components/Loading/Loading.jsx";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, useRoutes } from "react-router-dom";
 //
 /*
 * let routers = {
@@ -112,20 +112,15 @@ const router = [
     meta: { title: "什么也没找到", auth: false },
   }
 ];
-// 根据路径获取路由
-const checkAuth = (routers, path) => {
-  for (const data of routers) {
-    if (data.path === path) {
-      return data
-    }
-    if (data.children) {
-      const res = checkAuth(data.children, path)
-      if (res) {
-        return res
-      }
-    }
-  }
-  return null
+
+// routes
+import MainRoutes from "./MainRoutes";
+import AuthenticationRoutes from "./AuthenticationRoutes";
+
+// ==============================|| ROUTING RENDER ||============================== //
+
+export default function ThemeRoutes() {
+  return useRoutes([MainRoutes, AuthenticationRoutes]);
 }
 // 路由处理方式
 const generateRouter = (routers) => routers.map((Item) => {
@@ -150,8 +145,3 @@ const generateRouter = (routers) => routers.map((Item) => {
 const asyncRouter = generateRouter(router);
 //
 export const routes = createBrowserRouter([...asyncRouter]);
-export const checkRouterAuth = (path) => {
-  let auth;
-  auth = checkAuth(asyncRouter, path)
-  return auth;
-}

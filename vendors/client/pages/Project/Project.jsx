@@ -10,9 +10,9 @@ import Loading from "../../components/Loading/Loading";
 import ProjectMember from "./Setting/ProjectMember/ProjectMember.js";
 import ProjectData from "./Setting/ProjectData/ProjectData.js";
 //
-import { fetchGroupMsg } from "../../reducer/modules/group";
-import { setBreadcrumb } from "../../reducer/modules/user";
-import { getProject } from "../../reducer/modules/project";
+import { fetchGroupMsg } from "@/reducer/modules/group";
+import { setBreadcrumb } from "@/reducer/modules/user";
+import { getProject } from "@/reducer/modules/project";
 //
 const plugin = require("client/plugin.js");
 class Project extends Component {
