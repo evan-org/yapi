@@ -1,10 +1,10 @@
 import React, { PureComponent as Component } from "react";
-import { formatTime } from "../../../utils/common.js";
 import { Link } from "react-router-dom";
-import { setBreadcrumb } from "../../../reducer/modules/user";
-// import PropTypes from 'prop-types'
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+//
+import { formatTime } from "@/utils/common";
+import { setBreadcrumb } from "@/reducer/modules/user";
 import { Table, Popconfirm, message, Input } from "antd";
 import axios from "axios";
 

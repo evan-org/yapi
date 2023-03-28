@@ -1,10 +1,12 @@
-import React, { PureComponent as Component } from "react";
+import React, { createContext, PureComponent as Component, useContext, useEffect } from "react";
+import { Prop } from "react-dom";
 import { Row, Col, Input, Button, Select, message, Upload, Tooltip } from "antd";
 import axios from "axios";
-import { formatTime } from "../../../utils/common.js";
+import { formatTime } from "@/utils/common";
 import PropTypes from "prop-types";
-import { setBreadcrumb, setImageUrl } from "../../../reducer/modules/user";
+import { setBreadcrumb, setImageUrl } from "@/reducer/modules/user";
 import { connect } from "react-redux";
+import { matchPath, useParams } from "react-router-dom";
 
 const EditButton = (props) => {
   const { isAdmin, isOwner, onClick, name, admin } = props;
@@ -49,419 +51,6 @@ EditButton.propTypes = {
 
 @connect(
   (state) => ({
-    curUid: state.user.uid,
-    userType: state.user.type,
-    curRole: state.user.role
-  }),
-  {
-    setBreadcrumb
-  }
-)
-class Profile extends Component {
-  static propTypes = {
-    match: PropTypes.object,
-    curUid: PropTypes.number,
-    userType: PropTypes.string,
-    setBreadcrumb: PropTypes.func,
-    curRole: PropTypes.string,
-    upload: PropTypes.bool
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      usernameEdit: false,
-      emailEdit: false,
-      secureEdit: false,
-      roleEdit: false,
-      userinfo: {}
-    };
-  }
-
-  componentDidMount() {
-    this._uid = this.props.match.params.uid;
-    this.handleUserinfo(this.props);
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (!nextProps.match.params.uid) {
-      return;
-    }
-    if (this._uid !== nextProps.match.params.uid) {
-      this.handleUserinfo(nextProps);
-    }
-  }
-
-  handleUserinfo(props) {
-    const uid = props.match.params.uid;
-    this.getUserInfo(uid);
-  }
-
-  handleEdit = (key, val) => {
-    let s = {};
-    s[key] = val;
-    this.setState(s);
-  };
-
-  getUserInfo = (id) => {
-    let _this = this;
-    const { curUid } = this.props;
-
-    axios.get("/api/user/find?id=" + id).then((res) => {
-      _this.setState({
-        userinfo: res.data.data,
-        _userinfo: res.data.data
-      });
-      if (curUid === +id) {
-        this.props.setBreadcrumb([{ name: res.data.data.username }]);
-      } else {
-        this.props.setBreadcrumb([{ name: "管理: " + res.data.data.username }]);
-      }
-    });
-  };
-
-  updateUserinfo = (name) => {
-    let state = this.state;
-    let value = this.state._userinfo[name];
-    let params = { uid: state.userinfo.uid };
-    params[name] = value;
-
-    axios.post("/api/user/update", params).then(
-      (res) => {
-        let data = res.data;
-        if (data.errcode === 0) {
-          let userinfo = this.state.userinfo;
-          userinfo[name] = value;
-          this.setState({
-            userinfo: userinfo
-          });
-
-          this.handleEdit(name + "Edit", false);
-          message.success("更新用户信息成功");
-        } else {
-          message.error(data.errmsg);
-        }
-      },
-      (err) => {
-        message.error(err.message);
-      }
-    );
-  };
-
-  changeUserinfo = (e) => {
-    let dom = e.target;
-    let name = dom.getAttribute("name");
-    let value = dom.value;
-
-    this.setState({
-      _userinfo: {
-        ...this.state._userinfo,
-        [name]: value
-      }
-    });
-  };
-
-  changeRole = (val) => {
-    let userinfo = this.state.userinfo;
-    userinfo.role = val;
-    this.setState({
-      _userinfo: userinfo
-    });
-    this.updateUserinfo("role");
-  };
-
-  updatePassword = () => {
-    let old_password = document.getElementById("old_password").value;
-    let password = document.getElementById("password").value;
-    let verify_pass = document.getElementById("verify_pass").value;
-    if (password != verify_pass) {
-      return message.error("两次输入的密码不一样");
-    }
-    let params = {
-      uid: this.state.userinfo.uid,
-      password: password,
-      old_password: old_password
-    };
-
-    axios.post("/api/user/change_password", params).then(
-      (res) => {
-        let data = res.data;
-        if (data.errcode === 0) {
-          this.handleEdit("secureEdit", false);
-          message.success("修改密码成功");
-          if (this.props.curUid === this.state.userinfo.uid) {
-            location.reload();
-          }
-        } else {
-          message.error(data.errmsg);
-        }
-      },
-      (err) => {
-        message.error(err.message);
-      }
-    );
-  };
-
-  render() {
-    let ButtonGroup = Button.Group;
-    let userNameEditHtml, emailEditHtml, secureEditHtml, roleEditHtml;
-    const Option = Select.Option;
-    let userinfo = this.state.userinfo;
-    let _userinfo = this.state._userinfo;
-    let roles = { admin: "管理员", member: "会员" };
-    let userType = "";
-    if (this.props.userType === "third") {
-      userType = false;
-    } else if (this.props.userType === "site") {
-      userType = true;
-    } else {
-      userType = false;
-    }
-
-    // 用户名信息修改
-    if (this.state.usernameEdit === false) {
-      userNameEditHtml = (
-        <div>
-          <span className="text">{userinfo.username}</span>&nbsp;&nbsp;
-          {/* <span className="text-button"  onClick={() => { this.handleEdit('usernameEdit', true) }}><Icon type="edit" />修改</span>*/}
-          {/* {btn} */}
-          {/* 站点登陆才能编辑 */}
-          {userType && (
-            <EditButton
-              userType={userType}
-              isOwner={userinfo.uid === this.props.curUid}
-              isAdmin={this.props.curRole === "admin"}
-              onClick={this.handleEdit}
-              name="usernameEdit"
-            />
-          )}
-        </div>
-      );
-    } else {
-      userNameEditHtml = (
-        <div>
-          <Input
-            value={_userinfo.username}
-            name="username"
-            onChange={this.changeUserinfo}
-            placeholder="用户名"
-          />
-          <ButtonGroup className="edit-buttons">
-            <Button
-              className="edit-button"
-              onClick={() => {
-                this.handleEdit("usernameEdit", false);
-              }}
-            >
-              取消
-            </Button>
-            <Button
-              className="edit-button"
-              onClick={() => {
-                this.updateUserinfo("username");
-              }}
-              type="primary"
-            >
-              确定
-            </Button>
-          </ButtonGroup>
-        </div>
-      );
-    }
-    // 邮箱信息修改
-    if (this.state.emailEdit === false) {
-      emailEditHtml = (
-        <div>
-          <span className="text">{userinfo.email}</span>&nbsp;&nbsp;
-          {/* <span className="text-button" onClick={() => { this.handleEdit('emailEdit', true) }} ><Icon type="edit" />修改</span>*/}
-          {/* {btn} */}
-          {/* 站点登陆才能编辑 */}
-          {userType && (
-            <EditButton
-              admin={userinfo.role === "admin"}
-              isOwner={userinfo.uid === this.props.curUid}
-              isAdmin={this.props.curRole === "admin"}
-              onClick={this.handleEdit}
-              name="emailEdit"
-            />
-          )}
-        </div>
-      );
-    } else {
-      emailEditHtml = (
-        <div>
-          <Input
-            placeholder="Email"
-            value={_userinfo.email}
-            name="email"
-            onChange={this.changeUserinfo}
-          />
-          <ButtonGroup className="edit-buttons">
-            <Button
-              className="edit-button"
-              onClick={() => {
-                this.handleEdit("emailEdit", false);
-              }}
-            >
-              取消
-            </Button>
-            <Button
-              className="edit-button"
-              type="primary"
-              onClick={() => {
-                this.updateUserinfo("email");
-              }}
-            >
-              确定
-            </Button>
-          </ButtonGroup>
-        </div>
-      );
-    }
-
-    if (this.state.roleEdit === false) {
-      roleEditHtml = (
-        <div>
-          <span className="text">{roles[userinfo.role]}</span>&nbsp;&nbsp;
-        </div>
-      );
-    } else {
-      roleEditHtml = (
-        <Select defaultValue={_userinfo.role} onChange={this.changeRole} style={{ width: 150 }}>
-          <Option value="admin">管理员</Option>
-          <Option value="member">会员</Option>
-        </Select>
-      );
-    }
-
-    if (this.state.secureEdit === false) {
-      let btn = "";
-      if (userType) {
-        btn = (
-          <Button
-            icon="edit"
-            onClick={() => {
-              this.handleEdit("secureEdit", true);
-            }}
-          >
-            修改
-          </Button>
-        );
-      }
-      secureEditHtml = btn;
-    } else {
-      secureEditHtml = (
-        <div>
-          <Input
-            style={{
-              display: this.props.curRole === "admin" && userinfo.role != "admin" ? "none" : ""
-            }}
-            placeholder="旧的密码"
-            type="password"
-            name="old_password"
-            id="old_password"
-          />
-          <Input placeholder="新的密码" type="password" name="password" id="password" />
-          <Input placeholder="确认密码" type="password" name="verify_pass" id="verify_pass" />
-          <ButtonGroup className="edit-buttons">
-            <Button
-              className="edit-button"
-              onClick={() => {
-                this.handleEdit("secureEdit", false);
-              }}
-            >
-              取消
-            </Button>
-            <Button className="edit-button" onClick={this.updatePassword} type="primary">
-              确定
-            </Button>
-          </ButtonGroup>
-        </div>
-      );
-    }
-    return (
-      <div className="user-profile">
-        <div className="user-item-body">
-          {userinfo.uid === this.props.curUid ? (
-            <h3>个人设置</h3>
-          ) : (
-            <h3>{userinfo.username} 资料设置</h3>
-          )}
-
-          <Row className="avatarCon" type="flex" justify="start">
-            <Col span={24}>
-              {userinfo.uid === this.props.curUid ? (
-                <AvatarUpload uid={userinfo.uid}>点击上传头像</AvatarUpload>
-              ) : (
-                <div className="avatarImg">
-                  <img src={`/api/user/avatar?uid=${userinfo.uid}`} />
-                </div>
-              )}
-            </Col>
-          </Row>
-          <Row className="user-item" type="flex" justify="start">
-            <div className="maoboli" />
-            <Col span={4}>用户id</Col>
-            <Col span={12}>{userinfo.uid}</Col>
-          </Row>
-          <Row className="user-item" type="flex" justify="start">
-            <div className="maoboli" />
-            <Col span={4}>用户名</Col>
-            <Col span={12}>{userNameEditHtml}</Col>
-          </Row>
-          <Row className="user-item" type="flex" justify="start">
-            <div className="maoboli" />
-            <Col span={4}>Email</Col>
-            <Col span={12}>{emailEditHtml}</Col>
-          </Row>
-          <Row
-            className="user-item"
-            style={{ display: this.props.curRole === "admin" ? "" : "none" }}
-            type="flex"
-            justify="start"
-          >
-            <div className="maoboli" />
-            <Col span={4}>角色</Col>
-            <Col span={12}>{roleEditHtml}</Col>
-          </Row>
-          <Row
-            className="user-item"
-            style={{ display: this.props.curRole === "admin" ? "" : "none" }}
-            type="flex"
-            justify="start"
-          >
-            <div className="maoboli" />
-            <Col span={4}>登陆方式</Col>
-            <Col span={12}>{userinfo.type === "site" ? "站点登陆" : "第三方登陆"}</Col>
-          </Row>
-          <Row className="user-item" type="flex" justify="start">
-            <div className="maoboli" />
-            <Col span={4}>创建账号时间</Col>
-            <Col span={12}>{formatTime(userinfo.add_time)}</Col>
-          </Row>
-          <Row className="user-item" type="flex" justify="start">
-            <div className="maoboli" />
-            <Col span={4}>更新账号时间</Col>
-            <Col span={12}>{formatTime(userinfo.up_time)}</Col>
-          </Row>
-
-          {userType ? (
-            <Row className="user-item" type="flex" justify="start">
-              <div className="maoboli" />
-              <Col span={4}>密码</Col>
-              <Col span={12}>{secureEditHtml}</Col>
-            </Row>
-          ) : (
-            ""
-          )}
-        </div>
-      </div>
-    );
-  }
-}
-
-@connect(
-  (state) => ({
     url: state.user.imageUrl
   }),
   {
@@ -481,7 +70,7 @@ class AvatarUpload extends Component {
     axios
       .post("/api/user/upload_avatar", { basecode: basecode })
       .then(() => {
-        // this.setState({ imageUrl: basecode });
+      // this.setState({ imageUrl: basecode });
         this.props.setImageUrl(basecode);
       })
       .catch((e) => {
@@ -518,12 +107,12 @@ class AvatarUpload extends Component {
             >
               {/* <Avatar size="large" src={imageUrl}  />*/}
               <div style={{ width: 100, height: 100 }}>
-                <img className="avatar" src={imageUrl} />
+                <img className="avatar" src={imageUrl}/>
               </div>
             </Upload>
           </div>
         </Tooltip>
-        <span className="avatarChange" />
+        <span className="avatarChange"/>
       </div>
     );
   }
@@ -549,4 +138,348 @@ function getBase64(img, callback) {
   reader.readAsDataURL(img);
 }
 
-export default Profile;
+const PropsContext = createContext(null);
+//
+function UserNameEdit({ usernameEdit, userType, userinfo }) {
+  // 用户名信息修改
+  if (usernameEdit === false) {
+    return (<div>
+      <span className="text">{userinfo.username}</span>&nbsp;&nbsp;
+      {/* <span className="text-button"  onClick={() => { this.handleEdit('usernameEdit', true) }}><Icon type="edit" />修改</span>*/}
+      {/* {btn} */}
+      {/* 站点登陆才能编辑 */}
+      {userType && (
+        <EditButton
+          userType={userType}
+          isOwner={userinfo.uid === this.props.curUid}
+          isAdmin={this.props.curRole === "admin"}
+          onClick={this.handleEdit}
+          name="usernameEdit"
+        />
+      )}
+    </div>);
+  } else {
+    return (
+      <div>
+        <Input value={_userinfo.username} name="username" onChange={this.changeUserinfo}
+          placeholder="用户名"/>
+        <Button.Group className="edit-buttons">
+          <Button className="edit-button" onClick={() => {
+            this.handleEdit("usernameEdit", false);
+          }}
+          >
+            取消
+          </Button>
+          <Button
+            className="edit-button"
+            onClick={() => {
+              this.updateUserinfo("username");
+            }}
+            type="primary"
+          >
+            确定
+          </Button>
+        </Button.Group>
+      </div>
+    );
+  }
+}
+
+// 邮箱信息修改
+function EmailEdit({ emailEdit }) {
+  if (emailEdit === false) {
+    return (
+      <div>
+        <span className="text">{userinfo.email}</span>&nbsp;&nbsp;
+        {/* <span className="text-button" onClick={() => { this.handleEdit('emailEdit', true) }} ><Icon type="edit" />修改</span>*/}
+        {/* {btn} */}
+        {/* 站点登陆才能编辑 */}
+        {userType && (
+          <EditButton
+            admin={userinfo.role === "admin"}
+            isOwner={userinfo.uid === this.props.curUid}
+            isAdmin={this.props.curRole === "admin"}
+            onClick={this.handleEdit}
+            name="emailEdit"
+          />
+        )}
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <Input
+          placeholder="Email"
+          value={_userinfo.email}
+          name="email"
+          onChange={this.changeUserinfo}
+        />
+        <ButtonGroup className="edit-buttons">
+          <Button
+            className="edit-button"
+            onClick={() => {
+              this.handleEdit("emailEdit", false);
+            }}
+          >
+            取消
+          </Button>
+          <Button
+            className="edit-button"
+            type="primary"
+            onClick={() => {
+              this.updateUserinfo("email");
+            }}
+          >
+            确定
+          </Button>
+        </ButtonGroup>
+      </div>
+    );
+  }
+}
+
+// 角色
+function RoleEdit({ roleEdit }) {
+  if (roleEdit) {
+    return (
+      <div>
+        <span className="text">{roles[userinfo.role]}</span>&nbsp;&nbsp;
+      </div>
+    );
+  } else {
+    return (
+      <Select defaultValue={_userinfo.role} onChange={this.changeRole} style={{ width: 150 }}>
+        <Option value="admin">管理员</Option>
+        <Option value="member">会员</Option>
+      </Select>
+    );
+  }
+}
+
+function SecureEdit() {
+  const { secureEdit, userType, handleEdit, curRole, userinfo } = useContext(PropsContext);
+  if (secureEdit === false) {
+    if (userType) {
+      return (
+        <Button icon="edit" onClick={() => {
+          handleEdit("secureEdit", true)
+        }}>修改
+        </Button>
+      );
+    }
+    return null
+  } else {
+    return (
+      <div>
+        <Input
+          style={{ display: curRole === "admin" && userinfo.role !== "admin" ? "none" : "" }}
+          placeholder="旧的密码"
+          type="password"
+          name="old_password"
+          id="old_password"
+        />
+        <Input placeholder="新的密码" type="password" name="password" id="password"/>
+        <Input placeholder="确认密码" type="password" name="verify_pass" id="verify_pass"/>
+        <ButtonGroup className="edit-buttons">
+          <Button className="edit-button" onClick={() => {
+            handleEdit("secureEdit", false);
+          }}>
+            取消
+          </Button>
+          <Button className="edit-button" onClick={updatePassword} type="primary">
+            确定
+          </Button>
+        </ButtonGroup>
+      </div>
+    );
+  }
+}
+//
+function Profile(props) {
+  /*
+  usernameEdit: false,
+      emailEdit: false,
+      secureEdit: false,
+      roleEdit: false,
+      userinfo: {}
+  *  */
+  const { curUid, userType, curRole, setBreadcrumb } = props;
+  const [userinfo, setUserinfo] = useState({});
+  const [defineUserInfo, setDefineUserInfo] = useState({});
+  const [usernameEdit, setUsernameEdit] = useState(false);
+  const [emailEdit, setEmailEdit] = useState(false);
+  const [roleEdit, setRoleEdit] = useState(false);
+  const [secureEdit, setSecureEdit] = useState(false);
+  const { uid } = useParams();
+  //
+  useEffect(() => {
+    getUserInfo(uid);
+  }, []);
+
+  const handleEdit = (key, val) => {
+    let s = {};
+    s[key] = val;
+    this.setState(s);
+  };
+
+  const getUserInfo = async(id) => {
+    try {
+      const res = await axios.get("/api/user/find?id=" + id);
+      setUserinfo(() => res?.data?.data ?? {});
+      setDefineUserInfo(res.data.data);
+      if (curUid === +id) {
+        setBreadcrumb([{ name: res.data.data.username }]);
+      } else {
+        setBreadcrumb([{ name: "管理: " + res.data.data.username }]);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const updateUserinfo = async(name) => {
+    try {
+      let value = defineUserInfo[name];
+      let params = { uid: userinfo.uid };
+      params[name] = value;
+      const res = await axios.post("/api/user/update", params);
+      let data = res.data;
+      if (data.errcode === 0) {
+        const _userinfo = userinfo;
+        _userinfo[name] = value;
+        setUserinfo(_userinfo);
+        handleEdit(name + "Edit", false);
+        message.success("更新用户信息成功");
+      } else {
+        message.error(data.errmsg);
+      }
+    } catch (err) {
+      message.error(err?.message);
+    }
+  };
+
+  const changeUserinfo = (e) => {
+    let dom = e.target;
+    let name = dom.getAttribute("name");
+    let value = dom.value;
+    setDefineUserInfo(() => ({
+      ...defineUserInfo,
+      [name]: value
+    }));
+  };
+
+  const changeRole = (val) => {
+    let _userinfo = userinfo;
+    _userinfo.role = val;
+    setUserinfo(_userinfo);
+    updateUserinfo("role");
+  };
+
+  const updatePassword = async() => {
+    let old_password = document.getElementById("old_password").value;
+    let password = document.getElementById("password").value;
+    let verify_pass = document.getElementById("verify_pass").value;
+    if (password !== verify_pass) {
+      return message.error("两次输入的密码不一样");
+    }
+    let params = {
+      uid: userinfo.uid,
+      password: password,
+      old_password: old_password
+    };
+    try {
+      const res = await axios.post("/api/user/change_password", params);
+      const data = res.data;
+      if (data.errcode === 0) {
+        handleEdit("secureEdit", false);
+        message.success("修改密码成功");
+        if (curUid === userinfo.uid) {
+          location.reload();
+        }
+      } else {
+        message.error(data.errmsg);
+      }
+    } catch (err) {
+      message.error(err.message);
+    }
+  };
+  //
+  return (
+    <PropsContext.Provider value={{ userinfo, usernameEdit, emailEdit, roleEdit, secureEdit }}>
+      <div className="user-profile">
+        <div className="user-item-body">
+          {userinfo.uid === curUid ? (
+            <h3>个人设置</h3>
+          ) : (
+            <h3>{userinfo.username} 资料设置</h3>
+          )}
+          <Row className="avatarCon" type="flex" justify="start">
+            <Col span={24}>
+              {userinfo.uid === curUid ? (
+                <AvatarUpload uid={userinfo.uid}>点击上传头像</AvatarUpload>
+              ) : (
+                <div className="avatarImg">
+                  <img src={`/api/user/avatar?uid=${userinfo.uid}`} alt=""/>
+                </div>
+              )}
+            </Col>
+          </Row>
+          <Row className="user-item" type="flex" justify="start">
+            <div className="maoboli"/>
+            <Col span={4}>用户id</Col>
+            <Col span={12}>{userinfo.uid}</Col>
+          </Row>
+          <Row className="user-item" type="flex" justify="start">
+            <div className="maoboli"/>
+            <Col span={4}>用户名</Col>
+            <Col span={12}><UserNameEdit/></Col>
+          </Row>
+          <Row className="user-item" type="flex" justify="start">
+            <div className="maoboli"/>
+            <Col span={4}>Email</Col>
+            <Col span={12}><EmailEdit/></Col>
+          </Row>
+          <Row className="user-item" style={{ display: this.props.curRole === "admin" ? "" : "none" }} type="flex" justify="start">
+            <div className="maoboli"/>
+            <Col span={4}>角色</Col>
+            <Col span={12}><RoleEdit/></Col>
+          </Row>
+          <Row className="user-item" style={{ display: this.props.curRole === "admin" ? "" : "none" }} type="flex" justify="start">
+            <div className="maoboli"/>
+            <Col span={4}>登陆方式</Col>
+            <Col span={12}>{userinfo.type === "site" ? "站点登陆" : "第三方登陆"}</Col>
+          </Row>
+          <Row className="user-item" type="flex" justify="start">
+            <div className="maoboli"/>
+            <Col span={4}>创建账号时间</Col>
+            <Col span={12}>{formatTime(userinfo.add_time)}</Col>
+          </Row>
+          <Row className="user-item" type="flex" justify="start">
+            <div className="maoboli"/>
+            <Col span={4}>更新账号时间</Col>
+            <Col span={12}>{formatTime(userinfo.up_time)}</Col>
+          </Row>
+          {userType ? (
+            <Row className="user-item" type="flex" justify="start">
+              <div className="maoboli"/>
+              <Col span={4}>密码</Col>
+              <Col span={12}><SecureEdit/></Col>
+            </Row>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
+    </PropsContext.Provider>
+  )
+}
+export default connect(
+  (state) => ({
+    curUid: state.user.uid,
+    userType: state.user.type,
+    curRole: state.user.role
+  }),
+  {
+    setBreadcrumb
+  }
+)(Profile);

@@ -58,14 +58,14 @@ const router = [
             meta: { title: "加载中", auth: false },
           },
           {
-            path: "/profile",
-            name: "User",
+            path: "profile/:uid",
+            name: "UserProfile",
             element: lazy(() => import("../pages/User/Profile/Profile.jsx")),
             meta: { title: "个人中心", auth: true }
           },
           {
-            path: "/list",
-            name: "User",
+            path: "list",
+            name: "UserList",
             element: lazy(() => import("../pages/User/List/List.jsx")),
             meta: { title: "个人中心", auth: true }
           }
