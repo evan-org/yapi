@@ -33,9 +33,7 @@ function App(props) {
   };*/
   //
   return (
-    <div>
-      <RouterProvider router={routes}/>
-    </div>
+    <RouterProvider router={routes}/>
   )
 }
 export default App

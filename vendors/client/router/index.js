@@ -63,22 +63,22 @@ const router = [
     ]
   },
   // 重定向
-  // { path: "/home", redirectTo: "/" },
-  /* {
+  { path: "/home", redirectTo: "/" },
+  {
     path: "/login",
-    element: lazy(() => import("../pages/Login/Login")),
+    element: lazy(() => import("../pages/Login/Login.jsx")),
     meta: { title: "登录", auth: false },
   },
   {
     path: "/webview",
-    element: lazy(() => import("../pages/Webview/Webview")),
+    element: lazy(() => import("../pages/Webview/Webview.jsx")),
     meta: { title: APP_NAME, auth: false },
   },
   {
     path: "*",
-    element: lazy(() => import("../pages/Error/NotFound/NotFound")),
+    element: lazy(() => import("../pages/Error/NotFound/NotFound.jsx")),
     meta: { title: "什么也没找到", auth: false },
-  }*/
+  }
 ];
 // 根据路径获取路由
 const checkAuth = (routers, path) => {
