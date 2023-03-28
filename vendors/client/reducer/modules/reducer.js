@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import customizationReducer from "./customizationReducer.js";
 import user from "./user.js";
 import group from "./group.js";
 import project from "./project.js";
@@ -12,6 +13,7 @@ import follow from "./follow.js";
 import { emitHook } from "client/plugin.js";
 
 const reducerModules = {
+  customization: customizationReducer,
   group,
   user,
   inter,

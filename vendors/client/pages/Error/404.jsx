@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React, {useEffect} from "react";
 //
 function Main() {
   useEffect(() => {
-    console.error('err404');
+    console.error("err404");
   }, []);
   return (
     <div>404</div>

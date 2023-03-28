@@ -7,13 +7,13 @@ import { styled, useTheme } from "@mui/material/styles";
 import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from "@mui/material";
 
 // project imports
-import Breadcrumbs from "ui-component/extended/Breadcrumbs";
+import Breadcrumbs from "@/components/ui-component/extended/Breadcrumbs";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Customization from "../Customization";
-import navigation from "../../menu-items/index";
-import { drawerWidth } from "@/store/constant";
-import { SET_MENU } from "@/store/actions";
+import navigation from "../../components/menu-items/index";
+import { drawerWidth } from "@/reducer/constant";
+import { SET_MENU } from "@/reducer/actions";
 
 // assets
 import { IconChevronRight } from "@tabler/icons";

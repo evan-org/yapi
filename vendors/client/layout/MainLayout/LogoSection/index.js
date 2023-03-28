@@ -6,8 +6,8 @@ import { ButtonBase } from "@mui/material";
 
 // project imports
 import config from "config.json";
-import Logo from "ui-component/Logo";
-import { MENU_OPEN } from "store/actions";
+import Logo from "@/components/ui-component/Logo";
+import { MENU_OPEN } from "@/reducer/actions";
 
 // ==============================|| MAIN LOGO ||============================== //
 
