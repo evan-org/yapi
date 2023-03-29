@@ -3,7 +3,7 @@ import React, { lazy } from "react";
 import MainLayout from "@/layout/MainLayout";
 import Loadable from "@/components/ui-component/Loadable";
 // dashboard routing
-const DashboardDefault = Loadable(lazy(() => import("@/views/dashboard/Default")));
+const DashboardDefault = Loadable(lazy(() => import("@/pages/dashboard/Default")));
 // utilities routing
 const UtilsTypography = Loadable(lazy(() => import("@/views/utilities/Typography")));
 const UtilsColor = Loadable(lazy(() => import("@/views/utilities/Color")));

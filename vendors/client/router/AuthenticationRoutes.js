@@ -3,8 +3,8 @@ import React, { lazy } from "react";
 import Loadable from "@/components/ui-component/Loadable";
 import MinimalLayout from "@/layout/MinimalLayout";
 // login option 3 routing
-const AuthLogin3 = Loadable(lazy(() => import("@/views/pages/authentication/authentication3/Login3")));
-const AuthRegister3 = Loadable(lazy(() => import("@/views/pages/authentication/authentication3/Register3")));
+const AuthLogin3 = Loadable(lazy(() => import("@/pages/authentication/authentication3/Login3")));
+const AuthRegister3 = Loadable(lazy(() => import("@/pages/authentication/authentication3/Register3")));
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 const AuthenticationRoutes = {
   path: "/",

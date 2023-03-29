@@ -9,7 +9,7 @@ import { BrowserView, MobileView } from "react-device-detect";
 // project imports
 import MenuList from "./MenuList";
 import LogoSection from "../LogoSection";
-import MenuCard from "./MenuCard";
+// import MenuCard from "./MenuCard";
 import { drawerWidth } from "@/reducer/constant";
 // ==============================|| SIDEBAR DRAWER ||============================== //
 const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
@@ -23,22 +23,19 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         </Box>
       </Box>
       <BrowserView>
-        <PerfectScrollbar
-          component="div"
-          style={{
-            height: !matchUpMd ? "calc(100vh - 56px)" : "calc(100vh - 88px)",
-            paddingLeft: "16px",
-            paddingRight: "16px"
-          }}
-        >
+        <PerfectScrollbar component="div" style={{
+          height: !matchUpMd ? "calc(100vh - 56px)" : "calc(100vh - 88px)",
+          paddingLeft: "16px",
+          paddingRight: "16px"
+        }}>
           <MenuList/>
-          <MenuCard/>
+          {/* <MenuCard/> */}
         </PerfectScrollbar>
       </BrowserView>
       <MobileView>
         <Box sx={{ px: 2 }}>
           <MenuList/>
-          <MenuCard/>
+          {/* <MenuCard/> */}
         </Box>
       </MobileView>
     </>
