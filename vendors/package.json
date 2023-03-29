@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npm run dev-server & npm run dev-client",
     "dev-client": "set PORT=5000 && craco start FAST_REFRESH=true",
-    "dev-server": "cross-env NODE_ENV=development nodemon server/app.js dev -L",
+    "dev-server": "cross-env NODE_ENV=development nodemon -L server/app.js dev",
     "build-client": "craco build",
     "start": "node server/app.js",
     "test": "ava",

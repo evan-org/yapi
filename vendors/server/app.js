@@ -55,6 +55,6 @@ server.setTimeout(yapi.WEBROOT_CONFIG.timeout);
 // log
 commons.log(
   `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${
-    yapi.WEBROOT_CONFIG.port == "80" ? "" : ":" + yapi.WEBROOT_CONFIG.port
+    yapi.WEBROOT_CONFIG.port?.toString() === "80" ? "" : ":" + yapi.WEBROOT_CONFIG.port
   }/`
 );
