@@ -70,41 +70,33 @@ const MobileSearch = ({ value, setValue, popupState }) => {
       placeholder="Search"
       startAdornment={
         <InputAdornment position="start">
-          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />
+          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]}/>
         </InputAdornment>
       }
-      endAdornment={
-        <InputAdornment position="end">
+      endAdornment={<InputAdornment position="end">
+        <ButtonBase sx={{ borderRadius: "12px" }}>
+          <HeaderAvatarStyle variant="rounded">
+            <IconAdjustmentsHorizontal stroke={1.5} size="1.3rem"/>
+          </HeaderAvatarStyle>
+        </ButtonBase>
+        <Box sx={{ ml: 2 }}>
           <ButtonBase sx={{ borderRadius: "12px" }}>
-            <HeaderAvatarStyle variant="rounded">
-              <IconAdjustmentsHorizontal stroke={1.5} size="1.3rem" />
-            </HeaderAvatarStyle>
+            <Avatar variant="rounded" sx={{
+              ...theme.typography.commonAvatar,
+              ...theme.typography.mediumAvatar,
+              background: theme.palette.orange.light,
+              color: theme.palette.orange.dark,
+              "&:hover": {
+                background: theme.palette.orange.dark,
+                color: theme.palette.orange.light
+              }
+            }} {...bindToggle(popupState)}>
+              <IconX stroke={1.5} size="1.3rem"/>
+            </Avatar>
           </ButtonBase>
-          <Box sx={{ ml: 2 }}>
-            <ButtonBase sx={{ borderRadius: "12px" }}>
-              <Avatar
-                variant="rounded"
-                sx={{
-                  ...theme.typography.commonAvatar,
-                  ...theme.typography.mediumAvatar,
-                  background: theme.palette.orange.light,
-                  color: theme.palette.orange.dark,
-                  "&:hover": {
-                    background: theme.palette.orange.dark,
-                    color: theme.palette.orange.light
-                  }
-                }}
-                {...bindToggle(popupState)}
-              >
-                <IconX stroke={1.5} size="1.3rem" />
-              </Avatar>
-            </ButtonBase>
-          </Box>
-        </InputAdornment>
-      }
-      aria-describedby="search-helper-text"
-      inputProps={{ "aria-label": "weight" }}
-    />
+        </Box>
+      </InputAdornment>}
+      aria-describedby="search-helper-text" inputProps={{ "aria-label": "weight" }}/>
   );
 };
 
@@ -119,7 +111,7 @@ MobileSearch.propTypes = {
 const SearchSection = () => {
   const theme = useTheme();
   const [value, setValue] = useState("");
-
+  //
   return (
     <>
       <Box sx={{ display: { xs: "block", md: "none" } }}>
@@ -129,7 +121,7 @@ const SearchSection = () => {
               <Box sx={{ ml: 2 }}>
                 <ButtonBase sx={{ borderRadius: "12px" }}>
                   <HeaderAvatarStyle variant="rounded" {...bindToggle(popupState)}>
-                    <IconSearch stroke={1.5} size="1.2rem" />
+                    <IconSearch stroke={1.5} size="1.2rem"/>
                   </HeaderAvatarStyle>
                 </ButtonBase>
               </Box>
@@ -149,7 +141,7 @@ const SearchSection = () => {
                         <Box sx={{ p: 2 }}>
                           <Grid container alignItems="center" justifyContent="space-between">
                             <Grid item xs>
-                              <MobileSearch value={value} setValue={setValue} popupState={popupState} />
+                              <MobileSearch value={value} setValue={setValue} popupState={popupState}/>
                             </Grid>
                           </Grid>
                         </Box>
@@ -170,14 +162,14 @@ const SearchSection = () => {
           placeholder="Search"
           startAdornment={
             <InputAdornment position="start">
-              <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />
+              <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]}/>
             </InputAdornment>
           }
           endAdornment={
             <InputAdornment position="end">
               <ButtonBase sx={{ borderRadius: "12px" }}>
                 <HeaderAvatarStyle variant="rounded">
-                  <IconAdjustmentsHorizontal stroke={1.5} size="1.3rem" />
+                  <IconAdjustmentsHorizontal stroke={1.5} size="1.3rem"/>
                 </HeaderAvatarStyle>
               </ButtonBase>
             </InputAdornment>

@@ -33,7 +33,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 // project imports
 import MainCard from "@/components/ui-component/cards/MainCard";
 import Transitions from "@/components/ui-component/extended/Transitions";
-import UpgradePlanCard from "./UpgradePlanCard";
+// import UpgradePlanCard from "./UpgradePlanCard";
 import User1 from "@/assets/images/users/user-round.svg";
 
 // assets
@@ -52,8 +52,8 @@ const ProfileSection = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
   /**
-     * anchorRef is used on different componets and specifying one type leads to other components throwing an error
-     * */
+   * anchorRef is used on different componets and specifying one type leads to other components throwing an error
+   * */
   const anchorRef = useRef(null);
   const handleLogout = async() => {
     console.log("Logout");
@@ -97,7 +97,7 @@ const ProfileSection = () => {
           transition: "all .2s ease-in-out",
           borderColor: theme.palette.primary.light,
           backgroundColor: theme.palette.primary.light,
-          '&[aria-controls="menu-list-grow"], &:hover': {
+          "&[aria-controls=\"menu-list-grow\"], &:hover": {
             borderColor: theme.palette.primary.main,
             background: `${theme.palette.primary.main}!important`,
             color: theme.palette.primary.light,
@@ -120,10 +120,9 @@ const ProfileSection = () => {
             ref={anchorRef}
             aria-controls={open ? "menu-list-grow" : undefined}
             aria-haspopup="true"
-            color="inherit"
-          />
+            color="inherit"/>
         }
-        label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
+        label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main}/>}
         variant="outlined"
         ref={anchorRef}
         aria-controls={open ? "menu-list-grow" : undefined}
@@ -147,8 +146,7 @@ const ProfileSection = () => {
               }
             }
           ]
-        }}
-      >
+        }}>
         {({ TransitionProps }) => (
           <Transitions in={open} {...TransitionProps}>
             <Paper>
@@ -157,9 +155,9 @@ const ProfileSection = () => {
                   <Box sx={{ p: 2 }}>
                     <Stack>
                       <Stack direction="row" spacing={0.5} alignItems="center">
-                        <Typography variant="h4">Good Morning,</Typography>
+                        <Typography variant="h4">Hello,</Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Johne Doe
+                          Johne Doe
                         </Typography>
                       </Stack>
                       <Typography variant="subtitle2">Project Admin</Typography>
@@ -172,7 +170,7 @@ const ProfileSection = () => {
                       placeholder="Search profile options"
                       startAdornment={
                         <InputAdornment position="start">
-                          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />
+                          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]}/>
                         </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
@@ -180,18 +178,15 @@ const ProfileSection = () => {
                         "aria-label": "weight"
                       }}
                     />
-                    <Divider />
+                    <Divider/>
                   </Box>
                   <PerfectScrollbar style={{ height: "100%", maxHeight: "calc(100vh - 250px)", overflowX: "hidden" }}>
                     <Box sx={{ p: 2 }}>
-                      <UpgradePlanCard />
-                      <Divider />
-                      <Card
-                        sx={{
-                          bgcolor: theme.palette.primary.light,
-                          my: 2
-                        }}
-                      >
+                      {/* <UpgradePlanCard/> */}
+                      <Card sx={{
+                        bgcolor: theme.palette.primary.light,
+                        my: 2,
+                      }}>
                         <CardContent>
                           <Grid container spacing={3} direction="column">
                             <Grid item>
@@ -228,70 +223,53 @@ const ProfileSection = () => {
                           </Grid>
                         </CardContent>
                       </Card>
-                      <Divider />
-                      <List
-                        component="nav"
-                        sx={{
-                          width: "100%",
-                          maxWidth: 350,
-                          minWidth: 300,
-                          backgroundColor: theme.palette.background.paper,
-                          borderRadius: "10px",
-                          [theme.breakpoints.down("md")]: {
-                            minWidth: "100%"
-                          },
-                          "& .MuiListItemButton-root": {
-                            mt: 0.5
-                          }
-                        }}
-                      >
-                        <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 0}
-                          onClick={(event) => handleListItemClick(event, 0, "/user/account-profile/profile1")}
-                        >
+                      <Divider/>
+                      {/*  */}
+                      <List component="nav" sx={{
+                        width: "100%",
+                        maxWidth: 350,
+                        minWidth: 300,
+                        backgroundColor: theme.palette.background.paper,
+                        borderRadius: "10px",
+                        [theme.breakpoints.down("md")]: {
+                          minWidth: "100%"
+                        },
+                        "& .MuiListItemButton-root": {
+                          mt: 0.5
+                        }
+                      }}>
+                        {/* 帐户设置 */}
+                        <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} selected={selectedIndex === 0}
+                          onClick={(event) => handleListItemClick(event, 0, "/user/account-profile/profile1")}>
                           <ListItemIcon>
-                            <IconSettings stroke={1.5} size="1.3rem" />
+                            <IconSettings stroke={1.5} size="1.3rem"/>
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                          <ListItemText primary={<Typography variant="body2">帐户设置</Typography>}/>
                         </ListItemButton>
+                        {/* 用户管理 */}
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
-                          onClick={(event) => handleListItemClick(event, 1, "/user/social-profile/posts")}
-                        >
+                          onClick={(event) => handleListItemClick(event, 1, "/user/social-profile/posts")}>
                           <ListItemIcon>
-                            <IconUser stroke={1.5} size="1.3rem" />
+                            <IconUser stroke={1.5} size="1.3rem"/>
                           </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              <Grid container spacing={1} justifyContent="space-between">
-                                <Grid item>
-                                  <Typography variant="body2">Social Profile</Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Chip
-                                    label="02"
-                                    size="small"
-                                    sx={{
-                                      bgcolor: theme.palette.warning.dark,
-                                      color: theme.palette.background.default
-                                    }}
-                                  />
-                                </Grid>
-                              </Grid>
-                            }
-                          />
+                          <ListItemText primary={<Grid container spacing={1} justifyContent="space-between">
+                            <Grid item>
+                              <Typography variant="body2">用户管理</Typography>
+                            </Grid>
+                            <Grid item>
+                              <Chip label="02" size="small" sx={{ bgcolor: theme.palette.warning.dark, color: theme.palette.background.default }}/>
+                            </Grid>
+                          </Grid>}/>
                         </ListItemButton>
-                        <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 4}
-                          onClick={handleLogout}
-                        >
+                        {/* 退出登录 */}
+                        <ListItemButton title="$~退出登录" sx={{ borderRadius: `${customization.borderRadius}px` }}
+                          selected={selectedIndex === 4} onClick={handleLogout}>
                           <ListItemIcon>
-                            <IconLogout stroke={1.5} size="1.3rem" />
+                            <IconLogout stroke={1.5} size="1.3rem"/>
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                          <ListItemText primary={<Typography variant="body2">退出登录</Typography>}/>
                         </ListItemButton>
                       </List>
                     </Box>
