@@ -14,12 +14,12 @@ import {
   ClickAwayListener,
   Divider,
   Grid,
-  InputAdornment,
+  // InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  OutlinedInput,
+  // OutlinedInput,
   Paper,
   Popper,
   Stack,
@@ -162,8 +162,7 @@ const ProfileSection = () => {
                       </Stack>
                       <Typography variant="subtitle2">Project Admin</Typography>
                     </Stack>
-                    <OutlinedInput
-                      sx={{ width: "100%", pr: 1, pl: 2, my: 2 }}
+                    {/* <OutlinedInput sx={{ width: "100%", pr: 1, pl: 2, my: 2 }}
                       id="input-search-profile"
                       value={value}
                       onChange={(e) => setValue(e.target.value)}
@@ -176,14 +175,13 @@ const ProfileSection = () => {
                       aria-describedby="search-helper-text"
                       inputProps={{
                         "aria-label": "weight"
-                      }}
-                    />
-                    <Divider/>
+                      }}/> */}
                   </Box>
+                  <Divider/>
                   <PerfectScrollbar style={{ height: "100%", maxHeight: "calc(100vh - 250px)", overflowX: "hidden" }}>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard/> */}
-                      <Card sx={{ bgcolor: theme.palette.primary.light, my: 2, }}>
+                      <Card sx={{ bgcolor: theme.palette.primary.light, my: 0, }}>
                         <CardContent>
                           <Grid container spacing={3} direction="column">
                             <Grid item>
@@ -209,7 +207,6 @@ const ProfileSection = () => {
                           </Grid>
                         </CardContent>
                       </Card>
-                      <Divider/>
                       {/*  */}
                       <List component="nav" sx={{
                         width: "100%",
