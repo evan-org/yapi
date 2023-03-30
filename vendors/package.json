@@ -1,6 +1,6 @@
 {
   "name": "yapi-vendor",
-  "homepage": "/",
+  "homepage": "./",
   "version": "1.11.0",
   "description": "YAPI",
   "scripts": {
