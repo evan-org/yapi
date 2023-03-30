@@ -142,7 +142,7 @@ module.exports = ({ env }) => {
       {
         plugin: sassResourcesLoader,
         options: {
-          resources: ["./client/styles/mixin.scss"],
+          resources: ["./client/assets/styles/mixin.scss"],
           root: resolve("./client")
         },
       }

@@ -5,8 +5,7 @@ module.exports = {
     "commonjs": true,
     "es6": true,
     "es2021": true,
-    "node": true,
-    "mocha": true
+    "node": true
   },
   "parser": "babel-eslint",
   "extends": [
@@ -26,17 +25,21 @@ module.exports = {
     "sourceType": "module"
   },
   "plugins": [
-    "react",
-    // 'jsx-a11y',
-    // 'react-hooks',
-    // 'import',
+    "react"
   ],
   "rules": {
     //
-    // 'react/jsx-indent': [0, 2, {
-    //   SwitchCase: 1
-    // }],
-    // 'react/jsx-indent-props': ['error', 'tab'],
+    // "react/jsx-one-expression-per-line": ["error", {"allow": "literal"}],
+    //
+    "react/jsx-indent-props": ["error", 2],
+    // 限制JSX中单行上的props的最大数量
+    "react/jsx-max-props-per-line": [0, {
+      singleline: 10,
+      multiline: {
+        max: 1,
+        allowFirstLine: false
+      }
+    }],
     //
     "react/no-unescaped-entities": 0,
     // 在JSX中强制布尔属性符号
@@ -50,10 +53,7 @@ module.exports = {
     }],
     // 在数组或迭代器中验证JSX具有key属性
     "react/jsx-key": 2,
-    // 限制JSX中单行上的props的最大数量
-    "react/jsx-max-props-per-line": [1, {
-      "maximum": 5
-    }],
+
     // 防止在JSX中重复的props
     "react/jsx-no-duplicate-props": 2,
     //  //防止使用未包装的JSX字符串

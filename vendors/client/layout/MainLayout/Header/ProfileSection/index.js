@@ -37,7 +37,7 @@ import Transitions from "@/components/ui-component/extended/Transitions";
 import User1 from "@/assets/images/users/user-round.svg";
 
 // assets
-import { IconLogout, IconSearch, IconSettings, IconUser } from "@tabler/icons";
+import { IconLogout, IconSettings, IconUser } from "@tabler/icons";
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -117,19 +117,13 @@ const ProfileSection = () => {
               margin: "8px 0 8px 8px !important",
               cursor: "pointer"
             }}
-            ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
+            ref={anchorRef} aria-controls={open ? "menu-list-grow" : undefined}
             aria-haspopup="true"
             color="inherit"/>
         }
         label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main}/>}
-        variant="outlined"
-        ref={anchorRef}
-        aria-controls={open ? "menu-list-grow" : undefined}
-        aria-haspopup="true"
-        onClick={handleToggle}
-        color="primary"
-      />
+        variant="outlined" ref={anchorRef}
+        aria-controls={open ? "menu-list-grow" : undefined} aria-haspopup="true" onClick={handleToggle} color="primary"/>
       <Popper
         placement="bottom-end"
         open={open}
@@ -178,7 +172,7 @@ const ProfileSection = () => {
                       }}/> */}
                   </Box>
                   <Divider/>
-                  <PerfectScrollbar style={{ height: "100%", maxHeight: "calc(100vh - 250px)", overflowX: "hidden" }}>
+                  <PerfectScrollbar>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard/> */}
                       <Card sx={{ bgcolor: theme.palette.primary.light, my: 0, }}>
@@ -222,7 +216,7 @@ const ProfileSection = () => {
                         }
                       }}>
                         {/* 帐户设置 */}
-                        <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} selected={selectedIndex === 0}
+                        <ListItemButton title="帐户设置" sx={{ borderRadius: `${customization.borderRadius}px` }} selected={selectedIndex === 0}
                           onClick={(event) => handleListItemClick(event, 0, "/user/account-profile/profile1")}>
                           <ListItemIcon>
                             <IconSettings stroke={1.5} size="1.3rem"/>
@@ -230,7 +224,7 @@ const ProfileSection = () => {
                           <ListItemText primary={<Typography variant="body2">帐户设置</Typography>}/>
                         </ListItemButton>
                         {/* 用户管理 */}
-                        <ListItemButton
+                        <ListItemButton title="用户管理"
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
                           onClick={(event) => handleListItemClick(event, 1, "/user/social-profile/posts")}>
@@ -247,7 +241,7 @@ const ProfileSection = () => {
                           </Grid>}/>
                         </ListItemButton>
                         {/* 退出登录 */}
-                        <ListItemButton title="$~退出登录" sx={{ borderRadius: `${customization.borderRadius}px` }}
+                        <ListItemButton title="退出登录" sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 4} onClick={handleLogout}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="1.3rem"/>

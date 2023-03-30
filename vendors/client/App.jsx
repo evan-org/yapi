@@ -11,9 +11,6 @@ import themes from "@/themes";
 //
 import ThemeRoutes, { routes } from "@/router/index.js";
 //
-// import "./styles/App.scss";
-import "./styles/antd-ui/theme.less";
-//
 import { AppRoute } from "@/router/oldIndex";
 // antd
 import { ConfigProvider } from "antd";
