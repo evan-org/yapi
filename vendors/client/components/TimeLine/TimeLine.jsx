@@ -2,13 +2,13 @@ import React, { PureComponent as Component } from "react";
 import { Timeline, Spin, Row, Col, Tag, Avatar, Button, Modal, AutoComplete } from "antd";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { formatTime } from "../../utils/common.js";
+import { formatTime } from "@/utils/common";
 import showDiffMsg from "../../../common/diff-view.js";
 import variable from "../../utils/variable";
 import { Link } from "react-router-dom";
 //
-import { fetchNewsData, fetchMoreNews } from "../../reducer/modules/news.js";
-import { fetchInterfaceList } from "../../reducer/modules/interface.js";
+import { fetchNewsData, fetchMoreNews } from "@/reducer/modules/news";
+import { fetchInterfaceList } from "@/reducer/modules/interface";
 import ErrMsg from "../ErrMsg/ErrMsg.jsx";
 //
 import { timeago } from "../../../common/utils.js";

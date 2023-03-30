@@ -12,7 +12,7 @@ import App from "./App.jsx";
 import store from "./reducer/store";
 
 // style + assets
-import "@/assets/styles/scss/style.scss";
+import "@/assets/styles/index.scss";
 import "@/assets/styles/less/theme.less";
 import config from "@/config";
 //
