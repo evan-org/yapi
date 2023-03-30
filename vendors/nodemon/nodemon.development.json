@@ -7,5 +7,5 @@
   ],
   "ext": "js,json,hbs",
   "ignore": ["node_modules"],
-  "exec": "npm run start"
+  "exec": "server/app.js dev"
 }

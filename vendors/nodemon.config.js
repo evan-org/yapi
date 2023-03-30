@@ -2,10 +2,10 @@ const { exec } = require("child_process");
 
 // 获取当前环境
 const env = process.env.NODE_ENV || "development";
-console.log(env);
+console.log(env, `./nodemon/nodemon.${env}.json`);
 
 // 根据环境加载相应的配置文件
-const nodemonConfig = require(`./nodemon.${env}.json`);
+const nodemonConfig = require(`./nodemon/nodemon.${env}.json`);
 
 // 启动应用程序
 const app = exec(`nodemon -L -C ${nodemonConfig.exec}`, (error, stdout, stderr) => {
