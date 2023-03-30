@@ -183,40 +183,26 @@ const ProfileSection = () => {
                   <PerfectScrollbar style={{ height: "100%", maxHeight: "calc(100vh - 250px)", overflowX: "hidden" }}>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard/> */}
-                      <Card sx={{
-                        bgcolor: theme.palette.primary.light,
-                        my: 2,
-                      }}>
+                      <Card sx={{ bgcolor: theme.palette.primary.light, my: 2, }}>
                         <CardContent>
                           <Grid container spacing={3} direction="column">
                             <Grid item>
                               <Grid item container alignItems="center" justifyContent="space-between">
                                 <Grid item>
-                                  <Typography variant="subtitle1">Start DND Mode</Typography>
+                                  <Typography variant="subtitle1">启动免打扰模式</Typography>
                                 </Grid>
                                 <Grid item>
-                                  <Switch
-                                    color="primary"
-                                    checked={sdm}
-                                    onChange={(e) => setSdm(e.target.checked)}
-                                    name="sdm"
-                                    size="small"
-                                  />
+                                  <Switch color="primary" checked={sdm} onChange={(e) => setSdm(e.target.checked)} name="sdm" size="small"/>
                                 </Grid>
                               </Grid>
                             </Grid>
                             <Grid item>
                               <Grid item container alignItems="center" justifyContent="space-between">
                                 <Grid item>
-                                  <Typography variant="subtitle1">Allow Notifications</Typography>
+                                  <Typography variant="subtitle1">允许通知</Typography>
                                 </Grid>
                                 <Grid item>
-                                  <Switch
-                                    checked={notification}
-                                    onChange={(e) => setNotification(e.target.checked)}
-                                    name="sdm"
-                                    size="small"
-                                  />
+                                  <Switch checked={notification} name="sdm" size="small" onChange={(e) => setNotification(e.target.checked)}/>
                                 </Grid>
                               </Grid>
                             </Grid>

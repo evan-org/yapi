@@ -76,11 +76,7 @@ function handleCorsRequest(ctx) {
 }
 // 必填字段是否填写好
 function mockValidator(interfaceData, ctx) {
-  let i,
-    j,
-    l,
-    len,
-    noRequiredArr = [];
+  let i, j, l, len, noRequiredArr = [];
   let method = interfaceData.method.toUpperCase() || "GET";
   // query 判断
   for (i = 0, l = interfaceData.req_query.length; i < l; i++) {

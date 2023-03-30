@@ -13,7 +13,6 @@ const storageCreator = require("./utils/storage");
 require("./utils/notice");
 const Koa = require("koa");
 const koaStatic = require("koa-static");
-// const bodyParser = require('koa-bodyparser');
 const koaBody = require("koa-body");
 const router = require("./router.js");
 global.storageCreator = storageCreator;
@@ -21,14 +20,13 @@ let indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
 const app = websockify(new Koa());
 app.proxy = true;
 yapi.app = app;
-// app.use(bodyParser({multipart: true}));
 app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
 app.use(mockServer);
 app.use(router.routes());
 app.use(router.allowedMethods());
 websocket(app);
 app.use(async(ctx, next) => {
-  if (/^\/(?!api)[a-zA-Z0-9\/\-_]*$/.test(ctx.path)) {
+  if (/^\/(?!api)[\w\/-]*$/i.test(ctx.path)) {
     ctx.path = "/";
     await next();
   } else {
@@ -53,8 +51,5 @@ const server = app.listen(yapi.WEBROOT_CONFIG.port);
 //
 server.setTimeout(yapi.WEBROOT_CONFIG.timeout);
 // log
-commons.log(
-  `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${
-    yapi.WEBROOT_CONFIG.port?.toString() === "80" ? "" : ":" + yapi.WEBROOT_CONFIG.port
-  }/`
-);
+const port = yapi.WEBROOT_CONFIG.port?.toString() === "80" ? "" : ":" + yapi.WEBROOT_CONFIG.port;
+commons.log(`服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${port}/`);
