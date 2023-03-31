@@ -5,6 +5,7 @@
   "description": "YAPI",
   "scripts": {
     "dev": "npm run dev-server & npm run dev-client",
+    "install-server": " node server/install.js",
     "dev-client": "craco start",
     "dev-server": "cross-env NODE_ENV=development nodemon -L dev",
     "build-client": "craco build",
