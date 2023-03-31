@@ -22,10 +22,9 @@ import {
   delProject,
   getProject,
   upsetProject
-} from "../../../../reducer/modules/project";
-import { fetchGroupMsg } from "../../../../reducer/modules/group";
-import { fetchGroupList } from "../../../../reducer/modules/group.js";
-import { setBreadcrumb } from "../../../../reducer/modules/user";
+} from "@/reducer/modules/project";
+import { fetchGroupMsg, fetchGroupList } from "@/reducer/modules/group";
+import { setBreadcrumb } from "@/reducer/modules/user";
 import { connect } from "react-redux";
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -33,7 +32,7 @@ const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
 import constants from "../../../../utils/variable.js";
 const confirm = Modal.confirm;
-import { nameLengthLimit, entries, trim, htmlFilter } from "../../../../utils/common";
+import { nameLengthLimit, entries, trim, htmlFilter } from "@/utils/common";
 import "../Setting.scss";
 import _ from "underscore";
 import ProjectTag from "./ProjectTag.js";

@@ -6,7 +6,7 @@ import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import SubNav from "../../components/SubNav/SubNav.jsx";
 //
 import { Button } from "antd";
-import { getMockUrl } from "../../reducer/modules/news.js";
+import { getMockUrl } from "@/reducer/modules/news";
 
 
 @connect(

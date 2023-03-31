@@ -3,25 +3,22 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Tooltip, Icon, Input, Button, Row, Col, Spin, Modal, message, Select, Switch } from "antd";
-import {
-  fetchInterfaceColList,
-  fetchCaseList,
-  setColData,
-  fetchCaseEnvList
-} from "../../../../reducer/modules/interfaceCol";
+import { fetchInterfaceColList, fetchCaseList, setColData, fetchCaseEnvList } from "@/reducer/modules/interfaceCol";
 import HTML5Backend from "react-dnd-html5-backend";
-import { getToken, getEnv } from "../../../../reducer/modules/project";
+import { getToken, getEnv } from "@/reducer/modules/project";
 import { DragDropContext } from "react-dnd";
-import AceEditor from "client/components/AceEditor/AceEditor";
 import * as Table from "reactabular-table";
 import * as dnd from "reactabular-dnd";
 import * as resolve from "table-resolver";
 import axios from "axios";
 import CaseReport from "./CaseReport.jsx";
+//
 import _ from "underscore";
-import { initCrossRequest } from "client/components/Postman/CheckCrossInstall.jsx";
 import produce from "immer";
-import { InsertCodeMap } from "client/components/Postman/Postman.jsx"
+//
+import AceEditor from "@/components/AceEditor/AceEditor";
+import { initCrossRequest } from "@/components/Postman/CheckCrossInstall.jsx";
+import { InsertCodeMap } from "@/components/Postman/Postman.jsx"
 
 const plugin = require("client/plugin.js");
 const {

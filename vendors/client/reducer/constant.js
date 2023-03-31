@@ -1,4 +1,5 @@
+import config from "@/config.js";
 // theme constant
-export const gridSpacing = 3;
-export const drawerWidth = 260;
-export const appDrawerWidth = 320;
+export const gridSpacing = config.gridSpacing;
+export const drawerWidth = config.sidebar.drawerWidth;
+export const appDrawerWidth = config.appDrawerWidth;

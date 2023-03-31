@@ -1,5 +1,6 @@
 .InterfaceEditForm {
   :global {
+    @import "~json-schema-editor-visual/dist/main.css";
     .tui-editor-contents h1 {
       font-size: 45px;
       line-height: 1.5;

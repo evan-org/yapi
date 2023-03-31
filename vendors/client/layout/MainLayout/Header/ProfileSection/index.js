@@ -172,7 +172,9 @@ const ProfileSection = () => {
                       }}/> */}
                   </Box>
                   <Divider/>
-                  <PerfectScrollbar>
+                  <PerfectScrollbar
+                    style={{ height: "330px" }}
+                    options={{ suppressScrollX: true }}>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard/> */}
                       <Card sx={{ bgcolor: theme.palette.primary.light, my: 0, }}>

@@ -4,6 +4,11 @@ const config = {
   basename: "/",
   defaultPath: "/dashboard/default",
   fontFamily: "'Roboto', sans-serif",
-  borderRadius: 4
+  borderRadius: 4,
+  gridSpacing: 3,
+  sidebar: {
+    drawerWidth: 260
+  },
+  appDrawerWidth: 320
 };
 export default config;
