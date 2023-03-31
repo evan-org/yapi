@@ -1,18 +1,14 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import InterfaceEditForm from "./InterfaceEditForm.js";
-import {
-  updateInterfaceData,
-  fetchInterfaceListMenu,
-  fetchInterfaceData
-} from "../../../../reducer/modules/interface.js";
-import { getProject } from "../../../../reducer/modules/project.js";
+import InterfaceEditForm from "./InterfaceEditForm/InterfaceEditForm.js";
+import { updateInterfaceData, fetchInterfaceListMenu, fetchInterfaceData } from "@/reducer/modules/interface";
+import { getProject } from "@/reducer/modules/project";
 import axios from "axios";
 import { message, Modal } from "antd";
-import "./Edit.scss";
+import styles from "./Edit.module.scss";
 import { Link } from "react-router-dom";
-import ProjectTag from "../../Setting/ProjectMessage/ProjectTag.js";
+import ProjectTag from "../../../Setting/ProjectMessage/ProjectTag.js";
 
 @connect(
   (state) => ({
@@ -183,7 +179,7 @@ class InterfaceEdit extends Component {
   render() {
     const { cat, basepath, switch_notice, tag } = this.props.currProject;
     return (
-      <div className="interface-edit">
+      <div className="InterfaceEdit">
         {this.state.status === 1 ? (
           <InterfaceEditForm
             cat={cat}

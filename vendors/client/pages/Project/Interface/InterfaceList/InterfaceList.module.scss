@@ -1,0 +1,44 @@
+.InterfaceList {
+  padding: 24px;
+  :global {
+    .table-interfacelist {
+      margin-top: .2rem;
+      white-space: nowrap;
+      table {
+        table-layout: fixed;
+      }
+      .path {
+        width: 95%;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-right: 24px;
+        // line-height: 100%;
+        vertical-align: middle;
+      }
+      .opened {
+        color: #00a854;
+        padding-right: 6px;
+        font-size: 14px;
+      }
+      .colValue {
+        display: inline-block;
+        border-radius: 4px;
+        color: #00a854;
+        background: #cfefdf;
+        border-color: #cfefdf;
+        height: 23px;
+        line-height: 23px;
+        text-align: center;
+        font-size: 10px;
+        margin-right: 7px;
+        padding: 0 5px;
+      }
+      .ant-select-selection {
+        background-color: transparent;
+        border: none;
+      }
+    }
+  }
+}

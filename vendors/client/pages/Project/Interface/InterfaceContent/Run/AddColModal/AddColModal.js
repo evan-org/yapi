@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, Collapse, Row, Col, Input, message, Button, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { fetchInterfaceColList } from '../../../../../reducer/modules/interfaceCol';
+import { fetchInterfaceColList } from '../../../../../../reducer/modules/interfaceCol';
 
 const { TextArea } = Input;
 const Panel = Collapse.Panel;

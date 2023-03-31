@@ -2,13 +2,14 @@ import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Tabs, Modal, Button } from "antd";
-import Edit from "./Edit.js";
-import View from "./View.js";
 import { usePrompt } from "@/components/Prompt/Prompt";
-import { fetchInterfaceData } from "../../../../reducer/modules/interface.js";
+import { fetchInterfaceData } from "@/reducer/modules/interface";
+//
+import Edit from "./Edit/Edit.js";
+import View from "./View/View.js";
 import Run from "./Run/Run.js";
 
-const plugin = require("client/plugin.js");
+const plugin = require("@/plugin.js");
 const TabPane = Tabs.TabPane;
 @connect(
   (state) => ({

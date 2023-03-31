@@ -4,6 +4,6 @@ const config = {
   basename: "/",
   defaultPath: "/dashboard/default",
   fontFamily: "'Roboto', sans-serif",
-  borderRadius: 12
+  borderRadius: 4
 };
 export default config;

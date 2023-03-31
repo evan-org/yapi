@@ -2,26 +2,27 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import _ from "underscore";
-import constants from "../../../../utils/variable.js";
-import { handlePath, nameLengthLimit } from "../../../../utils/common.js";
-import { changeEditStatus } from "../../../../reducer/modules/interface.js";
+import constants from "../../../../../../utils/variable.js";
+import { handlePath, nameLengthLimit } from "@/utils/common";
+import { changeEditStatus } from "@/reducer/modules/interface";
 import json5 from "json5";
-import { message, Affix, Tabs, Modal } from "antd";
-import EasyDragSort from "../../../../components/EasyDragSort/EasyDragSort.jsx";
-import mockEditor from "client/components/AceEditor/utils/mockEditor";
-import AceEditor from "client/components/AceEditor/AceEditor";
+import { message, Affix, Tabs, Modal, Form, Select, Input, Tooltip, Button, Row, Col, Radio, Icon, AutoComplete, Switch } from "antd";
+const TabPane = Tabs.TabPane;
+import EasyDragSort from "@/components/EasyDragSort/EasyDragSort.jsx";
+import mockEditor from "@/components/AceEditor/utils/mockEditor";
+import AceEditor from "@/components/AceEditor/AceEditor";
 import axios from "axios";
-import { MOCK_SOURCE } from "../../../../utils/variable.js";
+import { MOCK_SOURCE } from "@/utils/variable";
+//
 import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
 const jSchema = require("json-schema-editor-visual");
 const ResBodySchema = jSchema({ lang: "zh_CN", mock: MOCK_SOURCE });
 const ReqBodySchema = jSchema({ lang: "zh_CN", mock: MOCK_SOURCE });
-const TabPane = Tabs.TabPane;
 
-
-require("common/tui-editor/dist/tui-editor.min.css"); // editor ui
-require("common/tui-editor/dist/tui-editor-contents.min.css"); // editor content
-require("./editor.css");
+import styles from "./InterfaceEditForm.module.scss";
+//
+// require("common/tui-editor/dist/tui-editor.min.css"); // editor ui
+// require("common/tui-editor/dist/tui-editor-contents.min.css"); // editor content
 
 
 function checkIsJsonSchema(json) {
@@ -56,20 +57,7 @@ const validJson = (json) => {
     return false;
   }
 };
-
-import {
-  Form,
-  Select,
-  Input,
-  Tooltip,
-  Button,
-  Row,
-  Col,
-  Radio,
-  Icon,
-  AutoComplete,
-  Switch
-} from "antd";
+//
 
 const Json5Example = `
   {
@@ -780,15 +768,14 @@ class InterfaceEditForm extends Component {
     const DEMOPATH = "/api/user/{id}";
 
     return (
-      <div>
+      <div className={styles.InterfaceEditForm}>
         <Modal
           title="批量添加参数"
           width={680}
           visible={this.state.visible}
           onOk={this.handleBulkOk}
           onCancel={this.handleBulkCancel}
-          okText="导入"
-        >
+          okText="导入">
           <div>
             <TextArea
               placeholder="每行一个name:examples"

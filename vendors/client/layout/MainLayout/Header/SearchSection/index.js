@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useState } from "react";
+
+// config
+import config from "@/config";
 
 // material-ui
 import { useTheme, styled } from "@mui/material/styles";
@@ -29,9 +31,9 @@ const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
 
 const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(({ theme }) => ({
   width: 434,
-  marginLeft: 16,
-  paddingLeft: 16,
-  paddingRight: 16,
+  marginLeft: 12,
+  paddingLeft: 12,
+  paddingRight: 12,
   "& input": {
     background: "transparent !important",
     paddingLeft: "4px !important"
@@ -73,29 +75,31 @@ const MobileSearch = ({ value, setValue, popupState }) => {
           <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]}/>
         </InputAdornment>
       }
-      endAdornment={<InputAdornment position="end">
-        <ButtonBase sx={{ borderRadius: "12px" }}>
-          <HeaderAvatarStyle variant="rounded">
-            <IconAdjustmentsHorizontal stroke={1.5} size="1.3rem"/>
-          </HeaderAvatarStyle>
-        </ButtonBase>
-        <Box sx={{ ml: 2 }}>
-          <ButtonBase sx={{ borderRadius: "12px" }}>
-            <Avatar variant="rounded" sx={{
-              ...theme.typography.commonAvatar,
-              ...theme.typography.mediumAvatar,
-              background: theme.palette.orange.light,
-              color: theme.palette.orange.dark,
-              "&:hover": {
-                background: theme.palette.orange.dark,
-                color: theme.palette.orange.light
-              }
-            }} {...bindToggle(popupState)}>
-              <IconX stroke={1.5} size="1.3rem"/>
-            </Avatar>
+      endAdornment={
+        <InputAdornment position="end">
+          <ButtonBase sx={{ borderRadius: config.borderRadius + "px" }}>
+            <HeaderAvatarStyle variant="rounded">
+              <IconAdjustmentsHorizontal stroke={1.5} size="1rem"/>
+            </HeaderAvatarStyle>
           </ButtonBase>
-        </Box>
-      </InputAdornment>}
+          <Box sx={{ ml: 2 }}>
+            <ButtonBase sx={{ borderRadius: config.borderRadius + "px" }}>
+              <Avatar variant="rounded" {...bindToggle(popupState)} sx={{
+                ...theme.typography.commonAvatar,
+                ...theme.typography.mediumAvatar,
+                background: theme.palette.orange.light,
+                color: theme.palette.orange.dark,
+                "&:hover": {
+                  background: theme.palette.orange.dark,
+                  color: theme.palette.orange.light
+                }
+              }}>
+                <IconX stroke={1.5} size="1rem"/>
+              </Avatar>
+            </ButtonBase>
+          </Box>
+        </InputAdornment>
+      }
       aria-describedby="search-helper-text" inputProps={{ "aria-label": "weight" }}/>
   );
 };
@@ -121,7 +125,7 @@ const SearchSection = () => {
               <Box sx={{ ml: 2 }}>
                 <ButtonBase sx={{ borderRadius: "12px" }}>
                   <HeaderAvatarStyle variant="rounded" {...bindToggle(popupState)}>
-                    <IconSearch stroke={1.5} size="1.2rem"/>
+                    <IconSearch stroke={1.5} size="1rem"/>
                   </HeaderAvatarStyle>
                 </ButtonBase>
               </Box>
@@ -167,9 +171,9 @@ const SearchSection = () => {
           }
           endAdornment={
             <InputAdornment position="end">
-              <ButtonBase sx={{ borderRadius: "12px" }}>
+              <ButtonBase sx={{ borderRadius: config.borderRadius }}>
                 <HeaderAvatarStyle variant="rounded">
-                  <IconAdjustmentsHorizontal stroke={1.5} size="1.3rem"/>
+                  <IconAdjustmentsHorizontal stroke={1.5} size="1rem"/>
                 </HeaderAvatarStyle>
               </ButtonBase>
             </InputAdornment>

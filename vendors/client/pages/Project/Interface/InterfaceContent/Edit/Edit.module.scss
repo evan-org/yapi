@@ -1,0 +1,72 @@
+.InterfaceEdit{
+  :global{
+    .interface-edit {
+      padding: 24px;
+      // overflow: hidden;
+      .interface-edit-item {
+        margin-bottom: 16px;
+        .ant-form-item-label label:after {
+          margin-left: 4px;
+        }
+        .interface-editor {
+          min-height: 300px;
+        }
+      }
+      .interface-edit-json-info {
+        margin-bottom: 5px;
+      }
+      .interface-edit-item.hide {
+        display: none;
+      }
+      .interface-edit-item-content {
+        margin-bottom: 16px;
+        .interface-edit-item-content-col {
+          padding: 0 1px;
+        }
+        .interface-edit-item-content-col-drag {
+          width: 24px;
+          padding: 7px;
+          cursor: ns-resize;
+        }
+      }
+      .interface-edit-del-icon {
+        margin-top: 10px;
+        margin-left: 5px;
+        cursor: pointer
+      }
+      .interface-edit-direc-icon {
+        margin-top: 5px;
+        margin-left: 5px;
+        cursor: pointer
+      }
+      .ant-select-selection__rendered {
+        line-height: 34px;
+      }
+      .interace-edit-desc {
+        height: 250px;
+      }
+      .ant-affix {
+        background-color: #f3f4f6;
+        padding: 16px 0;
+        z-index: 999;
+      }
+      .interface-edit-submit-button {
+        background-color: #1d1d3d;
+        color: #fff;
+      }
+      .interface-edit-submit-button:hover {
+        border-color: #434370;
+        background-color: #434370;
+      }
+    }
+  }
+}
+
+.toolTip .ant-tooltip-inner {
+  white-space: normal;
+  word-break: break-all;
+}
+.tag-modal-center {
+  padding-left: 48px;
+}
+

@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 // material-ui
 import { styled, useTheme } from "@mui/material/styles";
-import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from "@mui/material";
+import { AppBar, Box, Toolbar, useMediaQuery } from "@mui/material";
 
 // project imports
 import Breadcrumbs from "@/components/ui-component/extended/Breadcrumbs";
@@ -76,7 +76,6 @@ const MainLayout = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       {/* header */}
       <AppBar
         enableColorOnDark

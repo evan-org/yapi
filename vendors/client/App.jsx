@@ -13,8 +13,8 @@ import ThemeRoutes, { routes } from "@/router/index.js";
 //
 import { AppRoute } from "@/router/oldIndex";
 // antd
-import { ConfigProvider } from "antd";
-import zhCN from "antd/lib/locale-provider/zh_CN";
+// import { ConfigProvider } from "antd";
+// import zhCN from "antd/lib/locale-provider/zh_CN";
 //
 const plugin = require("client/plugin.js");
 // 增加路由钩子
@@ -34,12 +34,10 @@ function App(props) {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
-        <ConfigProvider locale={zhCN}>
-          <CssBaseline/>
-          <NavigationScroll>
-            <ThemeRoutes/>
-          </NavigationScroll>
-        </ConfigProvider>
+        <CssBaseline/>
+        <NavigationScroll>
+          <ThemeRoutes/>
+        </NavigationScroll>
       </ThemeProvider>
     </StyledEngineProvider>
   )

@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Form, Input, Select, Button } from "antd";
 
 import constants from "../../../../utils/variable.js"
-import { handleApiPath, nameLengthLimit } from "../../../../utils/common.js"
+import { handleApiPath, nameLengthLimit } from "@/utils/common"
 const HTTP_METHOD = constants.HTTP_METHOD;
 const HTTP_METHOD_KEYS = Object.keys(HTTP_METHOD);
 

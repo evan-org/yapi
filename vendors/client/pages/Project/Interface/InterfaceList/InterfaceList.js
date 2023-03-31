@@ -3,17 +3,14 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import axios from "axios";
 import { Table, Button, Modal, message, Tooltip, Select, Icon } from "antd";
-import AddInterfaceForm from "./AddInterfaceForm";
-import {
-  fetchInterfaceListMenu,
-  fetchInterfaceList,
-  fetchInterfaceCatList
-} from "../../../../reducer/modules/interface.js";
-import { getProject } from "../../../../reducer/modules/project.js";
+import AddInterfaceForm from "../InterfaceMenu/AddInterfaceForm";
+import { fetchInterfaceListMenu, fetchInterfaceList, fetchInterfaceCatList } from "@/reducer/modules/interface";
+import { getProject } from "@/reducer/modules/project";
 import { Link } from "react-router-dom";
-import variable from "../../../../utils/variable";
-import "./Edit.scss";
-import Label from "../../../../components/Label/Label.jsx";
+import variable from "@/utils/variable";
+import Label from "@/components/Label/Label.jsx";
+//
+import styles from "./InterfaceList.module.scss";
 
 const Option = Select.Option;
 const limit = 20;
@@ -348,7 +345,7 @@ class InterfaceList extends Component {
     // console.log(this.props.curProject.tag)
 
     return (
-      <div style={{ padding: "24px" }}>
+      <div className={styles.InterfaceList}>
         <h2 className="interface-title" style={{ display: "inline-block", margin: 0 }}>
           {intername ? intername : "全部接口"}共 ({total}) 个
         </h2>

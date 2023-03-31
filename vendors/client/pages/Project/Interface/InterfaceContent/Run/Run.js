@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { message } from 'antd';
 import { Postman } from '../../../../../components';
-import AddColModal from './AddColModal';
+import AddColModal from './AddColModal/AddColModal';
 
 // import {
 // } from '../../../reducer/modules/group.js'

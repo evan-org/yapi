@@ -3,20 +3,20 @@ import PropTypes from "prop-types";
 import { Tabs, Layout } from "antd";
 import { matchPath } from "react-router-dom";
 import { connect } from "react-redux";
-
 const { Content, Sider } = Layout;
-import styles from "./Interface.module.scss";
 // InterfaceList
-import InterfaceMenu from "./InterfaceList/InterfaceMenu.js";
+import InterfaceMenu from "./InterfaceMenu/InterfaceMenu.js";
 import InterfaceList from "./InterfaceList/InterfaceList.js";
-import InterfaceContent from "./InterfaceList/InterfaceContent.js";
+import InterfaceContent from "./InterfaceContent/InterfaceContent.js";
 // InterfaceCol
 import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.jsx";
 import InterfaceColContent from "./InterfaceCol/InterfaceColContent.jsx";
 import InterfaceCaseContent from "./InterfaceCol/InterfaceCaseContent.jsx";
 //
-import { getProject } from "../../../reducer/modules/project.js";
-import { setColData } from "../../../reducer/modules/interfaceCol.js";
+import { getProject } from "@/reducer/modules/project";
+import { setColData } from "@/reducer/modules/interfaceCol";
+//
+import styles from "./Interface.module.scss";
 //
 const contentRouter = {
   path: "/project/:id/interface/:action/:actionId",
