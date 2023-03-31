@@ -4,15 +4,17 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Table, Icon, Row, Col, Tooltip, message } from "antd";
 import { Link } from "react-router-dom";
+//
 import AceEditor from "@/components/AceEditor/AceEditor";
-import { formatTime, safeArray } from "../../../../../utils/common.js";
-import ErrMsg from "../../../../../components/ErrMsg/ErrMsg.jsx";
-import variable from "../../../../../utils/variable";
-import constants from "../../../../../utils/variable.js";
+import SchemaTable from "@/components/SchemaTable/SchemaTable.jsx";
+//
+import { formatTime, safeArray } from "@/utils/common";
+//
+import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
+import variable from "@/utils/variable";
 import copy from "copy-to-clipboard";
-import SchemaTable from "../../../../../components/SchemaTable/SchemaTable.jsx";
 
-const HTTP_METHOD = constants.HTTP_METHOD;
+const HTTP_METHOD = variable.HTTP_METHOD;
 
 @connect((state) => ({
   curData: state.inter.curdata,

@@ -1,5 +1,5 @@
-.InterfaceEdit{
-  :global{
+.InterfaceEdit {
+  :global {
     .interface-edit {
       padding: 24px;
       // overflow: hidden;
@@ -59,14 +59,12 @@
         background-color: #434370;
       }
     }
+    .toolTip .ant-tooltip-inner {
+      white-space: normal;
+      word-break: break-all;
+    }
+    .tag-modal-center {
+      padding-left: 48px;
+    }
   }
 }
-
-.toolTip .ant-tooltip-inner {
-  white-space: normal;
-  word-break: break-all;
-}
-.tag-modal-center {
-  padding-left: 48px;
-}
-

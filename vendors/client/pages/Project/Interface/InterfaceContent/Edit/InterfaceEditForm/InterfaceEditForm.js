@@ -15,15 +15,17 @@ import axios from "axios";
 import { MOCK_SOURCE } from "@/utils/variable";
 //
 import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
+// 注入tui-editor css
+import "../../../../../../../common/tui-editor/dist/tui-editor.min.css";
+import "../../../../../../../common/tui-editor/dist/tui-editor-contents.min.css";
+//
 const jSchema = require("json-schema-editor-visual");
+//
 const ResBodySchema = jSchema({ lang: "zh_CN", mock: MOCK_SOURCE });
 const ReqBodySchema = jSchema({ lang: "zh_CN", mock: MOCK_SOURCE });
-
-import styles from "./InterfaceEditForm.module.scss";
-//
 // require("common/tui-editor/dist/tui-editor.min.css"); // editor ui
 // require("common/tui-editor/dist/tui-editor-contents.min.css"); // editor content
-
+import styles from "./InterfaceEditForm.module.scss";
 
 function checkIsJsonSchema(json) {
   try {

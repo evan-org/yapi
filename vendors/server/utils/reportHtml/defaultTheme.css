@@ -28,8 +28,7 @@ blockquote {
   border-collapse: collapse;
 }
 
-.yapi-run-auto-test td,
-th {
+.yapi-run-auto-test td, th {
   border: 1px solid #ddd;
   padding: 3px 10px;
 }
