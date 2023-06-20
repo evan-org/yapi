@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Loading from "../components/Loading/Loading";
-import Footer from "./components/Footer/Footer";
-import Header from "./components/Header/Header";
+import Loading from "../components/Loading/Loading.jsx";
+import Footer from "./components/Footer/Footer.jsx";
+import Header from "./components/Header/Header.jsx";
 import { Alert } from "antd";
 //
 import styles from "./Layout.module.scss";

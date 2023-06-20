@@ -20,39 +20,39 @@ $color-white: #fff;
       right: 0;
     }
     .des-container {
-      padding-left: .15rem;
+      padding-left: 15px;
       .des-title {
-        font-size: .24rem;
-        margin-bottom: .1rem;
+        font-size: 24px;
+        margin-bottom: 10px;
       }
       .des-detail {
-        font-size: .15rem;
-        margin-bottom: .2rem;
+        font-size: 15px;
+        margin-bottom: 20px;
       }
       .des-switch {
         .switch-content {
           float: left;
           width: 50%;
-          max-height: .85rem;
-          font-size: .14rem;
-          padding: .1rem .15rem .1rem 0;
+          max-height: 85px;
+          font-size: 14px;
+          padding: 10px 15px 10px 0;
           div {
             float: left;
           }
           .icon-switch {
-            height: .4rem;
-            width: .4rem;
-            border-radius: .02rem;
+            height: 40px;
+            width: 40px;
+            border-radius: 2px;
             background-color: $color-blue;
-            margin-right: .1rem;
+            margin-right: 10px;
             color: $color-white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: .18rem;
+            font-size: 18px;
           }
           .text-switch {
-            width: calc(100% - .65rem);
+            width: calc(100% - 65px);
           }
         }
       }
@@ -60,13 +60,13 @@ $color-white: #fff;
     .img-container {
       height: 100%;
       width: 100%;
-      padding-right: .15rem;
+      padding-right: 15px;
       img {
         height: 100%;
         width: 100%;
-        border: .01rem solid $color-grey;
+        border: 1px solid $color-grey;
         box-shadow: 0 0 3px 1px $color-grey;
-        border-radius: .04rem;
+        border-radius: 4px;
       }
     }
   }

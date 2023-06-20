@@ -94,11 +94,11 @@ const router = [
       }*/
     ]
   },
-  /* {
+  {
     path: "/login",
     element: lazy(() => import("../pages/Login/Login.jsx")),
     meta: { title: "登录", auth: false },
-  }, */
+  },
   {
     path: "/webview",
     element: lazy(() => import("../pages/Webview/Webview.jsx")),
@@ -118,7 +118,7 @@ import AuthenticationRoutes from "./AuthenticationRoutes";
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-  return useRoutes([MainRoutes, AuthenticationRoutes]);
+  return useRoutes([...router]);
 }
 // 路由处理方式
 const generateRouter = (routers) => routers.map((Item) => {

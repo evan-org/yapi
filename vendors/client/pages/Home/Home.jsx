@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Row, Col, Button, Icon, Card } from "antd";
 import PropTypes from "prop-types";
 import LogoSVG from "../../components/LogoSVG/LogoSVG.jsx";
-import { changeMenuItem } from "../../reducer/modules/menu";
+import { changeMenuItem } from "@/reducer/modules/menu.js";
 
 const plugin = require("client/plugin.js");
 const ThirdLogin = plugin.emitHook("third_login");

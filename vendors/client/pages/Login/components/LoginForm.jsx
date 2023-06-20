@@ -2,7 +2,7 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Form, Button, Input, Icon, message, Radio } from "antd";
-import { loginActions, loginLdapActions } from "../../../reducer/modules/user";
+import { loginActions, loginLdapActions } from "@/reducer/modules/user.js";
 import { useNavigate } from "react-router-dom";
 
 const FormItem = Form.Item;
@@ -36,14 +36,14 @@ class LoginForm extends Component {
       if (!err) {
         if (this.props.isLDAP && this.state.loginType === "ldap") {
           this.props.loginLdapActions(values).then((res) => {
-            if (res.payload.data.errcode == 0) {
+            if (res.payload.data.errcode === 0) {
               navigate({ pathname: "/group" }, { replace: true });
               message.success("登录成功! ");
             }
           });
         } else {
           this.props.loginActions(values).then((res) => {
-            if (res.payload.data.errcode == 0) {
+            if (res.payload.data.errcode === 0) {
               navigate({ pathname: "/group" }, { replace: true });
               message.success("登录成功! ");
             }

@@ -1,10 +1,10 @@
 
 .form-item {
-  margin-bottom: .16rem;
+  margin-bottom: 16px;
 }
 .breakline {
-  margin-top: .18rem;
-  margin-bottom: .18rem;
+  margin-top: 18px;
+  margin-bottom: 18px;
   border: 0;
   border-top: 1px solid #eeeeee;
 }
@@ -14,7 +14,7 @@
   .ant-card-body {
     display: flex;
     align-items: center;
-    padding: .24rem !important;
+    padding: 24px !important;
   }
   .card-danger-content {
     flex: 1;
@@ -24,50 +24,47 @@
     flex-shrink: 1;
   }
 }
-
 .setting-project-member {
-  .btn{
+  .btn {
     margin-left: 8px;
   }
   .m-user-name {
     padding-right: 16px;
   }
-
 }
-
 .setting-group {
-  margin-top: .48rem;
+  margin-top: 48px;
   border-radius: 2px;
   border-bottom: 1px solid #eee;
   .ant-card-head {
     background-color: #eee;
-    padding: 0 .08rem !important;
+    padding: 0 8px !important;
   }
   .ant-card-head-title {
-    font-size: .12rem;
+    font-size: 12px;
     float: inherit;
   }
   .ant-card-body {
     padding: 0 !important;
   }
   .card-item {
-    padding: .1rem .15rem;
+    padding: 10px 15px;
     position: relative;
     .item-img {
-      width: .2rem;
-      height: .2rem;
-      margin-right: .08rem;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
       vertical-align: middle;
     }
     .item-name {
       position: absolute;
-      left: .43rem;
+      left: 43px;
       top: 50%;
       transform: translateY(-50%);
     }
     .item-role {
       position: absolute;
-      right: .15rem;
+      right: 15px;
       top: 50%;
       transform: translateY(-50%);
     }
@@ -76,37 +73,36 @@
     border-top: 1px solid #eee;
   }
 }
-
 .project-setting {
   .setting-logo {
     text-align: right;
-    padding: .24rem;
+    padding: 24px;
     cursor: pointer;
   }
   .setting-intro {
-    padding: .24rem;
-    height: 1.48rem;
+    padding: 24px;
+    height: 148px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     .ui-title {
-      font-size: .32rem;
+      font-size: 32px;
       font-weight: normal;
       width: 100%;
     }
     .ui-desc {
-      font-size: .16rem;
+      font-size: 16px;
     }
   }
   .ui-logo {
-    width: 1rem;
-    height: 1rem;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    font-size: .5rem;
+    font-size: 50px;
     color: #fff;
     background-color: #2395f1;
-    line-height: 1rem;
-    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+    line-height: 100px;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
     position: relative;
     &:after {
       opacity: 0;
@@ -117,25 +113,24 @@
       left: 0;
       top: 0;
       border-radius: 50%;
-      font-size: .14rem;
+      font-size: 14px;
       color: #fff;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0, .25);
+      background-color: rgba(0, 0, 0, .25);
     }
     &:hover:after {
       opacity: 1;
     }
   }
 }
-
 .change-project-container {
   max-width: 320px;
   .ant-popover-inner {
     text-align: center;
   }
   .ant-popover-title {
-    padding: 8px .16rem;
+    padding: 8px 16px;
     height: auto;
   }
   .ant-radio-button-wrapper {
@@ -169,20 +164,19 @@
     }
   }
 }
-
 .danger-container {
-  margin-top: .48rem;
+  margin-top: 48px;
 }
 .btnwrap-changeproject {
   text-align: center;
-  padding: .16rem 0;
+  padding: 16px 0;
   background: #fff;
   background-color: #fff;
-  margin: 0 -.4rem;
+  margin: 0 -40px;
   // background-image: linear-gradient(45deg, #d9d9d9 25%, transparent 0),linear-gradient(45deg, transparent 75%, #d9d9d9 0);
   background-size: 4px 4px;
   .btn-save {
-    font-size: .15rem;
+    font-size: 15px;
     font-weight: 200;
     letter-spacing: 1px;
     border: none;
@@ -197,11 +191,7 @@
     }
   }
 }
-
-
-
-
-.project-env{
+.project-env {
   // 环境配置中首个item的删除按钮定位调整
   .ant-row-flex {
     display: flex;
@@ -209,19 +199,17 @@
     height: 60px;
   }
 }
-
 // 危险操作
 .danger-container {
   .title {
-    margin-bottom: .48rem;
+    margin-bottom: 48px;
     text-align: center;
     .content {
       color: rgba(39, 56, 72, 0.65);
-      margin-bottom: .16rem;
+      margin-bottom: 16px;
     }
   }
 }
-
-.radio.ant-radio-wrapper{
+.radio.ant-radio-wrapper {
   line-height: unset
 }

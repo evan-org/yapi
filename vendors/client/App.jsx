@@ -1,15 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useRoutes, RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
 // project imports
-import NavigationScroll from "./layout/NavigationScroll";
-import themes from "@/themes";
+import NavigationScroll from "./layout/NavigationScroll.js";
+import themes from "@/themes/index.js";
 //
 // import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 //
-import ThemeRoutes, { routes } from "@/router/index.js";
+import ThemeRoutes from "@/router/index.js";
 //
 import { AppRoute } from "@/router/oldIndex";
 // antd

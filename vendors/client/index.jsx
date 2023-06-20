@@ -9,11 +9,11 @@ import { Provider } from "react-redux";
 // project imports
 import * as serviceWorker from "./serviceWorker.js";
 import App from "./App.jsx";
-import store from "./reducer/store";
+import store from "./reducer/store.js";
 
 // style + assets
 import "@/assets/styles/index.scss";
-import config from "@/config";
+import config from "@/config.js";
 //
 //
 const root = ReactDOM.createRoot(document.getElementById("yapi"));
