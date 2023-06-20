@@ -40,7 +40,7 @@ const router = [
           {
             path: ":groupId",
             name: "GroupContent",
-            element: lazy(() => import("../pages/Group/GroupContent/GroupContent.jsx")),
+            element: lazy(() => import("client/pages/Group/GroupContent.jsx")),
             meta: { title: "我的项目组", auth: true }
           }
         ]

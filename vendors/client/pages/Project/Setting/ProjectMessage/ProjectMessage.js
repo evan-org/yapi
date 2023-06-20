@@ -4,7 +4,6 @@ import {
   Input,
   Switch,
   Select,
-  Icon,
   Tooltip,
   Button,
   Row,
@@ -16,6 +15,7 @@ import {
   Modal,
   Popover
 } from "antd";
+import Icon from "@ant-design/icons";
 import PropTypes from "prop-types";
 import {
   updateProject,
@@ -26,12 +26,7 @@ import {
 import { fetchGroupMsg, fetchGroupList } from "@/reducer/modules/group";
 import { setBreadcrumb } from "@/reducer/modules/user";
 import { connect } from "react-redux";
-const { TextArea } = Input;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
-const RadioButton = Radio.Button;
 import constants from "../../../../utils/variable.js";
-const confirm = Modal.confirm;
 import { nameLengthLimit, entries, trim, htmlFilter } from "@/utils/common";
 import "../Setting.scss";
 import _ from "underscore";
@@ -50,9 +45,7 @@ const formItemLayout = {
   },
   className: "form-item"
 };
-
-const Option = Select.Option;
-
+//
 @connect(
   (state) => ({
     projectList: state.project.projectList,
@@ -145,7 +138,7 @@ class ProjectMessage extends Component {
 
   showConfirm = () => {
     let that = this;
-    confirm({
+    Modal.confirm({
       title: "确认删除 " + that.props.projectMsg.name + " 项目吗？",
       content: (
         <div style={{ marginTop: "10px", fontSize: "13px", lineHeight: "25px" }}>
@@ -250,26 +243,26 @@ class ProjectMessage extends Component {
 
     const colorArr = entries(constants.PROJECT_COLOR);
     const colorSelector = (
-      <RadioGroup onChange={this.changeProjectColor} value={projectMsg.color} className="color">
+      <Radio.Group onChange={this.changeProjectColor} value={projectMsg.color} className="color">
         {colorArr.map((item, index) => (
-          <RadioButton
+          <Radio.Button
             key={index}
             value={item[0]}
             style={{ backgroundColor: item[1], color: "#fff", fontWeight: "bold" }}
           >
             {item[0] === projectMsg.color ? <Icon type="check" /> : null}
-          </RadioButton>
+          </Radio.Button>
         ))}
-      </RadioGroup>
+      </Radio.Group>
     );
     const iconSelector = (
-      <RadioGroup onChange={this.changeProjectIcon} value={projectMsg.icon} className="icon">
+      <Radio.Group onChange={this.changeProjectIcon} value={projectMsg.icon} className="icon">
         {constants.PROJECT_ICON.map((item) => (
-          <RadioButton key={item} value={item} style={{ fontWeight: "bold" }}>
+          <Radio.Button key={item} value={item} style={{ fontWeight: "bold" }}>
             <Icon type={item} />
-          </RadioButton>
+          </Radio.Button>
         ))}
-      </RadioGroup>
+      </Radio.Group>
     );
     const selectDisbaled = projectMsg.role === "owner" || projectMsg.role === "admin";
     return (
@@ -303,16 +296,16 @@ class ProjectMessage extends Component {
           </Row>
           <hr className="breakline" />
           <Form>
-            <FormItem {...formItemLayout} label="项目ID">
+            <Form.Item {...formItemLayout} label="项目ID">
               <span>{this.props.projectMsg._id}</span>
-            </FormItem>
-            <FormItem {...formItemLayout} label="项目名称">
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="项目名称">
               {getFieldDecorator("name", {
                 initialValue: initFormValues.name,
                 rules: nameLengthLimit("项目")
               })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="所属分组">
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="所属分组">
               {getFieldDecorator("group_id", {
                 initialValue: initFormValues.group_id + "",
                 rules: [
@@ -324,15 +317,15 @@ class ProjectMessage extends Component {
               })(
                 <Select disabled={!selectDisbaled}>
                   {this.props.groupList.map((item, index) => (
-                    <Option value={item._id.toString()} key={index}>
+                    <Select.Option value={item._id.toString()} key={index}>
                       {item.group_name}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               )}
-            </FormItem>
+            </Form.Item>
 
-            <FormItem
+            <Form.Item
               {...formItemLayout}
               label={
                 <span>
@@ -352,9 +345,9 @@ class ProjectMessage extends Component {
                   }
                 ]
               })(<Input />)}
-            </FormItem>
+            </Form.Item>
 
-            <FormItem
+            <Form.Item
               {...formItemLayout}
               label={
                 <span>
@@ -366,9 +359,9 @@ class ProjectMessage extends Component {
               }
             >
               <Input disabled value={mockUrl} onChange={() => {}} />
-            </FormItem>
+            </Form.Item>
 
-            <FormItem {...formItemLayout} label="描述">
+            <Form.Item {...formItemLayout} label="描述">
               {getFieldDecorator("desc", {
                 initialValue: initFormValues.desc,
                 rules: [
@@ -376,10 +369,10 @@ class ProjectMessage extends Component {
                     required: false
                   }
                 ]
-              })(<TextArea rows={8} />)}
-            </FormItem>
+              })(<Input.TextArea rows={8} />)}
+            </Form.Item>
 
-            <FormItem
+            <Form.Item
               {...formItemLayout}
               label={
                 <span>
@@ -392,8 +385,8 @@ class ProjectMessage extends Component {
             >
               <ProjectTag tagMsg={tag} ref={this.tagSubmit} />
               {/* <Tag tagMsg={tag} ref={this.tagSubmit} /> */}
-            </FormItem>
-            <FormItem
+            </Form.Item>
+            <Form.Item
               {...formItemLayout}
               label={
                 <span>
@@ -408,8 +401,8 @@ class ProjectMessage extends Component {
                 valuePropName: "checked",
                 initialValue: initFormValues.strice
               })(<Switch checkedChildren="开" unCheckedChildren="关" />)}
-            </FormItem>
-            <FormItem
+            </Form.Item>
+            <Form.Item
               {...formItemLayout}
               label={
                 <span>
@@ -424,15 +417,15 @@ class ProjectMessage extends Component {
                 valuePropName: "checked",
                 initialValue: initFormValues.is_json5
               })(<Switch checkedChildren="开" unCheckedChildren="关" />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="默认开启消息通知">
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="默认开启消息通知">
               {getFieldDecorator("switch_notice", {
                 valuePropName: "checked",
                 initialValue: initFormValues.switch_notice
               })(<Switch checkedChildren="开" unCheckedChildren="关" />)}
-            </FormItem>
+            </Form.Item>
 
-            <FormItem {...formItemLayout} label="权限">
+            <Form.Item {...formItemLayout} label="权限">
               {getFieldDecorator("project_type", {
                 rules: [
                   {
@@ -441,7 +434,7 @@ class ProjectMessage extends Component {
                 ],
                 initialValue: initFormValues.project_type
               })(
-                <RadioGroup>
+                <Radio.Group>
                   <Radio value="private" className="radio">
                     <Icon type="lock" />私有<br />
                     <span className="radio-desc">只有组长和项目开发者可以索引并查看项目信息</span>
@@ -452,9 +445,9 @@ class ProjectMessage extends Component {
                     <span className="radio-desc">任何人都可以索引并查看项目信息</span>
                   </Radio>}
 
-                </RadioGroup>
+                </Radio.Group>
               )}
-            </FormItem>
+            </Form.Item>
           </Form>
 
           <div className="btnwrap-changeproject">
@@ -505,4 +498,4 @@ class ProjectMessage extends Component {
   }
 }
 
-export default Form.create()(ProjectMessage);
+export default ProjectMessage;

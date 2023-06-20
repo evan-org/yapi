@@ -9,8 +9,8 @@ import { connect } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { Tabs, Layout, Spin } from "antd";
 //
-import { fetchNewsData } from "../../reducer/modules/news.js";
-import { setCurrGroup } from "../../reducer/modules/group";
+import { fetchNewsData } from "@/reducer/modules/news.js";
+import { setCurrGroup } from "@/reducer/modules/group.js";
 //
 import styles from "./Group.module.scss";
 import axios from "axios";

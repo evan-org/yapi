@@ -79,22 +79,14 @@ module.exports = ({ env }) => {
       plugins: [
         ["@babel/plugin-proposal-decorators", { legacy: true }],
         ["@babel/plugin-proposal-class-properties", { loose: true }],
-        ["@babel/plugin-proposal-private-methods", { loose: true }],
-        ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
+        // ["@babel/plugin-proposal-private-methods", { loose: true }],
+        // ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
         ["babel-plugin-react-css-modules", {
           generateScopedName: "[local]___[hash:base64:5]",
           attributeNames: { activeStyleName: "activeClassName" },
         }],
         ["@babel/plugin-transform-modules-commonjs"],
-        ["@babel/plugin-transform-runtime"],
-        [
-          "import",
-          {
-            libraryName: "antd",
-            libraryDirectory: "es",
-            style: true, // `style: true` 会加载 less 文件
-          },
-        ],
+        ["@babel/plugin-transform-runtime"]
       ]
     },
     // 开发服务器
@@ -210,8 +202,8 @@ module.exports = ({ env }) => {
         console.log("configure new\n\n", webpackConfig);
         //
         if (env === "development") {
-          // webpackConfig.devtool = "cheap-module-source-map";
-          webpackConfig.devtool = "source-map";
+          webpackConfig.devtool = "cheap-module-source-map";
+          // webpackConfig.devtool = "source-map";
           console.log("当前是开发环境", env, "devtool:", webpackConfig.devtool);
           return webpackConfig;
         }

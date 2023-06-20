@@ -11,8 +11,7 @@ import variable from "@/utils/variable";
 import Label from "@/components/Label/Label.jsx";
 //
 import styles from "./InterfaceList.module.scss";
-
-const Option = Select.Option;
+//
 const limit = 20;
 
 @connect(
@@ -246,9 +245,9 @@ class InterfaceList extends Component {
             onChange={(catid) => this.changeInterfaceCat(record._id, catid)}
           >
             {this.props.catList.map((cat) => (
-              <Option key={cat.id + ""} value={cat._id + ""}>
+              <Select.Option key={cat.id + ""} value={cat._id + ""}>
                 <span>{cat.name}</span>
-              </Option>
+              </Select.Option>
             ))}
           </Select>
         )
@@ -266,12 +265,12 @@ class InterfaceList extends Component {
               className="select"
               onChange={this.changeInterfaceStatus}
             >
-              <Option value={key + "-done"}>
+              <Select.Option value={key + "-done"}>
                 <span className="tag-status done">已完成</span>
-              </Option>
-              <Option value={key + "-undone"}>
+              </Select.Option>
+              <Select.Option value={key + "-undone"}>
                 <span className="tag-status undone">未完成</span>
-              </Option>
+              </Select.Option>
             </Select>
           );
         },

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Row, Icon, Input, Select, Tooltip } from "antd";
+import { Row, Input, Select, Tooltip } from "antd";
+import Icon from "@ant-design/icons";
 import _ from "underscore";
-const Option = Select.Option;
 
 // 深拷贝
 function deepEqual(state) {
@@ -107,9 +107,9 @@ class MethodsList extends Component {
         onChange={(e) => this.handleParamsChange(e, clickIndex, paramsIndex, 0)}
       >
         {subname.map((item, index) => (
-          <Option value={item} key={index}>
+          <Select.Option value={item} key={index}>
             {item}
-          </Option>
+          </Select.Option>
         ))}
       </Select>
     );

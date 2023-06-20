@@ -1,7 +1,8 @@
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Input, Button, message, Icon, Card, Alert, Modal, Switch, Row, Col, Tooltip } from "antd";
+import { Input, Button, message, Card, Alert, Modal, Switch, Row, Col, Tooltip } from "antd";
+import Icon from "@ant-design/icons";
 import { fetchNewsData } from "../../../../reducer/modules/news.js";
 import {
   changeGroupMsg,
@@ -10,12 +11,10 @@ import {
   fetchGroupMsg,
   updateGroupList,
   deleteGroup
-} from "../../../../reducer/modules/group.js";
-const { TextArea } = Input;
-import { trim } from "../../../../utils/common.js";
+} from "@/reducer/modules/group.js";
+import { trim } from "@/utils/common.js";
 import _ from "underscore";
 import "./GroupSetting.scss";
-const confirm = Modal.confirm;
 
 @connect(
   (state) => ({
@@ -157,7 +156,7 @@ class GroupSetting extends Component {
   // 删除分组的二次确认
   showConfirm = () => {
     const that = this;
-    confirm({
+    Modal.confirm({
       title: "确认删除 " + that.props.currGroup.group_name + " 分组吗？",
       content: (
         <div style={{ marginTop: "10px", fontSize: "13px", lineHeight: "25px" }}>
@@ -220,7 +219,7 @@ class GroupSetting extends Component {
             简介：
           </Col>
           <Col span={20}>
-            <TextArea
+            <Input.TextArea
               size="large"
               rows={3}
               placeholder="请输入分组描述"

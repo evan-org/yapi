@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-// import { connect } from 'react-redux'
 import axios from "axios";
 import PropTypes from "prop-types";
-import { Form, Switch, Button, message, Icon, Tooltip, Radio } from "antd";
+import { Form, Switch, Button, message, Tooltip, Radio } from "antd";
+import Icon from "@ant-design/icons";
 import MockCol from "../MockCol/MockCol.js";
-import mockEditor from "../../../client/components/AceEditor/utils/mockEditor";
+import mockEditor from "../../../client/components/AceEditor/utils/mockEditor.js";
 import constants from "../../../client/utils/variable.js";
-
-const FormItem = Form.Item;
+//
+//
 class AdvMock extends Component {
   static propTypes = {
     form: PropTypes.object,
@@ -102,7 +102,7 @@ class AdvMock extends Component {
         </div>
         <div style={{ display: isShowCase ? "none" : "" }}>
           <Form onSubmit={this.handleSubmit}>
-            <FormItem
+            <Form.Item
               label={
                 <span>
                   是否开启&nbsp;<a
@@ -124,15 +124,15 @@ class AdvMock extends Component {
                 checkedChildren="开"
                 unCheckedChildren="关"
               />
-            </FormItem>
-            <FormItem label="Mock脚本" {...formItemLayout}>
+            </Form.Item>
+            <Form.Item label="Mock脚本" {...formItemLayout}>
               <div id="mock-script" style={{ minHeight: "500px" }}/>
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
+            </Form.Item>
+            <Form.Item {...tailFormItemLayout}>
               <Button type="primary" htmlType="submit">
                 保存
               </Button>
-            </FormItem>
+            </Form.Item>
           </Form>
         </div>
         <div style={{ display: isShowCase ? "" : "none" }}>
@@ -142,4 +142,4 @@ class AdvMock extends Component {
     );
   }
 }
-export default Form.create()(AdvMock);
+export default AdvMock;

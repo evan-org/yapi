@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Row, Col, Tabs } from "antd";
 
-const TabPane = Tabs.TabPane;
+//
 function jsonFormat(json) {
   // console.log('json',json)
   if (json && typeof json === "object") {
@@ -23,7 +23,7 @@ const CaseReport = function(props) {
   return (
     <div className="report">
       <Tabs defaultActiveKey="request">
-        <TabPane className="case-report-pane" tab="Request" key="request">
+        <Tabs.TabPane className="case-report-pane" tab="Request" key="request">
           <Row className="case-report">
             <Col className="case-report-title" span="6">
               Url
@@ -58,8 +58,8 @@ const CaseReport = function(props) {
               </Col>
             </Row>
           ) : null}
-        </TabPane>
-        <TabPane className="case-report-pane" tab="Response" key="response">
+        </Tabs.TabPane>
+        <Tabs.TabPane className="case-report-pane" tab="Response" key="response">
           <Row className="case-report">
             <Col className="case-report-title" span="6">
               HttpCode
@@ -88,8 +88,8 @@ const CaseReport = function(props) {
               </Col>
             </Row>
           ) : null}
-        </TabPane>
-        <TabPane className="case-report-pane" tab="验证结果" key="valid">
+        </Tabs.TabPane>
+        <Tabs.TabPane className="case-report-pane" tab="验证结果" key="valid">
           {props.validRes ? (
             <Row className="case-report">
               <Col className="case-report-title" span="6">
@@ -101,7 +101,7 @@ const CaseReport = function(props) {
               </Col>
             </Row>
           ) : null}
-        </TabPane>
+        </Tabs.TabPane>
       </Tabs>
     </div>
   );

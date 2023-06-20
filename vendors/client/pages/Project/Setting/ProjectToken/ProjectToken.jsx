@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Icon, Tooltip, message, Modal } from "antd";
+import { Tooltip, message, Modal } from "antd";
+import Icon from "@ant-design/icons";
 import copy from "copy-to-clipboard";
 import { getToken, updateToken } from "../../../../reducer/modules/project";
 //
 import styles from "./ProjectToken.module.scss";
 //
-const confirm = Modal.confirm;
 @connect(
   (state) => ({
     token: state.project.token
@@ -34,7 +34,7 @@ class ProjectToken extends Component {
   };
   updateToken = () => {
     let that = this;
-    confirm({
+    Modal.confirm({
       title: "重新生成key",
       content: "重新生成之后，之前的key将无法使用，确认重新生成吗？",
       okText: "确认",

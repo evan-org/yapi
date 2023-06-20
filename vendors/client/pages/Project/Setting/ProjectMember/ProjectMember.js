@@ -26,17 +26,15 @@ import {
   delMember,
   changeMemberRole,
   changeMemberEmailNotice
-} from "../../../../reducer/modules/project.js";
+} from "@/reducer/modules/project.js";
 import UsernameAutoComplete from "../../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 import "../Setting.scss";
-
-const Option = Select.Option;
-
+//
+//
 const arrayAddKey = (arr) => arr.map((item, index) => ({
   ...item,
   key: index
 }));
-
 @connect(
   (state) => ({
     projectMsg: state.project.currProject,
@@ -87,22 +85,18 @@ class ProjectMember extends Component {
     projectList: PropTypes.array,
     changeMemberEmailNotice: PropTypes.func
   };
-
   showAddMemberModal = () => {
     this.setState({
       visible: true
     });
   };
-
   showImportMemberModal = async() => {
     await this.props.fetchProjectList(this.props.projectMsg.group_id);
     this.setState({
       modalVisible: true
     });
   };
-
   // 重新获取列表
-
   reFetchList = () => {
     this.props.getProjectMemberList(this.props.match.params.id).then((res) => {
       this.setState({
@@ -112,32 +106,30 @@ class ProjectMember extends Component {
       });
     });
   };
-
   handleOk = () => {
     this.addMembers(this.state.inputUids);
   };
-
   // 增 - 添加成员
   addMembers = (memberUids) => {
     this.props
-      .addMember({
-        id: this.props.match.params.id,
-        member_uids: memberUids,
-        role: this.state.inputRole
-      })
-      .then((res) => {
-        if (!res.payload.data.errcode) {
-          const { add_members, exist_members } = res.payload.data.data;
-          const addLength = add_members.length;
-          const existLength = exist_members.length;
-          this.setState({
-            inputRole: "dev",
-            inputUids: []
-          });
-          message.success(`添加成功! 已成功添加 ${addLength} 人，其中 ${existLength} 人已存在`);
-          this.reFetchList(); // 添加成功后重新获取分组成员列表
-        }
-      });
+    .addMember({
+      id: this.props.match.params.id,
+      member_uids: memberUids,
+      role: this.state.inputRole
+    })
+    .then((res) => {
+      if (!res.payload.data.errcode) {
+        const { add_members, exist_members } = res.payload.data.data;
+        const addLength = add_members.length;
+        const existLength = exist_members.length;
+        this.setState({
+          inputRole: "dev",
+          inputUids: []
+        });
+        message.success(`添加成功! 已成功添加 ${addLength} 人，其中 ${existLength} 人已存在`);
+        this.reFetchList(); // 添加成功后重新获取分组成员列表
+      }
+    });
   };
   // 添加成员时 选择新增成员权限
   changeNewMemberRole = (value) => {
@@ -145,7 +137,6 @@ class ProjectMember extends Component {
       inputRole: value
     });
   };
-
   // 删 - 删除分组成员
   deleteConfirm = (member_uid) => () => {
     const id = this.props.match.params.id;
@@ -156,7 +147,6 @@ class ProjectMember extends Component {
       }
     });
   };
-
   // 改 - 修改成员权限
   changeUserRole = (e) => {
     const id = this.props.match.params.id;
@@ -169,14 +159,12 @@ class ProjectMember extends Component {
       }
     });
   };
-
   // 修改用户是否接收消息通知
   changeEmailNotice = async(notice, member_uid) => {
     const id = this.props.match.params.id;
     await this.props.changeMemberEmailNotice({ id, member_uid, notice });
     this.reFetchList(); // 添加成功后重新获取项目成员列表
   };
-
   // 关闭模态框
   handleCancel = () => {
     this.setState({
@@ -189,14 +177,12 @@ class ProjectMember extends Component {
       modalVisible: false
     });
   };
-
   // 处理选择项目
   handleChange = (key) => {
     this.setState({
       selectProjectId: key
     });
   };
-
   // 确定批量导入模态框
   handleModalOk = async() => {
     // 获取项目中的成员列表
@@ -204,13 +190,11 @@ class ProjectMember extends Component {
     const memberUidList = menberList.payload.data.data.map((item) => item.uid);
     this.addMembers(memberUidList);
   };
-
   onUserSelect = (uids) => {
     this.setState({
       inputUids: uids
     });
   };
-
   async UNSAFE_componentWillMount() {
     const groupMemberList = await this.props.fetchGroupMemberList(this.props.projectMsg.group_id);
     const groupMsg = await this.props.fetchGroupMsg(this.props.projectMsg.group_id);
@@ -222,7 +206,6 @@ class ProjectMember extends Component {
       role: this.props.projectMsg.role
     });
   }
-
   render() {
     const isEmailChangeEable = this.state.role === "owner" || this.state.role === "admin";
     const columns = [
@@ -233,7 +216,7 @@ class ProjectMember extends Component {
         key: "username",
         render: (text, record) => (
           <div className="m-user">
-            <img src={"/api/user/avatar?uid=" + record.uid} className="m-user-img" />
+            <img src={"/api/user/avatar?uid=" + record.uid} className="m-user-img"/>
             <p className="m-user-name">{text}</p>
             <Tooltip placement="top" title="消息通知">
               <span>
@@ -275,9 +258,9 @@ class ProjectMember extends Component {
                   className="select"
                   onChange={this.changeUserRole}
                 >
-                  <Option value={"owner-" + record.uid}>组长</Option>
-                  <Option value={"dev-" + record.uid}>开发者</Option>
-                  <Option value={"guest-" + record.uid}>访客</Option>
+                  <Select.Option value={"owner-" + record.uid}>组长</Select.Option>
+                  <Select.Option value={"dev-" + record.uid}>开发者</Select.Option>
+                  <Select.Option value={"guest-" + record.uid}>访客</Select.Option>
                 </Select>
                 <Popconfirm
                   placement="topRight"
@@ -286,7 +269,7 @@ class ProjectMember extends Component {
                   okText="确定"
                   cancelText=""
                 >
-                  <Button type="danger" icon="delete" className="btn-danger" />
+                  <Button type="danger" icon="delete" className="btn-danger"/>
                 </Popconfirm>
               </div>
             );
@@ -307,11 +290,10 @@ class ProjectMember extends Component {
     ];
     // 获取当前分组下的所有项目名称
     const children = this.props.projectList.map((item, index) => (
-      <Option key={index} value={"" + item._id}>
+      <Select.Option key={index} value={"" + item._id}>
         {item.name}
-      </Option>
+      </Select.Option>
     ));
-
     return (
       <div className="g-row">
         <div className="m-panel">
@@ -324,21 +306,21 @@ class ProjectMember extends Component {
             >
               <Row gutter={6} className="modal-input">
                 <Col span="5">
-                  <div className="label usernamelabel">用户名: </div>
+                  <div className="label usernamelabel">用户名:</div>
                 </Col>
                 <Col span="15">
-                  <UsernameAutoComplete callbackState={this.onUserSelect} />
+                  <UsernameAutoComplete callbackState={this.onUserSelect}/>
                 </Col>
               </Row>
               <Row gutter={6} className="modal-input">
                 <Col span="5">
-                  <div className="label usernamelabel">权限: </div>
+                  <div className="label usernamelabel">权限:</div>
                 </Col>
                 <Col span="15">
                   <Select defaultValue="dev" className="select" onChange={this.changeNewMemberRole}>
-                    <Option value="owner">组长</Option>
-                    <Option value="dev">开发者</Option>
-                    <Option value="guest">访客</Option>
+                    <Select.Option value="owner">组长</Select.Option>
+                    <Select.Option value="dev">开发者</Select.Option>
+                    <Select.Option value="guest">访客</Select.Option>
                   </Select>
                 </Col>
               </Row>
@@ -354,7 +336,7 @@ class ProjectMember extends Component {
           >
             <Row gutter={6} className="modal-input">
               <Col span="5">
-                <div className="label usernamelabel">项目名: </div>
+                <div className="label usernamelabel">项目名:</div>
               </Col>
               <Col span="15">
                 <Select
@@ -369,12 +351,11 @@ class ProjectMember extends Component {
               </Col>
             </Row>
           </Modal>
-
           <Table
             columns={columns}
             dataSource={this.state.projectMemberList}
             pagination={false}
-            locale={{ emptyText: <ErrMsg type="noMemberInProject" /> }}
+            locale={{ emptyText: <ErrMsg type="noMemberInProject"/> }}
             className="setting-project-member"
           />
           <Card
@@ -391,10 +372,10 @@ class ProjectMember extends Component {
                   <img
                     src={
                       location.protocol +
-                        "//" +
-                        location.host +
-                        "/api/user/avatar?uid=" +
-                        item.uid
+                      "//" +
+                      location.host +
+                      "/api/user/avatar?uid=" +
+                      item.uid
                     }
                     className="item-img"
                   />
@@ -418,7 +399,7 @@ class ProjectMember extends Component {
                 </div>
               ))
             ) : (
-              <ErrMsg type="noMemberInGroup" />
+              <ErrMsg type="noMemberInGroup"/>
             )}
           </Card>
         </div>
@@ -426,5 +407,4 @@ class ProjectMember extends Component {
     );
   }
 }
-
 export default ProjectMember;

@@ -3,10 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, Collapse, Row, Col, Input, message, Button, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { fetchInterfaceColList } from '../../../../../../reducer/modules/interfaceCol';
-
-const { TextArea } = Input;
-const Panel = Collapse.Panel;
+import { fetchInterfaceColList } from '@/reducer/modules/interfaceCol.js';
 
 @connect(
   state => ({
@@ -109,7 +106,7 @@ export default class AddColModal extends Component {
           )}
         </ul>
         <Collapse>
-          <Panel header="添加新集合">
+          <Collapse.Panel header="添加新集合">
             <Row gutter={6} className="modal-input">
               <Col span="5">
                 <div className="label">集合名：</div>
@@ -127,7 +124,7 @@ export default class AddColModal extends Component {
                 <div className="label">简介：</div>
               </Col>
               <Col span="15">
-                <TextArea
+                <Input.TextArea
                   rows={3}
                   placeholder="请输入集合描述"
                   value={this.state.addColDesc}
@@ -140,7 +137,7 @@ export default class AddColModal extends Component {
                 添 加
               </Button>
             </Row>
-          </Panel>
+          </Collapse.Panel>
         </Collapse>
       </Modal>
     );

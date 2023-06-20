@@ -1,6 +1,6 @@
 import React from "react";
 import LoginWrap from "./components/LoginWrap.jsx";
-import LogoSVG from "../../components/LogoSVG/LogoSVG.jsx";
+import LogoSVG from "@/components/LogoSVG/LogoSVG.jsx";
 import styles from "./Login.module.scss";
 import { Card } from "@mui/material";
 

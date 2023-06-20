@@ -12,8 +12,13 @@ import ThemeRoutes from "@/router/index.js";
 //
 import { AppRoute } from "@/router/oldIndex";
 // antd
-// import { ConfigProvider } from "antd";
-// import zhCN from "antd/lib/locale-provider/zh_CN";
+// 由于 antd 组件的默认文案是英文，所以需要修改为中文
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import { ConfigProvider } from "antd";
+import zhCN from "antd/locale/zh_CN";
+
+dayjs.locale("zh-cn");
 //
 const plugin = require("client/plugin.js");
 // 增加路由钩子

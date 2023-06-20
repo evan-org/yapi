@@ -1,12 +1,11 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Form, Button, Input, Icon, message, Radio } from "antd";
+import { Form, Button, Input, message, Radio } from "antd";
+import Icon from "@ant-design/icons";
 import { loginActions, loginLdapActions } from "@/reducer/modules/user.js";
 import { useNavigate } from "react-router-dom";
-
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
+//
 const formItemStyle = {
   marginBottom: "16px"
 };
@@ -30,6 +29,7 @@ class LoginForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const navigate = useNavigate();
+    console.log("11111111111", navigate);
     //
     const form = this.props.form;
     form.validateFields((err, values) => {
@@ -43,7 +43,9 @@ class LoginForm extends Component {
           });
         } else {
           this.props.loginActions(values).then((res) => {
+            console.log(res);
             if (res.payload.data.errcode === 0) {
+              debugger
               navigate({ pathname: "/group" }, { replace: true });
               message.success("登录成功! ");
             }
@@ -68,21 +70,21 @@ class LoginForm extends Component {
         : {
           required: true,
           message: "请输入正确的email!",
-          pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$/
+          pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{1,})+$/
         };
     return (
       <Form onSubmit={this.handleSubmit}>
         {/* 登录类型 (普通登录／LDAP登录) */}
         {isLDAP && (
-          <FormItem>
-            <RadioGroup defaultValue="ldap" onChange={this.handleFormLayoutChange}>
+          <Form.Item>
+            <Radio.Group defaultValue="ldap" onChange={this.handleFormLayoutChange}>
               <Radio value="ldap">LDAP</Radio>
               <Radio value="normal">普通登录</Radio>
-            </RadioGroup>
-          </FormItem>
+            </Radio.Group>
+          </Form.Item>
         )}
         {/* 用户名 (Email) */}
-        <FormItem style={formItemStyle}>
+        <Form.Item style={formItemStyle}>
           {getFieldDecorator("email", { rules: [emailRule] })(
             <Input
               style={changeHeight}
@@ -90,15 +92,19 @@ class LoginForm extends Component {
               placeholder="Email"
             />
           )}
-        </FormItem>
+        </Form.Item>
         {/* 密码 */}
-        <FormItem style={formItemStyle}>
-          {getFieldDecorator("password", { rules: [{ required: true, message: "请输入密码!" }] })(<Input style={changeHeight} prefix={<Icon type="lock" style={{ fontSize: 13 }}/>} type="password" placeholder="Password"/>)}
-        </FormItem>
+        <Form.Item style={formItemStyle}>
+          {
+            getFieldDecorator("password", { rules: [{ required: true, message: "请输入密码!" }] })(
+              <Input style={changeHeight} prefix={<Icon type="lock" style={{ fontSize: 13 }}/>} type="password" placeholder="Password"/>
+            )
+          }
+        </Form.Item>
         {/* 登录按钮 */}
-        <FormItem style={formItemStyle}>
+        <Form.Item style={formItemStyle}>
           <Button style={changeHeight} type="primary" htmlType="submit" className="login-form-button">登录</Button>
-        </FormItem>
+        </Form.Item>
         {/* <div className="qsso-breakline">
           <span className="qsso-breakword">或</span>
         </div>
@@ -116,4 +122,4 @@ export default connect(
     loginActions,
     loginLdapActions
   }
-)(Form.create()(LoginForm));
+)(LoginForm);

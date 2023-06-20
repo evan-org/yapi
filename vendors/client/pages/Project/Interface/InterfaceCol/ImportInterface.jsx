@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import { Table, Select, Tooltip, Icon } from "antd";
 import variable from "../../../../utils/variable";
 import { connect } from "react-redux";
-
-const Option = Select.Option;
-import { fetchInterfaceListMenu } from "../../../../reducer/modules/interface.js";
+//
+import { fetchInterfaceListMenu } from "@/reducer/modules/interface.js";
 //
 class ImportInterface extends Component {
   constructor(props) {
@@ -202,9 +201,9 @@ class ImportInterface extends Component {
             {projectList.map((item) => item.projectname ? (
               ""
             ) : (
-              <Option value={`${item._id}`} key={item._id}>
+              <Select.Option value={`${item._id}`} key={item._id}>
                 {item.name}
-              </Option>
+              </Select.Option>
             ))}
           </Select>
         </div>

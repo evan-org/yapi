@@ -10,13 +10,11 @@ import {
   Row,
   Input,
   Button,
-  Icon,
   AutoComplete,
   Modal
 } from "antd";
-
-const Option = Select.Option;
-const FormItem = Form.Item;
+import Icon from "@ant-design/icons";
+//
 import { safeAssign } from "../../../client/utils/common.js";
 import AceEditor from "../../../client/components/AceEditor/AceEditor";
 import constants from "../../../client/utils/variable.js";
@@ -226,14 +224,14 @@ class CaseDesForm extends Component {
       const display = paramsForm === "json" ? "none" : "";
       return values.map((item, index) => (
         <div key={index} className="paramsArr" style={{ display }}>
-          <FormItem
+          <Form.Item
             {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
             wrapperCol={index === 0 ? { span: 19 } : { span: 19, offset: 5 }}
             label={index ? "" : title}
           >
             <Row gutter={8}>
               <Col span={10}>
-                <FormItem>
+                <Form.Item>
                   {getFieldDecorator(`paramsArr[${index}].name`, { initialValue: item.name })(
                     <AutoComplete
                       dataSource={dataSource}
@@ -243,14 +241,14 @@ class CaseDesForm extends Component {
                       }
                     />
                   )}
-                </FormItem>
+                </Form.Item>
               </Col>
               <Col span={10}>
-                <FormItem>
+                <Form.Item>
                   {getFieldDecorator(`paramsArr[${index}].value`, { initialValue: item.value })(
                     <Input placeholder="参数值"/>
                   )}
-                </FormItem>
+                </Form.Item>
               </Col>
               <Col span={4}>
                 {values.length > 1 ? (
@@ -262,7 +260,7 @@ class CaseDesForm extends Component {
                 ) : null}
               </Col>
             </Row>
-          </FormItem>
+          </Form.Item>
         </div>
       ));
     };
@@ -270,14 +268,14 @@ class CaseDesForm extends Component {
       const dataSource = constants.HTTP_REQUEST_HEADER;
       return values.map((item, index) => (
         <div key={index} className="headers">
-          <FormItem
+          <Form.Item
             {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
             wrapperCol={index === 0 ? { span: 19 } : { span: 19, offset: 5 }}
             label={index ? "" : title}
           >
             <Row gutter={8}>
               <Col span={10}>
-                <FormItem>
+                <Form.Item>
                   {getFieldDecorator(`headers[${index}].name`, { initialValue: item.name })(
                     <AutoComplete
                       dataSource={dataSource}
@@ -287,14 +285,14 @@ class CaseDesForm extends Component {
                       }
                     />
                   )}
-                </FormItem>
+                </Form.Item>
               </Col>
               <Col span={10}>
-                <FormItem>
+                <Form.Item>
                   {getFieldDecorator(`headers[${index}].value`, { initialValue: item.value })(
                     <Input placeholder="参数值"/>
                   )}
-                </FormItem>
+                </Form.Item>
               </Col>
               <Col span={4}>
                 {values.length > 1 ? (
@@ -306,7 +304,7 @@ class CaseDesForm extends Component {
                 ) : null}
               </Col>
             </Row>
-          </FormItem>
+          </Form.Item>
         </div>
       ));
     };
@@ -325,25 +323,25 @@ class CaseDesForm extends Component {
           <h2 className="sub-title" style={{ marginTop: 0 }}>
             基本信息
           </h2>
-          <FormItem {...formItemLayout} label="期望名称">
+          <Form.Item {...formItemLayout} label="期望名称">
             {getFieldDecorator("name", {
               initialValue: name,
               rules: [{ required: true, message: "请输入期望名称！" }]
             })(<Input placeholder="请输入期望名称"/>)}
-          </FormItem>
-          <FormItem {...formItemLayout} label="IP 过滤" className="ip-filter">
+          </Form.Item>
+          <Form.Item {...formItemLayout} label="IP 过滤" className="ip-filter">
             <Col span={6} className="ip-switch">
-              <FormItem>
+              <Form.Item>
                 {getFieldDecorator("ip_enable", {
                   initialValue: ip_enable,
                   valuePropName: "checked",
                   rules: [{ type: "boolean" }]
                 })(<Switch/>)}
-              </FormItem>
+              </Form.Item>
             </Col>
             <Col span={18}>
               <div style={{ display: getFieldValue("ip_enable") ? "" : "none" }} className="ip">
-                <FormItem>
+                <Form.Item>
                   {getFieldDecorator(
                     "ip",
                     getFieldValue("ip_enable")
@@ -359,10 +357,10 @@ class CaseDesForm extends Component {
                       }
                       : {}
                   )(<Input placeholder="请输入过滤的 IP 地址"/>)}
-                </FormItem>
+                </Form.Item>
               </div>
             </Col>
-          </FormItem>
+          </Form.Item>
           <Row className="params-form" style={{ marginBottom: 8 }}>
             <Col {...{ span: 12, offset: 5 }}>
               <Switch
@@ -377,7 +375,7 @@ class CaseDesForm extends Component {
             </Col>
           </Row>
           {valuesTpl(paramsArr, "参数过滤")}
-          <FormItem
+          <Form.Item
             wrapperCol={{ span: 6, offset: 5 }}
             style={{ display: paramsForm === "form" ? "" : "none" }}
           >
@@ -389,15 +387,15 @@ class CaseDesForm extends Component {
             >
               <Icon type="plus"/> 添加参数
             </Button>
-          </FormItem>
-          <FormItem
+          </Form.Item>
+          <Form.Item
             {...formItemLayout}
             wrapperCol={{ span: 17 }}
             label="参数过滤"
             style={{ display: paramsForm === "form" ? "none" : "" }}
           >
             <AceEditor className="pretty-editor" data={params} onChange={this.handleParams}/>
-            <FormItem>
+            <Form.Item>
               {getFieldDecorator(
                 "params",
                 paramsForm === "json"
@@ -408,31 +406,31 @@ class CaseDesForm extends Component {
                   }
                   : {}
               )(<Input style={{ display: "none" }}/>)}
-            </FormItem>
-          </FormItem>
+            </Form.Item>
+          </Form.Item>
           <h2 className="sub-title">响应</h2>
-          <FormItem {...formItemLayout} required label="HTTP Code">
+          <Form.Item {...formItemLayout} required label="HTTP Code">
             {getFieldDecorator("code", {
               initialValue: code
             })(
               <Select showSearch>
                 {httpCodes.map((code) => (
-                  <Option key={"" + code} value={"" + code}>
+                  <Select.Option key={"" + code} value={"" + code}>
                     {"" + code}
-                  </Option>
+                  </Select.Option>
                 ))}
               </Select>
             )}
-          </FormItem>
-          <FormItem {...formItemLayout} label="延时">
+          </Form.Item>
+          <Form.Item {...formItemLayout} label="延时">
             {getFieldDecorator("delay", {
               initialValue: delay,
               rules: [{ required: true, message: "请输入延时时间！", type: "integer" }]
             })(<InputNumber placeholder="请输入延时时间" min={0}/>)}
             <span>ms</span>
-          </FormItem>
+          </Form.Item>
           {headersTpl(headers, "HTTP 头")}
-          <FormItem wrapperCol={{ span: 6, offset: 5 }}>
+          <Form.Item wrapperCol={{ span: 6, offset: 5 }}>
             <Button
               size="default"
               type="primary"
@@ -441,21 +439,21 @@ class CaseDesForm extends Component {
             >
               <Icon type="plus"/> 添加 HTTP 头
             </Button>
-          </FormItem>
-          <FormItem {...formItemLayout} wrapperCol={{ span: 17 }} label="Body" required>
-            <FormItem>
+          </Form.Item>
+          <Form.Item {...formItemLayout} wrapperCol={{ span: 17 }} label="Body" required>
+            <Form.Item>
               <AceEditor
                 className="pretty-editor"
                 data={res_body}
                 mode={this.props.currInterface.res_body_type === "json" ? null : "text"}
                 onChange={this.handleRequestBody}
               />
-            </FormItem>
-          </FormItem>
+            </Form.Item>
+          </Form.Item>
         </Form>
       </Modal>
     );
   }
 }
-const CaseDesModal = Form.create()(CaseDesForm);
-export default CaseDesModal;
+//
+export default CaseDesForm;

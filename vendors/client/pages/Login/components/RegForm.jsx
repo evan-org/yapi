@@ -1,11 +1,11 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Form, Button, Input, Icon, message } from "antd";
+import { Form, Button, Input, message } from "antd";
+import Icon from "@ant-design/icons";
 //
-import { regActions } from "../../../reducer/modules/user";
+import { regActions } from "@/reducer/modules/user.js";
 
-const FormItem = Form.Item;
 const formItemStyle = {
   marginBottom: "16px"
 };
@@ -65,7 +65,7 @@ class RegForm extends Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         {/* 用户名 */}
-        <FormItem style={formItemStyle}>
+        <Form.Item style={formItemStyle}>
           {getFieldDecorator("userName", {
             rules: [{ required: true, message: "请输入用户名!" }]
           })(
@@ -75,9 +75,9 @@ class RegForm extends Component {
               placeholder="Username"
             />
           )}
-        </FormItem>
+        </Form.Item>
         {/* Emaiil */}
-        <FormItem style={formItemStyle}>
+        <Form.Item style={formItemStyle}>
           {getFieldDecorator("email", {
             rules: [
               {
@@ -93,9 +93,9 @@ class RegForm extends Component {
               placeholder="Email"
             />
           )}
-        </FormItem>
+        </Form.Item>
         {/* 密码 */}
-        <FormItem style={formItemStyle}>
+        <Form.Item style={formItemStyle}>
           {getFieldDecorator("password", {
             rules: [
               {
@@ -114,9 +114,9 @@ class RegForm extends Component {
               placeholder="Password"
             />
           )}
-        </FormItem>
+        </Form.Item>
         {/* 密码二次确认 */}
-        <FormItem style={formItemStyle}>
+        <Form.Item style={formItemStyle}>
           {getFieldDecorator("confirm", {
             rules: [
               {
@@ -135,9 +135,9 @@ class RegForm extends Component {
               placeholder="Confirm Password"
             />
           )}
-        </FormItem>
+        </Form.Item>
         {/* 注册按钮 */}
-        <FormItem style={formItemStyle}>
+        <Form.Item style={formItemStyle}>
           <Button
             style={changeHeight}
             type="primary"
@@ -146,7 +146,7 @@ class RegForm extends Component {
           >
             注册
           </Button>
-        </FormItem>
+        </Form.Item>
       </Form>
     );
   }
@@ -158,4 +158,4 @@ export default connect(
   {
     regActions
   }
-)(Form.create()(RegForm));
+)(RegForm);

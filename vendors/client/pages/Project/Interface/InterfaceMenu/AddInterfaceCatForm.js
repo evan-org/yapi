@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { Form, Input, Button } from "antd";
-const FormItem = Form.Item;
+//
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some((field) => fieldsError[field]);
 }
@@ -36,7 +36,7 @@ class AddInterfaceForm extends Component {
 
     return (
       <Form onSubmit={this.handleSubmit}>
-        <FormItem {...formItemLayout} label="分类名">
+        <Form.Item {...formItemLayout} label="分类名">
           {getFieldDecorator("name", {
             rules: [
               {
@@ -46,24 +46,24 @@ class AddInterfaceForm extends Component {
             ],
             initialValue: this.props.catdata ? this.props.catdata.name || null : null
           })(<Input placeholder="分类名称" />)}
-        </FormItem>
-        <FormItem {...formItemLayout} label="备注">
+        </Form.Item>
+        <Form.Item {...formItemLayout} label="备注">
           {getFieldDecorator("desc", {
             initialValue: this.props.catdata ? this.props.catdata.desc || null : null
           })(<Input placeholder="备注" />)}
-        </FormItem>
+        </Form.Item>
 
-        <FormItem className="catModalfoot" wrapperCol={{ span: 24, offset: 8 }}>
+        <Form.Item className="catModalfoot" wrapperCol={{ span: 24, offset: 8 }}>
           <Button onClick={this.props.onCancel} style={{ marginRight: "10px" }}>
             取消
           </Button>
           <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
             提交
           </Button>
-        </FormItem>
+        </Form.Item>
       </Form>
     );
   }
 }
 
-export default Form.create()(AddInterfaceForm);
+export default AddInterfaceForm;

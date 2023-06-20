@@ -1,16 +1,14 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Modal, Form, Input, Icon, Tooltip, Select, message, Button, Row, Col } from "antd";
+import { Modal, Form, Input, Tooltip, Select, message, Button, Row, Col } from "antd";
+import Icon from "@ant-design/icons";
 import {
   updateProject, fetchProjectList, delProject,
   // changeUpdateModal,
   // changeTableLoading
-} from "../../../../reducer/modules/project";
+} from "@/reducer/modules/project.js";
 
-const { TextArea } = Input;
-const FormItem = Form.Item;
-const Option = Select.Option;
 import "./ProjectList.scss";
 // layout
 const formItemLayout = {
@@ -174,7 +172,7 @@ class UpDateModal extends Component {
       return (
         <Row key={index} type="flex" justify="space-between" align={index === 0 ? "middle" : "top"}>
           <Col span={10} offset={2}>
-            <FormItem label={index === 0 ? <span>环境名称</span> : ""} required={false} key={index}>
+            <Form.Item label={index === 0 ? <span>环境名称</span> : ""} required={false} key={index}>
               {getFieldDecorator(`envs-name-${index}`, {
                 validateTrigger: ["onChange", "onBlur"],
                 initialValue: envMessage.length !== 0 ? k.name : "",
@@ -200,10 +198,10 @@ class UpDateModal extends Component {
                   }
                 ]
               })(<Input placeholder="请输入环境名称" style={{ width: "90%", marginRight: 8 }}/>)}
-            </FormItem>
+            </Form.Item>
           </Col>
           <Col span={10}>
-            <FormItem
+            <Form.Item
               label={index === 0 ? <span>环境域名</span> : ""}
               required={false}
               key={secondIndex}
@@ -247,13 +245,13 @@ class UpDateModal extends Component {
                     ]
                   })(
                     <Select>
-                      <Option value="http://">{"http://"}</Option>
-                      <Option value="https://">{"https://"}</Option>
+                      <Select.Option value="http://">{"http://"}</Select.Option>
+                      <Select.Option value="https://">{"https://"}</Select.Option>
                     </Select>
                   )}
                 />
               )}
-            </FormItem>
+            </Form.Item>
           </Col>
           <Col span={2}>
             {/* 新增的项中，只有最后一项有删除按钮 */}
@@ -276,7 +274,7 @@ class UpDateModal extends Component {
         onCancel={this.handleCancel}
       >
         <Form>
-          <FormItem {...formItemLayout} label="项目名称">
+          <Form.Item {...formItemLayout} label="项目名称">
             {getFieldDecorator("name", {
               initialValue: initFormValues.name,
               rules: [
@@ -286,8 +284,8 @@ class UpDateModal extends Component {
                 }
               ]
             })(<Input/>)}
-          </FormItem>
-          <FormItem
+          </Form.Item>
+          <Form.Item
             {...formItemLayout}
             label={
               <span>
@@ -310,14 +308,14 @@ class UpDateModal extends Component {
               <Input
                 addonBefore={
                   <Select defaultValue={initFormValues.prd_protocol} onChange={this.protocolChange}>
-                    <Option value="http://">{"http://"}</Option>
-                    <Option value="https://">{"https://"}</Option>
+                    <Select.Option value="http://">{"http://"}</Select.Option>
+                    <Select.Option value="https://">{"https://"}</Select.Option>
                   </Select>
                 }
               />
             )}
-          </FormItem>
-          <FormItem
+          </Form.Item>
+          <Form.Item
             {...formItemLayout}
             label={
               <span>
@@ -337,8 +335,8 @@ class UpDateModal extends Component {
                 }
               ]
             })(<Input/>)}
-          </FormItem>
-          <FormItem {...formItemLayout} label="描述">
+          </Form.Item>
+          <Form.Item {...formItemLayout} label="描述">
             {getFieldDecorator("desc", {
               initialValue: initFormValues.desc,
               rules: [
@@ -347,17 +345,17 @@ class UpDateModal extends Component {
                   message: "请输入描述!"
                 }
               ]
-            })(<TextArea rows={4}/>)}
-          </FormItem>
+            })(<Input.TextArea rows={4}/>)}
+          </Form.Item>
           {formItems}
-          <FormItem {...formItemLayoutWithOutLabel}>
+          <Form.Item {...formItemLayoutWithOutLabel}>
             <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
               <Icon type="plus"/> 添加环境配置
             </Button>
-          </FormItem>
+          </Form.Item>
         </Form>
       </Modal>
     );
   }
 }
-export default Form.create()(UpDateModal);
+export default UpDateModal;

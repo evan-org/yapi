@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Row, Input } from "antd";
 import constants from "../../../utils/variable.js";
 const wordList = constants.MOCK_SOURCE;
-const Search = Input.Search;
 
 class MockList extends Component {
   static propTypes = {
@@ -38,7 +37,7 @@ class MockList extends Component {
     const { click, clickValue } = this.props;
     return (
       <div className="modal-postman-form-mock">
-        <Search
+        <Input.Search
           onChange={this.onFilter}
           value={filter}
           placeholder="搜索mock数据"

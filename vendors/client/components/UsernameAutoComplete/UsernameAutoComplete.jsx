@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { Select } from "antd";
 import axios from "axios";
 
-const Option = Select.Option;
-
 /**
  * 用户名输入框自动完成组件
  *
@@ -94,9 +92,9 @@ class UsernameAutoComplete extends Component {
     let { dataSource, fetching } = this.state;
 
     const children = dataSource.map((item, index) => (
-      <Option key={index} value={"" + item.id}>
+      <Select.Option key={index} value={"" + item.id}>
         {item.username}
-      </Option>
+      </Select.Option>
     ));
 
     // if (!children.length) {

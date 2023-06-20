@@ -7,7 +7,6 @@ import {
   Modal,
   Select,
   Spin,
-  Icon,
   Collapse,
   Tooltip,
   Tabs,
@@ -16,6 +15,7 @@ import {
   Col,
   Alert
 } from "antd";
+import Icon from "@ant-design/icons";
 import constants from "../../utils/variable.js";
 import AceEditor from "client/components/AceEditor/AceEditor";
 import _ from "underscore";
@@ -38,9 +38,6 @@ const {
 const plugin = require("client/plugin.js");
 const createContext = require("common/createContext")
 const HTTP_METHOD = constants.HTTP_METHOD;
-const InputGroup = Input.Group;
-const Option = Select.Option;
-const Panel = Collapse.Panel;
 export const InsertCodeMap = [
   {
     code: "assert.equal(status, 200)",
@@ -534,10 +531,10 @@ class Postman extends Component {
         )}
         <CheckCrossInstall hasPlugin={hasPlugin}/>
         <div className="url">
-          <InputGroup compact style={{ display: "flex" }}>
+          <Input.Group compact style={{ display: "flex" }}>
             <Select disabled value={method} style={{ flexBasis: 60 }}>
               {Object.keys(HTTP_METHOD).map((name) => {
-                <Option value={name.toUpperCase()}>{name.toUpperCase()}</Option>;
+                <Select.Option value={name.toUpperCase()}>{name.toUpperCase()}</Select.Option>;
               })}
             </Select>
             <Select
@@ -546,15 +543,15 @@ class Postman extends Component {
               onSelect={this.selectDomain}
             >
               {env.map((item, index) => (
-                <Option value={item.name} key={index}>
+                <Select.Option value={item.name} key={index}>
                   {item.name + "：" + item.domain}
-                </Option>
+                </Select.Option>
               ))}
-              <Option value="环境配置" disabled style={{ cursor: "pointer", color: "#2395f1" }}>
+              <Select.Option value="环境配置" disabled style={{ cursor: "pointer", color: "#2395f1" }}>
                 <Button type="primary" onClick={this.showEnvModal}>
                   环境配置
                 </Button>
-              </Option>
+              </Select.Option>
             </Select>
             <Input
               disabled
@@ -563,7 +560,7 @@ class Postman extends Component {
               spellCheck="false"
               style={{ flexBasis: 180, flexGrow: 1 }}
             />
-          </InputGroup>
+          </Input.Group>
           <Tooltip placement="bottom" title={(() => {
             if (hasPlugin) {
               return "发送请求";
@@ -582,7 +579,7 @@ class Postman extends Component {
           </Tooltip>
         </div>
         <Collapse defaultActiveKey={["0", "1", "2", "3"]} bordered>
-          <Panel header="PATH PARAMETERS" key="0" className={req_params.length === 0 ? "hidden" : ""}>
+          <Collapse.Panel header="PATH PARAMETERS" key="0" className={req_params.length === 0 ? "hidden" : ""}>
             {req_params.map((item, index) => (
               <div key={index} className="key-value-wrap">
                 <ParamsNameComponent example={item.example} desc={item.desc} name={item.name}/>
@@ -601,8 +598,8 @@ class Postman extends Component {
             <Button style={{ display: "none" }} type="primary" icon="plus" onClick={this.addPathParam}>
               添加Path参数
             </Button>
-          </Panel>
-          <Panel header="QUERY PARAMETERS" key="1" className={req_query.length === 0 ? "hidden" : ""}>
+          </Collapse.Panel>
+          <Collapse.Panel header="QUERY PARAMETERS" key="1" className={req_query.length === 0 ? "hidden" : ""}>
             {req_query.map((item, index) => (
               <div key={index} className="key-value-wrap">
                 {/* <Tooltip
@@ -630,8 +627,8 @@ class Postman extends Component {
             <Button style={{ display: "none" }} type="primary" icon="plus" onClick={this.addQuery}>
               添加Query参数
             </Button>
-          </Panel>
-          <Panel header="HEADERS" key="2" className={req_headers.length === 0 ? "hidden" : ""}>
+          </Collapse.Panel>
+          <Collapse.Panel header="HEADERS" key="2" className={req_headers.length === 0 ? "hidden" : ""}>
             {req_headers.map((item, index) => (
               <div key={index} className="key-value-wrap">
                 {/* <Tooltip
@@ -650,8 +647,8 @@ class Postman extends Component {
               </div>
             ))}
             <Button style={{ display: "none" }} type="primary" icon="plus" onClick={this.addHeader}>添加Header</Button>
-          </Panel>
-          <Panel header={<div style={{ display: "flex", justifyContent: "space-between" }}><Tooltip title="F9 全屏编辑">BODY(F9)</Tooltip></div>}
+          </Collapse.Panel>
+          <Collapse.Panel header={<div style={{ display: "flex", justifyContent: "space-between" }}><Tooltip title="F9 全屏编辑">BODY(F9)</Tooltip></div>}
             key="3" className={HTTP_METHOD[method].request_body && ((req_body_type === "form" && req_body_form.length > 0) || req_body_type !== "form") ? "POST" : "hidden"}>
             <div style={{ display: checkRequestBodyIsRaw(method, req_body_type) ? "block" : "none" }}>
               {req_body_type === "json" && (
@@ -709,7 +706,7 @@ class Postman extends Component {
               </div>
             )}
             {HTTP_METHOD[method].request_body && req_body_type === "file" && (<div><Input type="file" id="single-file"/></div>)}
-          </Panel>
+          </Collapse.Panel>
         </Collapse>
         <Tabs size="large" defaultActiveKey="res" className="response-tab">
           <Tabs.TabPane tab="Response" key="res">

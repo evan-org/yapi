@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "./ProjectEnv.module.scss";
-import { Icon, Row, Col, Form, Input, Select, Button, AutoComplete, Tooltip } from "antd";
-
-const FormItem = Form.Item;
-const Option = Select.Option;
+import { Row, Col, Form, Input, Select, Button, AutoComplete, Tooltip } from "antd";
+import Icon from "@ant-design/icons";
+//
 import constants from "client/utils/variable.js";
-
+//
 const initMap = {
   header: [
     {
@@ -151,7 +149,7 @@ class ProjectEnvContent extends Component {
       return (
         <Row gutter={2} key={index}>
           <Col span={10}>
-            <FormItem>
+            <Form.Item>
               {getFieldDecorator("header[" + index + "].name", {
                 validateTrigger: ["onChange", "onBlur"],
                 initialValue: item.name || ""
@@ -167,15 +165,15 @@ class ProjectEnvContent extends Component {
                   }
                 />
               )}
-            </FormItem>
+            </Form.Item>
           </Col>
           <Col span={12}>
-            <FormItem>
+            <Form.Item>
               {getFieldDecorator("header[" + index + "].value", {
                 validateTrigger: ["onChange", "onBlur"],
                 initialValue: item.value || ""
               })(<Input placeholder="请输入参数内容" style={{ width: "90%", marginRight: 8 }}/>)}
-            </FormItem>
+            </Form.Item>
           </Col>
           <Col span={2} className={index === headerLength ? " env-last-row" : null}>
             {/* 新增的项中，只有最后一项没有有删除按钮 */}
@@ -196,7 +194,7 @@ class ProjectEnvContent extends Component {
       return (
         <Row gutter={2} key={index}>
           <Col span={10}>
-            <FormItem>
+            <Form.Item>
               {getFieldDecorator(`${name}[${index}].name`, {
                 validateTrigger: ["onChange", "onBlur"],
                 initialValue: item.name || ""
@@ -207,15 +205,15 @@ class ProjectEnvContent extends Component {
                   onChange={() => this.addHeader(item, index, name)}
                 />
               )}
-            </FormItem>
+            </Form.Item>
           </Col>
           <Col span={12}>
-            <FormItem>
+            <Form.Item>
               {getFieldDecorator(`${name}[${index}].value`, {
                 validateTrigger: ["onChange", "onBlur"],
                 initialValue: item.value || ""
               })(<Input placeholder="请输入参数内容" style={{ width: "90%", marginRight: 8 }}/>)}
-            </FormItem>
+            </Form.Item>
           </Col>
           <Col span={2} className={index === length ? " env-last-row" : null}>
             {/* 新增的项中，只有最后一项没有有删除按钮 */}
@@ -234,7 +232,7 @@ class ProjectEnvContent extends Component {
     const envTpl = (data) => (
       <div>
         <h3 className="env-label">环境名称</h3>
-        <FormItem required={false}>
+        <Form.Item required={false}>
           {getFieldDecorator("env.name", {
             validateTrigger: ["onChange", "onBlur"],
             initialValue: data.name === "新环境" ? "" : data.name || "",
@@ -264,9 +262,9 @@ class ProjectEnvContent extends Component {
               style={{ width: "90%", marginRight: 8 }}
             />
           )}
-        </FormItem>
+        </Form.Item>
         <h3 className="env-label">环境域名</h3>
-        <FormItem required={false}>
+        <Form.Item required={false}>
           {getFieldDecorator("env.domain", {
             validateTrigger: ["onChange", "onBlur"],
             initialValue: data.domain ? data.domain.split("//")[1] : "",
@@ -302,13 +300,13 @@ class ProjectEnvContent extends Component {
                 ]
               })(
                 <Select>
-                  <Option value="http://">{"http://"}</Option>
-                  <Option value="https://">{"https://"}</Option>
+                  <Select.Option value="http://">{"http://"}</Select.Option>
+                  <Select.Option value="https://">{"https://"}</Select.Option>
                 </Select>
               )}
             />
           )}
-        </FormItem>
+        </Form.Item>
         <h3 className="env-label">Header</h3>
         {this.state.header.map((item, index) => headerTpl(item, index))}
         <h3 className="env-label">Cookie</h3>
@@ -347,4 +345,4 @@ class ProjectEnvContent extends Component {
     );
   }
 }
-export default Form.create()(ProjectEnvContent);
+export default ProjectEnvContent

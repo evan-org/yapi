@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Tabs, Layout } from "antd";
 import { matchPath } from "react-router-dom";
 import { connect } from "react-redux";
-const { Content, Sider } = Layout;
 // InterfaceList
 import InterfaceMenu from "./InterfaceMenu/InterfaceMenu.js";
 import InterfaceList from "./InterfaceList/InterfaceList.js";
@@ -91,7 +90,7 @@ class Interface extends Component {
     const activeKey = action === "api" ? "api" : "colOrCase";
     return (
       <Layout className={styles.Interface} style={{ minHeight: "calc(100vh - 156px)", marginLeft: "24px", marginTop: "24px" }}>
-        <Sider style={{ height: "100%" }} width={300}>
+        <Layout.Sider style={{ height: "100%" }} width={300}>
           <div className="left-menu">
             <Tabs type="card" className="tabs-large" activeKey={activeKey} onChange={this.onChange}>
               <Tabs.TabPane tab="接口列表" key="api"/>
@@ -102,16 +101,16 @@ class Interface extends Component {
               : <InterfaceColMenu router={matchPath(this.props.location.pathname, contentRouter)} projectId={this.props.match.params.id}/>
             }
           </div>
-        </Sider>
+        </Layout.Sider>
         <Layout>
-          <Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
+          <Layout.Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
             <div className="right-content">
               {/* <Switch>
                 <Route exact path="/project/:id/interface/:action" component={InterfaceRoute}/>
                 <Route {...contentRouter} component={InterfaceRoute}/>
               </Switch>*/}
             </div>
-          </Content>
+          </Layout.Content>
         </Layout>
       </Layout>
     );

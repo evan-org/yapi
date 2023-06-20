@@ -1,36 +1,34 @@
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchInterfaceColList, setColData, fetchCaseList, fetchCaseData } from '../../../../reducer/modules/interfaceCol';
-import { fetchProjectList } from '../../../../reducer/modules/project';
+import { fetchInterfaceColList, setColData, fetchCaseList, fetchCaseData } from '@/reducer/modules/interfaceCol.js';
+import { fetchProjectList } from '@/reducer/modules/project.js';
 import axios from 'axios';
 import ImportInterface from './ImportInterface';
-import { Input, Icon, Button, Modal, message, Tooltip, Tree, Form } from 'antd';
-import { arrayChangeIndex } from '../../../../utils/common.js';
+import { Input, Button, Modal, message, Tooltip, Tree, Form } from 'antd';
+import Icon from "@ant-design/icons";
+import { arrayChangeIndex } from '@/utils/common.js';
 import _ from 'underscore'
-
-const TreeNode = Tree.TreeNode;
-const FormItem = Form.Item;
-const confirm = Modal.confirm;
+//
 const headHeight = 240; // menu顶部到网页顶部部分的高度
 import styles from './InterfaceColMenu.module.scss';
 
-const ColModalForm = Form.create()(props => {
+const ColModalForm = (props) => {
   const { visible, onCancel, onCreate, form, title } = props;
   const { getFieldDecorator } = form;
   return (
     <Modal visible={visible} title={title} onCancel={onCancel} onOk={onCreate}>
       <Form layout="vertical">
-        <FormItem label="集合名">
+        <Form.Item label="集合名">
           {getFieldDecorator('colName', {
             rules: [{ required: true, message: '请输入集合命名！' }]
           })(<Input/>)}
-        </FormItem>
-        <FormItem label="简介">{getFieldDecorator('colDesc')(<Input type="textarea"/>)}</FormItem>
+        </Form.Item>
+        <Form.Item label="简介">{getFieldDecorator('colDesc')(<Input type="textarea"/>)}</Form.Item>
       </Form>
     </Modal>
   );
-});
+};
 @connect(
   state => {
     return {
@@ -151,7 +149,7 @@ export default class InterfaceColMenu extends Component {
   showDelColConfirm = colId => {
     let that = this;
     const params = this.props.match.params;
-    confirm({
+    Modal.confirm({
       title: '您确认删除此测试集合',
       content: '温馨提示：该操作会删除该集合下所有测试用例，用例删除后无法恢复',
       okText: '确认',
@@ -203,7 +201,7 @@ export default class InterfaceColMenu extends Component {
     message.success('克隆测试集成功');
   };
   showNoDelColConfirm = () => {
-    confirm({
+    Modal.confirm({
       title: '此测试集合为最后一个集合',
       content: '温馨提示：建议不要删除'
     });
@@ -232,7 +230,7 @@ export default class InterfaceColMenu extends Component {
   showDelCaseConfirm = caseId => {
     let that = this;
     const params = this.props.match.params;
-    confirm({
+    Modal.confirm({
       title: '您确认删除此测试用例',
       content: '温馨提示：用例删除后无法恢复',
       okText: '确认',
@@ -381,7 +379,7 @@ export default class InterfaceColMenu extends Component {
     };
     const itemInterfaceColCreate = interfaceCase => {
       return (
-        <TreeNode style={{ width: '100%' }} key={'case_' + interfaceCase._id} title={
+        <Tree.TreeNode style={{ width: '100%' }} key={'case_' + interfaceCase._id} title={
           <div className="menu-title"
                onMouseEnter={() => this.enterItem(interfaceCase._id)}
                onMouseLeave={this.leaveItem}
@@ -453,7 +451,7 @@ export default class InterfaceColMenu extends Component {
           <Tree className="col-list-tree" defaultExpandedKeys={currentKes.expands} defaultSelectedKeys={currentKes.selects} expandedKeys={currentKes.expands}
                 selectedKeys={currentKes.selects} onSelect={this.onSelect} autoExpandParent draggable onExpand={this.onExpand} onDrop={this.onDrop}>
             {list.map((col) => (
-              <TreeNode key={'col_' + col._id} title={
+              <Tree.TreeNode key={'col_' + col._id} title={
                 <div className="menu-title">
                     <span>
                       <Icon type="folder-open" style={{ marginRight: 5 }}/>
@@ -507,7 +505,7 @@ export default class InterfaceColMenu extends Component {
                 </div>
               }>
                 {col.caseList.map(itemInterfaceColCreate)}
-              </TreeNode>
+              </Tree.TreeNode>
             ))}
           </Tree>
         </div>

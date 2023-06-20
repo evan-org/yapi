@@ -12,7 +12,7 @@ import {
 } from "@/reducer/modules/interface";
 //
 import { getProject } from "@/reducer/modules/project";
-import { Input, Icon, Button, Modal, message, Tree, Tooltip } from "antd";
+import { Input, Button, Modal, message, Tree, Tooltip } from "antd";
 //
 import AddInterfaceForm from "./AddInterfaceForm";
 import AddInterfaceCatForm from "./AddInterfaceCatForm";
@@ -21,11 +21,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import produce from "immer";
 import { arrayChangeIndex } from "@/utils/common";
-
+//
 import "./interfaceMenu.scss";
-
-const confirm = Modal.confirm;
-const TreeNode = Tree.TreeNode;
+//
 const headHeight = 240; // menu顶部到网页顶部部分的高度
 
 @connect(
@@ -206,7 +204,7 @@ class InterfaceMenu extends Component {
     let that = this;
     let id = data._id;
     let catid = data.catid;
-    const ref = confirm({
+    const ref = Modal.confirm({
       title: "您确认删除此接口????",
       content: "温馨提示：接口删除后，无法恢复",
       okText: "确认",
@@ -228,7 +226,7 @@ class InterfaceMenu extends Component {
 
   showDelCatConfirm = (catid) => {
     let that = this;
-    const ref = confirm({
+    const ref = Modal.confirm({
       title: "确定删除此接口分类吗？",
       content: "温馨提示：该操作会删除该分类下所有接口，接口删除后无法恢复",
       okText: "确认",
@@ -461,7 +459,7 @@ class InterfaceMenu extends Component {
     };
 
     const itemInterfaceCreate = (item) => (
-      <TreeNode
+      <Tree.TreeNode
         title={
           <div
             className="container-title"
@@ -537,7 +535,7 @@ class InterfaceMenu extends Component {
               draggable
               onDrop={this.onDrop}
             >
-              <TreeNode
+              <Tree.TreeNode
                 className="item-all-interface"
                 title={
                   <Link
@@ -554,7 +552,7 @@ class InterfaceMenu extends Component {
                 key="root"
               />
               {menuList.map((item) => (
-                <TreeNode
+                <Tree.TreeNode
                   title={
                     <div
                       className="container-title"
@@ -623,7 +621,7 @@ class InterfaceMenu extends Component {
                   className={`interface-item-nav ${item.list.length ? "" : "cat_switch_hidden"}`}
                 >
                   {item.list.map(itemInterfaceCreate)}
-                </TreeNode>
+                </Tree.TreeNode>
               ))}
             </Tree>
           </div>

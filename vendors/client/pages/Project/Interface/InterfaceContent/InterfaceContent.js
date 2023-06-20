@@ -10,7 +10,7 @@ import View from "./View/View.js";
 import Run from "./Run/Run.js";
 
 const plugin = require("@/plugin.js");
-const TabPane = Tabs.TabPane;
+//
 @connect(
   (state) => ({
     curdata: state.inter.curdata,
@@ -126,7 +126,7 @@ class Content extends Component {
       >
         {Object.keys(InterfaceTabs).map((key) => {
           let item = InterfaceTabs[key];
-          return <TabPane tab={item.name} key={key}/>;
+          return <Tabs.TabPane tab={item.name} key={key}/>;
         })}
       </Tabs>
     );

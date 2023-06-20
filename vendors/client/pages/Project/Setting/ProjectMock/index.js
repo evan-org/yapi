@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Form, Switch, Button, Icon, Tooltip, message } from 'antd';
-import AceEditor from '../../../../components/AceEditor/AceEditor';
-const FormItem = Form.Item;
-import { updateProjectMock, getProject } from '../../../../reducer/modules/project';
+import { Form, Switch, Button, Tooltip, message } from 'antd';
+import Icon from "@ant-design/icons";
+import AceEditor from '../../../../components/AceEditor/AceEditor.jsx';
+//
+import { updateProjectMock, getProject } from '@/reducer/modules/project.js';
 
 const formItemLayout = {
   labelCol: {
@@ -34,7 +35,7 @@ const tailFormItemLayout = {
     getProject
   }
 )
-@Form.create()
+//
 export default class ProjectMock extends Component {
   static propTypes = {
     form: PropTypes.object,
@@ -94,7 +95,7 @@ export default class ProjectMock extends Component {
     return (
       <div className="m-panel">
         <Form>
-          <FormItem
+          <Form.Item
             label={
               <span>
                 是否开启&nbsp;<a
@@ -116,19 +117,19 @@ export default class ProjectMock extends Component {
               checkedChildren="开"
               unCheckedChildren="关"
             />
-          </FormItem>
-          <FormItem label="Mock脚本" {...formItemLayout}>
+          </Form.Item>
+          <Form.Item label="Mock脚本" {...formItemLayout}>
             <AceEditor
               data={this.state.project_mock_script}
               onChange={this.handleMockJsInput}
               style={{ minHeight: '500px' }}
             />
-          </FormItem>
-          <FormItem {...tailFormItemLayout}>
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit" onClick={this.handleSubmit}>
               保存
             </Button>
-          </FormItem>
+          </Form.Item>
         </Form>
       </div>
     );

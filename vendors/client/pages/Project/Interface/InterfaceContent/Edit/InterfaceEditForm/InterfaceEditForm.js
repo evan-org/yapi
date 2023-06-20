@@ -6,9 +6,9 @@ import constants from "../../../../../../utils/variable.js";
 import { handlePath, nameLengthLimit } from "@/utils/common";
 import { changeEditStatus } from "@/reducer/modules/interface";
 import json5 from "json5";
-import { message, Affix, Tabs, Modal, Form, Select, Input, Tooltip, Button, Row, Col, Radio, Icon, AutoComplete, Switch } from "antd";
-
-const TabPane = Tabs.TabPane;
+import { message, Affix, Tabs, Modal, Form, Select, Input, Tooltip, Button, Row, Col, Radio, AutoComplete, Switch } from "antd";
+import Icon from "@ant-design/icons";
+//
 import EasyDragSort from "@/components/EasyDragSort/EasyDragSort.jsx";
 import mockEditor from "@/components/AceEditor/utils/mockEditor";
 import AceEditor from "@/components/AceEditor/AceEditor";
@@ -72,12 +72,7 @@ const Json5Example = `
 
 `;
 
-const TextArea = Input.TextArea;
-const FormItem = Form.Item;
-const Option = Select.Option;
-const InputGroup = Input.Group;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+//
 const dataTpl = {
   req_query: { name: "", required: "1", desc: "", example: "" },
   req_headers: { name: "", required: "1", desc: "", example: "" },
@@ -611,20 +606,20 @@ class InterfaceEditForm extends Component {
             initialValue: data.required
           })(
             <Select>
-              <Option value="1">必需</Option>
-              <Option value="0">非必需</Option>
+              <Select.Option value="1">必需</Select.Option>
+              <Select.Option value="0">非必需</Select.Option>
             </Select>
           )}
         </Col>
         <Col span="6" className="interface-edit-item-content-col">
           {getFieldDecorator("req_query[" + index + "].example", {
             initialValue: data.example
-          })(<TextArea autosize placeholder="参数示例"/>)}
+          })(<Input.TextArea autosize placeholder="参数示例"/>)}
         </Col>
         <Col span="9" className="interface-edit-item-content-col">
           {getFieldDecorator("req_query[" + index + "].desc", {
             initialValue: data.desc
-          })(<TextArea autosize placeholder="备注"/>)}
+          })(<Input.TextArea autosize placeholder="备注"/>)}
         </Col>
         <Col span="1" className="interface-edit-item-content-col">
           <Icon
@@ -666,12 +661,12 @@ class InterfaceEditForm extends Component {
         <Col span="5" className="interface-edit-item-content-col">
           {getFieldDecorator("req_headers[" + index + "].example", {
             initialValue: data.example
-          })(<TextArea autosize placeholder="参数示例"/>)}
+          })(<Input.TextArea autosize placeholder="参数示例"/>)}
         </Col>
         <Col span="8" className="interface-edit-item-content-col">
           {getFieldDecorator("req_headers[" + index + "].desc", {
             initialValue: data.desc
-          })(<TextArea autosize placeholder="备注"/>)}
+          })(<Input.TextArea autosize placeholder="备注"/>)}
         </Col>
         <Col span="1" className="interface-edit-item-content-col">
           <Icon
@@ -702,8 +697,8 @@ class InterfaceEditForm extends Component {
             initialValue: data.type
           })(
             <Select>
-              <Option value="text">text</Option>
-              <Option value="file">file</Option>
+              <Select.Option value="text">text</Select.Option>
+              <Select.Option value="file">file</Select.Option>
             </Select>
           )}
         </Col>
@@ -712,20 +707,20 @@ class InterfaceEditForm extends Component {
             initialValue: data.required
           })(
             <Select>
-              <Option value="1">必需</Option>
-              <Option value="0">非必需</Option>
+              <Select.Option value="1">必需</Select.Option>
+              <Select.Option value="0">非必需</Select.Option>
             </Select>
           )}
         </Col>
         <Col span="5" className="interface-edit-item-content-col">
           {getFieldDecorator("req_body_form[" + index + "].example", {
             initialValue: data.example
-          })(<TextArea autosize placeholder="参数示例"/>)}
+          })(<Input.TextArea autosize placeholder="参数示例"/>)}
         </Col>
         <Col span="7" className="interface-edit-item-content-col">
           {getFieldDecorator("req_body_form[" + index + "].desc", {
             initialValue: data.desc
-          })(<TextArea autosize placeholder="备注"/>)}
+          })(<Input.TextArea autosize placeholder="备注"/>)}
         </Col>
         <Col span="1" className="interface-edit-item-content-col">
           <Icon
@@ -747,12 +742,12 @@ class InterfaceEditForm extends Component {
         <Col span="7" className="interface-edit-item-content-col">
           {getFieldDecorator("req_params[" + index + "].example", {
             initialValue: data.example
-          })(<TextArea autosize placeholder="参数示例"/>)}
+          })(<Input.TextArea autosize placeholder="参数示例"/>)}
         </Col>
         <Col span="11" className="interface-edit-item-content-col">
           {getFieldDecorator("req_params[" + index + "].desc", {
             initialValue: data.desc
-          })(<TextArea autosize placeholder="备注"/>)}
+          })(<Input.TextArea autosize placeholder="备注"/>)}
         </Col>
       </Row>
     );
@@ -779,7 +774,7 @@ class InterfaceEditForm extends Component {
           onCancel={this.handleBulkCancel}
           okText="导入">
           <div>
-            <TextArea
+            <Input.TextArea
               placeholder="每行一个name:examples"
               autosize={{ minRows: 6, maxRows: 10 }}
               value={this.state.bulkValue}
@@ -792,27 +787,27 @@ class InterfaceEditForm extends Component {
             基本设置
           </h2>
           <div className="panel-sub">
-            <FormItem className="interface-edit-item" {...formItemLayout} label="接口名称">
+            <Form.Item className="interface-edit-item" {...formItemLayout} label="接口名称">
               {getFieldDecorator("title", {
                 initialValue: this.state.title,
                 rules: nameLengthLimit("接口")
               })(<Input id="title" placeholder="接口名称"/>)}
-            </FormItem>
-            <FormItem className="interface-edit-item" {...formItemLayout} label="选择分类">
+            </Form.Item>
+            <Form.Item className="interface-edit-item" {...formItemLayout} label="选择分类">
               {getFieldDecorator("catid", {
                 initialValue: this.state.catid + "",
                 rules: [{ required: true, message: "请选择一个分类" }]
               })(
                 <Select placeholder="请选择一个分类">
                   {this.props.cat.map((item) => (
-                    <Option key={item._id} value={item._id + ""}>
+                    <Select.Option key={item._id} value={item._id + ""}>
                       {item.name}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               )}
-            </FormItem>
-            <FormItem
+            </Form.Item>
+            <Form.Item
               className="interface-edit-item"
               {...formItemLayout}
               label={
@@ -837,16 +832,16 @@ class InterfaceEditForm extends Component {
                 </span>
               }
             >
-              <InputGroup compact>
+              <Input.Group compact>
                 <Select
                   value={this.state.method}
                   onChange={this.onChangeMethod}
                   style={{ width: "15%" }}
                 >
                   {HTTP_METHOD_KEYS.map((item) => (
-                    <Option key={item} value={item}>
+                    <Select.Option key={item} value={item}>
                       {item}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
                 <Tooltip
@@ -875,39 +870,39 @@ class InterfaceEditForm extends Component {
                 })(
                   <Input onChange={this.handlePath} placeholder="/path" style={{ width: "60%" }}/>
                 )}
-              </InputGroup>
+              </Input.Group>
               <Row className="interface-edit-item">
                 <Col span={24} offset={0}>
                   {paramsList}
                 </Col>
               </Row>
-            </FormItem>
-            <FormItem className="interface-edit-item" {...formItemLayout} label="Tag">
+            </Form.Item>
+            <Form.Item className="interface-edit-item" {...formItemLayout} label="Tag">
               {getFieldDecorator("tag", { initialValue: this.state.tag })(
                 <Select placeholder="请选择 tag " mode="multiple">
                   {projectMsg.tag.map((item) => (
-                    <Option value={item.name} key={item._id}>
+                    <Select.Option value={item.name} key={item._id}>
                       {item.name}
-                    </Option>
+                    </Select.Option>
                   ))}
-                  <Option value="tag设置" disabled style={{ cursor: "pointer", color: "#2395f1" }}>
+                  <Select.Option value="tag设置" disabled style={{ cursor: "pointer", color: "#2395f1" }}>
                     <Button type="primary" onClick={this.props.onTagClick}>
                       Tag设置
                     </Button>
-                  </Option>
+                  </Select.Option>
                 </Select>
               )}
-            </FormItem>
-            <FormItem className="interface-edit-item" {...formItemLayout} label="状态">
+            </Form.Item>
+            <Form.Item className="interface-edit-item" {...formItemLayout} label="状态">
               {getFieldDecorator("status", { initialValue: this.state.status })(
                 <Select>
-                  <Option value="done">已完成</Option>
-                  <Option value="undone">未完成</Option>
+                  <Select.Option value="done">已完成</Select.Option>
+                  <Select.Option value="undone">未完成</Select.Option>
                 </Select>
               )}
-            </FormItem>
+            </Form.Item>
             {custom_field.enable && (
-              <FormItem
+              <Form.Item
                 className="interface-edit-item"
                 {...formItemLayout}
                 label={custom_field.name}
@@ -915,26 +910,26 @@ class InterfaceEditForm extends Component {
                 {getFieldDecorator("custom_field_value", {
                   initialValue: this.state.custom_field_value
                 })(<Input placeholder="请输入"/>)}
-              </FormItem>
+              </Form.Item>
             )}
           </div>
           <h2 className="interface-title">请求参数设置</h2>
           <div className="container-radiogroup">
-            <RadioGroup
+            <Radio.Group
               value={this.state.req_radio_type}
               size="large"
               className="radioGroup"
               onChange={this.changeRadioGroup}
             >
               {HTTP_METHOD[this.state.method].request_body ? (
-                <RadioButton value="req-body">Body</RadioButton>
+                <Radio.Button value="req-body">Body</Radio.Button>
               ) : null}
-              <RadioButton value="req-query">Query</RadioButton>
-              <RadioButton value="req-headers">Headers</RadioButton>
-            </RadioGroup>
+              <Radio.Button value="req-query">Query</Radio.Button>
+              <Radio.Button value="req-headers">Headers</Radio.Button>
+            </Radio.Group>
           </div>
           <div className="panel-sub">
-            <FormItem className={"interface-edit-item " + this.state.hideTabs.req.query}>
+            <Form.Item className={"interface-edit-item " + this.state.hideTabs.req.query}>
               <Row type="flex" justify="space-around">
                 <Col span={12}>
                   <Button size="small" type="primary" onClick={() => this.addParams("req_query")}>
@@ -947,7 +942,7 @@ class InterfaceEditForm extends Component {
                   </div>
                 </Col>
               </Row>
-            </FormItem>
+            </Form.Item>
             <Row className={"interface-edit-item " + this.state.hideTabs.req.query}>
               <Col>
                 <EasyDragSort
@@ -959,11 +954,11 @@ class InterfaceEditForm extends Component {
                 </EasyDragSort>
               </Col>
             </Row>
-            <FormItem className={"interface-edit-item " + this.state.hideTabs.req.headers}>
+            <Form.Item className={"interface-edit-item " + this.state.hideTabs.req.headers}>
               <Button size="small" type="primary" onClick={() => this.addParams("req_headers")}>
                 添加Header
               </Button>
-            </FormItem>
+            </Form.Item>
             <Row className={"interface-edit-item " + this.state.hideTabs.req.headers}>
               <Col>
                 <EasyDragSort
@@ -977,18 +972,18 @@ class InterfaceEditForm extends Component {
             </Row>
             {HTTP_METHOD[this.state.method].request_body ? (
               <div>
-                <FormItem className={"interface-edit-item " + this.state.hideTabs.req.body}>
+                <Form.Item className={"interface-edit-item " + this.state.hideTabs.req.body}>
                   {getFieldDecorator("req_body_type", {
                     initialValue: this.state.req_body_type
                   })(
-                    <RadioGroup>
+                    <Radio.Group>
                       <Radio value="form">form</Radio>
                       <Radio value="json">json</Radio>
                       <Radio value="file">file</Radio>
                       <Radio value="raw">raw</Radio>
-                    </RadioGroup>
+                    </Radio.Group>
                   )}
-                </FormItem>
+                </Form.Item>
                 <Row
                   className={
                     "interface-edit-item " +
@@ -1093,7 +1088,7 @@ class InterfaceEditForm extends Component {
                   <Col className="interface-edit-item-other-body">
                     {getFieldDecorator("req_body_other", {
                       initialValue: this.state.req_body_other
-                    })(<TextArea placeholder="" autosize/>)}
+                    })(<Input.TextArea placeholder="" autosize/>)}
                   </Col>
                 </Row>
               ) : null}
@@ -1103,7 +1098,7 @@ class InterfaceEditForm extends Component {
                   <Col>
                     {getFieldDecorator("req_body_other", {
                       initialValue: this.state.req_body_other
-                    })(<TextArea placeholder="" autosize={{ minRows: 8 }}/>)}
+                    })(<Input.TextArea placeholder="" autosize={{ minRows: 8 }}/>)}
                   </Col>
                 </Row>
               ) : null}
@@ -1131,10 +1126,10 @@ class InterfaceEditForm extends Component {
             {getFieldDecorator("res_body_type", {
               initialValue: this.state.res_body_type
             })(
-              <RadioGroup size="large" className="radioGroup">
-                <RadioButton value="json">JSON</RadioButton>
-                <RadioButton value="raw">RAW</RadioButton>
-              </RadioGroup>
+              <Radio.Group size="large" className="radioGroup">
+                <Radio.Button value="json">JSON</Radio.Button>
+                <Radio.Button value="raw">RAW</Radio.Button>
+              </Radio.Group>
             )}
           </div>
           <div className="panel-sub">
@@ -1147,8 +1142,8 @@ class InterfaceEditForm extends Component {
             >
               <Col>
                 <Tabs size="large" defaultActiveKey="tpl" onChange={this.handleJsonType}>
-                  <TabPane tab="模板" key="tpl"/>
-                  <TabPane tab="预览" key="preview"/>
+                  <Tabs.TabPane tab="模板" key="tpl"/>
+                  <Tabs.TabPane tab="预览" key="preview"/>
                 </Tabs>
                 <div style={{ marginTop: "10px" }}>
                   {!this.props.form.getFieldValue("res_body_is_json_schema") ? (
@@ -1216,23 +1211,23 @@ class InterfaceEditForm extends Component {
               <Col>
                 {getFieldDecorator("res_body", {
                   initialValue: this.state.res_body
-                })(<TextArea style={{ minHeight: "150px" }} placeholder=""/>)}
+                })(<Input.TextArea style={{ minHeight: "150px" }} placeholder=""/>)}
               </Col>
             </Row>
           </div>
           {/* ----------- remark ------------- */}
           <h2 className="interface-title">备 注</h2>
           <div className="panel-sub">
-            <FormItem className={"interface-edit-item"}>
+            <Form.Item className={"interface-edit-item"}>
               <div>
                 <div id="desc" style={{ lineHeight: "20px" }} className="remark-editor"/>
               </div>
-            </FormItem>
+            </Form.Item>
           </div>
           {/* ----------- email ------------- */}
           <h2 className="interface-title">其 他</h2>
           <div className="panel-sub">
-            <FormItem
+            <Form.Item
               className={"interface-edit-item"}
               {...formItemLayout}
               label={
@@ -1248,8 +1243,8 @@ class InterfaceEditForm extends Component {
                 valuePropName: "checked",
                 initialValue: this.props.noticed
               })(<Switch checkedChildren="开" unCheckedChildren="关"/>)}
-            </FormItem>
-            <FormItem
+            </Form.Item>
+            <Form.Item
               className={"interface-edit-item"}
               {...formItemLayout}
               label={
@@ -1265,9 +1260,9 @@ class InterfaceEditForm extends Component {
                 valuePropName: "checked",
                 initialValue: this.state.api_opened
               })(<Switch checkedChildren="开" unCheckedChildren="关"/>)}
-            </FormItem>
+            </Form.Item>
           </div>
-          <FormItem
+          <Form.Item
             className="interface-edit-item"
             style={{ textAlign: "center", marginTop: "16px" }}
           >
@@ -1282,15 +1277,11 @@ class InterfaceEditForm extends Component {
                 保存
               </Button>
             </Affix>
-          </FormItem>
+          </Form.Item>
         </Form>
       </div>
     );
   }
 }
 
-export default Form.create({
-  onValuesChange() {
-    EditFormContext.props.changeEditStatus(true);
-  }
-})(InterfaceEditForm);
+export default InterfaceEditForm;

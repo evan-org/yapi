@@ -1,16 +1,13 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button, Form, Input, Icon, Tooltip, Select, message, Row, Col, Radio } from "antd";
-import { addProject } from "../../reducer/modules/project.js";
-import { fetchGroupList } from "../../reducer/modules/group.js";
+import { Button, Form, Input, Tooltip, Select, message, Row, Col, Radio } from "antd";
+import Icon from "@ant-design/icons";
+import { addProject } from "@/reducer/modules/project.js";
+import { fetchGroupList } from "@/reducer/modules/group.js";
 import { autobind } from "core-decorators";
-import { setBreadcrumb } from "../../reducer/modules/user";
+import { setBreadcrumb } from "@/reducer/modules/user.js";
 //
-const { TextArea } = Input;
-const FormItem = Form.Item;
-const Option = Select.Option;
-const RadioGroup = Radio.Group;
 import { pickRandomProperty, handlePath, nameLengthLimit } from "../../utils/common";
 import constants from "../../utils/variable.js";
 
@@ -100,12 +97,12 @@ class ProjectList extends Component {
       <div className="g-row">
         <div className="g-row m-container">
           <Form>
-            <FormItem {...formItemLayout} label="项目名称">
+            <Form.Item {...formItemLayout} label="项目名称">
               {getFieldDecorator("name", {
                 rules: nameLengthLimit("项目")
               })(<Input/>)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="所属分组">
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="所属分组">
               {getFieldDecorator("group", {
                 initialValue: this.state.currGroupId + "",
                 rules: [
@@ -117,7 +114,7 @@ class ProjectList extends Component {
               })(
                 <Select>
                   {this.state.groupList.map((item, index) => (
-                    <Option
+                    <Select.Option
                       disabled={
                         !(item.role === "dev" || item.role === "owner" || item.role === "admin")
                       }
@@ -125,13 +122,13 @@ class ProjectList extends Component {
                       key={index}
                     >
                       {item.group_name}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               )}
-            </FormItem>
+            </Form.Item>
             <hr className="breakline"/>
-            <FormItem
+            <Form.Item
               {...formItemLayout}
               label={
                 <span>
@@ -150,8 +147,8 @@ class ProjectList extends Component {
                   }
                 ]
               })(<Input onBlur={this.handlePath}/>)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="描述">
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="描述">
               {getFieldDecorator("desc", {
                 rules: [
                   {
@@ -160,9 +157,9 @@ class ProjectList extends Component {
                     max: 144
                   }
                 ]
-              })(<TextArea rows={4}/>)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="权限">
+              })(<Input.TextArea rows={4}/>)}
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="权限">
               {getFieldDecorator("project_type", {
                 rules: [
                   {
@@ -171,7 +168,7 @@ class ProjectList extends Component {
                 ],
                 initialValue: "private"
               })(
-                <RadioGroup>
+                <Radio.Group>
                   <Radio value="private" className="radio">
                     <Icon type="lock"/>私有<br/>
                     <span className="radio-desc">只有组长和项目开发者可以索引并查看项目信息</span>
@@ -181,9 +178,9 @@ class ProjectList extends Component {
                     <Icon type="unlock" />公开<br />
                     <span className="radio-desc">任何人都可以索引并查看项目信息</span>
                   </Radio> */}
-                </RadioGroup>
+                </Radio.Group>
               )}
-            </FormItem>
+            </Form.Item>
           </Form>
           <Row>
             <Col sm={{ offset: 6 }} lg={{ offset: 3 }}>
@@ -197,4 +194,4 @@ class ProjectList extends Component {
     );
   }
 }
-export default Form.create()(ProjectList);
+export default ProjectList;

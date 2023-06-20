@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { formatTime } from "../../../client/utils/common.js";
-import { Form, Switch, Button, Icon, Tooltip, message, Input, Select } from "antd";
+import { Form, Switch, Button, Tooltip, message, Input, Select } from "antd";
+import Icon from "@ant-design/icons";
 import { handleSwaggerUrlData } from "../../../client/reducer/modules/project";
-
-const FormItem = Form.Item;
-const Option = Select.Option;
+//
 import axios from "axios";
 // layout
 const formItemLayout = {
@@ -124,7 +123,7 @@ class SwaggerAutoSyncPage extends Component {
     return (
       <div className="m-panel">
         <Form>
-          <FormItem
+          <Form.Item
             label="是否开启自动同步"
             {...formItemLayout}
           >
@@ -135,9 +134,9 @@ class SwaggerAutoSyncPage extends Component {
               unCheckedChildren="关"
             />
             {this.state.sync_data.last_sync_time != null ? (<div>上次更新时间:<span className="logtime">{formatTime(this.state.sync_data.last_sync_time)}</span></div>) : null}
-          </FormItem>
+          </Form.Item>
           <div>
-            <FormItem {...formItemLayout} label={
+            <Form.Item {...formItemLayout} label={
               <span className="label">
                 数据同步&nbsp;
                 <Tooltip
@@ -171,13 +170,13 @@ class SwaggerAutoSyncPage extends Component {
                 ]
               })(
                 <Select>
-                  <Option value="normal">普通模式</Option>
-                  <Option value="good">智能合并</Option>
-                  <Option value="merge">完全覆盖</Option>
+                  <Select.Option value="normal">普通模式</Select.Option>
+                  <Select.Option value="good">智能合并</Select.Option>
+                  <Select.Option value="merge">完全覆盖</Select.Option>
                 </Select>
               )}
-            </FormItem>
-            <FormItem {...formItemLayout} label="项目的swagger json地址">
+            </Form.Item>
+            <Form.Item {...formItemLayout} label="项目的swagger json地址">
               {getFieldDecorator("sync_json_url", {
                 rules: [
                   {
@@ -191,8 +190,8 @@ class SwaggerAutoSyncPage extends Component {
                 validateTrigger: "onBlur",
                 initialValue: this.state.sync_data.sync_json_url
               })(<Input/>)}
-            </FormItem>
-            <FormItem {...formItemLayout} label={<span>类cron风格表达式(默认10分钟更新一次)&nbsp;<a href="https://blog.csdn.net/shouldnotappearcalm/article/details/89469047">参考</a></span>}>
+            </Form.Item>
+            <Form.Item {...formItemLayout} label={<span>类cron风格表达式(默认10分钟更新一次)&nbsp;<a href="https://blog.csdn.net/shouldnotappearcalm/article/details/89469047">参考</a></span>}>
               {getFieldDecorator("sync_cron", {
                 rules: [
                   {
@@ -205,13 +204,13 @@ class SwaggerAutoSyncPage extends Component {
                 ],
                 initialValue: this.state.sync_data.sync_cron ? this.state.sync_data.sync_cron : this.state.random_corn
               })(<Input/>)}
-            </FormItem>
+            </Form.Item>
           </div>
-          <FormItem {...tailFormItemLayout}>
+          <Form.Item {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit" icon="save" size="large" onClick={this.handleSubmit}>
               保存
             </Button>
-          </FormItem>
+          </Form.Item>
         </Form>
       </div>
     );
@@ -225,4 +224,4 @@ export default connect(
   {
     handleSwaggerUrlData
   }
-)(Form.create()(SwaggerAutoSyncPage));
+)(SwaggerAutoSyncPage);

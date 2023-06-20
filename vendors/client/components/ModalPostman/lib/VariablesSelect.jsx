@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Tree } from "antd";
 import { connect } from "react-redux";
-import { fetchVariableParamsList } from "../../../reducer/modules/interfaceCol.js";
-
-const TreeNode = Tree.TreeNode;
+import { fetchVariableParamsList } from "@/reducer/modules/interfaceCol.js";
+//
 const CanSelectPathPrefix = "CanSelectPath-";
 
 function deleteLastObject(str) {
@@ -124,12 +123,12 @@ class VariablesSelect extends Component {
         if (item && typeof item === "object") {
           const isDisable = Array.isArray(item) && item.length === 0;
           return (
-            <TreeNode key={elementKeyPrefix} disabled={isDisable} title={casename || key}>
+            <Tree.TreeNode key={elementKeyPrefix} disabled={isDisable} title={casename || key}>
               {pathSelctByTree(item, elementKeyPrefix, deepLevel + 1)}
-            </TreeNode>
+            </Tree.TreeNode>
           );
         }
-        return <TreeNode key={CanSelectPathPrefix + elementKeyPrefix} title={key} />;
+        return <Tree.TreeNode key={CanSelectPathPrefix + elementKeyPrefix} title={key} />;
       });
 
       return TreeComponents;

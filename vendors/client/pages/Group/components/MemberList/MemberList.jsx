@@ -10,8 +10,6 @@ import UsernameAutoComplete from "@/components/UsernameAutoComplete/UsernameAuto
 import { autobind } from "core-decorators";
 import { fetchGroupMemberList, fetchGroupMsg, addMember, delMember, changeMemberRole } from "@/reducer/modules/group";
 
-const Option = Select.Option;
-
 import "./MemberList.scss";
 //
 function arrayAddKey(arr) {
@@ -222,9 +220,9 @@ class MemberList extends Component {
                   className="select"
                   onChange={this.changeUserRole}
                 >
-                  <Option value={"owner-" + record.uid}>组长</Option>
-                  <Option value={"dev-" + record.uid}>开发者</Option>
-                  <Option value={"guest-" + record.uid}>访客</Option>
+                  <Select.Option value={"owner-" + record.uid}>组长</Select.Option>
+                  <Select.Option value={"dev-" + record.uid}>开发者</Select.Option>
+                  <Select.Option value={"guest-" + record.uid}>访客</Select.Option>
                 </Select>
                 <Popconfirm
                   placement="topRight"
@@ -292,9 +290,9 @@ class MemberList extends Component {
               </Col>
               <Col span="15">
                 <Select defaultValue="dev" className="select" onChange={this.changeNewMemberRole}>
-                  <Option value="owner">组长</Option>
-                  <Option value="dev">开发者</Option>
-                  <Option value="guest">访客</Option>
+                  <Select.Option value="owner">组长</Select.Option>
+                  <Select.Option value="dev">开发者</Select.Option>
+                  <Select.Option value="guest">访客</Select.Option>
                 </Select>
               </Col>
             </Row>

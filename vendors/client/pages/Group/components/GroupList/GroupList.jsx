@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Icon, Modal, Input, message, Spin, Row, Menu, Col, Popover, Tooltip } from "antd";
+import { Modal, Input, message, Spin, Row, Menu, Col, Popover, Tooltip } from "antd";
+import Icon from "@ant-design/icons";
 import axios from "axios";
 //
 import UsernameAutoComplete from "@/components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
-//
-const { TextArea } = Input;
-const Search = Input.Search;
 //
 import { fetchNewsData } from "@/reducer/modules/news";
 import { fetchGroupList, setCurrGroup, fetchGroupMsg } from "@/reducer/modules/group";
@@ -48,7 +46,7 @@ function AddGroupModal(props) {
           <div className="label">简介：</div>
         </Col>
         <Col span={15}>
-          <TextArea rows={3} placeholder="请输入分组描述" onChange={inputNewGroupDesc}/>
+          <Input.TextArea rows={3} placeholder="请输入分组描述" onChange={inputNewGroupDesc}/>
         </Col>
       </Row>
       <Row gutter={6} className="modal-input">
@@ -198,7 +196,7 @@ function GroupList(props) {
         </div>
         <div className="group-operate">
           <div className="search">
-            <Search placeholder="搜索分类" onChange={(e) => searchGroup(e)} onSearch={(v) => searchGroup(null, v)}/>
+            <Input.Search placeholder="搜索分类" onChange={(e) => searchGroup(e)} onSearch={(v) => searchGroup(null, v)}/>
           </div>
         </div>
         {groupList.length === 0 && <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/>}

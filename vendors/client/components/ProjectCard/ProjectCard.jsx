@@ -1,6 +1,7 @@
 import "./ProjectCard.scss";
 import React, { PureComponent as Component } from "react";
-import { Card, Icon, Tooltip, Modal, Alert, Input, message } from "antd";
+import { Card, Tooltip, Modal, Alert, Input, message } from "antd";
+import Icon from "@ant-design/icons";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import constants from "../../utils/variable.js";
@@ -10,8 +11,6 @@ import { debounce } from "../../utils/common";
 import { getProject, checkProjectName, copyProjectMsg } from "../../reducer/modules/project";
 import { delFollow, addFollow } from "../../reducer/modules/follow";
 import { trim } from "../../utils/common.js";
-
-const confirm = Modal.confirm;
 
 class ProjectCard extends Component {
   constructor(props) {
@@ -54,7 +53,7 @@ class ProjectCard extends Component {
   showConfirm = () => {
     const that = this;
 
-    confirm({
+    Modal.confirm({
       title: "确认复制 " + that.props.projectData.name + " 项目吗？",
       okText: "确认",
       cancelText: "取消",

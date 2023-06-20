@@ -2,7 +2,8 @@ import "./View.scss";
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Table, Icon, Row, Col, Tooltip, message } from "antd";
+import { Table, Row, Col, Tooltip, message } from "antd";
+import Icon from "@ant-design/icons";
 import { Link } from "react-router-dom";
 //
 import AceEditor from "@/components/AceEditor/AceEditor";

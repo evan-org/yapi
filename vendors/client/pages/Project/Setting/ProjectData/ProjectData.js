@@ -1,7 +1,6 @@
 import React, { PureComponent as Component } from "react";
 import {
   Upload,
-  Icon,
   message,
   Select,
   Tooltip,
@@ -13,6 +12,7 @@ import {
   Input,
   Checkbox
 } from "antd";
+import Icon from "@ant-design/icons";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "./ProjectData.scss";
@@ -20,14 +20,12 @@ import axios from "axios";
 
 import URL from "url";
 
-const Dragger = Upload.Dragger;
-import { saveImportData } from "../../../../reducer/modules/interface";
-import { fetchUpdateLogData } from "../../../../reducer/modules/news.js";
-import { handleSwaggerUrlData } from "../../../../reducer/modules/project";
-const Option = Select.Option;
-const confirm = Modal.confirm;
+//
+import { saveImportData } from "@/reducer/modules/interface.js";
+import { fetchUpdateLogData } from "@/reducer/modules/news.js";
+import { handleSwaggerUrlData } from "@/reducer/modules/project.js";
+//
 const plugin = require("client/plugin.js");
-const RadioGroup = Radio.Group;
 const importDataModule = {};
 const exportDataModule = {};
 const HandleImportData = require("common/HandleImportData");
@@ -170,7 +168,7 @@ class ProjectData extends Component {
       apis: apiCollections
     });
     let domainData = result.payload.data.data;
-    const ref = confirm({
+    const ref = Modal.confirm({
       title: "您确认要进行数据同步????",
       width: 600,
       okType: "danger",
@@ -332,9 +330,9 @@ class ProjectData extends Component {
                   onChange={this.handleImportType}
                 >
                   {Object.keys(importDataModule).map((name) => (
-                    <Option key={name} value={name}>
+                    <Select.Option key={name} value={name}>
                       {importDataModule[name].name}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               </div>
@@ -351,9 +349,9 @@ class ProjectData extends Component {
                   }
                 >
                   {this.state.menuList.map((item, key) => (
-                    <Option key={key} value={item._id + ""}>
+                    <Select.Option key={key} value={item._id + ""}>
                       {item.name}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               </div>
@@ -381,9 +379,9 @@ class ProjectData extends Component {
                   </Tooltip>{" "}
                 </span>
                 <Select value={this.state.dataSync} onChange={this.onChange}>
-                  <Option value="normal">普通模式</Option>
-                  <Option value="good">智能合并</Option>
-                  <Option value="merge">完全覆盖</Option>
+                  <Select.Option value="normal">普通模式</Select.Option>
+                  <Select.Option value="good">智能合并</Select.Option>
+                  <Select.Option value="merge">完全覆盖</Select.Option>
                 </Select>
 
                 {/* <Switch checked={this.state.dataSync} onChange={this.onChange} /> */}
@@ -419,7 +417,7 @@ class ProjectData extends Component {
               ) : (
                 <div className="import-content">
                   <Spin spinning={this.state.showLoading} tip="上传中...">
-                    <Dragger {...uploadMess}>
+                    <Upload.Dragger {...uploadMess}>
                       <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                       </p>
@@ -435,7 +433,7 @@ class ProjectData extends Component {
                             : null
                         }}
                       />
-                    </Dragger>
+                    </Upload.Dragger>
                   </Spin>
                 </div>
               )}
@@ -454,18 +452,18 @@ class ProjectData extends Component {
               <div className="dataImportTile">
                 <Select placeholder="请选择导出数据的方式" onChange={this.handleExportType}>
                   {Object.keys(exportDataModule).map((name) => (
-                    <Option key={name} value={name}>
+                    <Select.Option key={name} value={name}>
                       {exportDataModule[name].name}
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               </div>
 
               <div className="dataExport">
-                <RadioGroup defaultValue="all" onChange={this.handleChange}>
+                <Radio.Group defaultValue="all" onChange={this.handleChange}>
                   <Radio value="all">全部接口</Radio>
                   <Radio value="open">公开接口</Radio>
-                </RadioGroup>
+                </Radio.Group>
               </div>
               <div className="export-content">
                 {this.state.curExportType ? (

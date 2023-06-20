@@ -2,7 +2,8 @@ import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { Tooltip, Icon, Input, Button, Row, Col, Spin, Modal, message, Select, Switch } from "antd";
+import { Tooltip, Input, Button, Row, Col, Spin, Modal, message, Select, Switch } from "antd";
+import Icon from "@ant-design/icons";
 import { fetchInterfaceColList, fetchCaseList, setColData, fetchCaseEnvList } from "@/reducer/modules/interfaceCol";
 import HTML5Backend from "react-dnd-html5-backend";
 import { getToken, getEnv } from "@/reducer/modules/project";
@@ -30,8 +31,7 @@ const {
 const { handleParamsValue, json_parse, ArrayToObject } = require("common/utils.js");
 import CaseEnv from "client/components/CaseEnv/CaseEnv";
 import Label from "../../../../components/Label/Label.jsx";
-
-const Option = Select.Option;
+//
 const createContext = require("common/createContext")
 import copy from "copy-to-clipboard";
 
@@ -1072,12 +1072,12 @@ class InterfaceColContent extends Component {
               </Col>
               <Col span={21}>
                 <Select value={this.state.mode} onChange={this.modeChange}>
-                  <Option key="html" value="html">
+                  <Select.Option key="html" value="html">
                     html
-                  </Option>
-                  <Option key="json" value="json">
+                  </Select.Option>
+                  <Select.Option key="json" value="json">
                     json
-                  </Option>
+                  </Select.Option>
                 </Select>
               </Col>
             </Row>

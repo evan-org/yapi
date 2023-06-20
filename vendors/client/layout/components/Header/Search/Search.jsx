@@ -1,13 +1,14 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Icon, Input, AutoComplete } from "antd";
+import { Input, AutoComplete } from "antd";
+import Icon from "@ant-design/icons";
 import styles from "./Search.module.scss";
 import axios from "axios";
 //
-import { setCurrGroup, fetchGroupMsg } from "../../../../reducer/modules/group";
-import { changeMenuItem } from "../../../../reducer/modules/menu";
-import { fetchInterfaceListMenu } from "../../../../reducer/modules/interface";
+import { setCurrGroup, fetchGroupMsg } from "@/reducer/modules/group.js";
+import { changeMenuItem } from "@/reducer/modules/menu.js";
+import { fetchInterfaceListMenu } from "@/reducer/modules/interface.js";
 //
 const Option = AutoComplete.Option;
 @connect(
@@ -66,38 +67,38 @@ class Search extends Component {
               switch (title) {
                 case "group":
                   dataSource.push(
-                    <Option
+                    <AutoComplete.Option
                       key={`分组${item._id}`}
                       type="分组"
                       value={`${item.groupName}`}
                       id={`${item._id}`}
                     >
                       {`分组: ${item.groupName}`}
-                    </Option>
+                    </AutoComplete.Option>
                   );
                   break;
                 case "project":
                   dataSource.push(
-                    <Option
+                    <AutoComplete.Option
                       key={`项目${item._id}`}
                       type="项目"
                       id={`${item._id}`}
                       groupId={`${item.groupId}`}
                     >
                       {`项目: ${item.name}`}
-                    </Option>
+                    </AutoComplete.Option>
                   );
                   break;
                 case "interface":
                   dataSource.push(
-                    <Option
+                    <AutoComplete.Option
                       key={`接口${item._id}`}
                       type="接口"
                       id={`${item._id}`}
                       projectId={`${item.projectId}`}
                     >
                       {`接口: ${item.title}`}
-                    </Option>
+                    </AutoComplete.Option>
                   );
                   break;
                 default:

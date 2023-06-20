@@ -1,14 +1,14 @@
 import React from "react";
 
-import ProjectList from "../components/ProjectList/ProjectList.jsx";
-import MemberList from "../components/MemberList/MemberList.jsx";
-import GroupLog from "../components/GroupLog/GroupLog.jsx";
-import GroupSetting from "../components/GroupSetting/GroupSetting.jsx";
+import ProjectList from "client/pages/Group/components/ProjectList/ProjectList.jsx";
+import MemberList from "client/pages/Group/components/MemberList/MemberList.jsx";
+import GroupLog from "client/pages/Group/components/GroupLog/GroupLog.jsx";
+import GroupSetting from "client/pages/Group/components/GroupSetting/GroupSetting.jsx";
 //
 import { Tabs } from "antd";
 import { connect } from "react-redux";
-import { fetchNewsData } from "@/reducer/modules/news";
-import { setCurrGroup } from "@/reducer/modules/group";
+import { fetchNewsData } from "@/reducer/modules/news.js";
+import { setCurrGroup } from "@/reducer/modules/group.js";
 /*
 * connect(
   (state) => ({

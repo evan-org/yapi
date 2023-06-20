@@ -2,10 +2,10 @@ import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Button, message } from 'antd';
-
-const FormItem = Form.Item;
+//
+//
 import AceEditor from 'client/components/AceEditor/AceEditor';
-import { updateProjectScript, getProject } from '../../../../reducer/modules/project';
+import { updateProjectScript, getProject } from '@/reducer/modules/project.js';
 //
 import styles from './ProjectRequest.module.scss';
 //
@@ -20,7 +20,6 @@ import styles from './ProjectRequest.module.scss';
     getProject
   }
 )
-@Form.create()
 export default class ProjectRequest extends Component {
   static propTypes = {
     projectMsg: PropTypes.object,
@@ -74,27 +73,27 @@ export default class ProjectRequest extends Component {
     return (
       <div className={styles.ProjectRequest}>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem {...formItemLayout} label="Pre-request Script(请求参数处理脚本)">
+          <Form.Item {...formItemLayout} label="Pre-request Script(请求参数处理脚本)">
             <AceEditor
               data={pre_script}
               onChange={editor => this.setState({ pre_script: editor.text })}
               fullScreen={true}
               className="request-editor"
             />
-          </FormItem>
-          <FormItem {...formItemLayout} label="Pre-response Script(响应数据处理脚本)">
+          </Form.Item>
+          <Form.Item {...formItemLayout} label="Pre-response Script(响应数据处理脚本)">
             <AceEditor
               data={after_script}
               onChange={editor => this.setState({ after_script: editor.text })}
               fullScreen={true}
               className="request-editor"
             />
-          </FormItem>
-          <FormItem {...tailFormItemLayout}>
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
             <Button onClick={this.handleSubmit} type="primary">
               保存
             </Button>
-          </FormItem>
+          </Form.Item>
         </Form>
       </div>
     );

@@ -19,8 +19,6 @@ import "jsondiffpatch/dist/formatters-styles/annotated.css";
 import "jsondiffpatch/dist/formatters-styles/html.css";
 //
 import styles from "./TimeLine.module.scss";
-// const Option = AutoComplete.Option;
-const { Option, OptGroup } = AutoComplete;
 const AddDiffView = (props) => {
   const { title, content, className } = props;
   if (!content) {
@@ -139,20 +137,20 @@ class TimeTree extends Component {
     const children = this.state.apiList.map((item) => {
       let methodColor = variable.METHOD_COLOR[item.method ? item.method.toLowerCase() : "get"];
       return (
-        <Option title={item.title} value={item._id + ""} path={item.path} key={item._id}>
+        <AutoComplete.Option title={item.title} value={item._id + ""} path={item.path} key={item._id}>
           {item.title}{" "}
           <Tag
             style={{ color: methodColor ? methodColor.color : "#cfefdf", backgroundColor: methodColor ? methodColor.bac : "#00a854", border: "unset" }}
           >
             {item.method}
           </Tag>
-        </Option>
+        </AutoComplete.Option>
       );
     });
     children.unshift(
-      <Option value="" key="all">
+      <AutoComplete.Option value="" key="all">
         选择全部
-      </Option>
+      </AutoComplete.Option>
     );
     if (data && data.length) {
       data = data.map((item, i) => {
@@ -230,12 +228,12 @@ class TimeTree extends Component {
                 }}
               >
                 {/* {children} */}
-                <OptGroup label="other">
-                  <Option value="wiki" path="" title="wiki">
+                <div label="other">
+                  <AutoComplete.Option value="wiki" path="" title="wiki">
                     wiki
-                  </Option>
-                </OptGroup>
-                <OptGroup label="api">{children}</OptGroup>
+                  </AutoComplete.Option>
+                </div>
+                <div label="api">{children}</div>
               </AutoComplete>
             </Col>
           </Row>

@@ -7,8 +7,7 @@ import { formatTime } from "@/utils/common";
 import { setBreadcrumb } from "@/reducer/modules/user";
 import { Table, Popconfirm, message, Input } from "antd";
 import axios from "axios";
-
-const Search = Input.Search;
+//
 const limit = 20;
 class List extends Component {
   constructor(props) {
@@ -165,7 +164,7 @@ class List extends Component {
       <section className="user-table">
         <div className="user-search-wrapper">
           <h2 style={{ marginBottom: "10px" }}>用户总数：{this.state.total}位</h2>
-          <Search onChange={(e) => this.handleSearch(e.target.value)} onSearch={this.handleSearch} placeholder="请输入用户名"/>
+          <Input.Search onChange={(e) => this.handleSearch(e.target.value)} onSearch={this.handleSearch} placeholder="请输入用户名"/>
         </div>
         <Table bordered rowKey={(record) => record._id} columns={columns} pagination={this.state.isSearch ? defaultPageConfig : pageConfig}
           dataSource={data}/>

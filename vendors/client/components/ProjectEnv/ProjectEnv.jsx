@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styles from "./ProjectEnv.module.scss";
-import { Icon, Layout, Tooltip, message, Row, Popconfirm } from "antd";
-
-const { Content, Sider } = Layout;
+import { Layout, Tooltip, message, Row, Popconfirm } from "antd";
+import Icon from "@ant-design/icons";
+//
 import ProjectEnvContent from "./ProjectEnvContent.jsx";
 import { connect } from "react-redux";
-import { updateEnv, getProject, getEnv } from "../../reducer/modules/project";
+import { updateEnv, getProject, getEnv } from "@/reducer/modules/project.js";
 import EasyDragSort from "../EasyDragSort/EasyDragSort.jsx";
 
 @connect(
@@ -168,7 +168,7 @@ class ProjectEnv extends Component {
     return (
       <div className={styles.projectEnvPanel}>
         <Layout className="project-env">
-          <Sider width={195} style={{ background: "#fff" }}>
+          <Layout.Sider width={195} style={{ background: "#fff" }}>
             <div style={{ height: "100%", borderRight: 0 }}>
               <Row className="first-menu-item menu-item">
                 <div className="env-icon-style">
@@ -186,15 +186,15 @@ class ProjectEnv extends Component {
                 {envSettingItems}
               </EasyDragSort>
             </div>
-          </Sider>
+          </Layout.Sider>
           <Layout className="env-content">
-            <Content style={{ background: "#fff", padding: 24, margin: 0, minHeight: 280 }}>
+            <Layout.Content style={{ background: "#fff", padding: 24, margin: 0, minHeight: 280 }}>
               <ProjectEnvContent
                 projectMsg={this.state.currentEnvMsg}
                 onSubmit={(e) => this.onSubmit(e, currentKey)}
                 handleEnvInput={(e) => this.handleInputChange(e, currentKey)}
               />
-            </Content>
+            </Layout.Content>
           </Layout>
         </Layout>
       </div>

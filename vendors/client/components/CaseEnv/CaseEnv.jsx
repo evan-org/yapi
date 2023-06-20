@@ -1,10 +1,9 @@
 // 测试集合中的环境切换
 import React from "react";
 import PropTypes from "prop-types";
-import { Select, Row, Col, Collapse, Icon, Tooltip } from "antd";
+import { Select, Row, Col, Collapse, Tooltip } from "antd";
+import Icon from "@ant-design/icons";
 //
-const Option = Select.Option;
-const Panel = Collapse.Panel;
 import styles from "./CaseEnv.module.scss";
 
 export default class CaseEnv extends React.Component {
@@ -24,7 +23,7 @@ export default class CaseEnv extends React.Component {
   render() {
     return (
       <Collapse style={{ margin: 0, marginBottom: "16px" }} onChange={this.callback} activeKey={this.props.collapseKey}>
-        <Panel key="1" header={
+        <Collapse.Panel key="1" header={
           <span>{" "}<span>选择测试用例环境</span>
             <Tooltip title="默认使用测试用例选择的环境">
               {" "}
@@ -57,13 +56,13 @@ export default class CaseEnv extends React.Component {
                         defaultValue=""
                         onChange={(val) => this.props.currProjectEnvChange(val, item._id)}
                       >
-                        <Option key="default" value="">
+                        <Select.Option key="default" value="">
                           默认环境
-                        </Option>
+                        </Select.Option>
                         {item.env.map((key) => (
-                          <Option value={key.name} key={key._id}>
+                          <Select.Option value={key.name} key={key._id}>
                             {key.name + ": " + key.domain}
-                          </Option>
+                          </Select.Option>
                         ))}
                       </Select>
                     </Col>
@@ -72,7 +71,7 @@ export default class CaseEnv extends React.Component {
               </div>
             )}
           </div>
-        </Panel>
+        </Collapse.Panel>
       </Collapse>
     );
   }

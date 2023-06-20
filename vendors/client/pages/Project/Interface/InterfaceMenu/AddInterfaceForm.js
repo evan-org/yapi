@@ -7,8 +7,8 @@ import { handleApiPath, nameLengthLimit } from "@/utils/common"
 const HTTP_METHOD = constants.HTTP_METHOD;
 const HTTP_METHOD_KEYS = Object.keys(HTTP_METHOD);
 
-const FormItem = Form.Item;
-const Option = Select.Option;
+//
+//
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some((field) => fieldsError[field]);
 }
@@ -46,7 +46,7 @@ class AddInterfaceForm extends Component {
       initialValue: "GET"
     })(
       <Select style={{ width: 75 }}>
-        {HTTP_METHOD_KEYS.map((item) => <Option key={item} value={item}>{item}</Option>)}
+        {HTTP_METHOD_KEYS.map((item) => <Select.Option key={item} value={item}>{item}</Select.Option>)}
       </Select>
     );
     const formItemLayout = {
@@ -64,7 +64,7 @@ class AddInterfaceForm extends Component {
     return (
 
       <Form onSubmit={this.handleSubmit}>
-        <FormItem
+        <Form.Item
           {...formItemLayout}
           label="接口分类"
         >
@@ -72,11 +72,11 @@ class AddInterfaceForm extends Component {
             initialValue: this.props.catid ? this.props.catid + "" : this.props.catdata[0]._id + ""
           })(
             <Select>
-              {this.props.catdata.map((item) => <Option key={item._id} value={item._id + ""}>{item.name}</Option>)}
+              {this.props.catdata.map((item) => <Select.Option key={item._id} value={item._id + ""}>{item.name}</Select.Option>)}
             </Select>
           )}
-        </FormItem>
-        <FormItem
+        </Form.Item>
+        <Form.Item
           {...formItemLayout}
           label="接口名称"
         >
@@ -85,9 +85,9 @@ class AddInterfaceForm extends Component {
           })(
             <Input placeholder="接口名称" />
           )}
-        </FormItem>
+        </Form.Item>
 
-        <FormItem
+        <Form.Item
           {...formItemLayout}
           label="接口路径"
         >
@@ -98,14 +98,14 @@ class AddInterfaceForm extends Component {
           })(
             <Input onBlur={this.handlePath} addonBefore={prefixSelector} placeholder="/path" />
           )}
-        </FormItem>
-        <FormItem
+        </Form.Item>
+        <Form.Item
           {...formItemLayout}
           label="注"
         >
           <span style={{ color: "#929292" }}>详细的接口数据可以在编辑页面中添加</span>
-        </FormItem>
-        <FormItem className="catModalfoot" wrapperCol={{ span: 24, offset: 8 }} >
+        </Form.Item>
+        <Form.Item className="catModalfoot" wrapperCol={{ span: 24, offset: 8 }} >
           <Button onClick={this.props.onCancel} style={{ marginRight: "10px" }}  >取消</Button>
           <Button
             type="primary"
@@ -114,7 +114,7 @@ class AddInterfaceForm extends Component {
           >
             提交
           </Button>
-        </FormItem>
+        </Form.Item>
 
       </Form>
 
@@ -122,4 +122,4 @@ class AddInterfaceForm extends Component {
   }
 }
 
-export default Form.create()(AddInterfaceForm);
+export default AddInterfaceForm;
