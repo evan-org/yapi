@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Loading from "../components/Loading/Loading.jsx";
-import Footer from "./components/Footer/Footer.jsx";
-import Header from "./components/Header/Header.jsx";
+import AppFooter from "./components/Footer/Footer.jsx";
+import AppHeader from "./components/Header/Header.jsx";
 import { Alert } from "antd";
 //
 import styles from "./Layout.module.scss";
@@ -52,11 +52,11 @@ function Layout(props) {
   }, [location])
   return (
     <section className={styles.Layout}>
-      {loginState === 2 ? <Header {...props}/> : null}
+      {loginState === 2 ? <AppHeader {...props}/> : null}
       <Container className={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
         <Outlet/>
       </Container>
-      {loginState !== 2 ? <Footer {...props}/> : null}
+      {loginState !== 2 ? <AppFooter {...props}/> : null}
       <AlertContent/>
       <Loading visible={visible}/>
     </section>

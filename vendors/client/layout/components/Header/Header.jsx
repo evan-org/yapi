@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Menu, Dropdown, message, Tooltip, Popover, Tag } from "antd";
 import Icon from "@ant-design/icons";
-import { checkLoginState, logoutActions, loginTypeAction } from "../../../reducer/modules/user";
-import { changeMenuItem } from "../../../reducer/modules/menu";
+import { checkLoginState, logoutActions, loginTypeAction } from "@/reducer/modules/user.js";
+import { changeMenuItem } from "@/reducer/modules/menu.js";
 import Search from "./Search/Search";
-import Notify from "../../../components/Notify/Notify";
+// import Notify from "../../../components/Notify/Notify";
 //
 import styles from "./Header.module.scss";
 //
