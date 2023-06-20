@@ -1,10 +1,10 @@
 .projectEnvPanel {
-  min-height: 4.68rem;
+  min-height: 468px;
   margin-top: 0;
   background-color: #fff;
   :global{
     .project-env{
-      min-height: 4.68rem;
+      min-height: 468px;
       .env-icon-style{
         display: flex;
         justify-content: space-between;
@@ -81,10 +81,10 @@
       }
       .btnwrap-changeproject {
         text-align: center;
-        padding: .16rem 0;
+        padding: 16px 0;
         background: #fff;
         background-color: #fff;
-        margin: 0 -.4rem;
+        margin: 0 -40px;
         background-size: 4px 4px;
       }
 

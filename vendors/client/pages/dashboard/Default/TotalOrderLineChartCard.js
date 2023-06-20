@@ -123,11 +123,11 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                     <Grid container alignItems="center">
                       <Grid item>
                         {timeValue ? (
-                          <Typography sx={{ fontSize: "2.125rem", fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                          <Typography sx={{ fontSize: "212.5px", fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
                                                         $108
                           </Typography>
                         ) : (
-                          <Typography sx={{ fontSize: "2.125rem", fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                          <Typography sx={{ fontSize: "212.5px", fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
                                                         $961
                           </Typography>
                         )}
@@ -147,7 +147,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                       <Grid item xs={12}>
                         <Typography
                           sx={{
-                            fontSize: "1rem",
+                            fontSize: "100px",
                             fontWeight: 500,
                             color: theme.palette.primary[200]
                           }}

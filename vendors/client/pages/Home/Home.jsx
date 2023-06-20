@@ -280,7 +280,7 @@ function HomeGuest() {
       </div>
       <div className="home-section section-manage">
         <div className="container">
-          <Row className="row-card" style={{ marginBottom: ".48rem" }}>
+          <Row className="row-card" style={{ marginBottom: "48px" }}>
             <Col lg={7} xs={10} className="section-card">
               <Card>
                 <div className="section-block block-first">

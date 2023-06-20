@@ -1,7 +1,7 @@
 $ball-color: #30a1f2;
-$ball-size: .15rem;
-$ball-margin: .02rem;
-$loader-radius: .25rem;
+$ball-size: 15px;
+$ball-margin: 2px;
+$loader-radius: 25px;
 .Loading {
   :global {
     @function delay($interval, $count, $index) {

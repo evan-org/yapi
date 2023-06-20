@@ -1,15 +1,15 @@
 .group-bar {
-  min-height: 5rem;
+  min-height: 500px;
   .curr-group {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
              "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
              SimSun, sans-serif;
     background-color: $color-bg-dark;
     color: $color-white;
-    padding: .24rem .24rem 0;
+    padding: 24px 24px 0;
     .curr-group-name {
       color: $color-white;
-      font-size: .22rem;
+      font-size: 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -60,7 +60,7 @@
       color: $color-white-secondary;
       font-size: 13px;
       max-height: 54px;
-      margin-top: .16rem;
+      margin-top: 16px;
       text-overflow:ellipsis;
       overflow:hidden;
       -webkit-line-clamp: 3;
@@ -69,7 +69,7 @@
     }
     .delete-group, .edit-group {
       font-size: 14px;
-      margin-left: .08rem;
+      margin-left: 8px;
       cursor: pointer;
       border: 1px solid $color-white;
       padding: 6px 12px;

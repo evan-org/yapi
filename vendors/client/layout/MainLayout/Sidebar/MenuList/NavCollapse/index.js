@@ -76,7 +76,7 @@ const NavCollapse = ({ menu, level }) => {
 
   const Icon = menu.icon;
   const menuIcon = menu.icon ? (
-    <Icon strokeWidth={1.5} size="1.3rem" style={{ marginTop: "auto", marginBottom: "auto" }} />
+    <Icon strokeWidth={1.5} size="130px" style={{ marginTop: "auto", marginBottom: "auto" }} />
   ) : (
     <FiberManualRecordIcon
       sx={{
@@ -117,9 +117,9 @@ const NavCollapse = ({ menu, level }) => {
           }
         />
         {open ? (
-          <IconChevronUp stroke={1.5} size="1rem" style={{ marginTop: "auto", marginBottom: "auto" }} />
+          <IconChevronUp stroke={1.5} size="100px" style={{ marginTop: "auto", marginBottom: "auto" }} />
         ) : (
-          <IconChevronDown stroke={1.5} size="1rem" style={{ marginTop: "auto", marginBottom: "auto" }} />
+          <IconChevronDown stroke={1.5} size="100px" style={{ marginTop: "auto", marginBottom: "auto" }} />
         )}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>

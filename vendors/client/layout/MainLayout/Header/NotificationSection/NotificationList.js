@@ -128,7 +128,7 @@ const NotificationList = () => {
                 borderColor: theme.palette.success.main
               }}
             >
-              <IconBuildingStore stroke={1.5} size="1.3rem" />
+              <IconBuildingStore stroke={1.5} size="130px" />
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={<Typography variant="subtitle1">Store Verification Done</Typography>} />
@@ -167,7 +167,7 @@ const NotificationList = () => {
                 borderColor: theme.palette.primary.main
               }}
             >
-              <IconMailbox stroke={1.5} size="1.3rem" />
+              <IconMailbox stroke={1.5} size="130px" />
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={<Typography variant="subtitle1">Check Your Mail.</Typography>} />
@@ -188,7 +188,7 @@ const NotificationList = () => {
           <Grid item xs={12}>
             <Grid container>
               <Grid item>
-                <Button variant="contained" disableElevation endIcon={<IconBrandTelegram stroke={1.5} size="1.3rem" />}>
+                <Button variant="contained" disableElevation endIcon={<IconBrandTelegram stroke={1.5} size="130px" />}>
                                     Mail
                 </Button>
               </Grid>
@@ -234,7 +234,7 @@ const NotificationList = () => {
                     <Grid container direction="column">
                       <Grid item xs={12}>
                         <Stack direction="row" spacing={2}>
-                          <IconPhoto stroke={1.5} size="1.3rem" />
+                          <IconPhoto stroke={1.5} size="130px" />
                           <Typography variant="subtitle1">demo.jpg</Typography>
                         </Stack>
                       </Grid>

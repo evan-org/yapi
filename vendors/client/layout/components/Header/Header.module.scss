@@ -40,9 +40,9 @@
       }
       .logo-name {
         color: $color-white;
-        font-size: .24rem;
+        font-size: 24px;
         font-weight: 300;
-        margin-left: .38rem;
+        margin-left: 38px;
       }
       .img {
         position: absolute;
@@ -63,7 +63,7 @@
       }
     }
     .nav-toolbar {
-      font-size: .15rem;
+      font-size: 15px;
       float: left;
     }
     .user-menu {
@@ -71,21 +71,21 @@
     }
     .user-toolbar {
       float: right;
-      height: .54rem;
+      height: 54px;
       display: flex;
       align-items: center;
       ul {
         margin: 0;
       }
       .item-search {
-        width: 2rem;
+        width: 200px;
       }
       .toolbar-li {
         float: left;
-        font-size: .14rem;
+        font-size: 14px;
         cursor: pointer;
         color: #ccc;
-        margin-left: .16rem;
+        margin-left: 16px;
         transition: color .2s;
         & a {
           color: #ccc;
@@ -128,7 +128,7 @@
           }
         }
         .name {
-          margin-left: .08rem;
+          margin-left: 8px;
         }
       }
     }

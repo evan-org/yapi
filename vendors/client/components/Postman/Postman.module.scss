@@ -1,5 +1,5 @@
 .Postman {
-  padding: .24rem;
+  padding: 24px;
   :global {
     .ant-checkbox-wrapper {
       display: flex;
@@ -69,10 +69,10 @@
       }
     }
     .res-code {
-      padding: .08rem .28rem;
+      padding: 8px 28px;
       color: #fff;
-      margin-left: -.1rem;
-      margin-right: -.28rem;
+      margin-left: -10px;
+      margin-right: -28px;
       transition: all .2s;
       position: relative;
       border-radius: 2px;
@@ -86,7 +86,7 @@
     // 容器：左侧是header 右侧是body
     .container-header-body {
       display: flex;
-      padding-bottom: .36rem;
+      padding-bottom: 36px;
       .header, .body {
         flex: 1 0 300px;
         .pretty-editor-header, .pretty-editor-body {
@@ -105,7 +105,7 @@
       .container-title {
         display: flex;
         justify-content: space-between;
-        padding: .08rem 0;
+        padding: 8px 0;
       }
       .resizer {
         flex: 0 0 21px;

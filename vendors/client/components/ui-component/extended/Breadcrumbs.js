@@ -33,8 +33,8 @@ const Breadcrumbs = ({ card, divider, icon, icons, maxItems, navigation, rightAl
   const iconStyle = {
     marginRight: theme.spacing(0.75),
     marginTop: `-${theme.spacing(0.25)}`,
-    width: "1rem",
-    height: "1rem",
+    width: "100px",
+    height: "100px",
     color: theme.palette.secondary.main
   };
 
@@ -69,7 +69,7 @@ const Breadcrumbs = ({ card, divider, icon, icons, maxItems, navigation, rightAl
 
   // item separator
   const SeparatorIcon = separator;
-  const separatorIcon = separator ? <SeparatorIcon stroke={1.5} size="1rem" /> : <IconTallymark1 stroke={1.5} size="1rem" />;
+  const separatorIcon = separator ? <SeparatorIcon stroke={1.5} size="100px" /> : <IconTallymark1 stroke={1.5} size="100px" />;
 
   let mainContent;
   let itemContent;

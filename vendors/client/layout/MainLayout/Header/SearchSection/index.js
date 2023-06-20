@@ -72,14 +72,14 @@ const MobileSearch = ({ value, setValue, popupState }) => {
       placeholder="Search"
       startAdornment={
         <InputAdornment position="start">
-          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]}/>
+          <IconSearch stroke={1.5} size="100px" color={theme.palette.grey[500]}/>
         </InputAdornment>
       }
       endAdornment={
         <InputAdornment position="end">
           <ButtonBase sx={{ borderRadius: config.borderRadius + "px" }}>
             <HeaderAvatarStyle variant="rounded">
-              <IconAdjustmentsHorizontal stroke={1.5} size="1rem"/>
+              <IconAdjustmentsHorizontal stroke={1.5} size="100px"/>
             </HeaderAvatarStyle>
           </ButtonBase>
           <Box sx={{ ml: 2 }}>
@@ -94,7 +94,7 @@ const MobileSearch = ({ value, setValue, popupState }) => {
                   color: theme.palette.orange.light
                 }
               }}>
-                <IconX stroke={1.5} size="1rem"/>
+                <IconX stroke={1.5} size="100px"/>
               </Avatar>
             </ButtonBase>
           </Box>
@@ -125,7 +125,7 @@ const SearchSection = () => {
               <Box sx={{ ml: 2 }}>
                 <ButtonBase sx={{ borderRadius: "12px" }}>
                   <HeaderAvatarStyle variant="rounded" {...bindToggle(popupState)}>
-                    <IconSearch stroke={1.5} size="1rem"/>
+                    <IconSearch stroke={1.5} size="100px"/>
                   </HeaderAvatarStyle>
                 </ButtonBase>
               </Box>
@@ -166,14 +166,14 @@ const SearchSection = () => {
           placeholder="Search"
           startAdornment={
             <InputAdornment position="start">
-              <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]}/>
+              <IconSearch stroke={1.5} size="100px" color={theme.palette.grey[500]}/>
             </InputAdornment>
           }
           endAdornment={
             <InputAdornment position="end">
               <ButtonBase sx={{ borderRadius: config.borderRadius }}>
                 <HeaderAvatarStyle variant="rounded">
-                  <IconAdjustmentsHorizontal stroke={1.5} size="1rem"/>
+                  <IconAdjustmentsHorizontal stroke={1.5} size="100px"/>
                 </HeaderAvatarStyle>
               </ButtonBase>
             </InputAdornment>

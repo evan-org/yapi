@@ -19,11 +19,11 @@ $color-antd-gray: #bfbfbf;
 $color-antd-purple: #7265e6;
 
 @mixin row-width-limit {
-  max-width: 12.2rem;
-  min-width: 10.2rem;
-  padding: 0 .24rem;
+  max-width: 1220px;
+  min-width: 1020px;
+  padding: 0 24px;
 }
 
 @mixin wrap-width-limit {
-  min-width: 10.2rem;
+  min-width: 1020px;
 }

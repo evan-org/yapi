@@ -121,7 +121,7 @@ const ProfileSection = () => {
             aria-haspopup="true"
             color="inherit"/>
         }
-        label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main}/>}
+        label={<IconSettings stroke={1.5} size="150px" color={theme.palette.primary.main}/>}
         variant="outlined" ref={anchorRef}
         aria-controls={open ? "menu-list-grow" : undefined} aria-haspopup="true" onClick={handleToggle} color="primary"/>
       <Popper
@@ -163,7 +163,7 @@ const ProfileSection = () => {
                       placeholder="Search profile options"
                       startAdornment={
                         <InputAdornment position="start">
-                          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]}/>
+                          <IconSearch stroke={1.5} size="100px" color={theme.palette.grey[500]}/>
                         </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
@@ -221,7 +221,7 @@ const ProfileSection = () => {
                         <ListItemButton title="帐户设置" sx={{ borderRadius: `${customization.borderRadius}px` }} selected={selectedIndex === 0}
                           onClick={(event) => handleListItemClick(event, 0, "/user/account-profile/profile1")}>
                           <ListItemIcon>
-                            <IconSettings stroke={1.5} size="1.3rem"/>
+                            <IconSettings stroke={1.5} size="130px"/>
                           </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2">帐户设置</Typography>}/>
                         </ListItemButton>
@@ -231,7 +231,7 @@ const ProfileSection = () => {
                           selected={selectedIndex === 1}
                           onClick={(event) => handleListItemClick(event, 1, "/user/social-profile/posts")}>
                           <ListItemIcon>
-                            <IconUser stroke={1.5} size="1.3rem"/>
+                            <IconUser stroke={1.5} size="130px"/>
                           </ListItemIcon>
                           <ListItemText primary={<Grid container spacing={1} justifyContent="space-between">
                             <Grid item>
@@ -246,7 +246,7 @@ const ProfileSection = () => {
                         <ListItemButton title="退出登录" sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 4} onClick={handleLogout}>
                           <ListItemIcon>
-                            <IconLogout stroke={1.5} size="1.3rem"/>
+                            <IconLogout stroke={1.5} size="130px"/>
                           </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2">退出登录</Typography>}/>
                         </ListItemButton>

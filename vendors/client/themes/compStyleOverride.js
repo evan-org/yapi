@@ -29,7 +29,7 @@ export default function componentStyleOverrides(theme) {
           padding: "24px"
         },
         title: {
-          fontSize: "1.125rem"
+          fontSize: "112.5px"
         }
       }
     },
@@ -94,7 +94,7 @@ export default function componentStyleOverrides(theme) {
           color: theme.textDark,
           "&::placeholder": {
             color: theme.darkTextSecondary,
-            fontSize: "0.875rem"
+            fontSize: "87.5px"
           }
         }
       }

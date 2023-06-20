@@ -244,7 +244,7 @@ const FirebaseRegister = ({ ...others }) => {
                       />
                     </Grid>
                     <Grid item>
-                      <Typography variant="subtitle1" fontSize="0.75rem">
+                      <Typography variant="subtitle1" fontSize="75px">
                         {level?.label}
                       </Typography>
                     </Grid>

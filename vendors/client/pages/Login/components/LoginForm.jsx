@@ -8,10 +8,10 @@ import { useNavigate } from "react-router-dom";
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const formItemStyle = {
-  marginBottom: ".16rem"
+  marginBottom: "16px"
 };
 const changeHeight = {
-  height: ".42rem"
+  height: "42px"
 };
 class LoginForm extends Component {
   constructor(props) {

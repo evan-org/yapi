@@ -3,13 +3,13 @@
   padding: 20px;
   :global {
     .g-doc {
-      margin: 0 auto 0.24rem;
+      margin: 0 auto 24px;
     }
     .user-list {
       box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       background: #fff;
       border-radius: 4px;
-      min-height: 5rem;
+      min-height: 500px;
       .search {
         padding: 5px;
         background-color: #eee;
@@ -22,7 +22,7 @@
       }
     }
     .user-name {
-      padding: 0.24rem;
+      padding: 24px;
       background-color: #34495e;
       color: white;
       font-size: 18px;
@@ -33,15 +33,15 @@
       }
     }
     .router-content {
-      min-height: calc(100% - 2.47rem);
+      min-height: calc(100% - 247px);
     }
     .user-table {
       -webkit-box-flex: 1;
       padding: 24px;
       background: #fff;
-      min-height: 5rem;
+      min-height: 500px;
       .ant-table-wrapper table {
-        // font-size: .14rem;
+        // font-size: 14px;
         a {
           // font-size: 13px;
         }
@@ -59,7 +59,7 @@
     .user-profile {
       -webkit-box-flex: 1;
       background: #fff;
-      min-height: 5rem;
+      min-height: 500px;
       position: relative;
       .edit-buttons {
         .edit-button {
@@ -158,8 +158,8 @@
       }
     }
     .user-nav {
-      border-bottom-left-radius: 0.04rem;
-      border-bottom-right-radius: 0.04rem;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
     }
     .avatar-uploader {
       border: none;

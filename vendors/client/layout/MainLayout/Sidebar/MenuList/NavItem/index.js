@@ -17,7 +17,7 @@ const NavItem = ({ item, level }) => {
   const matchesSM = useMediaQuery(theme.breakpoints.down("lg"));
   const Icon = item.icon;
   const itemIcon = item?.icon ? (
-    <Icon stroke={1.5} size="1.3rem"/>
+    <Icon stroke={1.5} size="130px"/>
   ) : (
     <FiberManualRecordIcon
       sx={{

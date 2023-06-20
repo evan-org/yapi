@@ -143,7 +143,7 @@ const EarningCard = ({ isLoading }) => {
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: "2.125rem", fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                    <Typography sx={{ fontSize: "212.5px", fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
                                             $500.00
                     </Typography>
                   </Grid>
@@ -164,7 +164,7 @@ const EarningCard = ({ isLoading }) => {
               <Grid item sx={{ mb: 1.25 }}>
                 <Typography
                   sx={{
-                    fontSize: "1rem",
+                    fontSize: "100px",
                     fontWeight: 500,
                     color: theme.palette.secondary[200]
                   }}

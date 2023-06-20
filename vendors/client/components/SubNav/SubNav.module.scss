@@ -1,8 +1,8 @@
 .MSubNav {
-  margin-bottom: .24rem;
+  margin-bottom: 24px;
   background-color: #fff;
-  box-shadow: 0 0 .04rem rgba(0, 0, 0, .08);
-  font-size: .14rem;
+  box-shadow: 0 0 4px rgba(0, 0, 0, .08);
+  font-size: 14px;
   border: none;
   :global {
     .ant-menu {
@@ -10,10 +10,10 @@
     }
     .m-subnav-menu {
       border: none;
-      padding: 0 .24rem;
+      padding: 0 24px;
       .item {
-        line-height: .54rem;
-        padding: 0 .36rem;
+        line-height: 54px;
+        padding: 0 36px;
         font-weight: normal;
       }
     }

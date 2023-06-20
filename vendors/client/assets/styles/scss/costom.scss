@@ -108,15 +108,15 @@
 }
 // 页面最外层元素 样式
 .router-main {
-  padding-bottom: .24rem;
+  padding-bottom: 24px;
   min-height: 100%;
   height: auto !important;
-  margin-bottom: -2.4rem;
+  margin-bottom: -240px;
   background-color: #eceef1;
   &::after {
     content: '';
     display: block;
-    height: 2.4rem;
+    height: 240px;
   }
 }
 .m-tab {
@@ -129,29 +129,29 @@
 }
 // 布局容器 guitter: 16px
 .g-row {
-  min-width: 7.52rem; // Col宽度 (752+16)/24 = 32
+  min-width: 752px; // Col宽度 (752+16)/24 = 32
   margin: 0 auto;
-  padding: 0 .24rem;
+  padding: 0 24px;
 }
 .m-container {
-  margin: .24rem auto;
-  padding: .24rem;
+  margin: 24px auto;
+  padding: 24px;
 }
 .ant-dropdown .user-menu {
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 // confirm 框内边距过大
 .ant-confirm .ant-modal-body {
-  padding: .24rem !important;
+  padding: 24px !important;
 }
 .card-panel {
-  padding: .36rem .24rem 0;
+  padding: 36px 24px 0;
 }
 .pannel-without-tab {
-  min-height: 5rem;
+  min-height: 500px;
 }
 .panel-title {
-  margin-bottom: .16rem;
+  margin-bottom: 16px;
   border-left: 3px solid #2395f1;
   padding-left: 8px;
   .title {
@@ -202,15 +202,15 @@
 }
 // 页面级底部固定 需要添加padding以保证页面底部不被覆盖
 // .has-affix-footer {
-//   padding-bottom: .92rem;
+//   padding-bottom: 92px;
 // }
 .popover-index {
-  max-width: 3.2rem;
+  max-width: 320px;
   .ant-popover-title {
     height: auto;
   }
   .title-container {
-    padding: .16rem 0;
+    padding: 16px 0;
     .title {
       text-align: center;
     }
@@ -218,7 +218,7 @@
   .btn-container {
     text-align: center;
     .btn {
-      margin: 0 .04rem;
+      margin: 0 4px;
     }
   }
 }
@@ -282,71 +282,71 @@
 .main-one {
   height: 600px;
   .home-des {
-    padding: 1rem 0 0;
+    padding: 100px 0 0;
     color: #fff;
     .title {
-      font-size: .6rem;
+      font-size: 60px;
     }
     .detail {
-      font-size: .2rem;
+      font-size: 20px;
     }
     .logo {
       display: flex;
       align-items: center;
-      padding: 0 .24rem;
+      padding: 0 24px;
     }
     .svg {
       animation: spin 5s linear infinite;
     }
     .name {
       vertical-align: middle;
-      font-size: .48rem;
-      margin-left: .24rem;
+      font-size: 48px;
+      margin-left: 24px;
       font-weight: 200;
     }
     .detail {
-      padding: .24rem;
-      font-size: .24rem;
+      padding: 24px;
+      font-size: 24px;
       font-weight: 200;
     }
     .desc {
-      font-size: .18rem;
+      font-size: 18px;
     }
   }
   .login-form {
     color: $color-white;
   }
   .main-one-left {
-    padding-right: .15rem;
-    margin-top: .2rem;
+    padding-right: 15px;
+    margin-top: 20px;
   }
   .main-one-right {
-    padding-left: .5rem;
-    padding-top: .3rem;
+    padding-left: 50px;
+    padding-top: 30px;
   }
 }
 .user-home {
   display: flex;
   align-items: center;
   height: 100%;
-  margin: 1rem auto 0;
+  margin: 100px auto 0;
   .user-des {
-    margin: 0 auto .5rem;
+    margin: 0 auto 50px;
     text-align: center;
     .title {
-      font-size: .8rem;
-      margin-bottom: .2rem;
+      font-size: 80px;
+      margin-bottom: 20px;
     }
     .des {
-      font-size: .25rem;
-      margin-bottom: .3rem;
+      font-size: 25px;
+      margin-bottom: 30px;
     }
     .btn {
       button {
-        font-size: .2rem;
-        line-height: .2rem;
-        height: .5rem;
-        padding: .15rem .5rem;
+        font-size: 20px;
+        line-height: 20px;
+        height: 50px;
+        padding: 15px 50px;
       }
     }
   }
@@ -357,7 +357,7 @@
   display: -webkit-box;
   -webkit-box-flex: 1;
   margin: 0px auto 0 auto;
-  font-size: 0.14rem;
+  font-size: 14px;
   background: #FFF;
   display: block;
 
@@ -454,10 +454,10 @@
   font-weight: 600;
 }
 .radio-desc {
-  margin-left: .22rem;
+  margin-left: 22px;
   position: relative;
   font-weight: normal;
-  top: -.08rem;
+  top: -8px;
   color: #919191;
 }
 .table-desc {

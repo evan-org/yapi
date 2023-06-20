@@ -7,11 +7,11 @@ import { regActions } from "../../../reducer/modules/user";
 
 const FormItem = Form.Item;
 const formItemStyle = {
-  marginBottom: ".16rem"
+  marginBottom: "16px"
 };
 
 const changeHeight = {
-  height: ".42rem"
+  height: "42px"
 };
 
 class RegForm extends Component {

@@ -1,9 +1,9 @@
 .Interface {
   :global {
     .left-menu {
-      min-height: 5rem;
+      min-height: 500px;
       .ant-tag {
-        margin-right: 0.16rem;
+        margin-right: 16px;
       }
       .ant-tabs-nav {
         width: 100%;
@@ -147,7 +147,7 @@
       }
     }
     .right-content {
-      min-height: 5rem;
+      min-height: 500px;
       background: #fff;
       .caseContainer {
         table {
@@ -175,8 +175,8 @@
       .interface-title {
         clear: both;
         font-weight: normal;
-        margin-top: 0.48rem;
-        margin-bottom: 0.16rem;
+        margin-top: 48px;
+        margin-bottom: 16px;
         border-left: 3px solid #2395f1;
         padding-left: 8px;
         .tooltip {
@@ -186,11 +186,11 @@
       }
       .container-radiogroup {
         text-align: center;
-        margin-bottom: 0.16rem;
+        margin-bottom: 16px;
       }
       .panel-sub {
         background: rgba(236, 238, 241, 0.67);
-        padding: 0.1rem;
+        padding: 10px;
         .bulk-import {
           color: #2395f1;
           text-align: right;
