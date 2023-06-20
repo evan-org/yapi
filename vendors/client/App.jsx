@@ -16,7 +16,7 @@ import { AppRoute } from "@/router/oldIndex";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import { ConfigProvider } from "antd";
-import zhCN from "antd/locale/zh_CN";
+import zhCN from "antd/es/locale/zh_CN";
 
 dayjs.locale("zh-cn");
 //
@@ -40,7 +40,9 @@ function App(props) {
       <ThemeProvider theme={themes(customization)}>
         <CssBaseline/>
         <NavigationScroll>
-          <ThemeRoutes/>
+          <ConfigProvider locale={zhCN}>
+            <ThemeRoutes/>
+          </ConfigProvider>
         </NavigationScroll>
       </ThemeProvider>
     </StyledEngineProvider>

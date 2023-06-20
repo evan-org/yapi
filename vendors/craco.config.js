@@ -81,10 +81,10 @@ module.exports = ({ env }) => {
         ["@babel/plugin-proposal-class-properties", { loose: true }],
         // ["@babel/plugin-proposal-private-methods", { loose: true }],
         // ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
-        ["babel-plugin-react-css-modules", {
-          generateScopedName: "[local]___[hash:base64:5]",
-          attributeNames: { activeStyleName: "activeClassName" },
-        }],
+        // ["babel-plugin-react-css-modules", {
+        //   generateScopedName: "[local]___[hash:base64:5]",
+        //   attributeNames: { activeStyleName: "activeClassName" },
+        // }],
         ["@babel/plugin-transform-modules-commonjs"],
         ["@babel/plugin-transform-runtime"]
       ]
@@ -111,14 +111,14 @@ module.exports = ({ env }) => {
     // craco的plugins
     plugins: [
       // env注入
-      {
+      /* {
         plugin: CracoEnvPlugin,
         options: {
           variables: {}
         }
-      },
+      }, */
       // 配置lessOptions
-      {
+      /* {
         // 配置less支持
         plugin: CracoLessPlugin,
         options: {
@@ -129,7 +129,7 @@ module.exports = ({ env }) => {
             },
           },
         },
-      },
+      }, */
       // 配置sass全局注入
       {
         plugin: sassResourcesLoader,
