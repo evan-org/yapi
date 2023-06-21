@@ -3,10 +3,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { matchPath, Outlet } from "react-router-dom";
 import { SubNav } from "../../components/index";
+import Loading from "../../components/Loading/Loading";
+//
 import Interface from "./Interface/Interface.jsx";
 import Activity from "./Activity/Activity.jsx";
 import Setting from "./Setting/Setting.jsx";
-import Loading from "../../components/Loading/Loading";
 import Members from "@/pages/Project/Members/Members.jsx";
 import Data from "@/pages/Project/Data/Data.jsx";
 //
