@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { Tabs } from "antd";
 //
-import LoginForm from "./LoginForm";
-import RegForm from "./RegForm";
+import LoginForm from "./LoginForm.jsx";
+import RegForm from "./RegForm.jsx";
 //
 function LoginWrap(props) {
   const { loginWrapActiveKey, canRegister } = props;

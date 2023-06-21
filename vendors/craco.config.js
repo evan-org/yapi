@@ -48,169 +48,167 @@ function resolve(dir) {
   return path.join(__dirname, dir);
 }
 //
-module.exports = ({ env }) => {
-  console.log("env", env);
-  return {
-    // 配置打包后的文件位置
-    reactScriptsVersion: "react-scripts",
-    // style配置
-    style: {
-      modules: {
-        localIdentName: "[local]___[hash:base64:5]",
-      },
-      sass: {
-        loaderOptions: {
-          // Prefer 'sass' (dart-sass) over 'node-sass' if both packages are installed.
-          implementation: require("sass"),
-          // Workaround for this bug: https://github.com/webpack-contrib/sass-loader/issues/804
-          webpackImporter: false,
-        },
-      },
-      postcss: {
-        mode: POSTCSS_MODES.file,
+module.exports = {
+  // 配置打包后的文件位置
+  reactScriptsVersion: "react-scripts",
+  // style配置
+  style: {
+    modules: {
+      localIdentName: "[local]___[hash:base64:5]",
+    },
+    sass: {
+      loaderOptions: {
+        // Prefer 'sass' (dart-sass) over 'node-sass' if both packages are installed.
+        implementation: require("sass"),
+        // Workaround for this bug: https://github.com/webpack-contrib/sass-loader/issues/804
+        webpackImporter: false,
       },
     },
-    // babel配置
-    babel: {
-      presets: [
-        "@babel/preset-react",
-        ["@babel/preset-env", { modules: "auto" }]
-      ],
-      plugins: [
-        ["@babel/plugin-proposal-decorators", { legacy: true }],
-        ["@babel/plugin-proposal-class-properties", { loose: true }],
-        // ["@babel/plugin-proposal-private-methods", { loose: true }],
-        // ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
-        // ["babel-plugin-react-css-modules", {
-        //   generateScopedName: "[local]___[hash:base64:5]",
-        //   attributeNames: { activeStyleName: "activeClassName" },
-        // }],
-        ["@babel/plugin-transform-modules-commonjs"],
-        ["@babel/plugin-transform-runtime"]
-      ]
+    postcss: {
+      mode: POSTCSS_MODES.file,
     },
-    // 开发服务器
-    devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {
-      devServerConfig = {
-        ...devServerConfig,
-        publicPath: "/",
-        host: "localhost",
-        overlay: true,
-        port: 4000,
-        hot: true,
-        proxy: [{
-          context: ["/api"],
-          // 转发端口自定义
-          target: "http://127.0.0.1:3030",
-          changeOrigin: true,
-          ws: true,
-        }]
-      }
-      return devServerConfig
-    },
-    // craco的plugins
+  },
+  // babel配置
+  babel: {
+    presets: [
+      "@babel/preset-react",
+      ["@babel/preset-env", { modules: "auto" }]
+    ],
     plugins: [
-      // env注入
-      /* {
-        plugin: CracoEnvPlugin,
-        options: {
-          variables: {}
-        }
-      }, */
-      // 配置lessOptions
-      /* {
-        // 配置less支持
-        plugin: CracoLessPlugin,
-        options: {
-          lessLoaderOptions: {
-            lessOptions: {
-              modifyVars: {},
-              javascriptEnabled: true,
-            },
+      ["@babel/plugin-proposal-decorators", { legacy: true }],
+      ["@babel/plugin-proposal-class-properties", { loose: true }],
+      ["@babel/plugin-proposal-private-methods", { loose: true }],
+      ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
+      ["babel-plugin-react-css-modules", {
+        generateScopedName: "[local]___[hash:base64:5]",
+        attributeNames: { activeStyleName: "activeClassName" },
+      }],
+      ["@babel/plugin-transform-modules-commonjs"],
+      ["@babel/plugin-transform-runtime"],
+      ["import", { libraryName: "antd", libraryDirectory: "es", style: "css" }]
+    ]
+  },
+  // 开发服务器
+  devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {
+    devServerConfig = {
+      ...devServerConfig,
+      publicPath: "/",
+      host: "localhost",
+      overlay: true,
+      port: 4000,
+      hot: true,
+      proxy: [{
+        context: ["/api"],
+        // 转发端口自定义
+        target: "http://127.0.0.1:3030",
+        changeOrigin: true,
+        ws: true,
+      }]
+    }
+    return devServerConfig
+  },
+  // craco的plugins
+  plugins: [
+    // env注入
+    /* {
+      plugin: CracoEnvPlugin,
+      options: {
+        variables: {}
+      }
+    }, */
+    // 配置lessOptions
+    /* {
+      // 配置less支持
+      plugin: CracoLessPlugin,
+      options: {
+        lessLoaderOptions: {
+          lessOptions: {
+            modifyVars: {},
+            javascriptEnabled: true,
           },
         },
-      }, */
-      // 配置sass全局注入
-      {
-        plugin: sassResourcesLoader,
-        options: {
-          resources: ["./client/assets/styles/mixin.scss"],
-          root: resolve("./client")
-        },
-      }
-    ],
-    // eslint
-    eslint: {
-      mode: ESLINT_MODES.file,
+      },
+    }, */
+    // 配置sass全局注入
+    {
+      plugin: sassResourcesLoader,
+      options: {
+        resources: ["./client/assets/styles/mixin.scss"],
+        root: resolve("./client")
+      },
+    }
+  ],
+  // eslint
+  eslint: {
+    mode: ESLINT_MODES.file,
+  },
+  // webpack
+  webpack: {
+    context: resolve("./client"),
+    // 别名
+    alias: {
+      "@": resolve("./client"),
+      "src": resolve("./client"),
+      "client": resolve("./client"),
+      "common": resolve("./common"),
+      "exts": resolve("./exts"),
+      "@mui/styled-engine": "@mui/styled-engine-sc",
     },
-    // webpack
-    webpack: {
-      context: resolve("./client"),
-      // 别名
-      alias: {
-        "@": resolve("./client"),
-        "src": resolve("./client"),
-        "client": resolve("./client"),
-        "common": resolve("./common"),
-        "exts": resolve("./exts"),
-        "@mui/styled-engine": "@mui/styled-engine-sc",
-      },
-      plugins: {
-        add: [
-          // 打压缩包
-          ...whenProd(() => [
-            new SimpleProgressWebpackPlugin(),
-            new CompressionWebpackPlugin({
-              algorithm: "gzip",
-              test: new RegExp("\\.(" + ["js", "css"].join("|") + ")$"),
-              threshold: 1024,
-              minRatio: 0.8
-            })
-          ], [])
-        ]
-      },
-      module: {
-        // 独完整的 react.min.js 文件就没有采用模块化，忽略对 react.min.js 文件的递归解析处理
-        noParse: [/node_modules\/jsondiffpatch\/public\/build\/.*js/, /tui-eritor/],
-      },
-      configure: (webpackConfig, { env, paths }) => {
-        paths.appBuild = resolve("./example/client");
-        paths.appSrc = resolve("./client");
-        paths.appIndexJs = resolve("./client/index.jsx");
-        paths.swSrc = resolve("./client/service-worker.js");
-        paths.testsSetup = resolve("./client/testsSetup.js");
-        paths.proxySetup = resolve("./client/proxySetup.js");
-        webpackConfig.entry = resolve("./client/index.jsx");
-        //
-        const resolveUrlLoader = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
-        const babels = getLoader(webpackConfig, loaderByName("babel-loader"));
-        if (babels.isFound) {
-          babels.match.loader.include = resolve("./client");
-        }
-        console.log(babels);
-        if (resolveUrlLoader.isFound) {
-          removeLoaders(webpackConfig, loaderByName("resolve-url-loader"));
-          // resolveUrlLoader.match.loader.options.root = null;
-        }
-        //
-        webpackConfig.output = {
-          ...webpackConfig.output,
-          path: path.resolve(__dirname, "./example/client"), // 修改打包输出文件目录 两步都要写
-          publicPath: whenProd(() => "/", "/"), // 静态资源publicpath
-        }
-        //
-        console.log("configure new\n\n", webpackConfig);
-        //
-        if (env === "development") {
-          webpackConfig.devtool = "cheap-module-source-map";
-          // webpackConfig.devtool = "source-map";
-          console.log("当前是开发环境", env, "devtool:", webpackConfig.devtool);
-          return webpackConfig;
-        }
-        //
-        if (env === "production") {
-          return smp.wrap(webpackConfig);
-        }
+    plugins: {
+      add: [
+        // 打压缩包
+        ...whenProd(() => [
+          new SimpleProgressWebpackPlugin(),
+          new CompressionWebpackPlugin({
+            algorithm: "gzip",
+            test: new RegExp("\\.(" + ["js", "css"].join("|") + ")$"),
+            threshold: 1024,
+            minRatio: 0.8
+          })
+        ], [])
+      ]
+    },
+    module: {
+      // 独完整的 react.min.js 文件就没有采用模块化，忽略对 react.min.js 文件的递归解析处理
+      noParse: [/node_modules\/jsondiffpatch\/public\/build\/.*js/, /tui-eritor/],
+    },
+    configure: (webpackConfig, { env, paths }) => {
+      paths.appBuild = resolve("./example/client");
+      paths.appSrc = resolve("./client");
+      paths.appIndexJs = resolve("./client/index.jsx");
+      paths.swSrc = resolve("./client/service-worker.js");
+      paths.testsSetup = resolve("./client/testsSetup.js");
+      paths.proxySetup = resolve("./client/proxySetup.js");
+      webpackConfig.entry = resolve("./client/index.jsx");
+      //
+      const resolveUrlLoader = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
+      const babels = getLoader(webpackConfig, loaderByName("babel-loader"));
+      if (babels.isFound) {
+        babels.match.loader.include = resolve("./client");
+      }
+      // console.log(babels);
+      if (resolveUrlLoader.isFound) {
+        removeLoaders(webpackConfig, loaderByName("resolve-url-loader"));
+        // resolveUrlLoader.match.loader.options.root = null;
+      }
+      //
+      webpackConfig.output = {
+        ...webpackConfig.output,
+        path: path.resolve(__dirname, "./example/client"), // 修改打包输出文件目录 两步都要写
+        publicPath: whenProd(() => "/", "/"), // 静态资源publicpath
+      }
+      //
+      // console.log("configure new\n\n", webpackConfig);
+      //
+      if (env === "development") {
+        webpackConfig.devtool = "cheap-module-source-map";
+        // webpackConfig.devtool = "source-map";
+        console.log("当前是开发环境", env, "devtool:", webpackConfig.devtool);
+        return webpackConfig;
+      }
+      //
+      if (env === "production") {
+        return smp.wrap(webpackConfig);
       }
     }
   }
