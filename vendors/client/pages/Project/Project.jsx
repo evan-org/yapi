@@ -7,7 +7,7 @@ import Interface from "./Interface/Interface.jsx";
 import Activity from "./Activity/Activity.jsx";
 import Setting from "./Setting/Setting.jsx";
 import Loading from "../../components/Loading/Loading";
-import Member from "@/pages/Project/Member/Member.jsx";
+import Members from "@/pages/Project/Members/Members.jsx";
 import Data from "@/pages/Project/Data/Data.jsx";
 //
 import { fetchGroupMsg } from "@/reducer/modules/group";
@@ -64,7 +64,7 @@ class Project extends Component {
       interface: { name: "接口", path: "/project/:id/interface/:action", component: Interface },
       activity: { name: "动态", path: "/project/:id/activity", component: Activity },
       data: { name: "数据管理", path: "/project/:id/data", component: Data },
-      members: { name: "成员管理", path: "/project/:id/members", component: Member },
+      members: { name: "成员管理", path: "/project/:id/members", component: Members },
       setting: { name: "设置", path: "/project/:id/setting", component: Setting }
     };
     plugin.emitHook("sub_nav", routers);
@@ -147,6 +147,10 @@ class Project extends Component {
   }
 }
 //
+function ProjectMain() {
+  return (
+  )
+}
 export default connect(
   (state) => ({
     curProject: state.project.currProject,

@@ -223,7 +223,7 @@ hooks = {
       interface: { name: '接口', path: "/project/:id/interface/:action", component:Interface },
       activity: { name: '动态', path: "/project/:id/activity", component:  Activity},
       data: { name: '数据管理', path: "/project/:id/data",  component: Data},
-      members: { name: '成员管理', path: "/project/:id/members" , component: Member},
+      members: { name: '成员管理', path: "/project/:id/members" , component: Members},
       setting: { name: '设置', path: "/project/:id/setting" , component: Setting}
     }
    */
