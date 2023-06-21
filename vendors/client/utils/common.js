@@ -118,7 +118,7 @@ function trim(str) {
 
 exports.trim = trim;
 
-exports.handlePath = (path) => {
+export const handlePath = (path) => {
   path = trim(path);
   if (!path) {
     return path;

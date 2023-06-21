@@ -1,11 +1,10 @@
-import React, { useState, Component } from "react";
+import React, { useState, useEffect, Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 //
-import { Slide, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
-
+import { Zoom, Select, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, Box, FormControl, InputLabel } from "@mui/material";
 //
-import { Form, Input, Tooltip, Select, message, Row, Col, Radio } from "antd";
+import { Form, Input, Tooltip, message, Row, Col, Radio } from "antd";
 import Icon from "@ant-design/icons";
 //
 import { addProject } from "@/reducer/modules/project.js";
@@ -29,7 +28,6 @@ const formItemLayout = {
   },
   className: "form-item"
 };
-
 class ProjectList extends Component {
   constructor(props) {
     super(props);
@@ -64,7 +62,7 @@ class ProjectList extends Component {
         values.icon = constants.PROJECT_ICON[0];
         values.color = pickRandomProperty(constants.PROJECT_COLOR);
         addProject(values).then((res) => {
-          if (res.payload.data.errcode == 0) {
+          if (res.payload.data.errcode === 0) {
             form.resetFields();
             message.success("创建成功! ");
             this.props.history.push("/project/" + res.payload.data.data._id + "/interface/api");
@@ -189,42 +187,117 @@ class ProjectList extends Component {
     );
   }
 }
-//
+// 动画
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="down" ref={ref} {...props} />;
+  return <Zoom ref={ref} {...props} />;
 });
-function AddProject() {
-  //
-  const [open, setOpen] = useState(false);
+//
+import * as yup from "yup";
 
+const schema = yup.object().shape({
+  name: yup.string().required("请输入姓名"),
+  email: yup.string().email("请输入有效的电子邮件地址").required("请输入电子邮件地址"),
+});
+//
+function AddProject(props) {
+  const [open, setOpen] = useState(false);
+  const { groupList, currGroup } = props;
+  //
+  const initialFormData = {
+    "name": "", // 项目名称
+    "group": "", // 所属分组
+    "basepath": "", // 基本路径
+    "desc": "", // 项目描述
+    "project_type": "private" // private public 权限
+  };
+  const [formData, setFormData] = useState(initialFormData);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState({});
+  //
+  useEffect(() => {
+    console.log("groupList: ", groupList, "currGroup: ", currGroup);
+  }, []);
+  //
+  //
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
+  };
+  //
+  const handleChange = (obj) => {
+    setFormData((e) => ({ ...e, ...obj }))
+  }
+  //
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // 验证表单字段
+    schema.validate({ ...formData }, { abortEarly: false }).then(() => {
+      // 在这里处理表单提交逻辑
+      console.log(`提交表单：${formData}`);
+    }).catch((err) => {
+      // 显示错误消息
+      const newErrors = {};
+      err.inner.forEach((e) => {
+        newErrors[e.path] = e.message;
+      });
+      setErrors(newErrors);
+    });
   };
   //
   return (
     <>
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        添加项目
+        创建项目
       </Button>
       {/*  */}
-      <Dialog open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}>
-        <DialogTitle>Dialog Title</DialogTitle>
+      <Dialog open={open} TransitionComponent={Transition} keepMounted onClose={handleClose}>
+        <DialogTitle>创建项目</DialogTitle>
+        {/*  */}
         <DialogContent>
-          <p>Dialog Content</p>
+          <Box sx={{ minWidth: 120, m: 1 }} component={"form"} onSubmit={handleSubmit}>
+            <FormControl sx={{ mb: 2 }} fullWidth>
+              <TextField label="项目名称" placeholder={"请输入项目名称"} value={formData.name} error={!!errors.name} helperText={errors.name}
+                onChange={(event) => handleChange({ "name": event.target.value })}/>
+            </FormControl>
+            <FormControl sx={{ mb: 2 }} fullWidth>
+              <InputLabel id="group-simple-select-label">所属分组</InputLabel>
+              <Select label="所属分组" placeholder={"请选择项目所属的分组"} labelId="group-simple-select-label" id="group-simple-select" value={formData.group}
+                defaultValue={formData.group}
+                onChange={(event) => handleChange({ "group": event.target.value })}>
+                {
+                  groupList.map((item, index) => (
+                    <MenuItem key={index} value={item._id.toString()}
+                      disabled={!(item.role === "dev" || item.role === "owner" || item.role === "admin")}>
+                      {item.group_name}
+                    </MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
+            <FormControl sx={{ mb: 2 }} fullWidth>
+              <TextField label="基本路径" placeholder={"请输入项目基本路径"} value={formData.basepath} error={!!errors.basepath} helperText={errors.basepath}
+                onChange={(event) => handleChange({ "basepath": handlePath(event.target.value) })}/>
+            </FormControl>
+            <FormControl sx={{ mb: 2 }} fullWidth>
+              <TextField label="项目描述" placeholder={"项目描述不超过144字"} multiline rows={3} value={formData.desc} error={!!errors.desc} helperText={errors.desc}
+                onChange={(event) => handleChange({ "desc": event.target.value })}/>
+            </FormControl>
+            <FormControl sx={{ mb: 2 }} fullWidth>
+              <TextField label="项目权限" placeholder={"请选择项目是否公开"} value={formData.project_type} error={!!errors.project_type} helperText={errors.project_type}
+                onChange={(event) => handleChange({ "project_type": event.target.value })}/>
+            </FormControl>
+            <FormControl sx={{ mb: 2 }} fullWidth>
+              <DialogActions>
+                <Button onClick={handleClose}>取消</Button>
+                <Button onClick={handleSubmit} type={"submit"} color="primary">创建</Button>
+              </DialogActions>
+            </FormControl>
+          </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose} color="primary">
-            OK
-          </Button>
-        </DialogActions>
+        {/*  */}
       </Dialog>
     </>
   )
