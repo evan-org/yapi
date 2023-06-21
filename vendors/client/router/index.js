@@ -93,14 +93,14 @@ const router = [
           {
             path: "members",
             name: "ProjectData",
-            element: lazy(() => import("../pages/members/Data/Data.jsx")),
-            meta: { title: "数据管理", auth: true }
+            element: lazy(() => import("../pages/Project/Member/Member.jsx")),
+            meta: { title: "成员管理", auth: true }
           },
           {
             path: "setting",
             name: "ProjectSetting",
             element: lazy(() => import("../pages/Project/Setting/Setting.jsx")),
-            meta: { title: "数据管理", auth: true }
+            meta: { title: "设置", auth: true }
           }
         ]
       },

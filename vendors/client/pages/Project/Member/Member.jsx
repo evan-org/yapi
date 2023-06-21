@@ -14,10 +14,10 @@ import {
   Tooltip
 } from "antd";
 import PropTypes from "prop-types";
-import { fetchGroupMsg } from "client/reducer/modules/group.js";
+import { fetchGroupMsg, fetchGroupMemberList } from "client/reducer/modules/group.js";
 import { connect } from "react-redux";
 import ErrMsg from "client/components/ErrMsg/ErrMsg.jsx";
-import { fetchGroupMemberList } from "client/reducer/modules/group.js";
+//
 import {
   fetchProjectList,
   getProjectMemberList,
