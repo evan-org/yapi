@@ -3,7 +3,7 @@ import Login from "./Login/Login.jsx";
 import Group from "./Group/Group.jsx";
 import Project from "./Project/Project.jsx";
 import Follow from "./Follow/Follow.jsx";
-import AddProject from "./AddProject/AddProject.jsx";
+import AddProject from "@/pages/Group/components/AddProject/AddProject.jsx";
 import User from "client/pages/User/User";
 
 export { User, Home, Login, Group, Project, Follow, AddProject };

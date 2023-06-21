@@ -8,8 +8,8 @@ import { fetchGroupList } from "@/reducer/modules/group.js";
 import { autobind } from "core-decorators";
 import { setBreadcrumb } from "@/reducer/modules/user.js";
 //
-import { pickRandomProperty, handlePath, nameLengthLimit } from "../../utils/common";
-import constants from "../../utils/variable.js";
+import { pickRandomProperty, handlePath, nameLengthLimit } from "@/utils/common";
+import constants from "../../../../utils/variable.js";
 
 const formItemLayout = {
   labelCol: {
@@ -24,17 +24,7 @@ const formItemLayout = {
   },
   className: "form-item"
 };
-@connect(
-  (state) => ({
-    groupList: state.group.groupList,
-    currGroup: state.group.currGroup
-  }),
-  {
-    fetchGroupList,
-    addProject,
-    setBreadcrumb
-  }
-)
+
 class ProjectList extends Component {
   constructor(props) {
     super(props);
@@ -194,4 +184,14 @@ class ProjectList extends Component {
     );
   }
 }
-export default ProjectList;
+export default connect(
+  (state) => ({
+    groupList: state.group.groupList,
+    currGroup: state.group.currGroup
+  }),
+  {
+    fetchGroupList,
+    addProject,
+    setBreadcrumb
+  }
+)(ProjectList);
