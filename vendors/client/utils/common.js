@@ -1,9 +1,8 @@
 const moment = require("moment");
 const constants = require("./variable");
 const Mock = require("mockjs");
-const json5 = require("json5");
+import json5 from "json5";
 const MockExtra = require("common/mock-extra.js");
-
 const Roles = {
   0: "admin",
   10: "owner",
@@ -11,7 +10,6 @@ const Roles = {
   30: "guest",
   40: "member"
 };
-
 const roleAction = {
   manageUserlist: "admin",
   changeMemberRole: "owner",
@@ -19,8 +17,7 @@ const roleAction = {
   viewPrivateInterface: "guest",
   viewGroup: "guest"
 };
-
-function isJson(json) {
+export function isJson(json) {
   if (!json) {
     return false;
   }
@@ -31,10 +28,7 @@ function isJson(json) {
     return false;
   }
 }
-
-exports.isJson = isJson;
-
-function isJson5(json) {
+export function isJson5(json) {
   if (!json) {
     return false;
   }
@@ -45,52 +39,41 @@ function isJson5(json) {
     return false;
   }
 }
-exports.safeArray = function(arr) {
+export const safeArray = function(arr) {
   return Array.isArray(arr) ? arr : [];
 };
-
-exports.json5_parse = function(json) {
+export const json5_parse = function(json) {
   try {
     return json5.parse(json);
   } catch (err) {
     return json;
   }
 };
-
-exports.json_parse = function(json) {
+export const json_parse = function(json) {
   try {
     return JSON.parse(json);
   } catch (err) {
     return json;
   }
 };
-
-function deepCopyJson(json) {
+export function deepCopyJson(json) {
   return JSON.parse(JSON.stringify(json));
 }
-
-exports.deepCopyJson = deepCopyJson;
-
-exports.isJson5 = isJson5;
-
-exports.checkAuth = (action, role) => Roles[roleAction[action]] <= Roles[role];
-
-exports.formatTime = (timestamp) => moment.unix(timestamp).format("YYYY-MM-DD HH:mm:ss");
-
+export const checkAuth = (action, role) => Roles[roleAction[action]] <= Roles[role];
+export const formatTime = (timestamp) => moment.unix(timestamp).format("YYYY-MM-DD HH:mm:ss");
 // 防抖函数，减少高频触发的函数执行的频率
 // 请在 constructor 里使用:
 // import { debounce } from '$/common';
 // this.func = debounce(this.func, 400);
-exports.debounce = (func, wait) => {
+export const debounce = (func, wait) => {
   let timeout;
   return function() {
     clearTimeout(timeout);
     timeout = setTimeout(func, wait);
   };
 };
-
 // 从 Javascript 对象中选取随机属性
-exports.pickRandomProperty = (obj) => {
+export const pickRandomProperty = (obj) => {
   let result;
   let count = 0;
   for (let prop in obj) {
@@ -100,38 +83,30 @@ exports.pickRandomProperty = (obj) => {
   }
   return result;
 };
-
-exports.getImgPath = (path, type) => {
+export const getImgPath = (path, type) => {
   let rate = window.devicePixelRatio >= 2 ? 2 : 1;
   return `${path}@${rate}x.${type}`;
 };
-
-function trim(str) {
+export function trim(str) {
   if (!str) {
     return str;
   }
-
   str = str + "";
-
   return str.replace(/(^\s*)|(\s*$)/g, "");
 }
-
-exports.trim = trim;
-
 export const handlePath = (path) => {
   path = trim(path);
   if (!path) {
     return path;
   }
   if (path === "/") {
-    return "";
+    return "/";
   }
   path = path[0] !== "/" ? "/" + path : path;
   path = path[path.length - 1] === "/" ? path.substr(0, path.length - 1) : path;
   return path;
 };
-
-exports.handleApiPath = (path) => {
+export const handleApiPath = (path) => {
   if (!path) {
     return "";
   }
@@ -139,9 +114,15 @@ exports.handleApiPath = (path) => {
   path = path[0] !== "/" ? "/" + path : path;
   return path;
 };
-
+export const charStrLength = (str = "") => {
+  let length = 0;
+  for (let i = 0; i < str.length; i++) {
+    str.charCodeAt(i) > 255 ? (length += 2) : length++;
+  }
+  return length;
+};
 // 名称限制 constants.NAME_LIMIT 字符
-exports.nameLengthLimit = (type) => {
+export const nameLengthLimit = (type) => {
   // 返回字符串长度，汉字计数为2
   const strLength = (str) => {
     let length = 0;
@@ -171,24 +152,20 @@ exports.nameLengthLimit = (type) => {
     }
   ];
 };
-
 // 去除所有html标签只保留文字
-
-exports.htmlFilter = (html) => {
+export const htmlFilter = (html) => {
   let reg = /<\/?.+?\/?>/g;
   return html.replace(reg, "") || "新项目";
 };
-
 // 实现 Object.entries() 方法
-exports.entries = (obj) => {
+export const entries = (obj) => {
   let res = [];
   for (let key in obj) {
     res.push([key, obj[key]]);
   }
   return res;
 };
-
-exports.getMockText = (mockTpl) => {
+export const getMockText = (mockTpl) => {
   try {
     return JSON.stringify(Mock.mock(MockExtra(json5.parse(mockTpl), {})), null, "  ");
   } catch (err) {
@@ -201,7 +178,7 @@ exports.getMockText = (mockTpl) => {
  * @param  {Object} nextObj 新对象
  * @return {Object}           合并后的对象
  */
-exports.safeAssign = (Obj, nextObj) => {
+export const safeAssign = (Obj, nextObj) => {
   let keys = Object.keys(nextObj);
   return Object.keys(Obj).reduce((result, value) => {
     if (keys.indexOf(value) >= 0) {
@@ -212,9 +189,8 @@ exports.safeAssign = (Obj, nextObj) => {
     return result;
   }, {});
 };
-
 // 交换数组的位置
-exports.arrayChangeIndex = (arr, start, end) => {
+export const arrayChangeIndex = (arr, start, end) => {
   let newArr = [].concat(arr);
   // newArr[start] = arr[end];
   // newArr[end] = arr[start];
@@ -229,6 +205,5 @@ exports.arrayChangeIndex = (arr, start, end) => {
       index: index
     });
   });
-
   return changes;
 };

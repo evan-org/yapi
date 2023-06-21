@@ -72,21 +72,22 @@ const router = [
         ]
       },
       //
-      /* {
-        path: "/project/:id",
+      {
+        path: "/project",
         name: "Project",
         element: lazy(() => import("../pages/Project/Project.jsx")),
-        meta: { title: "查看报告", auth: true }
+        meta: { title: "查看报告", auth: true },
+        children: [
+          {
+            path: ":id",
+            name: "GroupContent",
+            element: lazy(() => import("../pages/Project/Project.jsx")),
+            meta: { title: "我的项目组", auth: true }
+          }
+        ]
       },
       //
-      {
-        path: "/add-project",
-        name: "AddProject",
-        element: lazy(() => import("../pages/AddProject/AddProject.jsx")),
-        meta: { title: "查看报告", auth: true }
-      },
-      //
-      {
+      /* {
         path: "/follow",
         name: "Follow",
         element: lazy(() => import("../pages/Follow/Follow.jsx")),
