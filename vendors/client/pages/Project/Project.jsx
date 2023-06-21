@@ -1,14 +1,14 @@
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { matchPath } from "react-router-dom";
+import { matchPath, Outlet } from "react-router-dom";
 import { SubNav } from "../../components/index";
 import Interface from "./Interface/Interface.jsx";
 import Activity from "./Activity/Activity.jsx";
 import Setting from "./Setting/Setting.jsx";
 import Loading from "../../components/Loading/Loading";
-import ProjectMember from "./Setting/ProjectMember/ProjectMember.js";
-import ProjectData from "./Setting/ProjectData/ProjectData.js";
+import Member from "@/pages/Project/Member/Member.jsx";
+import Data from "@/pages/Project/Data/Data.jsx";
 //
 import { fetchGroupMsg } from "@/reducer/modules/group";
 import { setBreadcrumb } from "@/reducer/modules/user";
@@ -63,8 +63,8 @@ class Project extends Component {
     let routers = {
       interface: { name: "接口", path: "/project/:id/interface/:action", component: Interface },
       activity: { name: "动态", path: "/project/:id/activity", component: Activity },
-      data: { name: "数据管理", path: "/project/:id/data", component: ProjectData },
-      members: { name: "成员管理", path: "/project/:id/members", component: ProjectMember },
+      data: { name: "数据管理", path: "/project/:id/data", component: Data },
+      members: { name: "成员管理", path: "/project/:id/members", component: Member },
       setting: { name: "设置", path: "/project/:id/setting", component: Setting }
     };
     plugin.emitHook("sub_nav", routers);
@@ -121,6 +121,7 @@ class Project extends Component {
     return (
       <div>
         <SubNav default={defaultName} data={subnavData}/>
+        <Outlet/>
         {/* <Switch>*/}
         {/*  <Redirect exact from="/project/:id" to={`/project/${match.params.id}/interface/api`}/>*/}
         {/*  <Route path={routers.activity.path} component={Activity}/>*/}
@@ -129,7 +130,7 @@ class Project extends Component {
         {/*    ? <Route path={routers.members.path} component={routers.members.component}/>*/}
         {/*    : null*/}
         {/*  }*/}
-        {/*  <Route path={routers.data.path} component={ProjectData}/>*/}
+        {/*  <Route path={routers.data.path} component={Data}/>*/}
         {/*  {Object.keys(routers).map((key) => {*/}
         {/*    let item = routers[key];*/}
         {/*    return key === "members" ? (*/}

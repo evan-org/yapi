@@ -14,10 +14,10 @@ import {
   Tooltip
 } from "antd";
 import PropTypes from "prop-types";
-import { fetchGroupMsg } from "../../../../reducer/modules/group";
+import { fetchGroupMsg } from "client/reducer/modules/group.js";
 import { connect } from "react-redux";
-import ErrMsg from "../../../../components/ErrMsg/ErrMsg.jsx";
-import { fetchGroupMemberList } from "../../../../reducer/modules/group.js";
+import ErrMsg from "client/components/ErrMsg/ErrMsg.jsx";
+import { fetchGroupMemberList } from "client/reducer/modules/group.js";
 import {
   fetchProjectList,
   getProjectMemberList,
@@ -27,8 +27,8 @@ import {
   changeMemberRole,
   changeMemberEmailNotice
 } from "@/reducer/modules/project.js";
-import UsernameAutoComplete from "../../../../components/UsernameAutoComplete/UsernameAutoComplete.jsx";
-import "../Setting.scss";
+import UsernameAutoComplete from "client/components/UsernameAutoComplete/UsernameAutoComplete.jsx";
+import "client/pages/Project/Setting/Setting.scss";
 //
 //
 const arrayAddKey = (arr) => arr.map((item, index) => ({
@@ -53,7 +53,7 @@ const arrayAddKey = (arr) => arr.map((item, index) => ({
     changeMemberEmailNotice
   }
 )
-class ProjectMember extends Component {
+class Member extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -112,24 +112,24 @@ class ProjectMember extends Component {
   // 增 - 添加成员
   addMembers = (memberUids) => {
     this.props
-    .addMember({
-      id: this.props.match.params.id,
-      member_uids: memberUids,
-      role: this.state.inputRole
-    })
-    .then((res) => {
-      if (!res.payload.data.errcode) {
-        const { add_members, exist_members } = res.payload.data.data;
-        const addLength = add_members.length;
-        const existLength = exist_members.length;
-        this.setState({
-          inputRole: "dev",
-          inputUids: []
-        });
-        message.success(`添加成功! 已成功添加 ${addLength} 人，其中 ${existLength} 人已存在`);
-        this.reFetchList(); // 添加成功后重新获取分组成员列表
-      }
-    });
+      .addMember({
+        id: this.props.match.params.id,
+        member_uids: memberUids,
+        role: this.state.inputRole
+      })
+      .then((res) => {
+        if (!res.payload.data.errcode) {
+          const { add_members, exist_members } = res.payload.data.data;
+          const addLength = add_members.length;
+          const existLength = exist_members.length;
+          this.setState({
+            inputRole: "dev",
+            inputUids: []
+          });
+          message.success(`添加成功! 已成功添加 ${addLength} 人，其中 ${existLength} 人已存在`);
+          this.reFetchList(); // 添加成功后重新获取分组成员列表
+        }
+      });
   };
   // 添加成员时 选择新增成员权限
   changeNewMemberRole = (value) => {
@@ -407,4 +407,4 @@ class ProjectMember extends Component {
     );
   }
 }
-export default ProjectMember;
+export default Member;

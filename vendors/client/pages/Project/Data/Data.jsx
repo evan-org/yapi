@@ -15,7 +15,7 @@ import {
 import Icon from "@ant-design/icons";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import "./ProjectData.scss";
+import "@/pages/Project/Data/Data.module.scss";
 import axios from "axios";
 
 import URL from "url";
@@ -25,10 +25,10 @@ import { saveImportData } from "@/reducer/modules/interface.js";
 import { fetchUpdateLogData } from "@/reducer/modules/news.js";
 import { handleSwaggerUrlData } from "@/reducer/modules/project.js";
 //
-const plugin = require("client/plugin.js");
+const plugin = require("@/plugin.js");
 const importDataModule = {};
 const exportDataModule = {};
-const HandleImportData = require("common/HandleImportData");
+const HandleImportData = require("common/HandleImportData.js");
 function handleExportRouteParams(url, status, isWiki) {
   if (!url) {
     return;
@@ -60,7 +60,7 @@ function handleExportRouteParams(url, status, isWiki) {
     handleSwaggerUrlData
   }
 )
-class ProjectData extends Component {
+class Data extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -281,7 +281,7 @@ class ProjectData extends Component {
    *
    *
    * @returns
-   * @memberof ProjectData
+   * @memberof Data
    */
   render() {
     const uploadMess = {
@@ -505,4 +505,4 @@ class ProjectData extends Component {
   }
 }
 
-export default ProjectData;
+export default Data;
