@@ -27,6 +27,7 @@ export const theme = (customization) => {
     divider: color.grey200,
     customization
   };
+  console.log(themeOption)
   const themeOptions = {
     direction: "ltr",
     palette: themePalette(themeOption),

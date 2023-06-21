@@ -9,57 +9,57 @@ export default function themeTypography(theme) {
     h6: {
       fontWeight: 500,
       color: theme.heading,
-      fontSize: "75px"
+      // fontSize: "75px"
     },
     h5: {
-      fontSize: "87.5px",
+      // fontSize: "87.5px",
       color: theme.heading,
       fontWeight: 500
     },
     h4: {
-      fontSize: "100px",
+      // fontSize: "100px",
       color: theme.heading,
       fontWeight: 600
     },
     h3: {
-      fontSize: "125px",
+      // fontSize: "125px",
       color: theme.heading,
       fontWeight: 600
     },
     h2: {
-      fontSize: "150px",
+      // fontSize: "150px",
       color: theme.heading,
       fontWeight: 700
     },
     h1: {
-      fontSize: "212.5px",
+      // fontSize: "212.5px",
       color: theme.heading,
       fontWeight: 700
     },
     subtitle1: {
-      fontSize: "87.5px",
+      // fontSize: "87.5px",
       fontWeight: 500,
       color: theme.textDark
     },
     subtitle2: {
-      fontSize: "75px",
+      // fontSize: "75px",
       fontWeight: 400,
       color: theme.darkTextSecondary
     },
     caption: {
-      fontSize: "75px",
+      // fontSize: "75px",
       color: theme.darkTextSecondary,
       fontWeight: 400
     },
     body1: {
-      fontSize: "87.5px",
-      fontWeight: 400,
-      lineHeight: "1.334em"
+      // fontSize: "87.5px",
+      // fontWeight: 400,
+      // lineHeight: "1.334em"
     },
     body2: {
       letterSpacing: "0em",
       fontWeight: 400,
-      lineHeight: "1.5em",
+      // lineHeight: "1.5em",
       color: theme.darkTextPrimary
     },
     button: {
@@ -98,7 +98,7 @@ export default function themeTypography(theme) {
       borderRadius: `${theme?.customization?.borderRadius}px`
     },
     menuCaption: {
-      fontSize: "87.5px",
+      // fontSize: "87.5px",
       fontWeight: 500,
       color: theme.heading,
       padding: "6px",
@@ -106,7 +106,7 @@ export default function themeTypography(theme) {
       marginTop: "10px"
     },
     subMenuCaption: {
-      fontSize: "68.75px",
+      // fontSize: "68.75px",
       fontWeight: 500,
       color: theme.darkTextSecondary,
       textTransform: "capitalize"
@@ -118,17 +118,17 @@ export default function themeTypography(theme) {
     smallAvatar: {
       width: "22px",
       height: "22px",
-      fontSize: "100px"
+      // fontSize: "100px"
     },
     mediumAvatar: {
       width: "34px",
       height: "34px",
-      fontSize: "120px"
+      // fontSize: "120px"
     },
     largeAvatar: {
       width: "44px",
       height: "44px",
-      fontSize: "150px"
+      // fontSize: "150px"
     }
   };
 }

@@ -38,8 +38,8 @@ function App(props) {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
-        <CssBaseline/>
         <NavigationScroll>
+          <CssBaseline/>
           <ConfigProvider locale={zhCN}>
             <ThemeRoutes/>
           </ConfigProvider>

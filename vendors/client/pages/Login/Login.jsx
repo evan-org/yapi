@@ -1,5 +1,5 @@
 import React from "react";
-import LoginWrap from "./components/LoginWrap.jsx";
+import LoginContainer from "./components/LoginContainer.jsx";
 import LogoSVG from "@/components/LogoSVG/LogoSVG.jsx";
 import styles from "./Login.module.scss";
 import { Card } from "@mui/material";
@@ -21,7 +21,7 @@ function Login(props) {
               <LogoSVG length="100px"/>
             </div>
             <h2 className="login-title">YAPI</h2>
-            <LoginWrap {...props}/>
+            <LoginContainer {...props}/>
           </div>
         </Card>
       </div>
