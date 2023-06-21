@@ -1,15 +1,20 @@
-import React, { PureComponent as Component } from "react";
+import React, { useState, Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button, Form, Input, Tooltip, Select, message, Row, Col, Radio } from "antd";
+//
+import { Slide, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+
+//
+import { Form, Input, Tooltip, Select, message, Row, Col, Radio } from "antd";
 import Icon from "@ant-design/icons";
+//
 import { addProject } from "@/reducer/modules/project.js";
 import { fetchGroupList } from "@/reducer/modules/group.js";
 import { autobind } from "core-decorators";
 import { setBreadcrumb } from "@/reducer/modules/user.js";
 //
-import { pickRandomProperty, handlePath, nameLengthLimit } from "@/utils/common";
-import constants from "../../../../utils/variable.js";
+import { pickRandomProperty, handlePath, nameLengthLimit } from "@/utils/common.js";
+import constants from "@/utils/variable.js";
 
 const formItemLayout = {
   labelCol: {
@@ -184,6 +189,46 @@ class ProjectList extends Component {
     );
   }
 }
+//
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
+function AddProject() {
+  //
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  //
+  return (
+    <>
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        添加项目
+      </Button>
+      {/*  */}
+      <Dialog open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}>
+        <DialogTitle>Dialog Title</DialogTitle>
+        <DialogContent>
+          <p>Dialog Content</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  )
+}
 export default connect(
   (state) => ({
     groupList: state.group.groupList,
@@ -194,4 +239,4 @@ export default connect(
     addProject,
     setBreadcrumb
   }
-)(ProjectList);
+)(AddProject);

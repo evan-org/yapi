@@ -4,11 +4,12 @@ import { connect } from "react-redux";
 import { autobind } from "core-decorators";
 import { Row, Col, Button, Tooltip } from "antd";
 import { Link } from "react-router-dom";
+import AddProject from "../AddProject/AddProject.jsx";
 //
 import ProjectCard from "@/components/ProjectCard/ProjectCard.jsx";
 import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
 //
-import { addProject, fetchProjectList, delProject, } from "@/reducer/modules/project";
+import { addProject, fetchProjectList, delProject, } from "@/reducer/modules/project.js";
 import { setBreadcrumb } from "@/reducer/modules/user";
 //
 import "./ProjectList.scss";
@@ -117,6 +118,7 @@ class ProjectList extends Component {
     ) : (
       <ErrMsg type="noProject"/>
     );
+    //
     return (
       <div style={{ paddingTop: "24px" }} className="m-panel card-panel card-panel-s project-list">
         <Row className="project-list-header">
@@ -125,9 +127,7 @@ class ProjectList extends Component {
           </Col>
           <Col span={8}>
             {isShow ? (
-              <Link to="/add-project">
-                <Button type="primary">添加项目</Button>
-              </Link>
+              <AddProject/>
             ) : (
               <Tooltip title="您没有权限,请联系该分组组长或管理员">
                 <Button type="primary" disabled>
