@@ -112,8 +112,8 @@ const router = [
 ];
 
 // routes
-import MainRoutes from "./MainRoutes";
-import AuthenticationRoutes from "./AuthenticationRoutes";
+// import MainRoutes from "./MainRoutes";
+// import AuthenticationRoutes from "./AuthenticationRoutes";
 
 // ==============================|| ROUTING RENDER ||============================== //
 
