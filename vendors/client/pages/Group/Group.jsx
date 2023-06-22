@@ -1,30 +1,22 @@
+import { Grid } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import GroupList from "./components/GroupList/GroupList.jsx";
-import ProjectList from "./components/ProjectList/ProjectList.jsx";
-import MemberList from "./components/MemberList/MemberList.jsx";
-import GroupLog from "./components/GroupLog/GroupLog.jsx";
-import GroupSetting from "./components/GroupSetting/GroupSetting.jsx";
+import GroupContent from "./components/GroupContent/GroupContent.jsx";
+// import ProjectList from "./components/ProjectList/ProjectList.jsx";
+// import MemberList from "./components/MemberList/MemberList.jsx";
+// import GroupLog from "./components/GroupLog/GroupLog.jsx";
+// import GroupSetting from "./components/GroupSetting/GroupSetting.jsx";
 //
 import { connect } from "react-redux";
-import { Outlet } from "react-router-dom";
-import { Tabs, Layout, Spin } from "antd";
+import { Spin } from "antd";
 //
-import { fetchNewsData } from "@/reducer/modules/news.js";
+// import { fetchNewsData } from "@/reducer/modules/news.js";
 import { setCurrGroup } from "@/reducer/modules/group.js";
 //
 import styles from "./Group.module.scss";
 import axios from "axios";
 //
-function GroupSider() {
-  return (
-    <Layout.Sider style={{ height: "100%" }} width={300}>
-      <div className="logo"/>
-      <GroupList/>
-    </Layout.Sider>
-  )
-}
-//
-
 function Group(props) {
   console.debug("Group 1111111111111111111", props);
   const { curGroupId, setCurrGroup } = props;
@@ -52,13 +44,15 @@ function Group(props) {
     return <Spin/>
   }
   return (
-    <Layout className={styles.Group}>
-      <GroupSider/>
-      <Layout.Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
-        <Outlet/>
-      </Layout.Content>
-    </Layout>
-  );
+    <Grid container spacing={0} className={styles.Group}>
+      <Grid item xs={2}>
+        <GroupList/>
+      </Grid>
+      <Grid item xs={10}>
+        <GroupContent/>
+      </Grid>
+    </Grid>
+  )
 }
 export default connect(
   (state) => ({

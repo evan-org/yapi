@@ -1,14 +1,14 @@
 import React from "react";
-
-import ProjectList from "client/pages/Group/components/ProjectList/ProjectList.jsx";
-import MemberList from "client/pages/Group/components/MemberList/MemberList.jsx";
-import GroupLog from "client/pages/Group/components/GroupLog/GroupLog.jsx";
-import GroupSetting from "client/pages/Group/components/GroupSetting/GroupSetting.jsx";
+import ProjectList from "@/pages/Group/components/ProjectList/ProjectList.jsx";
+import MemberList from "@/pages/Group/components/MemberList/MemberList.jsx";
+import GroupLog from "@/pages/Group/components/GroupLog/GroupLog.jsx";
+import GroupSetting from "@/pages/Group/components/GroupSetting/GroupSetting.jsx";
 //
 import { Tabs } from "antd";
 import { connect } from "react-redux";
 import { fetchNewsData } from "@/reducer/modules/news.js";
 import { setCurrGroup } from "@/reducer/modules/group.js";
+import { useParams } from "react-router-dom";
 /*
 * connect(
   (state) => ({
@@ -24,6 +24,8 @@ import { setCurrGroup } from "@/reducer/modules/group.js";
   }
 )(Group) */
 function GroupContent(props) {
+  const params = useParams()
+  console.log(props, params);
   const { curUserRole, currGroup, curUserRoleInGroup } = props;
   console.debug("GroupContent1", props);
   return (

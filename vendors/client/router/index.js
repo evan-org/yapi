@@ -33,8 +33,8 @@ const router = [
         children: [
           {
             path: ":groupId",
-            name: "GroupContent",
-            element: lazy(() => import("client/pages/Group/GroupContent.jsx")),
+            name: "Group",
+            element: lazy(() => import("@/pages/Group/Group.jsx")),
             meta: { title: "我的项目组", auth: true }
           }
         ]
@@ -67,16 +67,30 @@ const router = [
       },
       //
       {
-        path: "/project:id",
+        path: "/project",
         name: "Project",
         element: lazy(() => import("../pages/Project/Project.jsx")),
         meta: { title: "查看报告", auth: true },
         children: [
           {
-            path: "interface:action",
+            path: ":id",
+            name: "Project",
+            element: lazy(() => import("../pages/Project/Project.jsx")),
+            meta: { title: "查看报告", auth: true },
+          },
+          {
+            path: "interface",
             name: "ProjectInterface",
             element: lazy(() => import("../pages/Project/Interface/Interface.jsx")),
-            meta: { title: "接口", auth: true }
+            meta: { title: "接口", auth: true },
+            children: [
+              {
+                path: ":action",
+                name: "ProjectInterface",
+                element: lazy(() => import("../pages/Project/Interface/Interface.jsx")),
+                meta: { title: "接口", auth: true },
+              }
+            ]
           },
           {
             path: "activity",

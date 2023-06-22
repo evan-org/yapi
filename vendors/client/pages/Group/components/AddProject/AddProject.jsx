@@ -1,8 +1,8 @@
 import { Snackbar } from "@mui/base";
 import { Close } from "@mui/icons-material";
 import { useFormik } from "formik";
-import React, { useState, useEffect, Component } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
+// import PropTypes from "prop-types";
 import { connect } from "react-redux";
 //
 import {
@@ -10,190 +10,14 @@ import {
   RadioGroup, Radio, FormControlLabel, FormLabel, IconButton
 } from "@mui/material";
 //
-import { Form, Input, Tooltip, message, Row, Col, Alert } from "antd";
-import Icon from "@ant-design/icons";
-//
 import { addProject } from "@/reducer/modules/project.js";
 import { fetchGroupList } from "@/reducer/modules/group.js";
-import { autobind } from "core-decorators";
 import { setBreadcrumb } from "@/reducer/modules/user.js";
 //
-import { pickRandomProperty, handlePath, nameLengthLimit, debounce } from "@/utils/common.js";
+import { pickRandomProperty } from "@/utils/common.js";
 import constants from "@/utils/variable.js";
 import { useNavigate } from "react-router-dom";
 
-const formItemLayout = {
-  labelCol: {
-    lg: { span: 3 },
-    xs: { span: 24 },
-    sm: { span: 6 }
-  },
-  wrapperCol: {
-    lg: { span: 21 },
-    xs: { span: 24 },
-    sm: { span: 14 }
-  },
-  className: "form-item"
-};
-class ProjectList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      groupList: [],
-      currGroupId: null
-    };
-  }
-  static propTypes = {
-    groupList: PropTypes.array,
-    form: PropTypes.object,
-    currGroup: PropTypes.object,
-    addProject: PropTypes.func,
-    history: PropTypes.object,
-    setBreadcrumb: PropTypes.func,
-    fetchGroupList: PropTypes.func
-  };
-  handlePath = (e) => {
-    let val = e.target.value;
-    this.props.form.setFieldsValue({
-      basepath: handlePath(val)
-    });
-  };
-  // 确认添加项目
-  @autobind
-  handleOk(e) {
-    const { form, addProject } = this.props;
-    e.preventDefault();
-    form.validateFields((err, values) => {
-      if (!err) {
-        values.group_id = values.group;
-        values.icon = constants.PROJECT_ICON[0];
-        values.color = pickRandomProperty(constants.PROJECT_COLOR);
-        addProject(values).then((res) => {
-          if (res.payload.data.errcode === 0) {
-            form.resetFields();
-            message.success("创建成功! ");
-            this.props.history.push("/project/" + res.payload.data.data._id + "/interface/api");
-          }
-        });
-      }
-    });
-  }
-  async UNSAFE_componentWillMount() {
-    this.props.setBreadcrumb([{ name: "新建项目" }]);
-    if (!this.props.currGroup._id) {
-      await this.props.fetchGroupList();
-    }
-    if (this.props.groupList.length === 0) {
-      return null;
-    }
-    this.setState({
-      currGroupId: this.props.currGroup._id ? this.props.currGroup._id : this.props.groupList[0]._id
-    });
-    this.setState({ groupList: this.props.groupList });
-  }
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <div className="g-row">
-        <div className="g-row m-container">
-          <Form>
-            <Form.Item {...formItemLayout} label="项目名称">
-              {getFieldDecorator("name", {
-                rules: nameLengthLimit("项目")
-              })(<Input/>)}
-            </Form.Item>
-            <Form.Item {...formItemLayout} label="所属分组">
-              {getFieldDecorator("group", {
-                initialValue: this.state.currGroupId + "",
-                rules: [
-                  {
-                    required: true,
-                    message: "请选择项目所属的分组!"
-                  }
-                ]
-              })(
-                <Select>
-                  {this.state.groupList.map((item, index) => (
-                    <Select.Option
-                      disabled={
-                        !(item.role === "dev" || item.role === "owner" || item.role === "admin")
-                      }
-                      value={item._id.toString()}
-                      key={index}
-                    >
-                      {item.group_name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            </Form.Item>
-            <hr className="breakline"/>
-            <Form.Item
-              {...formItemLayout}
-              label={
-                <span>
-                  基本路径&nbsp;
-                  <Tooltip title="接口基本路径，为空是根路径">
-                    <Icon type="question-circle-o"/>
-                  </Tooltip>
-                </span>
-              }
-            >
-              {getFieldDecorator("basepath", {
-                rules: [
-                  {
-                    required: false,
-                    message: "请输入项目基本路径"
-                  }
-                ]
-              })(<Input onBlur={this.handlePath}/>)}
-            </Form.Item>
-            <Form.Item {...formItemLayout} label="描述">
-              {getFieldDecorator("desc", {
-                rules: [
-                  {
-                    required: false,
-                    message: "描述不超过144字!",
-                    max: 144
-                  }
-                ]
-              })(<Input.TextArea rows={4}/>)}
-            </Form.Item>
-            <Form.Item {...formItemLayout} label="权限">
-              {getFieldDecorator("project_type", {
-                rules: [
-                  {
-                    required: true
-                  }
-                ],
-                initialValue: "private"
-              })(
-                <Radio.Group>
-                  <Radio value="private" className="radio">
-                    <Icon type="lock"/>私有<br/>
-                    <span className="radio-desc">只有组长和项目开发者可以索引并查看项目信息</span>
-                  </Radio>
-                  <br/>
-                  {/* <Radio value="public" className="radio">
-                    <Icon type="unlock" />公开<br />
-                    <span className="radio-desc">任何人都可以索引并查看项目信息</span>
-                  </Radio> */}
-                </Radio.Group>
-              )}
-            </Form.Item>
-          </Form>
-          <Row>
-            <Col sm={{ offset: 6 }} lg={{ offset: 3 }}>
-              <Button className="m-btn" icon="plus" type="primary" onClick={this.handleOk}>
-                创建项目
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      </div>
-    );
-  }
-}
 // 动画
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;

@@ -1,4 +1,5 @@
 .Group{
+  height: 100%;
   :global{
     .g-doc {
       @include row-width-limit;

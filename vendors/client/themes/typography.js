@@ -62,6 +62,11 @@ export default function themeTypography(theme) {
       // lineHeight: "1.5em",
       color: theme.darkTextPrimary
     },
+    header: {
+      position: "sticky", top: 0, left: 0,
+      zIndex: 1,
+      height: "64px"
+    },
     button: {
       textTransform: "capitalize"
     },

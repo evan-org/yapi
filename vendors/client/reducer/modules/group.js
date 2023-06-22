@@ -1,112 +1,137 @@
 import axios from "axios";
-// Actions
-const FETCH_GROUP_LIST = "yapi/group/FETCH_GROUP_LIST";
-const SET_CURR_GROUP = "yapi/group/SET_CURR_GROUP";
-const FETCH_GROUP_MEMBER = "yapi/group/FETCH_GROUP_MEMBER";
-const FETCH_GROUP_MSG = "yapi/group/FETCH_GROUP_MSG";
-const ADD_GROUP_MEMBER = "yapi/group/ADD_GROUP_MEMBER";
-const DEL_GROUP_MEMBER = "yapi/group/DEL_GROUP_MEMBER";
-const CHANGE_GROUP_MEMBER = "yapi/group/CHANGE_GROUP_MEMBER";
-const CHANGE_GROUP_MESSAGE = "yapi/group/CHANGE_GROUP_MESSAGE";
-const UPDATE_GROUP_LIST = "yapi/group/UPDATE_GROUP_LIST";
-const DEL_GROUP = "yapi/group/DEL_GROUP";
-// Reducer
-const initialState = {
-  groupList: [],
-  currGroup: {
-    group_name: "",
-    group_desc: "",
-    custom_field1: {
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+// 封装 createAsyncThunk 函数
+const createAsyncThunkWithStatus = (name, thunkFn) => {
+  const typePrefix = `${name}/status`;
+  const asyncThunk = createAsyncThunk(`${name}/async`, thunkFn);
+  asyncThunk.typePrefix = typePrefix;
+  return asyncThunk;
+};
+// 创建 fetchUserById 异步 action creator
+export const groupList = createAsyncThunkWithStatus("group/groupList", async() => {
+  const response = await axios.get("/api/group/list");
+  return response.data;
+});
+// 生成 extraReducers
+const createAsyncReducers = (asyncThunks) => {
+  const reducers = {};
+  asyncThunks.forEach((asyncThunk) => {
+    const [pending, fulfilled, rejected] = [
+      asyncThunk.pending,
+      asyncThunk.fulfilled,
+      asyncThunk.rejected,
+    ];
+    reducers[pending] = (state) => {
+      state[asyncThunk.typePrefix] = "loading";
+    };
+    reducers[fulfilled] = (state, action) => {
+      state[asyncThunk.typePrefix] = "succeeded";
+      // state[action.payload.id] = action.payload;
+    };
+    reducers[rejected] = (state, action) => {
+      state[asyncThunk.typePrefix] = "failed";
+      state.error = action.error.message;
+    };
+  });
+  return reducers;
+};
+//
+export const appSlice = createSlice({
+  name: "group",
+  initialState: {
+    groupList: [],
+    currGroup: {
+      group_name: "",
+      group_desc: "",
+      custom_field1: {
+        name: "",
+        enable: false
+      }
+    },
+    field: {
       name: "",
       enable: false
+    },
+    member: [],
+    role: ""
+  },
+  reducers: {
+    FETCH_GROUP_LIST: (state, action) => {
+      console.debug("[FETCH_GROUP_LIST]: ", action);
+      state.groupList = action.payload.data.data;
+    },
+    UPDATE_GROUP_LIST: (state, action) => {
+      console.debug("[UPDATE_GROUP_LIST]: ", action);
+      state.groupList = action.payload
+    },
+    SET_CURR_GROUP: (state, action) => {
+      console.debug("[SET_CURR_GROUP]: ", action);
+      state.currGroup = { ...action.payload.data.data, id: action.payload.data.data._id }
+    },
+    FETCH_GROUP_MEMBER: (state, action) => {
+      console.debug("[FETCH_GROUP_MEMBER]: ", action);
+      state.member = action.payload.data.data
+    },
+    FETCH_GROUP_MSG: (state, action) => {
+      console.debug("[FETCH_GROUP_MSG]: ", action);
+      state.role = action.payload.data.role;
+      state.currGroup = action.payload.data;
+      state.field = {
+        name: action.payload.data.data.custom_field1.name,
+        enable: action.payload.data.data.custom_field1.enable
+      }
     }
   },
-  field: {
-    name: "",
-    enable: false
-  },
-  member: [],
-  role: ""
-};
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case FETCH_GROUP_LIST: {
-      return {
-        ...state,
-        groupList: action.payload.data.data
-      };
-    }
-    case UPDATE_GROUP_LIST: {
-      return {
-        ...state,
-        groupList: action.payload
-      };
-    }
-    case SET_CURR_GROUP: {
-      console.log("SET_CURR_GROUP = action.payload : ", action.payload);
-      return {
-        ...state,
-        currGroup: { ...action.payload.data.data, id: action.payload.data.data._id }
-      };
-    }
-    case FETCH_GROUP_MEMBER: {
-      return {
-        ...state,
-        member: action.payload.data.data
-      };
-    }
-    case FETCH_GROUP_MSG: {
-      console.log(action.payload)
-      // const {role,group_name,group_desc,} = action.payload.data.data
-      return {
-        ...state,
-        role: action.payload.data.data.role,
-        currGroup: action.payload.data.data,
-        field: {
-          name: action.payload.data.data.custom_field1.name,
-          enable: action.payload.data.data.custom_field1.enable
-        }
-      };
-    }
-    default:
-      return state;
-  }
-};
+  // extraReducers: createAsyncReducers([groupList]),
+})
+// 每个 case reducer 函数会生成对应的 Action creators
+export const {
+  FETCH_GROUP_LIST,
+  UPDATE_GROUP_LIST,
+  SET_CURR_GROUP,
+  FETCH_GROUP_MEMBER,
+  FETCH_GROUP_MSG,
+  ADD_GROUP_MEMBER,
+  DEL_GROUP_MEMBER,
+  CHANGE_GROUP_MEMBER,
+  CHANGE_GROUP_MESSAGE,
+  DEL_GROUP
+} = appSlice.actions
+//
+export default appSlice.reducer
 // 获取 group 信息 (权限信息)
-export function fetchGroupMsg(id) {
+export async function fetchGroupMsg(id) {
   return {
     type: FETCH_GROUP_MSG,
-    payload: axios.get("/api/group/get", {
-      params: { id }
-    })
+    payload: await axios.get("/api/group/get", { params: { id } })
   };
 }
 // 添加分组成员
-export function addMember(param) {
+export async function addMember(param) {
   return {
     type: ADD_GROUP_MEMBER,
-    payload: axios.post("/api/group/add_member", param)
+    payload: await axios.post("/api/group/add_member", param)
   };
 }
 // 删除分组成员
-export function delMember(param) {
+export async function delMember(param) {
   return {
     type: DEL_GROUP_MEMBER,
-    payload: axios.post("/api/group/del_member", param)
+    payload: await axios.post("/api/group/del_member", param)
   };
 }
 // 修改分组成员权限
-export function changeMemberRole(param) {
+export async function changeMemberRole(param) {
   return {
     type: CHANGE_GROUP_MEMBER,
-    payload: axios.post("/api/group/change_member_role", param)
+    payload: await axios.post("/api/group/change_member_role", param)
   };
 }
 // 修改分组信息
-export function changeGroupMsg(param) {
+export async function changeGroupMsg(param) {
   return {
     type: CHANGE_GROUP_MESSAGE,
-    payload: axios.post("/api/group/up", param)
+    payload: await axios.post("/api/group/up", param)
   };
 }
 // 更新左侧的分组列表
@@ -117,33 +142,32 @@ export function updateGroupList(param) {
   };
 }
 // 删除分组
-export function deleteGroup(param) {
+export async function deleteGroup(param) {
   return {
     type: DEL_GROUP,
-    payload: axios.post("/api/group/del", param)
+    payload: await axios.post("/api/group/del", param)
   };
 }
 // 获取分组成员列表
-export function fetchGroupMemberList(id) {
+export async function fetchGroupMemberList(id) {
   return {
     type: FETCH_GROUP_MEMBER,
-    payload: axios.get("/api/group/get_member_list", {
-      params: { id }
-    })
+    payload: await axios.get("/api/group/get_member_list", { params: { id } })
   };
 }
 // Action Creators
-export function fetchGroupList() {
+export async function fetchGroupList() {
   return {
     type: FETCH_GROUP_LIST,
-    payload: axios.get("/api/group/list")
+    payload: await axios.get("/api/group/list")
   };
 }
-export function setCurrGroup(group, time) {
+//
+export async function setCurrGroup(group, time) {
   if (group && group._id) {
     return {
       type: SET_CURR_GROUP,
-      payload: axios.request({
+      payload: await axios.request({
         url: "/api/group/get",
         method: "GET",
         params: { id: group._id }

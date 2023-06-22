@@ -45,6 +45,7 @@
     "@mui/system": "^5.11.14",
     "@mui/utils": "^5.11.13",
     "@mui/x-data-grid": "^6.0.3",
+    "@reduxjs/toolkit": "^1.9.5",
     "@tabler/icons": "^1.119.0",
     "@toast-ui/editor": "^3.2.2",
     "ajv": "^5.5.1",

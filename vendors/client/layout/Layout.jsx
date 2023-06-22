@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import Loading from "../components/Loading/Loading.jsx";
 import AppFooter from "./components/Footer/Footer.jsx";
 import AppHeader from "./components/Header/Header.jsx";
-import { Alert } from "antd";
 //
 import styles from "./Layout.module.scss";
-import { Container } from "@mui/material";
+import { Container, Alert } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkLoginState } from "@/reducer/modules/user";
@@ -51,7 +50,7 @@ function Layout(props) {
     }
   }, [location])
   return (
-    <section className={styles.Layout}>
+    <div className={styles.Layout}>
       {loginState === 2 ? <AppHeader {...props}/> : null}
       <Container className={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
         <Outlet/>
@@ -59,7 +58,7 @@ function Layout(props) {
       {loginState !== 2 ? <AppFooter {...props}/> : null}
       <AlertContent/>
       <Loading visible={visible}/>
-    </section>
+    </div>
   )
 }
 export default connect(

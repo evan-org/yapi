@@ -98,6 +98,7 @@ export default (state = initialState, action) => {
       };
     }
     case SET_BREADCRUMB: {
+      console.log(action);
       return {
         ...state,
         breadcrumb: action.data
@@ -173,7 +174,7 @@ export function loginTypeAction(index) {
 export function setBreadcrumb(data) {
   return {
     type: SET_BREADCRUMB,
-    data
+    data: data
   };
 }
 export function setImageUrl(data) {

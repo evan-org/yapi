@@ -1,3 +1,5 @@
+import { Box } from "@mui/material";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -9,10 +11,10 @@ import UsernameAutoComplete from "@/components/UsernameAutoComplete/UsernameAuto
 import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
 //
 import { fetchNewsData } from "@/reducer/modules/news";
-import { fetchGroupList, setCurrGroup, fetchGroupMsg } from "@/reducer/modules/group";
+import { fetchGroupList, setCurrGroup, fetchGroupMsg } from "@/reducer/modules/group.js";
 import _ from "underscore";
 //
-import "./GroupList.scss";
+import styles from "./GroupList.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 
 const tip = (
@@ -86,7 +88,8 @@ function GroupList(props) {
       setGroupId(() => !isNaN(paramsGroupId) ? parseInt(paramsGroupId) : 0);
     }
     //
-    await fetchGroupList();
+    const req = await fetchGroupList();
+    console.log("11111111111111111111111111111", req);
     //
     let currGroup = false;
     if (groupList.length && groupId) {
@@ -180,15 +183,15 @@ function GroupList(props) {
   }
   //
   return (
-    <div className="m-group">
+    <Box sx={{height: "100%"}} className={styles.GroupList}>
       {!study ? <div className="study-mask"/> : null}
       <div className="group-bar">
         <div className="curr-group">
           <div className="curr-group-name">
             <span className="name">{currGroup.group_name}</span>
             <Tooltip title="添加分组">
-              <a className="editSet">
-                <Icon className="btn" type="folder-add" onClick={showModal}/>
+              <a className="editSet" href="javascript:void(0);" onClick={showModal}>
+                <ControlPointIcon/>
               </a>
             </Tooltip>
           </div>
@@ -236,9 +239,10 @@ function GroupList(props) {
         inputNewGroupName,
         inputNewGroupDesc
       }}/>
-    </div>
+    </Box>
   )
 }
+//
 GroupList.propTypes = {
   groupList: PropTypes.array,
   currGroup: PropTypes.object,
