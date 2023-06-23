@@ -19,7 +19,6 @@ function Group(props) {
       const r = await fetchMyGroup();
       console.debug("/api/group/get_mygroup http", r);
       const group = r.payload.data.data;
-      debugger
       setGroupId(group._id);
       //
       const a = await setCurrGroup(group, "time");

@@ -1,15 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-// import { createAction } from "redux-actions";
-// Actions
-const LOGIN = "yapi/user/LOGIN";
-const LOGIN_OUT = "yapi/user/LOGIN_OUT";
-const LOGIN_TYPE = "yapi/user/LOGIN_TYPE";
-const GET_LOGIN_STATE = "yapi/user/GET_LOGIN_STATE";
-const REGISTER = "yapi/user/REGISTER";
-const SET_BREADCRUMB = "yapi/user/SET_BREADCRUMB";
-const CHANGE_STUDY_TIP = "yapi/user/CHANGE_STUDY_TIP";
-const FINISH_STUDY = "yapi/user/FINISH_STUDY";
-const SET_IMAGE_URL = "yapi/user/SET_IMAGE_URL";
 // Reducer
 const LOADING_STATUS = 0;
 const GUEST_STATUS = 1;
@@ -37,97 +27,80 @@ const initialState = {
   study: false,
   imageUrl: ""
 };
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case GET_LOGIN_STATE: {
-      return {
-        ...state,
-        isLogin: action.payload.data.errcode === 0,
-        isLDAP: action.payload.data.ladp,
-        canRegister: action.payload.data.canRegister,
-        role: action.payload.data.data ? action.payload.data.data.role : null,
-        loginState: action.payload.data.errcode === 0 ? MEMBER_STATUS : GUEST_STATUS,
-        userName: action.payload.data.data ? action.payload.data.data.username : null,
-        uid: action.payload.data.data ? action.payload.data.data._id : null,
-        type: action.payload.data.data ? action.payload.data.data.type : null,
-        study: action.payload.data.data ? action.payload.data.data.study : false
-      };
-    }
-    case LOGIN: {
+//
+export const appSlice = createSlice({
+  name: "user",
+  initialState: initialState,
+  reducers: {
+    GET_LOGIN_STATE: (state, action) => {
+      state.isLogin = action.payload.data.errcode === 0;
+      state.isLDAP = action.payload.data.ladp;
+      state.canRegister = action.payload.data.canRegister;
+      state.role = action.payload.data.data ? action.payload.data.data.role : null;
+      state.loginState = action.payload.data.errcode === 0 ? MEMBER_STATUS : GUEST_STATUS;
+      state.userName = action.payload.data.data ? action.payload.data.data.username : null;
+      state.uid = action.payload.data.data ? action.payload.data.data._id : null;
+      state.type = action.payload.data.data ? action.payload.data.data.type : null;
+      state.study = action.payload.data.data ? action.payload.data.data.study : false;
+    },
+    LOGIN: (state, action) => {
       if (action.payload.data.errcode === 0) {
-        return {
-          ...state,
-          isLogin: true,
-          loginState: MEMBER_STATUS,
-          uid: action.payload.data.data.uid,
-          userName: action.payload.data.data.username,
-          role: action.payload.data.data.role,
-          type: action.payload.data.data.type,
-          study: action.payload.data.data.study
-        };
-      } else {
-        return state;
+        state.isLogin = true;
+        state.loginState = MEMBER_STATUS;
+        state.uid = action.payload.data.data.uid;
+        state.userName = action.payload.data.data.username;
+        state.role = action.payload.data.data.role;
+        state.type = action.payload.data.data.type;
+        state.study = action.payload.data.data.study;
       }
+    },
+    LOGIN_OUT: (state, action) => {
+      state.isLogin = false;
+      state.loginState = GUEST_STATUS;
+      state.userName = null;
+      state.uid = null;
+      state.role = "";
+      state.type = "";
+    },
+    LOGIN_TYPE: (state, action) => {
+      state.loginWrapActiveKey = action.index;
+    },
+    REGISTER: (state, action) => {
+      state.isLogin = true;
+      state.loginState = MEMBER_STATUS;
+      state.uid = action.payload.data.data.uid;
+      state.userName = action.payload.data.data.username;
+      state.type = action.payload.data.data.type;
+      state.study = action.payload.data.data ? action.payload.data.data.study : false;
+    },
+    SET_BREADCRUMB: (state, action) => {
+      state.breadcrumb = action.data;
+    },
+    CHANGE_STUDY_TIP: (state, action) => {
+      state.studyTip = state.studyTip + 1
+    },
+    FINISH_STUDY: (state, action) => {
+      state.study = true;
+      state.studyTip = 0;
+    },
+    SET_IMAGE_URL: (state, action) => {
+      state.imageUrl = action.data;
     }
-    case LOGIN_OUT: {
-      return {
-        ...state,
-        isLogin: false,
-        loginState: GUEST_STATUS,
-        userName: null,
-        uid: null,
-        role: "",
-        type: ""
-      };
-    }
-    case LOGIN_TYPE: {
-      return {
-        ...state,
-        loginWrapActiveKey: action.index
-      };
-    }
-    case REGISTER: {
-      return {
-        ...state,
-        isLogin: true,
-        loginState: MEMBER_STATUS,
-        uid: action.payload.data.data.uid,
-        userName: action.payload.data.data.username,
-        type: action.payload.data.data.type,
-        study: action.payload.data.data ? action.payload.data.data.study : false
-      };
-    }
-    case SET_BREADCRUMB: {
-      console.log(action);
-      return {
-        ...state,
-        breadcrumb: action.data
-      };
-    }
-    case CHANGE_STUDY_TIP: {
-      return {
-        ...state,
-        studyTip: state.studyTip + 1
-      };
-    }
-    case FINISH_STUDY: {
-      return {
-        ...state,
-        study: true,
-        studyTip: 0
-      };
-    }
-    case SET_IMAGE_URL: {
-      // console.log('state', state);
-      return {
-        ...state,
-        imageUrl: action.data
-      };
-    }
-    default:
-      return state;
-  }
-};
+  },
+  // extraReducers: createAsyncReducers([groupList]),
+})
+const {
+  GET_LOGIN_STATE,
+  LOGIN,
+  LOGIN_OUT,
+  LOGIN_TYPE,
+  SET_IMAGE_URL,
+  REGISTER,
+  SET_BREADCRUMB,
+  CHANGE_STUDY_TIP,
+  FINISH_STUDY
+} = appSlice.actions;
+export default appSlice.reducer
 // Action Creators
 export async function checkLoginState() {
   return {

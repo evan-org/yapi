@@ -10,5 +10,5 @@ import rootReducers from "./modules/reducer";
 export default configureStore({
   reducer: rootReducers,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(thunkMiddleware, messageMiddleware, promiseMiddleware, loggerMiddleware)
+    getDefaultMiddleware().concat(thunkMiddleware, promiseMiddleware, loggerMiddleware, messageMiddleware)
 })

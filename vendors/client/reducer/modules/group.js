@@ -40,6 +40,7 @@ export const appSlice = createSlice({
   name: "group",
   initialState: {
     groupList: [],
+    myGroup: {},
     currGroup: {
       group_name: "",
       group_desc: "",
@@ -59,7 +60,7 @@ export const appSlice = createSlice({
     /* 获取我的空间 */
     FETCH_MY_GROUP_LIST: (state, action) => {
       console.debug("[FETCH_GROUP_LIST]: ", action);
-      // state.groupList = action.payload.data.data;
+      state.myGroup = action.payload.data.data;
     },
     /* 获取当前组列表 */
     FETCH_GROUP_LIST: (state, action) => {

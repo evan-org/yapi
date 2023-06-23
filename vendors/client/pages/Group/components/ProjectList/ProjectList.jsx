@@ -63,13 +63,11 @@ class ProjectList extends Component {
     if (this.props.currGroup !== nextProps.currGroup && nextProps.currGroup._id) {
       this.props.fetchProjectList(nextProps.currGroup._id, this.props.currPage);
     }
+    console.log("UNSAFE_componentWillReceiveProps", this.props.projectList, nextProps.projectList)
     // 切换项目列表
     if (this.props.projectList !== nextProps.projectList) {
       // console.log(nextProps.projectList);
-      const data = nextProps.projectList.map((item, index) => {
-        item.key = index;
-        return item;
-      });
+      const data = nextProps.projectList.map((item, index) => ({ ...item, key: index }));
       this.setState({
         projectData: data
       });

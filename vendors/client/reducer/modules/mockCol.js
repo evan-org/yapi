@@ -1,25 +1,23 @@
+import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
-// Actions
-const FETCH_MOCK_COL = "yapi/mockCol/FETCH_MOCK_COL";
-
 // Reducer
 const initialState = {
   list: []
 };
-
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case FETCH_MOCK_COL:
-      return {
-        ...state,
-        list: action.payload.data
-      };
-    default:
-      return state;
-  }
-};
-
+export const appSlice = createSlice({
+  name: "mockCol",
+  initialState: initialState,
+  reducers: {
+    FETCH_MOCK_COL: (state, action) => {
+      state.list = action.payload.data;
+    }
+  },
+  // extraReducers: createAsyncReducers([groupList]),
+})
+const {
+  FETCH_MOCK_COL,
+} = appSlice.actions;
+export default appSlice.reducer
 // Action Creators
 export async function fetchMockCol(interfaceId) {
   let result = await axios.get("/api/plugin/advmock/case/list?interface_id=" + interfaceId);

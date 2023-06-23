@@ -1,26 +1,30 @@
+import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
 // Actions
-const GET_FOLLOW_LIST = "yapi/follow/GET_FOLLOW_LIST";
-const DEL_FOLLOW = "yapi/follow/DEL_FOLLOW";
-const ADD_FOLLOW = "yapi/follow/ADD_FOLLOW";
-
-// Reducer
-const initialState = {
-  data: []
-};
-
-export default (state = initialState, action) => {
-  if (action.type === GET_FOLLOW_LIST) {
-    return {
-      ...state,
-      data: action.payload.data.data
-    };
-  } else {
-    return state;
-  }
-};
-
+export const appSlice = createSlice({
+  name: "follow",
+  initialState: {
+    data: []
+  },
+  reducers: {
+    GET_FOLLOW_LIST: (state, action) => {
+      state.data = action.payload.data.data;
+    },
+    ADD_FOLLOW: (state, action) => {
+      // state.data = action.payload.data.data;
+    },
+    DEL_FOLLOW: (state, action) => {
+      // state.data = action.payload.data.data;
+    }
+  },
+  // extraReducers: createAsyncReducers([groupList]),
+})
+const {
+  GET_FOLLOW_LIST,
+  DEL_FOLLOW,
+  ADD_FOLLOW
+} = appSlice.actions;
+export default appSlice.reducer
 // 获取关注列表
 export async function getFollowList(uid) {
   return {
@@ -30,7 +34,6 @@ export async function getFollowList(uid) {
     })
   };
 }
-
 // 添加关注
 export async function addFollow(param) {
   return {
@@ -38,7 +41,6 @@ export async function addFollow(param) {
     payload: await axios.post("/api/follow/add", param)
   };
 }
-
 // 删除关注
 export async function delFollow(id) {
   return {

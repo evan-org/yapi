@@ -1,27 +1,7 @@
+import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import variable from "../../utils/variable";
-import {htmlFilter} from "@/utils/common.js";
-
-// Actions
-const FETCH_PROJECT_LIST = "yapi/project/FETCH_PROJECT_LIST";
-const PROJECT_ADD = "yapi/project/PROJECT_ADD";
-const PROJECT_DEL = "yapi/project/PROJECT_DEL";
-// const CHANGE_TABLE_LOADING = 'yapi/project/CHANGE_TABLE_LOADING';
-const PROJECT_UPDATE = "yapi/project/PROJECT_UPDATE";
-const PROJECT_UPDATE_ENV = "yapi/project/PROJECT_UPDATE_ENV";
-const PROJECT_UPSET = "yapi/project/PROJECT_UPSET";
-const GET_CURR_PROJECT = "yapi/project/GET_CURR_PROJECT";
-const GET_PEOJECT_MEMBER = "yapi/project/GET_PEOJECT_MEMBER";
-const ADD_PROJECT_MEMBER = "yapi/project/ADD_PROJECT_MEMBER";
-const DEL_PROJECT_MEMBER = "yapi/project/DEL_PROJECT_MEMBER";
-const CHANGE_PROJECT_MEMBER = "yapi/project/CHANGE_PROJECT_MEMBER";
-const GET_TOKEN = "yapi/project/GET_TOKEN";
-const UPDATE_TOKEN = "yapi/project/UPDATE_TOKEN";
-const CHECK_PROJECT_NAME = "yapi/project/CHECK_PROJECT_NAME";
-const COPY_PROJECT_MSG = "yapi/project/COPY_PROJECT_MSG";
-const PROJECT_GET_ENV = "yapi/project/PROJECT_GET_ENV";
-const CHANGE_MEMBER_EMAIL_NOTICE = "yapi/project/CHANGE_MEMBER_EMAIL_NOTICE";
-const GET_SWAGGER_URL_DATA = "yapi/project/GET_SWAGGER_URL_DATA"
+import variable from "@/utils/variable.js";
+import { htmlFilter } from "@/utils/common.js";
 // Reducer
 const initialState = {
   isUpdateModalShow: false,
@@ -43,74 +23,69 @@ const initialState = {
   },
   swaggerUrlData: ""
 };
-
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case GET_CURR_PROJECT: {
-      return {
-        ...state,
-        currProject: action.payload.data.data
-      };
+//
+export const appSlice = createSlice({
+  name: "project",
+  initialState: initialState,
+  reducers: {
+    GET_CURR_PROJECT: (state, action) => {
+      state.currProject = action.payload.data.data;
+    },
+    FETCH_PROJECT_LIST: (state, action) => {
+      state.projectList = action.payload.data.data.list;
+      state.total = action.payload.data.data.total;
+      state.userInfo = action.payload.data.data.userinfo;
+    },
+    PROJECT_ADD: (state, action) => {
+      // state.data = action.payload.data.data;
+    },
+    PROJECT_DEL: (state, action) => {
+      // state.data = action.payload.data.data;
+    },
+    GET_TOKEN: (state, action) => {
+      state.token = action.payload.data.data;
+    },
+    PROJECT_GET_ENV: (state, action) => {
+      state.projectEnv = action.payload.data.data;
+    },
+    UPDATE_TOKEN: (state, action) => {
+      state.token = action.payload.data.data.token;
+    },
+    //
+    CHECK_PROJECT_NAME: (state, action) => {
+      // state.token = action.payload.data.data.token;
+    },
+    COPY_PROJECT_MSG: (state, action) => {
+      // state.token = action.payload.data.data.token;
+    },
+    //
+    GET_SWAGGER_URL_DATA: (state, action) => {
+      state.swaggerUrlData = action.payload.data.data;
     }
-
-    case FETCH_PROJECT_LIST: {
-      return {
-        ...state,
-        projectList: action.payload.data.data.list,
-        total: action.payload.data.data.total,
-        userInfo: action.payload.data.data.userinfo
-      };
-    }
-
-    case PROJECT_ADD: {
-      return state;
-    }
-    case PROJECT_DEL: {
-      return state;
-    }
-
-    case GET_TOKEN: {
-      return {
-        ...state,
-        token: action.payload.data.data
-      };
-    }
-
-    case PROJECT_GET_ENV: {
-      return {
-        ...state,
-        projectEnv: action.payload.data.data
-      };
-    }
-    case UPDATE_TOKEN: {
-      return {
-        ...state,
-        token: action.payload.data.data.token
-      };
-    }
-
-    case CHECK_PROJECT_NAME: {
-      return {
-        ...state
-      };
-    }
-    case COPY_PROJECT_MSG: {
-      return {
-        ...state
-      };
-    }
-
-    case GET_SWAGGER_URL_DATA: {
-      return {
-        ...state,
-        swaggerUrlData: action.payload.data.data
-      }
-    }
-    default:
-      return state;
-  }
-};
-
+  },
+  // extraReducers: createAsyncReducers([groupList]),
+})
+const {
+  GET_SWAGGER_URL_DATA,
+  GET_CURR_PROJECT,
+  FETCH_PROJECT_LIST,
+  PROJECT_ADD,
+  PROJECT_UPDATE,
+  PROJECT_UPDATE_ENV,
+  PROJECT_UPSET,
+  GET_TOKEN,
+  PROJECT_DEL,
+  PROJECT_GET_ENV,
+  CHECK_PROJECT_NAME,
+  COPY_PROJECT_MSG,
+  UPDATE_TOKEN,
+  ADD_PROJECT_MEMBER,
+  DEL_PROJECT_MEMBER,
+  CHANGE_PROJECT_MEMBER,
+  CHANGE_MEMBER_EMAIL_NOTICE,
+  GET_PEOJECT_MEMBER
+} = appSlice.actions;
+export default appSlice.reducer
 // 获取某分组下的项目列表
 export async function fetchProjectList(id, pageNum) {
   return {
@@ -124,7 +99,6 @@ export async function fetchProjectList(id, pageNum) {
     })
   };
 }
-
 // 复制项目
 export async function copyProjectMsg(params) {
   return {
@@ -132,7 +106,6 @@ export async function copyProjectMsg(params) {
     payload: await axios.post("/api/project/copy", params)
   };
 }
-
 // 添加项目成员
 export async function addMember(param) {
   return {
@@ -140,7 +113,6 @@ export async function addMember(param) {
     payload: await axios.post("/api/project/add_member", param)
   };
 }
-
 // 删除项目成员
 export async function delMember(param) {
   return {
@@ -148,7 +120,6 @@ export async function delMember(param) {
     payload: await axios.post("/api/project/del_member", param)
   };
 }
-
 // 修改项目成员权限
 export async function changeMemberRole(param) {
   return {
@@ -163,7 +134,6 @@ export async function changeMemberEmailNotice(param) {
     payload: await axios.post("/api/project/change_member_email_notice", param)
   };
 }
-
 // 获取项目成员列表
 export async function getProjectMemberList(id) {
   return {
@@ -173,14 +143,12 @@ export async function getProjectMemberList(id) {
     })
   };
 }
-
 // export function changeTableLoading(data) {
 //   return {
 //     type: CHANGE_TABLE_LOADING,
 //     payload: data
 //   };
 // }
-
 export async function addProject(data) {
   let {
     name,
@@ -194,7 +162,6 @@ export async function addProject(data) {
     color,
     project_type
   } = data;
-
   // 过滤项目名称中有html标签存在的情况
   name = htmlFilter(name);
   const param = {
@@ -214,11 +181,9 @@ export async function addProject(data) {
     payload: await axios.post("/api/project/add", param)
   };
 }
-
 // 修改项目
 export async function updateProject(data) {
   let { name, project_type, basepath, desc, _id, env, group_id, switch_notice, strice, is_json5, tag } = data;
-
   // 过滤项目名称中有html标签存在的情况
   name = htmlFilter(name);
   const param = {
@@ -239,7 +204,6 @@ export async function updateProject(data) {
     payload: await axios.post("/api/project/up", param)
   };
 }
-
 // 修改项目脚本
 export async function updateProjectScript(data) {
   return {
@@ -247,7 +211,6 @@ export async function updateProjectScript(data) {
     payload: await axios.post("/api/project/up", data)
   };
 }
-
 // 修改全局mock
 export async function updateProjectMock(data) {
   return {
@@ -255,7 +218,6 @@ export async function updateProjectMock(data) {
     payload: await axios.post("/api/project/up", data)
   };
 }
-
 // 修改项目环境配置
 export async function updateEnv(data) {
   const { env, _id } = data;
@@ -268,7 +230,6 @@ export async function updateEnv(data) {
     payload: await axios.post("/api/project/up_env", param)
   };
 }
-
 // 获取项目环境配置
 export async function getEnv(project_id) {
   return {
@@ -276,7 +237,6 @@ export async function getEnv(project_id) {
     payload: await axios.get("/api/project/get_env", { params: { project_id } })
   };
 }
-
 // 修改项目头像
 export async function upsetProject(param) {
   return {
@@ -284,7 +244,6 @@ export async function upsetProject(param) {
     payload: await axios.post("/api/project/upset", param)
   };
 }
-
 // 删除项目
 export async function delProject(id) {
   const param = { id };
@@ -293,14 +252,12 @@ export async function delProject(id) {
     payload: await axios.post("/api/project/del", param)
   };
 }
-
 export async function getProject(id) {
   return {
     type: GET_CURR_PROJECT,
     payload: await axios.get("/api/project/get?id=" + id)
   };
 }
-
 export async function getToken(project_id) {
   return {
     type: GET_TOKEN,
@@ -309,7 +266,6 @@ export async function getToken(project_id) {
     })
   };
 }
-
 export async function updateToken(project_id) {
   return {
     type: UPDATE_TOKEN,
@@ -318,7 +274,6 @@ export async function updateToken(project_id) {
     })
   };
 }
-
 export async function checkProjectName(name, group_id) {
   return {
     type: CHECK_PROJECT_NAME,
@@ -327,7 +282,6 @@ export async function checkProjectName(name, group_id) {
     })
   };
 }
-
 export async function handleSwaggerUrlData(url) {
   return {
     type: GET_SWAGGER_URL_DATA,

@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const { whenProd, getLoader, loaderByName, removeLoaders,BABEL_MODES, POSTCSS_MODES, ESLINT_MODES } = require("@craco/craco");
+const { whenProd, getLoader, loaderByName, removeLoaders, BABEL_MODES, POSTCSS_MODES, ESLINT_MODES } = require("@craco/craco");
 // const CracoEnvPlugin = require("craco-plugin-env");
 // const CracoLessPlugin = require("craco-less");
 // sass plugin 全局注入
@@ -89,23 +89,16 @@ module.exports = {
     ]
   },
   // 开发服务器
-  devServer: (devServerConfig, { env, paths, proxy, allowedHost }) => {
-    devServerConfig = {
-      ...devServerConfig,
-      publicPath: "/",
-      host: "localhost",
-      overlay: true,
-      port: 4000,
-      hot: true,
-      proxy: [{
-        context: ["/api"],
-        // 转发端口自定义
-        target: "http://127.0.0.1:3030",
-        changeOrigin: true,
-        ws: true,
-      }]
-    }
-    return devServerConfig
+  devServer: {
+    host: "0.0.0.0",
+    port: 4000,
+    proxy: [{
+      context: ["/api"],
+      // 转发端口自定义
+      target: "http://127.0.0.1:3030",
+      changeOrigin: true,
+      ws: true,
+    }]
   },
   // craco的plugins
   plugins: [

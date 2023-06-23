@@ -190,9 +190,9 @@ function GroupList(props) {
           <div className="curr-group-name">
             <span className="name">{currGroup.group_name}</span>
             <Tooltip title="添加分组">
-              <a className="editSet" href="javascript:void(0);" onClick={showModal}>
+              <span className="editSet" onClick={showModal}>
                 <ControlPointIcon/>
-              </a>
+              </span>
             </Tooltip>
           </div>
           <div className="curr-group-desc">简介: {currGroup.group_desc}</div>

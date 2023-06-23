@@ -1,11 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-// Actions
-const FETCH_INTERFACE_COL_LIST = "yapi/interfaceCol/FETCH_INTERFACE_COL_LIST";
-const FETCH_CASE_DATA = "yapi/interfaceCol/FETCH_CASE_DATA";
-const FETCH_CASE_LIST = "yapi/interfaceCol/FETCH_CASE_LIST";
-const SET_COL_DATA = "yapi/interfaceCol/SET_COL_DATA";
-const FETCH_VARIABLE_PARAMS_LIST = "yapi/interfaceCol/FETCH_VARIABLE_PARAMS_LIST";
-const FETCH_CASE_ENV_LIST = "yapi/interfaceCol/FETCH_CASE_ENV_LIST";
 // Reducer
 const initialState = {
   interfaceColList: [
@@ -29,48 +23,50 @@ const initialState = {
   variableParamsList: [],
   envList: []
 };
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case FETCH_INTERFACE_COL_LIST: {
-      return {
-        ...state,
-        interfaceColList: action.payload.data.data
-      };
-    }
-    case FETCH_CASE_DATA: {
-      return {
-        ...state,
-        currCase: action.payload.data.data
-      };
-    }
-    case FETCH_CASE_LIST: {
-      return {
-        ...state,
-        currCaseList: action.payload.data.data
-      };
-    }
-    case FETCH_VARIABLE_PARAMS_LIST: {
-      return {
-        ...state,
-        variableParamsList: action.payload.data.data
-      };
-    }
-    case SET_COL_DATA: {
-      return {
-        ...state,
-        ...action.payload
-      };
-    }
-    case FETCH_CASE_ENV_LIST: {
-      return {
-        ...state,
-        envList: action.payload.data.data
-      };
-    }
-    default:
-      return state;
-  }
-};
+export const appSlice = createSlice({
+  name: "interfaceCol",
+  initialState: initialState,
+  reducers: {
+    //
+    FETCH_INTERFACE_COL_LIST: (state, action) => {
+      state.interfaceColList = action.payload.data.data;
+    },
+    //
+    FETCH_CASE_DATA: (state, action) => {
+      state.currCase = action.payload.data.data;
+    },
+    //
+    FETCH_CASE_LIST: (state, action) => {
+      state.currCaseList = action.payload.data.data;
+    },
+    //
+    FETCH_VARIABLE_PARAMS_LIST: (state, action) => {
+      state.variableParamsList = action.payload.data.data;
+    },
+    //
+    SET_COL_DATA: (state, action) => {
+      if (action.payload instanceof "object") {
+        for (const stateElement of Object.keys(action.payload)) {
+          state[stateElement] = action.payload[stateElement];
+        }
+      }
+    },
+    //
+    FETCH_CASE_ENV_LIST: (state, action) => {
+      state.envList = action.payload.data.data;
+    },
+  },
+  // extraReducers: createAsyncReducers([groupList]),
+})
+const {
+  FETCH_INTERFACE_COL_LIST,
+  FETCH_CASE_DATA,
+  FETCH_CASE_LIST,
+  FETCH_VARIABLE_PARAMS_LIST,
+  SET_COL_DATA,
+  FETCH_CASE_ENV_LIST
+} = appSlice.actions;
+export default appSlice.reducer
 // Action Creators
 export async function fetchInterfaceColList(projectId) {
   return {
