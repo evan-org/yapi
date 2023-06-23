@@ -56,10 +56,17 @@ export const appSlice = createSlice({
     role: ""
   },
   reducers: {
+    /* 获取我的空间 */
+    FETCH_MY_GROUP_LIST: (state, action) => {
+      console.debug("[FETCH_GROUP_LIST]: ", action);
+      // state.groupList = action.payload.data.data;
+    },
+    /* 获取当前组列表 */
     FETCH_GROUP_LIST: (state, action) => {
       console.debug("[FETCH_GROUP_LIST]: ", action);
       state.groupList = action.payload.data.data;
     },
+    /* 更新组列表 */
     UPDATE_GROUP_LIST: (state, action) => {
       console.debug("[UPDATE_GROUP_LIST]: ", action);
       state.groupList = action.payload
@@ -91,6 +98,7 @@ export const {
   SET_CURR_GROUP,
   FETCH_GROUP_MEMBER,
   FETCH_GROUP_MSG,
+  FETCH_MY_GROUP_LIST,
   ADD_GROUP_MEMBER,
   DEL_GROUP_MEMBER,
   CHANGE_GROUP_MEMBER,
@@ -165,7 +173,7 @@ export async function fetchGroupList() {
 // Action Creators
 export async function fetchMyGroup() {
   return {
-    type: FETCH_GROUP_LIST,
+    type: FETCH_MY_GROUP_LIST,
     payload: await axios.get("/api/group/get_mygroup")
   };
 }

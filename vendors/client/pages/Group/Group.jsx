@@ -8,7 +8,6 @@ import { connect } from "react-redux";
 import { fetchMyGroup, setCurrGroup } from "@/reducer/modules/group.js";
 //
 import styles from "./Group.module.scss";
-import axios from "axios";
 //
 function Group(props) {
   console.debug("Group 1111111111111111111", props);
@@ -19,7 +18,8 @@ function Group(props) {
     try {
       const r = await fetchMyGroup();
       console.debug("/api/group/get_mygroup http", r);
-      const group = r.data.data;
+      const group = r.payload.data.data;
+      debugger
       setGroupId(group._id);
       //
       const a = await setCurrGroup(group, "time");
