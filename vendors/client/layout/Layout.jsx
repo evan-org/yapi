@@ -5,9 +5,9 @@ import AppHeader from "./components/Header/Header.jsx";
 //
 import styles from "./Layout.module.scss";
 import { Container, Alert } from "@mui/material";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import { checkLoginState } from "@/reducer/modules/user";
+import { checkLoginState } from "@/reducer/modules/user.js";
 //
 function AlertContent() {
   const ua = window.navigator.userAgent,
@@ -28,7 +28,7 @@ function AlertContent() {
 function Layout(props) {
   console.debug("layout =>", props);
   //
-  const { loginState, checkLoginState } = props;
+  const { loginState, checkLoginState, isLogin } = props;
   const [visible, setVisible] = useState(true);
   const [compute, setCompute] = useState("");
   const location = useLocation();

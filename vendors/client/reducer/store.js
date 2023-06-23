@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import promiseMiddleware from "redux-promise";
-import messageMiddleware from "./middleware/messageMiddleware";
 import thunkMiddleware from "redux-thunk";
 import { createLogger } from "redux-logger";
 // logger 日志
 const loggerMiddleware = createLogger();
-import rootReducers from "./modules/reducer";
+//
+import messageMiddleware from "./middleware/messageMiddleware.js";
+//
+import rootReducers from "./modules/reducer.js";
 // mount it on the Store
 export default configureStore({
   reducer: rootReducers,

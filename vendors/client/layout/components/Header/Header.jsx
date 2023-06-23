@@ -7,11 +7,12 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { replace } from "formik";
 //
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Dropdown, message, Tooltip, Popover, Tag } from "antd";
 import Icon from "@ant-design/icons";
 import { checkLoginState, logoutActions, loginTypeAction } from "@/reducer/modules/user.js";
@@ -315,7 +316,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 //
-function PrimarySearchAppBar() {
+function PrimarySearchAppBar(props) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  //
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -330,75 +334,93 @@ function PrimarySearchAppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+  const onLogout = async() => {
+    try {
+      const res = await props.logoutActions();
+      if (res.payload.data.errcode === 0) {
+        navigate({ pathname: "/" }, { replace: true });
+        props.changeMenuItem("/");
+        message.success("退出成功! ");
+      } else {
+        message.error(res.payload.data.errmsg);
+      }
+    } catch (err) {
+      message.error(err);
+    }
+  };
+  //
+  useEffect(() => {
+    handleMenuClose();
+  }, [location])
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  //
   const menuId = "primary-search-account-menu";
   const renderMenu = (
-    <Menu anchorEl={anchorEl} anchorOrigin={{
-      vertical: "top",
-      horizontal: "right",
-    }} id={menuId} keepMounted transformOrigin={{
+    <Menu anchorEl={anchorEl} id={menuId} keepMounted
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      open={isMenuOpen} onClose={handleMenuClose}>
+      {Object.keys(HeaderMenu).map((key) => {
+        let item = HeaderMenu[key];
+        const isAdmin = props.role === "admin";
+        if (item.adminFlag && !isAdmin) {
+          return null;
+        }
+        return (
+          <Link key={key} to={item.path + (item.name === "个人中心" ? `/${props.uid}` : "")}>
+            <MenuItem key={key}>{item.name}</MenuItem>
+          </Link>
+        )
+      })}
+      <MenuItem onClick={onLogout}>退出</MenuItem>
+    </Menu>
+  );
+  /* mobile */
+  const mobileMenuId = "primary-search-account-menu-mobile";
+  const renderMobileMenu = (<Menu
+    anchorEl={mobileMoreAnchorEl} id={mobileMenuId} keepMounted
+    anchorOrigin={{
       vertical: "top",
       horizontal: "right",
     }}
-      open={isMenuOpen} onClose={handleMenuClose}>
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon/>
-          </Badge>
-        </IconButton>
-        <p>消息</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon/>
-          </Badge>
-        </IconButton>
-        <p>通知</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle/>
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
-
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    open={isMobileMenuOpen}
+    onClose={handleMobileMenuClose}>
+    <MenuItem>
+      <IconButton size="large" title={"消息"} aria-label="消息" color="inherit">
+        <Badge badgeContent={4} color="error">
+          <MailIcon/>
+        </Badge>
+      </IconButton>
+      <p>消息</p>
+    </MenuItem>
+    <MenuItem>
+      <IconButton size="large" title={"通知"} aria-label="通知" color="inherit">
+        <Badge badgeContent={17} color="error">
+          <NotificationsIcon/>
+        </Badge>
+      </IconButton>
+      <p>通知</p>
+    </MenuItem>
+    <MenuItem onClick={handleProfileMenuOpen}>
+      <IconButton size="large" aria-label="account of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
+        <AccountCircle/>
+      </IconButton>
+      <p>用户</p>
+    </MenuItem>
+  </Menu>);
+  /*  */
   return (
     <Typography variant="header">
       <Box>
@@ -407,7 +429,9 @@ function PrimarySearchAppBar() {
             <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
               <MenuIcon/>
             </IconButton>
-            <Typography variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>MUI</Typography>
+            <Typography variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
+              YAPI
+            </Typography>
             <SearchStyled>
               <SearchIconWrapper>
                 <SearchIcon/>
@@ -416,23 +440,24 @@ function PrimarySearchAppBar() {
             </SearchStyled>
             <Box sx={{ flexGrow: 1 }}/>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+              <IconButton size="large" title={"通知"} aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={4} color="error">
-                  <MailIcon/>
+                  <MailIcon fontSize={"small"}/>
                 </Badge>
               </IconButton>
-              <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
+              <IconButton size="large" title={"消息"} aria-label="show 17 new notifications" color="inherit">
                 <Badge badgeContent={17} color="error">
-                  <NotificationsIcon/>
+                  <NotificationsIcon fontSize={"small"}/>
                 </Badge>
               </IconButton>
-              <IconButton size="large" edge="end" aria-label="account of current user" aria-controls={menuId} aria-haspopup="true" onClick={handleProfileMenuOpen} color="inherit">
-                <AccountCircle/>
+              <IconButton size="large" edge="end" aria-label="account of current user" aria-controls={menuId} aria-haspopup="true"
+                onClick={handleProfileMenuOpen} color="inherit">
+                <AccountCircle fontSize={"small"}/>
               </IconButton>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
               <IconButton size="large" aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
-                <MoreIcon/>
+                <MoreIcon  fontSize={"small"}/>
               </IconButton>
             </Box>
           </Toolbar>
