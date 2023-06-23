@@ -22,27 +22,27 @@ export default (state = initialState, action) => {
 };
 
 // 获取关注列表
-export function getFollowList(uid) {
+export async function getFollowList(uid) {
   return {
     type: GET_FOLLOW_LIST,
-    payload: axios.get("/api/follow/list", {
+    payload: await axios.get("/api/follow/list", {
       params: { uid }
     })
   };
 }
 
 // 添加关注
-export function addFollow(param) {
+export async function addFollow(param) {
   return {
     type: ADD_FOLLOW,
-    payload: axios.post("/api/follow/add", param)
+    payload: await axios.post("/api/follow/add", param)
   };
 }
 
 // 删除关注
-export function delFollow(id) {
+export async function delFollow(id) {
   return {
     type: DEL_FOLLOW,
-    payload: axios.post("/api/follow/del", { projectid: id })
+    payload: await axios.post("/api/follow/del", { projectid: id })
   };
 }

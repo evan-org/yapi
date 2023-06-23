@@ -13,8 +13,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_NEWS_DATA: {
-      const list = action.payload.data.data.list;
-      state.newsData.list = list;
+      state.newsData.list = action.payload.data.data.list;
       state.curpage = 1;
       state.newsData.list.sort(function(a, b) {
         return b.add_time - a.add_time;
@@ -48,12 +47,11 @@ export default (state = initialState, action) => {
       return state;
   }
 };
-
 // Action Creators
 import axios from "axios";
 import variable from "../../utils/variable";
 
-export function fetchNewsData(typeid, type, page, limit, selectValue) {
+export async function fetchNewsData(typeid, type, page, limit, selectValue) {
   let param = {
     typeid: typeid,
     type: type,
@@ -64,12 +62,12 @@ export function fetchNewsData(typeid, type, page, limit, selectValue) {
 
   return {
     type: FETCH_NEWS_DATA,
-    payload: axios.get("/api/log/list", {
+    payload: await axios.get("/api/log/list", {
       params: param
     })
   };
 }
-export function fetchMoreNews(typeid, type, page, limit, selectValue) {
+export async function fetchMoreNews(typeid, type, page, limit, selectValue) {
   const param = {
     typeid: typeid,
     type: type,
@@ -79,23 +77,23 @@ export function fetchMoreNews(typeid, type, page, limit, selectValue) {
   }
   return {
     type: FETCH_MORE_NEWS,
-    payload: axios.get("/api/log/list", {
+    payload: await axios.get("/api/log/list", {
       params: param
     })
   };
 }
 
-export function getMockUrl(project_id) {
+export async function getMockUrl(project_id) {
   const params = { id: project_id };
   return {
     type: "",
-    payload: axios.get("/api/project/get", { params: params })
+    payload: await axios.get("/api/project/get", { params: params })
   };
 }
 
-export function fetchUpdateLogData(params) {
+export async function fetchUpdateLogData(params) {
   return {
     type: "",
-    payload: axios.post("/api/log/list_by_update", params)
+    payload: await axios.post("/api/log/list_by_update", params)
   };
 }

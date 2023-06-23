@@ -5,19 +5,19 @@ import GroupContent from "./components/GroupContent/GroupContent.jsx";
 //
 import { connect } from "react-redux";
 // import { fetchNewsData } from "@/reducer/modules/news.js";
-import { setCurrGroup } from "@/reducer/modules/group.js";
+import { fetchMyGroup, setCurrGroup } from "@/reducer/modules/group.js";
 //
 import styles from "./Group.module.scss";
 import axios from "axios";
 //
 function Group(props) {
   console.debug("Group 1111111111111111111", props);
-  const { curGroupId, setCurrGroup } = props;
+  const { curGroupId, setCurrGroup, fetchMyGroup } = props;
   const [groupId, setGroupId] = useState(curGroupId ?? -1);
   //
   const init = async() => {
     try {
-      const r = await axios.get("/api/group/get_mygroup");
+      const r = await fetchMyGroup();
       console.debug("/api/group/get_mygroup http", r);
       const group = r.data.data;
       setGroupId(group._id);
@@ -52,6 +52,7 @@ export default connect(
     curGroupId: state.group.currGroup._id,
   }),
   {
-    setCurrGroup
+    setCurrGroup,
+    fetchMyGroup
   }
 )(Group)

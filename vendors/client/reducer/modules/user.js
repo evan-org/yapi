@@ -129,25 +129,25 @@ export default (state = initialState, action) => {
   }
 };
 // Action Creators
-export function checkLoginState() {
+export async function checkLoginState() {
   return {
     type: GET_LOGIN_STATE,
-    payload: axios.get("/api/user/status")
+    payload: await axios.get("/api/user/status")
   };
 }
-export function loginActions(data) {
+export async function loginActions(data) {
   return {
     type: LOGIN,
-    payload: axios.post("/api/user/login", data)
+    payload: await axios.post("/api/user/login", data)
   };
 }
-export function loginLdapActions(data) {
+export async function loginLdapActions(data) {
   return {
     type: LOGIN,
-    payload: axios.post("/api/user/login_by_ldap", data)
+    payload: await axios.post("/api/user/login_by_ldap", data)
   };
 }
-export function regActions(data) {
+export async function regActions(data) {
   const { email, password, userName } = data;
   const param = {
     email,
@@ -156,19 +156,19 @@ export function regActions(data) {
   };
   return {
     type: REGISTER,
-    payload: axios.post("/api/user/reg", param)
+    payload: await axios.post("/api/user/reg", param)
   };
 }
-export function logoutActions() {
+export async function logoutActions() {
   return {
     type: LOGIN_OUT,
-    payload: axios.get("/api/user/logout")
+    payload: await axios.get("/api/user/logout")
   };
 }
-export function loginTypeAction(index) {
+export async function loginTypeAction(index) {
   return {
     type: LOGIN_TYPE,
-    index
+    index: index
   };
 }
 export function setBreadcrumb(data) {
@@ -180,7 +180,7 @@ export function setBreadcrumb(data) {
 export function setImageUrl(data) {
   return {
     type: SET_IMAGE_URL,
-    data
+    data: data
   };
 }
 export function changeStudyTip() {
@@ -188,10 +188,10 @@ export function changeStudyTip() {
     type: CHANGE_STUDY_TIP
   };
 }
-export function finishStudy(actionType = FINISH_STUDY) {
+export async function finishStudy(actionType = FINISH_STUDY) {
   // createAction(FINISH_STUDY, axios.get("/api/user/up_study"))
   return {
     type: FINISH_STUDY,
-    payload: axios.get("/api/user/up_study")
+    payload: await axios.get("/api/user/up_study")
   };
 }

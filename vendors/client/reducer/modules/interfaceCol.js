@@ -29,7 +29,6 @@ const initialState = {
   variableParamsList: [],
   envList: []
 };
-
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_INTERFACE_COL_LIST: {
@@ -50,7 +49,6 @@ export default (state = initialState, action) => {
         currCaseList: action.payload.data.data
       };
     }
-
     case FETCH_VARIABLE_PARAMS_LIST: {
       return {
         ...state,
@@ -73,45 +71,39 @@ export default (state = initialState, action) => {
       return state;
   }
 };
-
 // Action Creators
-export function fetchInterfaceColList(projectId) {
+export async function fetchInterfaceColList(projectId) {
   return {
     type: FETCH_INTERFACE_COL_LIST,
-    payload: axios.get("/api/col/list?project_id=" + projectId)
+    payload: await axios.get("/api/col/list?project_id=" + projectId)
   };
 }
-
-export function fetchCaseData(caseId) {
+export async function fetchCaseData(caseId) {
   return {
     type: FETCH_CASE_DATA,
-    payload: axios.get("/api/col/case?caseid=" + caseId)
+    payload: await axios.get("/api/col/case?caseid=" + caseId)
   };
 }
-
-export function fetchCaseList(colId) {
+export async function fetchCaseList(colId) {
   return {
     type: FETCH_CASE_LIST,
-    payload: axios.get("/api/col/case_list/?col_id=" + colId)
+    payload: await axios.get("/api/col/case_list/?col_id=" + colId)
   };
 }
-
-export function fetchCaseEnvList(col_id) {
+export async function fetchCaseEnvList(col_id) {
   return {
     type: FETCH_CASE_ENV_LIST,
-    payload: axios.get("/api/col/case_env_list", {
+    payload: await axios.get("/api/col/case_env_list", {
       params: { col_id }
     })
   };
 }
-
-export function fetchVariableParamsList(colId) {
+export async function fetchVariableParamsList(colId) {
   return {
     type: FETCH_VARIABLE_PARAMS_LIST,
-    payload: axios.get("/api/col/case_list_by_var_params?col_id=" + colId)
+    payload: await axios.get("/api/col/case_list_by_var_params?col_id=" + colId)
   };
 }
-
 export function setColData(data) {
   return {
     type: SET_COL_DATA,

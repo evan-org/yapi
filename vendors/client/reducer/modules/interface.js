@@ -146,7 +146,7 @@ export async function fetchInterfaceList(params) {
 }
 
 export async function fetchInterfaceCatList(params) {
-  let result = axios.get("/api/interface/list_cat", {
+  let result = await axios.get("/api/interface/list_cat", {
     params,
     paramsSerializer: (params) => qs.stringify(params, {indices: false})
   })
