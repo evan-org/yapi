@@ -103,21 +103,24 @@ const {
 export default appSlice.reducer
 // Action Creators
 export async function checkLoginState() {
+  const result = await axios.get("/api/user/status")
   return {
     type: GET_LOGIN_STATE,
-    payload: await axios.get("/api/user/status")
+    payload: result
   };
 }
 export async function loginActions(data) {
+  const result = await axios.post("/api/user/login", data)
   return {
     type: LOGIN,
-    payload: await axios.post("/api/user/login", data)
+    payload: result
   };
 }
 export async function loginLdapActions(data) {
+  const result = await axios.post("/api/user/login_by_ldap", data)
   return {
     type: LOGIN,
-    payload: await axios.post("/api/user/login_by_ldap", data)
+    payload: result
   };
 }
 export async function regActions(data) {
@@ -127,15 +130,17 @@ export async function regActions(data) {
     password,
     username: userName
   };
+  const result = await axios.post("/api/user/reg", param)
   return {
     type: REGISTER,
-    payload: await axios.post("/api/user/reg", param)
+    payload: result
   };
 }
 export async function logoutActions() {
+  const result = await axios.get("/api/user/logout")
   return {
     type: LOGIN_OUT,
-    payload: await axios.get("/api/user/logout")
+    payload: result
   };
 }
 export async function loginTypeAction(index) {

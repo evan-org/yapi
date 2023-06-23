@@ -110,37 +110,42 @@ export const {
 export default appSlice.reducer
 // 获取 group 信息 (权限信息)
 export async function fetchGroupMsg(id) {
+  const result = await axios.get("/api/group/get", { params: { id } })
   return {
     type: FETCH_GROUP_MSG,
-    payload: await axios.get("/api/group/get", { params: { id } })
+    payload: result
   };
 }
 // 添加分组成员
 export async function addMember(param) {
+  const result = await axios.post("/api/group/add_member", param)
   return {
     type: ADD_GROUP_MEMBER,
-    payload: await axios.post("/api/group/add_member", param)
+    payload: result
   };
 }
 // 删除分组成员
 export async function delMember(param) {
+  const result = await axios.post("/api/group/del_member", param)
   return {
     type: DEL_GROUP_MEMBER,
-    payload: await axios.post("/api/group/del_member", param)
+    payload: result
   };
 }
 // 修改分组成员权限
 export async function changeMemberRole(param) {
+  const result = await axios.post("/api/group/change_member_role", param)
   return {
     type: CHANGE_GROUP_MEMBER,
-    payload: await axios.post("/api/group/change_member_role", param)
+    payload: result
   };
 }
 // 修改分组信息
 export async function changeGroupMsg(param) {
+  const result = await axios.post("/api/group/up", param)
   return {
     type: CHANGE_GROUP_MESSAGE,
-    payload: await axios.post("/api/group/up", param)
+    payload: result
   };
 }
 // 更新左侧的分组列表
@@ -152,42 +157,47 @@ export function updateGroupList(param) {
 }
 // 删除分组
 export async function deleteGroup(param) {
+  const result = await axios.post("/api/group/del", param)
   return {
     type: DEL_GROUP,
-    payload: await axios.post("/api/group/del", param)
+    payload: result
   };
 }
 // 获取分组成员列表
 export async function fetchGroupMemberList(id) {
+  const result = await axios.get("/api/group/get_member_list", { params: { id } })
   return {
     type: FETCH_GROUP_MEMBER,
-    payload: await axios.get("/api/group/get_member_list", { params: { id } })
+    payload: result
   };
 }
 // Action Creators
 export async function fetchGroupList() {
+  const result = await axios.get("/api/group/list")
   return {
     type: FETCH_GROUP_LIST,
-    payload: await axios.get("/api/group/list")
+    payload: result
   };
 }
 // Action Creators
 export async function fetchMyGroup() {
+  const result = await axios.get("/api/group/get_mygroup");
   return {
     type: FETCH_MY_GROUP_LIST,
-    payload: await axios.get("/api/group/get_mygroup")
+    payload: result
   };
 }
 //
 export async function setCurrGroup(group, time) {
   if (group && group._id) {
+    const result = await axios.request({
+      url: "/api/group/get",
+      method: "GET",
+      params: { id: group._id }
+    })
     return {
       type: SET_CURR_GROUP,
-      payload: await axios.request({
-        url: "/api/group/get",
-        method: "GET",
-        params: { id: group._id }
-      })
+      payload: result
     };
   }
   // console.log("setCurrGroup ==========>", time);
