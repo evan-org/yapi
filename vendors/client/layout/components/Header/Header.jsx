@@ -426,11 +426,12 @@ function PrimarySearchAppBar(props) {
       <Box>
         <AppBar position="static">
           <Toolbar>
-            <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
-              <MenuIcon/>
-            </IconButton>
-            <Typography variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
-              YAPI
+            <Link to={"/"}>
+              <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
+                <LogoSVG length="36px"/>
+              </IconButton>
+            </Link>
+            <Typography variant="h6" noWrap component="div" sx={{ fontSize: 0, lineHeight: 1, display: { xs: "none", sm: "block" } }}>
             </Typography>
             <SearchStyled>
               <SearchIconWrapper>
@@ -457,7 +458,7 @@ function PrimarySearchAppBar(props) {
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
               <IconButton size="large" aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
-                <MoreIcon  fontSize={"small"}/>
+                <MoreIcon fontSize={"small"}/>
               </IconButton>
             </Box>
           </Toolbar>
