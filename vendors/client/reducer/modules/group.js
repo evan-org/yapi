@@ -162,6 +162,13 @@ export async function fetchGroupList() {
     payload: await axios.get("/api/group/list")
   };
 }
+// Action Creators
+export async function fetchMyGroup() {
+  return {
+    type: FETCH_GROUP_LIST,
+    payload: await axios.get("/api/group/get_mygroup")
+  };
+}
 //
 export async function setCurrGroup(group, time) {
   if (group && group._id) {

@@ -24,22 +24,22 @@ const plugin = require("client/plugin.js");
 // 增加路由钩子
 plugin.emitHook("app_route", AppRoute);
 //
-//   /* const showConfirm = (msg, callback) => {
-//     // 自定义 window.confirm
-//     // http://reacttraining.cn/web/api/BrowserRouter/getUserConfirmation-func
-//     let container = document.createElement("div");
-//     document.body.appendChild(container);
-//     const root = ReactDOM.createRoot(container);
-//     root.render(<MyPopConfirm msg={msg} callback={callback}/>);
-//   };*/
+/* const showConfirm = (msg, callback) => {
+  // 自定义 window.confirm
+  // http://reacttraining.cn/web/api/BrowserRouter/getUserConfirmation-func
+  let container = document.createElement("div");
+  document.body.appendChild(container);
+  const root = ReactDOM.createRoot(container);
+  root.render(<MyPopConfirm msg={msg} callback={callback}/>);
+};*/
 function App(props) {
   const customization = useSelector((state) => state.customization);
   console.log(process.env);
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
+        <CssBaseline/>
         <NavigationScroll>
-          <CssBaseline/>
           <ConfigProvider locale={zhCN}>
             <ThemeRoutes/>
           </ConfigProvider>

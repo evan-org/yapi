@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import { Grid } from "@mui/material";
+import React from "react";
 import { Row, Col } from "antd";
 import Icon from "@ant-design/icons";
 //
@@ -7,27 +7,6 @@ import styles from "./Footer.module.scss";
 //
 const version = "1.0.0" // process.env.version;
 //
-
-function FootItem(props) {
-  const {iconType, linkList, title} = props;
-  return (
-    <Col span={6}>
-      <h4 className="title">
-        {iconType ? <Icon type={iconType} className="icon"/> : ""}
-        {title}
-      </h4>
-      {
-        linkList.map((item, i) => (
-          <p key={i}>
-            <a href={item.itemLink} className="link">
-              {item.itemTitle}
-            </a>
-          </p>
-        ))
-      }
-    </Col>
-  )
-}
 const footList = [
   {
     title: "GitHub",
@@ -80,13 +59,27 @@ const footList = [
 function Main(props) {
   return (
     <footer className={styles.FooterWrapper}>
-      <Row className="footer-container">
+      <Grid container className="footer-container">
         {
           footList.map((item, index) => (
-            <FootItem key={index} linkList={item.linkList} title={item.title} iconType={item.iconType}/>
+            <Grid item xs={3} key={index}>
+              <h4 className="title">
+                {item.iconType ? <Icon type={item.iconType} className="icon"/> : ""}
+                {item.title}
+              </h4>
+              {
+                item.linkList.map((item2, i2) => (
+                  <p key={i2}>
+                    <a href={item2.itemLink} className="link">
+                      {item2.itemTitle}
+                    </a>
+                  </p>
+                ))
+              }
+            </Grid>
           ))
         }
-      </Row>
+      </Grid>
     </footer>
   )
 }

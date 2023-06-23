@@ -1,16 +1,9 @@
-import { Grid } from "@mui/material";
+import { Grid, CircularProgress } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
 import GroupList from "./components/GroupList/GroupList.jsx";
 import GroupContent from "./components/GroupContent/GroupContent.jsx";
-// import ProjectList from "./components/ProjectList/ProjectList.jsx";
-// import MemberList from "./components/MemberList/MemberList.jsx";
-// import GroupLog from "./components/GroupLog/GroupLog.jsx";
-// import GroupSetting from "./components/GroupSetting/GroupSetting.jsx";
 //
 import { connect } from "react-redux";
-import { Spin } from "antd";
-//
 // import { fetchNewsData } from "@/reducer/modules/news.js";
 import { setCurrGroup } from "@/reducer/modules/group.js";
 //
@@ -41,7 +34,7 @@ function Group(props) {
   }, []);
   //
   if (groupId === -1) {
-    return <Spin/>
+    return <CircularProgress />
   }
   return (
     <Grid container spacing={0} className={styles.Group}>

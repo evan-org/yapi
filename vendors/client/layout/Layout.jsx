@@ -27,7 +27,7 @@ function AlertContent() {
 }
 function Layout(props) {
   console.debug("layout =>", props);
-  // const {} = useR
+  //
   const { loginState, checkLoginState } = props;
   const [visible, setVisible] = useState(true);
   const [compute, setCompute] = useState("");
@@ -45,14 +45,15 @@ function Layout(props) {
   //
   useEffect(() => {
     console.log("location update", location);
-    if (!["", "/", "/login"].includes(location.pathname)) {
+    if (["", "/", "/login"].includes(location.pathname)) {
       setCompute(() => styles.compute);
     }
   }, [location])
+  //
   return (
     <div className={styles.Layout}>
       {loginState === 2 ? <AppHeader {...props}/> : null}
-      <Container className={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
+      <Container mode={"section"} className={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
         <Outlet/>
       </Container>
       {loginState !== 2 ? <AppFooter {...props}/> : null}

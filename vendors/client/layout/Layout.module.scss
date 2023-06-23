@@ -7,4 +7,7 @@
   position: relative;
   margin: 0;
   padding: 0;
+  &.compute {
+    height: auto;
+  }
 }
