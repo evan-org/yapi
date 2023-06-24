@@ -1,12 +1,11 @@
-import AddGroup from "@/components/AddGroup/AddGroup.jsx";
 import { Box, List, ListItemAvatar, ListItemText, Typography, Avatar, Divider, ListItemButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Input, Spin, Menu, Popover, Tooltip } from "antd";
-import Icon from "@ant-design/icons";
+import { Input, Spin, Tooltip } from "antd";
 //
 import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
+import AddGroup from "@/components/AddGroup/AddGroup.jsx";
 //
 import { fetchNewsData } from "@/reducer/modules/news";
 import { fetchGroupList, setCurrGroup, fetchGroupMsg } from "@/reducer/modules/group.js";
@@ -25,19 +24,15 @@ const tip = (
 );
 //
 function GroupList(props) {
-  const { currGroup, setCurrGroup, groupList, fetchGroupList, study, studyTip, currentGroupId } = props;
-  const [groupId, setGroupId] = useState(null);
   //
   const navigate = useNavigate();
   const { groupId: paramsGroupId } = useParams();
+  const { currGroup, setCurrGroup, groupList, fetchGroupList, study, currentGroupId } = props;
+  const [groupId, setGroupId] = useState(() => !isNaN(paramsGroupId) ? parseInt(paramsGroupId) : 0);
   //
   const onLoad = async() => {
     console.debug("GroupList.jsx onLoad: ", props);
     console.debug("GroupList.jsx onLoad: ", paramsGroupId);
-    //
-    if (paramsGroupId !== undefined) {
-      setGroupId(() => !isNaN(paramsGroupId) ? parseInt(paramsGroupId) : 0);
-    }
     //
     const req = await fetchGroupList();
     console.warn("GroupList.jsx fetchGroupList: ", req, groupList, groupId, !!groupId);
@@ -63,6 +58,7 @@ function GroupList(props) {
   const selectGroup = async(e) => {
     console.warn("GroupList.jsx selectGroup: ", e);
     const groupId = e.key;
+    setGroupId(e.key);
     const currGroup = groupList.find((group) => group._id === groupId);
     if (currGroup) {
       setCurrGroup(currGroup);
@@ -85,7 +81,7 @@ function GroupList(props) {
   }
   //
   return (
-    <Box sx={{ height: "100%" }} className={styles.GroupList}>
+    <Box sx={{ height: "calc(100vh - 64px)", overflowY: "auto" }} className={styles.GroupList}>
       {!study ? <div className="study-mask"/> : null}
       <div className="group-bar">
         <div className="curr-group">
@@ -113,7 +109,7 @@ function GroupList(props) {
               <Box key={index}>
                 <ListItemButton alignItems="flex-start" key={index} divider={(groupList.length - 1) === index}
                   onClick={(event) => selectGroup({ ...item, key: item._id })}
-                  selected={currentGroupId === item._id}>
+                  selected={groupId === item._id}>
                   <ListItemAvatar><Avatar alt="demo" src="/static/images/avatar/1.jpg"/></ListItemAvatar>
                   <ListItemText
                     primary={item.group_name}
@@ -132,30 +128,6 @@ function GroupList(props) {
             ))
           }
         </List>
-        {/* <Menu className="group-list" mode="inline" onClick={selectGroup} selectedKeys={[`${currGroup._id}`]}>
-          {
-            groupList.map((group) => {
-              if (group.type === "private") {
-                return (
-                  <Menu.Item key={`${group._id}`} className="group-item" style={{ zIndex: studyTip === 0 ? 3 : 1 }}>
-                    <Icon type="user"/>
-                    <Popover overlayClassName="popover-index" content={<GuideBtns/>} title={tip} placement="right"
-                      visible={studyTip === 0 && !study}>
-                      {group.group_name}
-                    </Popover>
-                  </Menu.Item>
-                );
-              } else {
-                return (
-                  <Menu.Item key={`${group._id}`} className="group-item">
-                    <Icon type="folder-open"/>
-                    {group.group_name}
-                  </Menu.Item>
-                );
-              }
-            })
-          }
-        </Menu> */}
       </div>
     </Box>
   )

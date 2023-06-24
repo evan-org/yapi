@@ -47,8 +47,8 @@ class GroupSetting extends Component {
     this.setState({
       currGroupName: props.currGroup.group_name,
       currGroupDesc: props.currGroup.group_desc,
-      custom_field1_name: props.currGroup.custom_field1.name,
-      custom_field1_enable: props.currGroup.custom_field1.enable
+      custom_field1_name: props.currGroup.custom_field1?.name,
+      custom_field1_enable: props.currGroup.custom_field1?.enable
     });
   }
 
