@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Input, Button, message, Card, Alert, Modal, Switch, Row, Col, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
-import { fetchNewsData } from "../../../../reducer/modules/news.js";
+import { fetchNewsData } from "@/reducer/modules/news.js";
 import {
   changeGroupMsg,
   fetchGroupList,
@@ -14,24 +14,8 @@ import {
 } from "@/reducer/modules/group.js";
 import { trim } from "@/utils/common.js";
 import _ from "underscore";
-import "./GroupSetting.scss";
+import styles from "./GroupSetting.module.scss";
 
-@connect(
-  (state) => ({
-    groupList: state.group.groupList,
-    currGroup: state.group.currGroup,
-    curUserRole: state.user.role
-  }),
-  {
-    changeGroupMsg,
-    fetchGroupList,
-    setCurrGroup,
-    fetchGroupMsg,
-    fetchNewsData,
-    updateGroupList,
-    deleteGroup
-  }
-)
 class GroupSetting extends Component {
   constructor(props) {
     super(props);
@@ -59,6 +43,7 @@ class GroupSetting extends Component {
   };
 
   initState(props) {
+    console.warn(props.currGroup);
     this.setState({
       currGroupName: props.currGroup.group_name,
       currGroupDesc: props.currGroup.group_desc,
@@ -200,7 +185,7 @@ class GroupSetting extends Component {
 
   render() {
     return (
-      <div className="m-panel card-panel card-panel-s panel-group">
+      <div className={styles.panelGroup + " m-panel card-panel card-panel-s"}>
         <Row type="flex" justify="space-around" className="row" align="middle">
           <Col span={4} className="label">
             分组名：
@@ -298,4 +283,19 @@ class GroupSetting extends Component {
   }
 }
 
-export default GroupSetting;
+export default connect(
+  (state) => ({
+    groupList: state.group.groupList,
+    currGroup: state.group.currGroup,
+    curUserRole: state.user.role
+  }),
+  {
+    changeGroupMsg,
+    fetchGroupList,
+    setCurrGroup,
+    fetchGroupMsg,
+    fetchNewsData,
+    updateGroupList,
+    deleteGroup
+  }
+)(GroupSetting);
