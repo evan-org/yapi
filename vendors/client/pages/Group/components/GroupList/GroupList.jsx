@@ -1,4 +1,4 @@
-import AddGroup from "@/pages/Group/components/AddGroup/AddGroup.jsx";
+import AddGroup from "@/components/AddGroup/AddGroup.jsx";
 import { Box } from "@mui/material";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import React, { useEffect, useState } from "react";

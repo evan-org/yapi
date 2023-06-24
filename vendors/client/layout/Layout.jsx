@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Loading from "../components/Loading/Loading.jsx";
+// import Loading from "../components/Loading/Loading.jsx";
 import AppFooter from "./components/Footer/Footer.jsx";
 import AppHeader from "./components/Header/Header.jsx";
 //

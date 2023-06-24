@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { autobind } from "core-decorators";
 import { Row, Col, Button, Tooltip } from "antd";
 import { Link } from "react-router-dom";
-import AddProject from "../AddProject/AddProject.jsx";
+import AddProject from "@/components/AddProject/AddProject.jsx";
 //
 import ProjectCard from "@/components/ProjectCard/ProjectCard.jsx";
 import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
