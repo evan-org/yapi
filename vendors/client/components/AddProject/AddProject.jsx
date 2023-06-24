@@ -112,9 +112,9 @@ function AddProject(props) {
   return (
     <>
       {
-        props.children ? props.children : <Button variant="contained" color="primary" onClick={handleClickOpen}>
-          创建项目
-        </Button>
+        props.children
+          ? <Box onClick={handleClickOpen}>{props.children}</Box>
+          : <Button variant="contained" color="primary" onClick={handleClickOpen}>创建项目</Button>
       }
       {/*  */}
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose} message={message} action={action}/>
@@ -136,7 +136,8 @@ function AddProject(props) {
                 {
                   groupList.map((item, index) => (
                     <MenuItem key={index} value={item._id.toString()}
-                      disabled={!(item.role === "dev" || item.role === "owner" || item.role === "admin")}>
+                      // disabled={!(item.role === "dev" || item.role === "owner" || item.role === "admin")}
+                    >
                       {item.group_name}
                     </MenuItem>
                   ))
