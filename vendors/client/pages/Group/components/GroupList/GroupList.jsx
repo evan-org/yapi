@@ -1,3 +1,4 @@
+import AddGroup from "@/pages/Group/components/AddGroup/AddGroup.jsx";
 import { Box } from "@mui/material";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import React, { useEffect, useState } from "react";
@@ -197,6 +198,7 @@ function GroupList(props) {
           </div>
           <div className="curr-group-desc">简介: {currGroup.group_desc}</div>
         </div>
+        <AddGroup/>
         <div className="group-operate">
           <div className="search">
             <Input.Search placeholder="搜索分类" onChange={(e) => searchGroup(e)} onSearch={(v) => searchGroup(null, v)}/>

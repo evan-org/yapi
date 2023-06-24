@@ -1,4 +1,7 @@
-import { Autocomplete, CircularProgress, TextField } from "@mui/material";
+import { Autocomplete, Checkbox, TextField } from "@mui/material";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+//
 import { Select } from "antd";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -106,40 +109,18 @@ class UserAutoComplete extends Component {
     );
   }
 }
-function sleep(delay = 0) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
-}
-function UserAutoCompleteMain() {
+const icon = <CheckBoxOutlineBlankIcon fontSize="small"/>;
+const checkedIcon = <CheckBoxIcon fontSize="small"/>;
+function UserAutoCompleteMain(props) {
+  const { onChange, value, name, label, placeholder } = props;
+  //
   const [open, setOpen] = useState(false);
+  const [selection, setSelection] = useState([]);
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
-  //
-  useEffect(() => {
-    let active = true;
-    if (!loading) {
-      return undefined;
-    }
-    (async() => {
-      const list = await handleSearch(); // For demo purposes.
-      if (active) {
-        setOptions([...list]);
-      }
-    })();
-    return () => {
-      active = false;
-    };
-  }, [loading]);
-  //
-  useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
   // 搜索回调
   const handleSearch = async(value) => {
-    const response = await axios.get("/api/user/search", { q: value });
+    const response = await axios.get("/api/user/search", { params: { q: value } });
     const data = response.data.data;
     if (data) {
       return data.map((v) => ({ ...v, title: v.username, username: v.username, id: v.uid, value: v.uid }));
@@ -148,33 +129,37 @@ function UserAutoCompleteMain() {
     }
   };
   //
-  const onChange = () => {
-
+  const _onChange = (event, newValue) => {
+    console.log(event, newValue);
+    setSelection(newValue)
+    onChange(event, newValue.map((e) => e.value));
+  }
+  const _onInput = async(e) => {
+    console.log(e.nativeEvent.data);
+    const list = await handleSearch(e.nativeEvent.data);
+    setOptions(list);
   }
   //
   return (
-    <Autocomplete id="asynchronous-demo" sx={{ width: 300 }} open={open}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      onClose={() => {
-        setOpen(false);
-      }}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
-      getOptionLabel={(option) => option.title}
+    <Autocomplete multiple limitTags={2}
+      name={name}
       options={options}
+      getOptionLabel={(option) => option.title}
+      defaultValue={value}
       loading={loading}
-      renderInput={(params) => (
-        <TextField label="Asynchronous" {...params} InputProps={{
-          ...params.InputProps,
-          endAdornment: (
-            <React.Fragment>
-              {loading ? <CircularProgress color="inherit" size={20}/> : null}
-              {params.InputProps.endAdornment}
-            </React.Fragment>
-          ),
-        }} onChange={onChange}/>
+      disableCloseOnSelect
+      renderOption={(props, option, { selected }) => (
+        <li {...props}>
+          <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected}/>
+          {option.title}
+        </li>
       )}
+      renderInput={(params) => (
+        <TextField {...params} label={label} placeholder={placeholder} onChange={_onInput}/>
+      )}
+      sx={{ width: "auto" }}
+      value={selection}
+      onChange={_onChange}
     />
   )
 }
