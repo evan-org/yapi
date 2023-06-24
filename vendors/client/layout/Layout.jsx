@@ -58,7 +58,6 @@ function Layout(props) {
       </Container>
       {loginState !== 2 ? <AppFooter {...props}/> : null}
       <AlertContent/>
-      <Loading visible={visible}/>
     </div>
   )
 }

@@ -376,11 +376,11 @@ function PrimarySearchAppBar(props) {
         }
         return (
           <Link key={key} to={item.path + (item.name === "个人中心" ? `/${props.uid}` : "")}>
-            <MenuItem key={key}>{item.name}</MenuItem>
+            <MenuItem sx={{fontSize: 14}} key={key}>{item.name}</MenuItem>
           </Link>
         )
       })}
-      <MenuItem onClick={onLogout}>退出</MenuItem>
+      <MenuItem sx={{fontSize: 14}} onClick={onLogout}>退出</MenuItem>
     </Menu>
   );
   /* mobile */

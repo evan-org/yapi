@@ -1,8 +1,9 @@
-node_modules/*
-common/json-schema-mockjs.js
-/common/tui-editor
-/static
+node_modules
+/common
+/exts
+/public
+/test
 /example
-.yarn/*
+.yarn
 .yarnrc.yml
-docs
+/docs

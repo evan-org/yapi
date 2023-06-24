@@ -119,12 +119,12 @@ const router = [
         ]
       },
       //
-      /* {
+      {
         path: "/follow",
         name: "Follow",
         element: lazy(() => import("../pages/Follow/Follow.jsx")),
         meta: { title: "查看报告", auth: true }
-      }*/
+      }
     ]
   },
   {

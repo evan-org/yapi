@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "target": "ES5",
+    "target": "ESNext",
     "lib": [
       "dom",
       "dom.iterable",
@@ -28,6 +28,5 @@
       "client/*": ["client/*"]
     }
   },
-  "include": ["client"],
-  "exclude": ["node_modules", "dist", ".yarn", "server", "docs", "static", "example"]
+  "include": ["client"]
 }
