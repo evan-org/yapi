@@ -1,19 +1,15 @@
 import AddGroup from "@/components/AddGroup/AddGroup.jsx";
-import { Box } from "@mui/material";
-import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import { Box, List, ListItemAvatar, ListItemText, Typography, Avatar, Divider, ListItemButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Modal, Input, message, Spin, Row, Menu, Col, Popover, Tooltip } from "antd";
+import { Input, Spin, Menu, Popover, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
-import axios from "axios";
 //
-import UsernameAutoComplete from "@/components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
 //
 import { fetchNewsData } from "@/reducer/modules/news";
 import { fetchGroupList, setCurrGroup, fetchGroupMsg } from "@/reducer/modules/group.js";
-import _ from "underscore";
 //
 import styles from "./GroupList.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,7 +25,7 @@ const tip = (
 );
 //
 function GroupList(props) {
-  const { currGroup, setCurrGroup, groupList, fetchGroupList, study, studyTip } = props;
+  const { currGroup, setCurrGroup, groupList, fetchGroupList, study, studyTip, currentGroupId } = props;
   const [groupId, setGroupId] = useState(null);
   //
   const navigate = useNavigate();
@@ -64,13 +60,15 @@ function GroupList(props) {
     onLoad();
   }, []);
   //
-  const selectGroup = (e) => {
+  const selectGroup = async(e) => {
+    console.warn("GroupList.jsx selectGroup: ", e);
     const groupId = e.key;
-    // const currGroup = groupList.find((group) => { return +group._id === +groupId });
-    const currGroup = _.find(groupList, (group) => +group._id === +groupId);
-    setCurrGroup(currGroup);
-    navigate(`${currGroup._id}`, { replace: true });
-    fetchNewsData(groupId, "group", 1, 10);
+    const currGroup = groupList.find((group) => group._id === groupId);
+    if (currGroup) {
+      setCurrGroup(currGroup);
+      await fetchNewsData(groupId, "group", 1, 10);
+      navigate(`${currGroup._id}`, { replace: true });
+    }
   }
   //
   const searchGroup = (e, value) => {
@@ -107,7 +105,34 @@ function GroupList(props) {
           </div>
         </div>
         {groupList.length === 0 && <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/>}
-        <Menu className="group-list" mode="inline" onClick={selectGroup} selectedKeys={[`${currGroup._id}`]}>
+        {/*  */}
+        <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+          <Divider variant="fullWidth" component="li"/>
+          {
+            groupList.map((item, index) => (
+              <Box key={index}>
+                <ListItemButton alignItems="flex-start" key={index} divider={(groupList.length - 1) === index}
+                  onClick={(event) => selectGroup({ ...item, key: item._id })}
+                  selected={currentGroupId === item._id}>
+                  <ListItemAvatar><Avatar alt="demo" src="/static/images/avatar/1.jpg"/></ListItemAvatar>
+                  <ListItemText
+                    primary={item.group_name}
+                    secondary={
+                      <React.Fragment>
+                        <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
+                          简介：
+                        </Typography>
+                        {item.group_desc}
+                      </React.Fragment>
+                    }
+                  />
+                </ListItemButton>
+                <Divider variant="inset" component="li"/>
+              </Box>
+            ))
+          }
+        </List>
+        {/* <Menu className="group-list" mode="inline" onClick={selectGroup} selectedKeys={[`${currGroup._id}`]}>
           {
             groupList.map((group) => {
               if (group.type === "private") {
@@ -130,7 +155,7 @@ function GroupList(props) {
               }
             })
           }
-        </Menu>
+        </Menu> */}
       </div>
     </Box>
   )
