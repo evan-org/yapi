@@ -28,138 +28,41 @@ const tip = (
   </div>
 );
 //
-function AddGroupModal(props) {
-  const {
-    addGroupModalVisible, inputNewGroupName, inputNewGroupDesc,
-    hideModal, setOwner_uids, addGroup
-  } = props;
-  const onUserSelect = (uids) => setOwner_uids(uids);
-  return (
-    <Modal title="添加分组" visible={addGroupModalVisible} onOk={addGroup} onCancel={hideModal} className="add-group-modal">
-      <Row gutter={6} className="modal-input">
-        <Col span={5}>
-          <div className="label">分组名：</div>
-        </Col>
-        <Col span={15}>
-          <Input placeholder="请输入分组名称" onChange={inputNewGroupName}/>
-        </Col>
-      </Row>
-      <Row gutter={6} className="modal-input">
-        <Col span={5}>
-          <div className="label">简介：</div>
-        </Col>
-        <Col span={15}>
-          <Input.TextArea rows={3} placeholder="请输入分组描述" onChange={inputNewGroupDesc}/>
-        </Col>
-      </Row>
-      <Row gutter={6} className="modal-input">
-        <Col span={5}>
-          <div className="label">组长：</div>
-        </Col>
-        <Col span={15}>
-          <UsernameAutoComplete callbackState={onUserSelect}/>
-        </Col>
-      </Row>
-    </Modal>
-  )
-}
-//
 function GroupList(props) {
-  //
-  const { currGroup, groupList, fetchGroupList, study, studyTip } = props;
-  const [groupId, setGroupId] = useState(0);
-  //
-  const [addGroupModalVisible, setAddGroupModalVisible] = useState(false);
-  //
-  const [newGroupName, setNewGroupName] = useState("");
-  const [newGroupDesc, setNewGroupDesc] = useState("");
-  const [owner_uids, setOwner_uids] = useState([]);
-  //
-  const [currGroupName, setCurrGroupName] = useState("");
-  const [currGroupDesc, setCurrGroupDesc] = useState("");
+  const { currGroup, setCurrGroup, groupList, fetchGroupList, study, studyTip } = props;
+  const [groupId, setGroupId] = useState(null);
   //
   const navigate = useNavigate();
   const { groupId: paramsGroupId } = useParams();
   //
-  const init = async() => {
-    console.debug("UNSAFE_componentWillMount", props);
-    console.debug("UNSAFE_componentWillMount", paramsGroupId);
+  const onLoad = async() => {
+    console.debug("GroupList.jsx onLoad: ", props);
+    console.debug("GroupList.jsx onLoad: ", paramsGroupId);
     //
     if (paramsGroupId !== undefined) {
       setGroupId(() => !isNaN(paramsGroupId) ? parseInt(paramsGroupId) : 0);
     }
     //
     const req = await fetchGroupList();
-    console.log("11111111111111111111111111111", req);
-    //
-    let currGroup = false;
-    if (groupList.length && groupId) {
-      for (let i = 0; i < groupList.length; i++) {
-        if (groupList[i]._id === groupId) {
-          currGroup = groupList[i];
-        }
+    console.warn("GroupList.jsx fetchGroupList: ", req, groupList, groupId, !!groupId);
+    if (groupId) {
+      const _currGroup = groupList.find((e) => e._id === groupId);
+      if (_currGroup) {
+        setCurrGroup(_currGroup);
       }
-    } else if (!groupId && groupList.length) {
-      navigate(`/group/${groupList[0]._id}`);
+    } else {
+      // 没有id
+      if (groupList.length > 0) {
+        setGroupId(groupList[0]._id);
+        setCurrGroup(groupList[0]);
+        navigate(`/group/${groupList[0]._id}`);
+      }
     }
-    if (!currGroup) {
-      currGroup = groupList[0] || { group_name: "", group_desc: "" };
-      navigate(`${currGroup._id}`, { replace: true });
-    }
-    setCurrGroup(currGroup);
   }
   //
   useEffect(() => {
-    init();
-    return () => {
-      console.log("加载中");
-    };
+    onLoad();
   }, []);
-
-  //
-  const showModal = () => {
-    setAddGroupModalVisible(true);
-  }
-  //
-  const hideModal = () => {
-    setNewGroupName("")
-    setAddGroupModalVisible(false);
-  }
-  //
-  const addGroup = async() => {
-    const res = await axios.post("/api/group/add", { group_name: newGroupName, group_desc: newGroupDesc, owner_uids });
-    if (!res.data.errcode) {
-      //
-      hideModal();
-      const currGroup = await fetchGroupList();
-      fetchGroupMsg(currGroup._id);
-      fetchNewsData(currGroup._id, "group", 1, 10);
-    } else {
-      message.error(res.data.errmsg);
-    }
-  }
-  //
-  const editGroup = async() => {
-    const id = currGroup._id;
-    const res = await axios.post("/api/group/up", { group_name: currGroupName, group_desc: currGroupDesc, id });
-    if (res.data.errcode) {
-      message.error(res.data.errmsg);
-    } else {
-      await fetchGroupList();
-      const currGroup = _.find(groupList, (group) => +group._id === +id);
-      setCurrGroup(currGroup);
-      fetchGroupMsg(currGroup._id);
-      fetchNewsData(currGroup._id, "group", 1, 10);
-    }
-  }
-  //
-  const inputNewGroupName = (e) => {
-    setNewGroupName(e.target.value)
-  }
-  //
-  const inputNewGroupDesc = (e) => {
-    setNewGroupDesc(e.target.value)
-  }
   //
   const selectGroup = (e) => {
     const groupId = e.key;
@@ -184,21 +87,20 @@ function GroupList(props) {
   }
   //
   return (
-    <Box sx={{height: "100%"}} className={styles.GroupList}>
+    <Box sx={{ height: "100%" }} className={styles.GroupList}>
       {!study ? <div className="study-mask"/> : null}
       <div className="group-bar">
         <div className="curr-group">
           <div className="curr-group-name">
             <span className="name">{currGroup.group_name}</span>
             <Tooltip title="添加分组">
-              <span className="editSet" onClick={showModal}>
-                <ControlPointIcon/>
+              <span className="editSet">
+                <AddGroup/>
               </span>
             </Tooltip>
           </div>
           <div className="curr-group-desc">简介: {currGroup.group_desc}</div>
         </div>
-        <AddGroup/>
         <div className="group-operate">
           <div className="search">
             <Input.Search placeholder="搜索分类" onChange={(e) => searchGroup(e)} onSearch={(v) => searchGroup(null, v)}/>
@@ -230,17 +132,6 @@ function GroupList(props) {
           }
         </Menu>
       </div>
-      {/*  */}
-      <AddGroupModal {...{
-        addGroupModalVisible,
-        setAddGroupModalVisible,
-        addGroup,
-        editGroup,
-        hideModal,
-        setOwner_uids,
-        inputNewGroupName,
-        inputNewGroupDesc
-      }}/>
     </Box>
   )
 }
@@ -263,6 +154,7 @@ export default connect(
   (state) => ({
     groupList: state.group.groupList,
     currGroup: state.group.currGroup,
+    currentGroupId: state.group.currentGroupId,
     curUserRole: state.user.role,
     curUserRoleInGroup: state.group.currGroup.role || state.group.role,
     studyTip: state.user.studyTip,

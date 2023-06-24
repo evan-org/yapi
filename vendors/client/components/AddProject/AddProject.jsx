@@ -17,7 +17,6 @@ import { setBreadcrumb } from "@/reducer/modules/user.js";
 import { pickRandomProperty } from "@/utils/common.js";
 import constants from "@/utils/variable.js";
 import { useNavigate } from "react-router-dom";
-
 // 动画
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Zoom ref={ref} {...props} />;
@@ -34,7 +33,7 @@ const schema = yup.object().shape({
 });
 //
 function AddProject(props) {
-  const navigate  = useNavigate()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false);
   //
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -66,7 +65,7 @@ function AddProject(props) {
           setMessage("创建成功");
           setOpenSnackbar(true);
           //
-          navigate({pathname: "/project/" + res.payload.data.data._id + "/interface/api"});
+          navigate({ pathname: "/project/" + res.payload.data.data._id + "/interface/api" });
         }
       } catch (e) {
         console.error(e);
@@ -112,9 +111,11 @@ function AddProject(props) {
   //
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        创建项目
-      </Button>
+      {
+        props.children ? props.children : <Button variant="contained" color="primary" onClick={handleClickOpen}>
+          创建项目
+        </Button>
+      }
       {/*  */}
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose} message={message} action={action}/>
       {/*  */}

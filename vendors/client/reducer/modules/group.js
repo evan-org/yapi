@@ -39,6 +39,7 @@ const createAsyncReducers = (asyncThunks) => {
 export const appSlice = createSlice({
   name: "group",
   initialState: {
+    currentGroupId: "", // 当前选择的组ID
     groupList: [],
     myGroup: {},
     currGroup: {
@@ -57,6 +58,11 @@ export const appSlice = createSlice({
     role: ""
   },
   reducers: {
+    /* 设置当前选中的ID */
+    SET_CURRENT_GROUP_ID: (state, action) => {
+      console.debug("[FETCH_GROUP_LIST]: ", action);
+      state.currentGroupId = action.payload;
+    },
     /* 获取我的空间 */
     FETCH_MY_GROUP_LIST: (state, action) => {
       console.debug("[FETCH_GROUP_LIST]: ", action);
@@ -72,9 +78,12 @@ export const appSlice = createSlice({
       console.debug("[UPDATE_GROUP_LIST]: ", action);
       state.groupList = action.payload
     },
+    /* 设置当前选中的组 */
     SET_CURR_GROUP: (state, action) => {
       console.debug("[SET_CURR_GROUP]: ", action);
-      state.currGroup = { ...action.payload.data.data, id: action.payload.data.data._id }
+      state.currGroup = { ...action.payload.data.data, id: action.payload.data.data._id };
+      //
+      state.currentGroupId = action.payload.data.data._id;
     },
     FETCH_GROUP_MEMBER: (state, action) => {
       console.debug("[FETCH_GROUP_MEMBER]: ", action);
@@ -94,6 +103,7 @@ export const appSlice = createSlice({
 })
 // 每个 case reducer 函数会生成对应的 Action creators
 export const {
+  SET_CURRENT_GROUP_ID,
   FETCH_GROUP_LIST,
   UPDATE_GROUP_LIST,
   SET_CURR_GROUP,

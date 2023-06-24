@@ -2,6 +2,8 @@ import styles from "./Home.module.scss";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+//
+import AppFooter from "./components/Footer/Footer.jsx";
 import { Row, Col, Button, Card } from "antd";
 import Icon from "@ant-design/icons";
 import PropTypes from "prop-types";
@@ -337,31 +339,34 @@ function Home(props) {
     props.changeMenuItem("/group");
   };
   return (
-    <div className={styles.HomeMain}>
-      <HomeGuest introList={props.introList}/>
-      <div className="row-tip">
-        <div className="container">
-          <div className="tip-title">
-            <h3 className="title">准备好使用了吗？</h3>
-            <p className="desc">注册账号尽请使用吧，查看使用文档了解更多信息</p>
-          </div>
-          <div className="tip-btns">
-            <div className="btn-group">
-              <Link to="/login">
-                <Button type="primary" className="btn-home btn-login">
-                  登录 / 注册
+    <>
+      <div className={styles.HomeMain}>
+        <HomeGuest introList={props.introList}/>
+        <div className="row-tip">
+          <div className="container">
+            <div className="tip-title">
+              <h3 className="title">准备好使用了吗？</h3>
+              <p className="desc">注册账号尽请使用吧，查看使用文档了解更多信息</p>
+            </div>
+            <div className="tip-btns">
+              <div className="btn-group">
+                <Link to="/login">
+                  <Button type="primary" className="btn-home btn-login">
+                    登录 / 注册
+                  </Button>
+                </Link>
+                <Button className="btn-home btn-home-normal">
+                  <a target="_blank" rel="noopener noreferrer" href="https://hellosean1025.github.io/yapi">
+                    使用文档
+                  </a>
                 </Button>
-              </Link>
-              <Button className="btn-home btn-home-normal">
-                <a target="_blank" rel="noopener noreferrer" href="https://hellosean1025.github.io/yapi">
-                  使用文档
-                </a>
-              </Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <AppFooter/>
+    </>
   )
 }
 export default connect(

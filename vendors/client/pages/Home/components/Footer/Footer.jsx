@@ -3,7 +3,7 @@ import React from "react";
 import { Row, Col } from "antd";
 import Icon from "@ant-design/icons";
 //
-import styles from "./Footer.module.scss";
+import styles from "client/pages/Home/components/Footer/Footer.module.scss";
 //
 const version = "1.0.0" // process.env.version;
 //

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import Loading from "../components/Loading/Loading.jsx";
-import AppFooter from "./components/Footer/Footer.jsx";
+import AppFooter from "@/pages/Home/components/Footer/Footer.jsx";
 import AppHeader from "./components/Header/Header.jsx";
 //
 import styles from "./Layout.module.scss";
@@ -52,11 +52,10 @@ function Layout(props) {
   //
   return (
     <div className={styles.Layout}>
-      {loginState === 2 ? <AppHeader {...props}/> : null}
+      {isLogin ? <AppHeader {...props}/> : null}
       <Container mode={"section"} className={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
         <Outlet/>
       </Container>
-      {loginState !== 2 ? <AppFooter {...props}/> : null}
       <AlertContent/>
     </div>
   )
