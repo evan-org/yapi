@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Input, Spin, Tooltip } from "antd";
 //
-import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
+// import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
 import AddGroup from "@/components/AddGroup/AddGroup.jsx";
 //
 import { fetchNewsData } from "@/reducer/modules/news";

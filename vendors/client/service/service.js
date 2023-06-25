@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getToken, removeInfo, removeToken } from "@/utils/auth";
+import { getToken, removeInfo, removeToken } from "@/utils/auth.js";
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.NODE_ENV === "development" ? "/api" : process.env["VITE_REACT_APP_BASE_URL"], // url = base url + request url
@@ -39,10 +39,12 @@ service.interceptors.request.use((config) => {
 // response interceptor response拦截器
 service.interceptors.response.use((response) => {
   const { code, message } = response.data;
-  if (["002", "000"].includes(response.data.code)) {
+  if ([0, "0"].includes(response.data.errcode)) {
     return response.data
+  } else if ([40011, "40011"].includes(response.data.errcode)) {
+    // Toast.show({ content: message }) 未登录
+    return
   } else {
-    // Toast.show({ content: message })
     return Promise.reject(new Error(message || "Error"))
   }
 }, (error) => {
