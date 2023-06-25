@@ -1,9 +1,9 @@
-const logModel = require("../models/log.js");
+const logModel = require("@root/models/modules/log.js");
 const yapi = require("../yapi.js");
 const baseController = require("./base.js");
-const groupModel = require("../models/group");
-const projectModel = require("../models/project");
-const interfaceModel = require("../models/interface");
+const groupModel = require("@root/models/modules/group.js");
+const projectModel = require("@root/models/modules/project.js");
+const interfaceModel = require("@root/models/modules/interface.js");
 
 class logController extends baseController {
   constructor(ctx) {

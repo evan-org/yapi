@@ -2,12 +2,10 @@ const yapi = require("../yapi.js");
 const baseController = require("./base.js");
 const fs = require("fs"); // 引入文件模块
 const path = require("path");
-
 class interfaceColController extends baseController {
   constructor(ctx) {
     super(ctx);
   }
-
   /**
    * 测试 get
    * @interface /test/get
@@ -28,7 +26,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 code
    * @interface /http/code
@@ -46,7 +43,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 post
    * @interface /test/post
@@ -62,7 +58,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 单文件上传
    * @interface /test/single/upload
@@ -74,18 +69,15 @@ class interfaceColController extends baseController {
     try {
       // let params = ctx.request.body;
       let req = ctx.req;
-
       let chunks = [],
         size = 0;
       req.on("data", function(chunk) {
         chunks.push(chunk);
         size += chunk.length;
       });
-
       req.on("finish", function() {
         console.log(34343);
       });
-
       req.on("end", function() {
         let data = new Buffer(size);
         for (let i = 0, pos = 0, l = chunks.length; i < l; i++) {
@@ -97,13 +89,11 @@ class interfaceColController extends baseController {
           return (ctx.body = yapi.commons.resReturn(null, 402, "写入失败"));
         });
       });
-
       ctx.body = yapi.commons.resReturn({ res: "上传成功" });
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 文件上传
    * @interface /test/files/upload
@@ -121,7 +111,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 put
    * @interface /test/put
@@ -137,7 +126,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 delete
    * @interface /test/delete
@@ -153,7 +141,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 head
    * @interface /test/head
@@ -169,7 +156,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 options
    * @interface /test/options
@@ -185,7 +171,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试 patch
    * @interface /test/patch
@@ -216,7 +201,6 @@ class interfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 测试返回值
    * @interface /test/response
@@ -238,5 +222,4 @@ class interfaceColController extends baseController {
     }
   }
 }
-
 module.exports = interfaceColController;

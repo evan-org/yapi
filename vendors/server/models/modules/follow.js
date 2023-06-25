@@ -1,4 +1,4 @@
-const baseModel = require("./base.js");
+const baseModel = require("@root/models/modules/base.js");
 
 class followModel extends baseModel {
   getName() {

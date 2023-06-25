@@ -21,9 +21,9 @@ const noticeObj = {
 /*  */
 yapi.emitHook("addNotice", noticeObj)
 yapi.commons.sendNotice = async function(projectId, data) {
-  const projectModel = require("../models/project.js");
-  const userModel = require("../models/user.js");
-  const followModel = require("../models/follow.js");
+  const projectModel = require("@root/models/modules/project.js");
+  const userModel = require("@root/models/modules/user.js");
+  const followModel = require("@root/models/modules/follow.js");
   const followInst = yapi.getInst(followModel);
   const userInst = yapi.getInst(userModel);
   const projectInst = yapi.getInst(projectModel);

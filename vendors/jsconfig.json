@@ -23,6 +23,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "paths": {
+      "@root/*": ["server/*"],
       "common/*": ["common/*"],
       "@/*": ["client/*"],
       "client/*": ["client/*"]

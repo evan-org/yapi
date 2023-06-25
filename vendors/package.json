@@ -1,6 +1,6 @@
 {
   "name": "yapi-vendor",
-  "homepage": "./",
+  "homepage": ".",
   "version": "1.11.0",
   "description": "YAPI",
   "scripts": {
@@ -76,6 +76,10 @@
     "jsrsasign": "^8.0.12",
     "koa": "2.0.0",
     "koa-body": "^2.5.0",
+    "koa-bodyparser": "^4.4.1",
+    "koa-json": "^2.0.2",
+    "koa-jwt": "^4.0.4",
+    "koa-logger": "^3.2.1",
     "koa-multer": "1.0.2",
     "koa-mysql-session": "0.0.2",
     "koa-router": "^7.0.1",
@@ -83,6 +87,7 @@
     "koa-session-minimal": "3.0.3",
     "koa-static": "3.0.0",
     "koa-websocket": "4.0.0",
+    "koa2-history-api-fallback": "^0.1.0",
     "ldapjs": "~2.3.3",
     "markdown-it": "8.4.0",
     "markdown-it-anchor": "4.0.0",
@@ -90,6 +95,7 @@
     "material-ui-popup-state": "^5.0.8",
     "md5": "~2.3.0",
     "mockjs": "^1.1.0",
+    "module-alias": "^2.2.3",
     "moment": "^2.19.3",
     "mongodb": "3.1.8",
     "mongoose": "5.7.5",
@@ -189,6 +195,9 @@
     "speed-measure-webpack-plugin": "^1.5.0",
     "validate-commit-msg": "^2.14.0",
     "ydoc-plugin-img-view": "^1.0.1"
+  },
+  "_moduleAliases": {
+    "@root": "./server"
   },
   "config": {},
   "engines": {

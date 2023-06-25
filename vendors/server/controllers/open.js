@@ -1,10 +1,10 @@
-const projectModel = require("../models/project.js");
-const interfaceColModel = require("../models/interfaceCol.js");
-const interfaceCaseModel = require("../models/interfaceCase.js");
-const interfaceModel = require("../models/interface.js");
-const interfaceCatModel = require("../models/interfaceCat.js");
-const followModel = require("../models/follow.js");
-const userModel = require("../models/user.js");
+const projectModel = require("@root/models/modules/project.js");
+const interfaceColModel = require("@root/models/modules/interfaceCol.js");
+const interfaceCaseModel = require("@root/models/modules/interfaceCase.js");
+const interfaceModel = require("@root/models/modules/interface.js");
+const interfaceCatModel = require("@root/models/modules/interfaceCat.js");
+const followModel = require("@root/models/modules/follow.js");
+const userModel = require("@root/models/modules/user.js");
 const yapi = require("../yapi.js");
 const baseController = require("./base.js");
 const {

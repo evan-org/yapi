@@ -1,5 +1,5 @@
 const yapi = require("yapi.js");
-const baseModel = require("models/base.js");
+const baseModel = require("@root/models/modules/base.js");
 
 class advMockModel extends baseModel {
   getName() {

@@ -1,13 +1,13 @@
-const userModel = require("../models/user.js");
+const userModel = require("@root/models/modules/user.js");
 const yapi = require("../yapi.js");
 const baseController = require("./base.js");
 const common = require("../utils/commons.js");
 const ldap = require("../utils/ldap.js");
 
-const interfaceModel = require("../models/interface.js");
-const groupModel = require("../models/group.js");
-const projectModel = require("../models/project.js");
-const avatarModel = require("../models/avatar.js");
+const interfaceModel = require("@root/models/modules/interface.js");
+const groupModel = require("@root/models/modules/group.js");
+const projectModel = require("@root/models/modules/project.js");
+const avatarModel = require("@root/models/modules/avatar.js");
 
 const jwt = require("jsonwebtoken");
 

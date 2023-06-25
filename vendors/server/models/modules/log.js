@@ -1,5 +1,5 @@
-const yapi = require("../yapi.js");
-const baseModel = require("./base.js");
+const yapi = require("@root/yapi.js");
+const baseModel = require("@root/models/modules/base.js");
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 

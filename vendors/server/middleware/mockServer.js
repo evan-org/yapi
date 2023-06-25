@@ -1,6 +1,6 @@
 const yapi = require("../yapi.js");
-const projectModel = require("../models/project.js");
-const interfaceModel = require("../models/interface.js");
+const projectModel = require("@root/models/modules/project.js");
+const interfaceModel = require("@root/models/modules/interface.js");
 const mockExtra = require("../../common/mock-extra.js");
 const { schemaValidator } = require("../../common/utils.js");
 const _ = require("underscore");

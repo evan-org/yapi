@@ -1,24 +1,26 @@
-const fs = require("fs-extra");
 const path = require("path");
+const fs = require("fs-extra");
 const yapi = require("../yapi.js");
+//
 const sha1 = require("sha1");
-const logModel = require("../models/log.js");
-const projectModel = require("../models/project.js");
-const interfaceColModel = require("../models/interfaceCol.js");
-const interfaceCaseModel = require("../models/interfaceCase.js");
-const interfaceModel = require("../models/interface.js");
-const userModel = require("../models/user.js");
-const followModel = require("../models/follow.js");
 const json5 = require("json5");
 const _ = require("underscore");
 const Ajv = require("ajv");
 const Mock = require("mockjs");
-const sandboxFn = require("./sandbox")
-const ejs = require("easy-json-schema");
-const jsf = require("json-schema-faker");
-const { schemaValidator } = require("../../common/utils");
+const easyJsonScheme = require("easy-json-schema");
+const jsonSchemaFaker = require("json-schema-faker");
+//
+const logModel = require("@root/models/modules/log.js");
+const projectModel = require("@root/models/modules/project.js");
+const interfaceColModel = require("@root/models/modules/interfaceCol.js");
+const interfaceCaseModel = require("@root/models/modules/interfaceCase.js");
+const interfaceModel = require("@root/models/modules/interface.js");
+const userModel = require("@root/models/modules/user.js");
+const followModel = require("@root/models/modules/follow.js");
+const sandboxFn = require("./sandbox.js");
+const { schemaValidator } = require("../../common/utils.js");
 const http = require("http");
-jsf.extend("mock", function() {
+jsonSchemaFaker.extend("mock", function() {
   return {
     mock: function(xx) {
       return Mock.mock(xx);
@@ -293,33 +295,36 @@ exports.sandbox = (sandbox, script) => {
 /**
  *
  **/
-exports.trim = function trim(str) {
+function trim(str) {
   if (!str) {
     return str;
   }
   str = str + "";
   return str.replace(/(^\s*)|(\s*$)/g, "");
 }
+exports.trim = trim;
 /**
  *
  **/
-exports.ltrim = function ltrim(str) {
+function ltrim(str) {
   if (!str) {
     return str;
   }
   str = str + "";
   return str.replace(/(^\s*)/g, "");
 }
+exports.ltrim = ltrim;
 /**
  *
  **/
-exports.rtrim = function rtrim(str) {
+function rtrim(str) {
   if (!str) {
     return str;
   }
   str = str + "";
   return str.replace(/(\s*$)/g, "");
 }
+exports.rtrim = rtrim;
 /**
  * 处理请求参数类型，String 字符串去除两边空格，Number 使用parseInt 转换为数字
  * @params Object {a: ' ab ', b: ' 123 '}
@@ -360,7 +365,7 @@ exports.validateParams = (schema2, params) => {
   });
   let localize = require("ajv-i18n");
   delete schema2.closeRemoveAdditional;
-  const schema = ejs(schema2);
+  const schema = easyJsonScheme(schema2);
   schema.additionalProperties = !!flag;
   const validate = ajv.compile(schema);
   let valid = validate(params);
@@ -397,15 +402,16 @@ exports.saveLog = (logData) => {
  *
  * @param {*} router router
  * @param {*} baseurl base_url_path
- * @param {*} routerController controller
+ * @param {*} RouterController controller
  * @param {*} path  routerPath
  * @param {*} method request_method , post get put delete ...
  * @param {*} action controller action_name
  * @param {*} ws enable ws
  */
-exports.createAction = (router, baseurl, routerController, action, path, method, ws) => {
+// eslint-disable-next-line max-params
+exports.createAction = (router, baseurl, RouterController, action, path, method, ws) => {
   router[method](baseurl + path, async(ctx) => {
-    let inst = new routerController(ctx);
+    let inst = new RouterController(ctx);
     try {
       await inst.init(ctx);
       ctx.params = Object.assign({}, ctx.request.query, ctx.request.body, ctx.params);
@@ -534,7 +540,7 @@ exports.runCaseScript = async function runCaseScript(params, colId, interfaceId)
       }
     }
     if (colData.checkResponseField.enable) {
-      if (params.response.body[colData.checkResponseField.name] != colData.checkResponseField.value) {
+      if (params.response.body[colData.checkResponseField.name] !== colData.checkResponseField.value) {
         throw (`返回json ${colData.checkResponseField.name} 值不是${colData.checkResponseField.value}，请检查(该规则来源于于 [测试集->通用规则配置] )`)
       }
     }
@@ -545,9 +551,7 @@ exports.runCaseScript = async function runCaseScript(params, colId, interfaceId)
         let schema = JSON.parse(interfaceData.res_body);
         let result = schemaValidator(schema, context.body)
         if (!result.valid) {
-          throw (`返回Json 不符合 response 定义的数据结构,原因: ${result.message}
-数据结构如下：
-${JSON.stringify(schema, null, 2)}`)
+          throw (`返回Json 不符合 response 定义的数据结构,原因: ${result.message}\r\n数据结构如下：\r\n${JSON.stringify(schema, null, 2)}`)
         }
       }
     }
@@ -624,30 +628,22 @@ exports.handleMockScript = async function(script, context) {
 exports.createWebAPIRequest = function(ops) {
   return new Promise(function(resolve, reject) {
     let req = "";
-    let http_client = http.request(
-      {
-        host: ops.hostname,
-        method: "GET",
-        port: ops.port,
-        path: ops.path
-      },
-      function(res) {
-        res.on("error", function(err) {
-          reject(err);
+    let http_client = http.request({ host: ops.hostname, method: "GET", port: ops.port, path: ops.path }, function(res) {
+      res.on("error", function(err) {
+        reject(err);
+      });
+      res.setEncoding("utf8");
+      if (res.statusCode !== 200) {
+        reject({ message: "statusCode != 200" });
+      } else {
+        res.on("data", function(chunk) {
+          req += chunk;
         });
-        res.setEncoding("utf8");
-        if (res.statusCode != 200) {
-          reject({ message: "statusCode != 200" });
-        } else {
-          res.on("data", function(chunk) {
-            req += chunk;
-          });
-          res.on("end", function() {
-            resolve(req);
-          });
-        }
+        res.on("end", function() {
+          resolve(req);
+        });
       }
-    );
+    });
     http_client.on("error", (e) => {
       reject({ message: `request error: ${e.message}` });
     });
