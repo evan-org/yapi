@@ -14,7 +14,7 @@ const {
   checkNameIsExistInArray
 } = require("../../common/postmanLib");
 const { handleParamsValue, ArrayToObject } = require("../../common/utils.js");
-const renderToHtml = require("../utils/reportHtml");
+const renderToHtml = require("../views/reportHtml");
 const axios = require("axios");
 const HanldeImportData = require("../../common/HandleImportData");
 const _ = require("underscore");

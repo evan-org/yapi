@@ -34,8 +34,10 @@ export const appSlice = createSlice({
   reducers: {
     GET_LOGIN_STATE: (state, action) => {
       state.isLogin = action.payload.data.errcode === 0;
+      //
       state.isLDAP = action.payload.data.ladp;
       state.canRegister = action.payload.data.canRegister;
+      //
       state.role = action.payload.data.data ? action.payload.data.data.role : null;
       state.loginState = action.payload.data.errcode === 0 ? MEMBER_STATUS : GUEST_STATUS;
       state.userName = action.payload.data.data ? action.payload.data.data.username : null;

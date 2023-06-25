@@ -1,7 +1,7 @@
 const fs = require("fs-extra");
 const yapi = require("./yapi.js");
 const commons = require("./utils/commons");
-const dbModule = require("./utils/db.js");
+const dbModule = require("./service/db.js");
 const userModel = require("./models/user.js");
 const mongoose = require("mongoose");
 

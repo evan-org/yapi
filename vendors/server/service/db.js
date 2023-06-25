@@ -1,6 +1,6 @@
 const Mongoose = require("mongoose");
 const yapi = require("../yapi.js");
-const autoIncrement = require("./mongoose-auto-increment");
+const autoIncrement = require("../utils/mongooseAutoIncrement.js");
 function model(model, schema) {
   if (!(schema instanceof Mongoose.Schema)) {
     schema = new Mongoose.Schema(schema);

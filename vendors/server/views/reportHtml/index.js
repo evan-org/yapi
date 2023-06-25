@@ -1,17 +1,14 @@
-const defaultTheme = require("./defaultTheme.js");
-
+const defaultTheme = require("../reportHtml/defaultTheme.js");
 function json_format(json) {
   if (json && typeof json === "object") {
     return JSON.stringify(json, null, "   ");
   }
   return json;
 }
-
 module.exports = function renderToHtml(reports) {
   let tp = createHtml(reports);
   return tp;
 };
-
 function createHtml(reports) {
   let mdTemplate = "";
   let left = "";
@@ -25,7 +22,6 @@ function createHtml(reports) {
   });
   return createHtml5(left, mdTemplate, reports.message, reports.runTime);
 }
-
 function createHtml5(left, tp, msg, runTime) {
   let message = "";
   if (msg.failedNum === 0) {
@@ -37,7 +33,6 @@ function createHtml5(left, tp, msg, runTime) {
       msg.successNum
     }</span> 个验证通过， ${msg.failedNum} 个未通过(${runTime})</div>`;
   }
-
   // html5模板
   let html = `<!DOCTYPE html>
   <html>
@@ -72,7 +67,6 @@ function createHtml5(left, tp, msg, runTime) {
   `;
   return html;
 }
-
 function requestHtml(url, headers, params) {
   headers = json_format(headers, null, "   ");
   params = json_format(params);
@@ -92,7 +86,6 @@ function requestHtml(url, headers, params) {
     </div>
    </div>`
     : "";
-
   html += params
     ? ` <div class="row case-report">
    <div class="col-3 case-report-title">Body</div>
@@ -102,16 +95,13 @@ function requestHtml(url, headers, params) {
    </div>`
     : "";
   html += "</div>";
-
   return html;
 }
-
 function reponseHtml(res_header, res_body) {
   res_header = json_format(res_header, null, "   ");
   res_body = json_format(res_body, null, "   ");
   let html = "";
   html += "<div><h3>Reponse</h3>";
-
   html += res_header
     ? `
   <div class="row case-report">
@@ -121,7 +111,6 @@ function reponseHtml(res_header, res_body) {
    </div>
   </div>`
     : "";
-
   html += res_body
     ? ` <div class="row case-report">
   <div class="col-3 case-report-title">Body</div>
@@ -130,15 +119,12 @@ function reponseHtml(res_header, res_body) {
   </div>
  </div>`
     : "";
-
   html += "</div>";
-
   return html;
 }
-
 function validHtml(validRes) {
   if (validRes && Array.isArray(validRes)) {
-    validRes = validRes.map((item, index) => `<div key=${index}>${item.message}</div>`);
+    validRes = validRes.map((item, index) => `<div key="${index}">${item.message}</div>`);
   }
   let html = `
   <div>
@@ -151,10 +137,8 @@ function validHtml(validRes) {
   </div>
   
   `;
-
   return html;
 }
-
 function baseHtml(index, name, path, status) {
   let html = `
   <div>
@@ -170,10 +154,8 @@ function baseHtml(index, name, path, status) {
    </div>
   </div>
   `;
-
   return html;
 }
-
 function leftHtml(index, name, code) {
   let html = `
   <div class="list-content">
@@ -181,10 +163,8 @@ function leftHtml(index, name, code) {
     ${codeHtml(code)}
   </div>
   `;
-
   return html;
 }
-
 function codeHtml(code) {
   let codeHtml = "";
   switch (code) {

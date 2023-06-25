@@ -1,17 +1,17 @@
 const koaRouter = require("koa-router");
-const yapi = require("./yapi.js");
+const yapi = require("../yapi.js");
 // controllers
-const interfaceController = require("./controllers/interface.js");
-const groupController = require("./controllers/group.js");
-const userController = require("./controllers/user.js");
-const interfaceColController = require("./controllers/interfaceCol.js");
-const testController = require("./controllers/test.js");
-const projectController = require("./controllers/project.js");
-const logController = require("./controllers/log.js");
-const followController = require("./controllers/follow.js");
-const openController = require("./controllers/open.js");
+const interfaceController = require("../controllers/interface.js");
+const groupController = require("../controllers/group.js");
+const userController = require("../controllers/user.js");
+const interfaceColController = require("../controllers/interfaceCol.js");
+const testController = require("../controllers/test.js");
+const projectController = require("../controllers/project.js");
+const logController = require("../controllers/log.js");
+const followController = require("../controllers/follow.js");
+const openController = require("../controllers/open.js");
 //
-const { createAction } = require("./utils/commons.js");
+const { createAction } = require("../utils/commons.js");
 const router = koaRouter();
 let INTERFACE_CONFIG = {
   interface: {

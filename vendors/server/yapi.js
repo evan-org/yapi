@@ -53,4 +53,5 @@ const yapi = {
 if (mail) {
   yapi.mail = mail;
 }
+yapi.commons = {};
 module.exports = yapi;

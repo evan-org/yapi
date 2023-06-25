@@ -1,18 +1,14 @@
 const ldap = require("ldapjs");
 const yapi = require("../yapi.js");
 const util = require("util");
-
 exports.ldapQuery = (username, password) =>
-// const deferred = Q.defer();
-
+  // const deferred = Q.defer();
   new Promise((resolve, reject) => {
     const { ldapLogin } = yapi.WEBROOT_CONFIG;
-
     //  使用ldapjs库创建一个LDAP客户端
     const client = ldap.createClient({
       url: ldapLogin.server
     });
-
     client.once("error", (err) => {
       if (err) {
         let msg = {
@@ -49,7 +45,6 @@ exports.ldapQuery = (username, password) =>
           reject(msg);
         }
       });
-
       search.on("searchReference", (referral) => {
         // if (referral) {
         //   let msg = {
@@ -103,7 +98,6 @@ exports.ldapQuery = (username, password) =>
             };
             reject(msg);
           }
-
           resolve();
         });
       } else {
@@ -124,7 +118,6 @@ exports.ldapQuery = (username, password) =>
         filter: `(${customFilter})`,
         scope: "sub"
       };
-
       // 开始查询
       // 第一个参数： 查询基础路径，代表在查询用户信息将在这个路径下进行，该路径由根结点开始
       // 第二个参数： 查询选项

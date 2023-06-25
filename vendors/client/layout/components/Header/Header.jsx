@@ -7,7 +7,6 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { replace } from "formik";
 //
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
@@ -319,6 +318,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function PrimarySearchAppBar(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logoutActions } = props;
   //
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -336,7 +336,7 @@ function PrimarySearchAppBar(props) {
   };
   const onLogout = async() => {
     try {
-      const res = await props.logoutActions();
+      const res = await logoutActions();
       if (res.payload.data.errcode === 0) {
         navigate({ pathname: "/" }, { replace: true });
         props.changeMenuItem("/");
@@ -376,11 +376,11 @@ function PrimarySearchAppBar(props) {
         }
         return (
           <Link key={key} to={item.path + (item.name === "个人中心" ? `/${props.uid}` : "")}>
-            <MenuItem sx={{fontSize: 14}} key={key}>{item.name}</MenuItem>
+            <MenuItem sx={{ fontSize: 14 }} key={key}>{item.name}</MenuItem>
           </Link>
         )
       })}
-      <MenuItem sx={{fontSize: 14}} onClick={onLogout}>退出</MenuItem>
+      <MenuItem sx={{ fontSize: 14 }} onClick={onLogout}>退出</MenuItem>
     </Menu>
   );
   /* mobile */

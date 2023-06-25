@@ -3,18 +3,18 @@ require("module").Module._initPaths();
 const yapi = require("./yapi.js");
 const commons = require("./utils/commons");
 yapi.commons = commons;
-const dbModule = require("./utils/db.js");
+const dbModule = require("./service/db.js");
 yapi.connect = dbModule.connect();
 const mockServer = require("./middleware/mockServer.js");
-require("./plugin.js");
+require("./plugins/plugin.js");
 const websockify = require("koa-websocket");
-const websocket = require("./websocket.js");
-const storageCreator = require("./utils/storage");
-require("./utils/notice");
+const websocket = require("./service/websocket.js");
+const storageCreator = require("./utils/storage.js");
+require("./utils/notice.js");
 const Koa = require("koa");
 const koaStatic = require("koa-static");
 const koaBody = require("koa-body");
-const router = require("./router.js");
+const router = require("routes/router.js");
 global.storageCreator = storageCreator;
 let indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
 const app = websockify(new Koa());
@@ -26,7 +26,7 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 websocket(app);
 app.use(async(ctx, next) => {
-  if (/^\/(?!api)[\w\/-]*$/i.test(ctx.path)) {
+  if (/^\/(?!api)[\w/-]*$/i.test(ctx.path)) {
     ctx.path = "/";
     await next();
   } else {

@@ -14,14 +14,10 @@ const _ = require("underscore");
 const Ajv = require("ajv");
 const Mock = require("mockjs");
 const sandboxFn = require("./sandbox")
-
-
 const ejs = require("easy-json-schema");
-
 const jsf = require("json-schema-faker");
 const { schemaValidator } = require("../../common/utils");
 const http = require("http");
-
 jsf.extend("mock", function() {
   return {
     mock: function(xx) {
@@ -29,12 +25,10 @@ jsf.extend("mock", function() {
     }
   };
 });
-
 const defaultOptions = {
   failOnInvalidTypes: false,
   failOnInvalidFormat: false
 };
-
 // formats.forEach(item => {
 //   item = item.name;
 //   jsf.format(item, () => {
@@ -44,10 +38,11 @@ const defaultOptions = {
 //     return Mock.mock('@' + item);
 //   });
 // });
-
+/**
+ *
+ * */
 exports.schemaToJson = function(schema, options = {}) {
   Object.assign(options, defaultOptions);
-
   jsf.option(options);
   let result;
   try {
@@ -58,26 +53,26 @@ exports.schemaToJson = function(schema, options = {}) {
   jsf.option(defaultOptions);
   return result;
 };
-
+/**
+ *
+ * */
 exports.resReturn = (data, num, errmsg) => {
   num = num || 0;
-
   return {
     errcode: num,
     errmsg: errmsg || "成功！",
     data: data
   };
 };
-
+/**
+ *
+ * */
 exports.log = (msg, type) => {
   if (!msg) {
     return;
   }
-
   type = type || "log";
-
   let f;
-
   switch (type) {
     case "log":
       f = console.log; // eslint-disable-line
@@ -92,27 +87,27 @@ exports.log = (msg, type) => {
       f = console.log; // eslint-disable-line
       break;
   }
-
   f(type + ":", msg);
-
   let date = new Date();
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
-
   let logfile = path.join(yapi.WEBROOT_LOG, year + "-" + month + ".log");
-
   if (typeof msg === "object") {
-    if (msg instanceof Error) {msg = msg.message;} else {msg = JSON.stringify(msg);}
+    if (msg instanceof Error) {
+      msg = msg.message;
+    } else {
+      msg = JSON.stringify(msg);
+    }
   }
-
   // let data = (new Date).toLocaleString() + '\t|\t' + type + '\t|\t' + msg + '\n';
   let data = `[ ${new Date().toLocaleString()} ] [ ${type} ] ${msg}\n`;
-
   fs.writeFileSync(logfile, data, {
     flag: "a"
   });
 };
-
+/**
+ *
+ * */
 exports.fileExist = (filePath) => {
   try {
     return fs.statSync(filePath).isFile();
@@ -120,25 +115,30 @@ exports.fileExist = (filePath) => {
     return false;
   }
 };
-
+/**
+ *
+ * */
 exports.time = () => Date.parse(new Date()) / 1000;
-
+/**
+ *
+ * */
 exports.fieldSelect = (data, field) => {
   if (!data || !field || !Array.isArray(field)) {
     return null;
   }
-
   let arr = {};
-
   field.forEach((f) => {
     typeof data[f] !== "undefined" && (arr[f] = data[f]);
   });
-
   return arr;
 };
-
+/**
+ *
+ * */
 exports.rand = (min, max) => Math.floor(Math.random() * (max - min) + min);
-
+/**
+ *
+ * */
 exports.json_parse = (json) => {
   try {
     return json5.parse(json);
@@ -146,10 +146,13 @@ exports.json_parse = (json) => {
     return json;
   }
 };
-
-exports.randStr = () => Math.random()
-  .toString(36)
-  .substr(2);
+/**
+ *
+ * */
+exports.randStr = () => Math.random().toString(36).substr(2);
+/**
+ *
+ * */
 exports.getIp = (ctx) => {
   let ip;
   try {
@@ -159,19 +162,26 @@ exports.getIp = (ctx) => {
   }
   return ip;
 };
-
+/**
+ *
+ * */
 exports.generatePassword = (password, passsalt) => sha1(password + sha1(passsalt));
-
+/**
+ *
+ * */
 exports.expireDate = (day) => {
   let date = new Date();
   date.setTime(date.getTime() + day * 86400000);
   return date;
 };
-
+/**
+ *
+ * */
 exports.sendMail = (options, cb) => {
-  if (!yapi.mail) {return false;}
+  if (!yapi.mail) {
+    return false;
+  }
   options.subject = options.subject ? options.subject + "-YApi 平台" : "YApi 平台";
-
   cb =
     cb ||
     function(err) {
@@ -181,7 +191,6 @@ exports.sendMail = (options, cb) => {
         yapi.commons.log("send mail " + options.to + " success");
       }
     };
-
   try {
     yapi.mail.sendMail(
       {
@@ -197,18 +206,15 @@ exports.sendMail = (options, cb) => {
     console.error(e.message); // eslint-disable-line
   }
 };
-
-exports.validateSearchKeyword = (keyword) => {
-  if (/^\*|\?|\+|\$|\^|\\|\.$/.test(keyword)) {
-    return false;
-  }
-
-  return true;
-};
-
+/**
+ *
+ * */
+exports.validateSearchKeyword = (keyword) => !/^\*|\?|\+|\$|\^|\\|\.$/.test(keyword);
+/**
+ *
+ * */
 exports.filterRes = (list, rules) => list.map((item) => {
   let filteredRes = {};
-
   rules.forEach((rule) => {
     if (typeof rule == "string") {
       filteredRes[rule] = item[rule];
@@ -216,10 +222,11 @@ exports.filterRes = (list, rules) => list.map((item) => {
       filteredRes[rule.alias] = item[rule.key];
     }
   });
-
   return filteredRes;
 });
-
+/**
+ *
+ * */
 exports.handleVarPath = (pathname, params) => {
   function insertParams(name) {
     if (!_.find(params, { name: name })) {
@@ -229,8 +236,9 @@ exports.handleVarPath = (pathname, params) => {
       });
     }
   }
-
-  if (!pathname) {return;}
+  if (!pathname) {
+    return;
+  }
   if (pathname.indexOf(":") !== -1) {
     let paths = pathname.split("/"),
       name,
@@ -246,20 +254,19 @@ exports.handleVarPath = (pathname, params) => {
     insertParams(match);
   });
 };
-
 /**
  * 验证一个 path 是否合法
  * path第一位必需为 /, path 只允许由 字母数字-/_:.{}= 组成
  */
-exports.verifyPath = (path) =>
+exports.verifyPath = (path) => {
   // if (/^\/[a-zA-Z0-9\-\/_:!\.\{\}\=]*$/.test(path)) {
   //   return true;
   // } else {
   //   return false;
   // }
-  /^\/[a-zA-Z0-9\-\/_:!\.\{\}\=]*$/.test(path)
-;
-
+  let reg = /^\/[a-zA-Z0-9\-\/_:!\.\{\}\=]*$/;
+  return reg.test(path)
+}
 /**
  * 沙盒执行 js 代码
  * @sandbox Object context
@@ -283,41 +290,36 @@ exports.sandbox = (sandbox, script) => {
     throw err
   }
 };
-
-function trim(str) {
+/**
+ *
+ **/
+exports.trim = function trim(str) {
   if (!str) {
     return str;
   }
-
   str = str + "";
-
   return str.replace(/(^\s*)|(\s*$)/g, "");
 }
-
-function ltrim(str) {
+/**
+ *
+ **/
+exports.ltrim = function ltrim(str) {
   if (!str) {
     return str;
   }
-
   str = str + "";
-
   return str.replace(/(^\s*)/g, "");
 }
-
-function rtrim(str) {
+/**
+ *
+ **/
+exports.rtrim = function rtrim(str) {
   if (!str) {
     return str;
   }
-
   str = str + "";
-
   return str.replace(/(\s*$)/g, "");
 }
-
-exports.trim = trim;
-exports.ltrim = ltrim;
-exports.rtrim = rtrim;
-
 /**
  * 处理请求参数类型，String 字符串去除两边空格，Number 使用parseInt 转换为数字
  * @params Object {a: ' ab ', b: ' 123 '}
@@ -328,7 +330,6 @@ exports.handleParams = (params, keys) => {
   if (!params || typeof params !== "object" || !keys || typeof keys !== "object") {
     return false;
   }
-
   for (let key in keys) {
     let filter = keys[key];
     if (params[key]) {
@@ -344,10 +345,11 @@ exports.handleParams = (params, keys) => {
       }
     }
   }
-
   return params;
 };
-
+/**
+ *
+ */
 exports.validateParams = (schema2, params) => {
   const flag = schema2.closeRemoveAdditional;
   const ajv = new Ajv({
@@ -356,28 +358,25 @@ exports.validateParams = (schema2, params) => {
     useDefaults: true,
     removeAdditional: !flag
   });
-
   let localize = require("ajv-i18n");
   delete schema2.closeRemoveAdditional;
-
   const schema = ejs(schema2);
-
   schema.additionalProperties = !!flag;
   const validate = ajv.compile(schema);
   let valid = validate(params);
-
   let message = "请求参数 ";
   if (!valid) {
     localize.zh(validate.errors);
     message += ajv.errorsText(validate.errors, { separator: "\n" });
   }
-
   return {
     valid: valid,
     message: message
   };
 };
-
+/**
+ *
+ */
 exports.saveLog = (logData) => {
   try {
     let logInst = yapi.getInst(logModel);
@@ -389,13 +388,11 @@ exports.saveLog = (logData) => {
       typeid: logData.typeid,
       data: logData.data
     };
-
     logInst.save(data).then();
   } catch (e) {
     yapi.commons.log(e, 'error'); // eslint-disable-line
   }
 };
-
 /**
  *
  * @param {*} router router
@@ -413,9 +410,7 @@ exports.createAction = (router, baseurl, routerController, action, path, method,
       await inst.init(ctx);
       ctx.params = Object.assign({}, ctx.request.query, ctx.request.body, ctx.params);
       if (inst.schemaMap && typeof inst.schemaMap === "object" && inst.schemaMap[action]) {
-
         let validResult = yapi.commons.validateParams(inst.schemaMap[action], ctx.params);
-
         if (!validResult.valid) {
           return (ctx.body = yapi.commons.resReturn(null, 400, validResult.message));
         }
@@ -435,9 +430,7 @@ exports.createAction = (router, baseurl, routerController, action, path, method,
     }
   });
 };
-
 /**
- *
  * @param {*} params 接口定义的参数
  * @param {*} val  接口case 定义的参数值
  */
@@ -445,7 +438,9 @@ function handleParamsValue(params, val) {
   let value = {};
   try {
     params = params.toObject();
-  } catch (e) { }
+  } catch (e) {
+    console.error(e);
+  }
   if (params.length === 0 || val.length === 0) {
     return params;
   }
@@ -453,7 +448,9 @@ function handleParamsValue(params, val) {
     value[item.name] = item;
   });
   params.forEach((item, index) => {
-    if (!value[item.name] || typeof value[item.name] !== "object") {return null;}
+    if (!value[item.name] || typeof value[item.name] !== "object") {
+      return null;
+    }
     params[index].value = value[item.name].value;
     if (!_.isUndefined(value[item.name].enable)) {
       params[index].enable = value[item.name].enable;
@@ -461,15 +458,16 @@ function handleParamsValue(params, val) {
   });
   return params;
 }
-
 exports.handleParamsValue = handleParamsValue;
-
+/**
+ *
+ *
+ * */
 exports.getCaseList = async function getCaseList(id) {
   const caseInst = yapi.getInst(interfaceCaseModel);
   const colInst = yapi.getInst(interfaceColModel);
   const projectInst = yapi.getInst(projectModel);
   const interfaceInst = yapi.getInst(interfaceModel);
-
   let resultList = await caseInst.list(id, "all");
   let colData = await colInst.get(id);
   for (let index = 0; index < resultList.length; index++) {
@@ -496,7 +494,6 @@ exports.getCaseList = async function getCaseList(id) {
   ctxBody.colData = colData;
   return ctxBody;
 };
-
 function convertString(variable) {
   if (variable instanceof Error) {
     return variable.name + ": " + variable.message;
@@ -510,8 +507,9 @@ function convertString(variable) {
     return variable || "";
   }
 }
-
-
+/**
+ *
+ * */
 exports.runCaseScript = async function runCaseScript(params, colId, interfaceId) {
   const colInst = yapi.getInst(interfaceColModel);
   let colData = await colInst.get(colId);
@@ -527,23 +525,19 @@ exports.runCaseScript = async function runCaseScript(params, colId, interfaceId)
       logs.push("log: " + convertString(msg));
     }
   };
-
   let result = {};
   try {
-
     if (colData.checkHttpCodeIs200) {
       let status = +params.response.status;
       if (status !== 200) {
         throw ("Http status code 不是 200，请检查(该规则来源于于 [测试集->通用规则配置] )")
       }
     }
-
     if (colData.checkResponseField.enable) {
       if (params.response.body[colData.checkResponseField.name] != colData.checkResponseField.value) {
         throw (`返回json ${colData.checkResponseField.name} 值不是${colData.checkResponseField.value}，请检查(该规则来源于于 [测试集->通用规则配置] )`)
       }
     }
-
     if (colData.checkResponseSchema) {
       const interfaceInst = yapi.getInst(interfaceModel);
       let interfaceData = await interfaceInst.get(interfaceId);
@@ -557,7 +551,6 @@ ${JSON.stringify(schema, null, 2)}`)
         }
       }
     }
-
     if (colData.checkScript.enable) {
       let globalScript = colData.checkScript.content;
       // script 是断言
@@ -566,8 +559,6 @@ ${JSON.stringify(schema, null, 2)}`)
         result = await sandboxFn(context, globalScript);
       }
     }
-
-
     let script = params.script;
     // script 是断言
     if (script) {
@@ -582,7 +573,9 @@ ${JSON.stringify(schema, null, 2)}`)
     return yapi.commons.resReturn(result, 400, err.name + ": " + err.message);
   }
 };
-
+/**
+ *
+ * */
 exports.getUserdata = async function getUserdata(uid, role) {
   role = role || "dev";
   let userInst = yapi.getInst(userModel);
@@ -597,8 +590,9 @@ exports.getUserdata = async function getUserdata(uid, role) {
     email: userData.email
   };
 };
-
-// 处理mockJs脚本
+/**
+ * 处理mockJs脚本
+ * */
 exports.handleMockScript = async function(script, context) {
   let sandbox = {
     header: context.ctx.header,
@@ -612,22 +606,21 @@ exports.handleMockScript = async function(script, context) {
     Random: Mock.Random
   };
   sandbox.cookie = {};
-
   context.ctx.header.cookie &&
-    context.ctx.header.cookie.split(";").forEach(function(Cookie) {
-      let parts = Cookie.split("=");
-      sandbox.cookie[parts[0].trim()] = (parts[1] || "").trim();
-    });
+  context.ctx.header.cookie.split(";").forEach(function(Cookie) {
+    let parts = Cookie.split("=");
+    sandbox.cookie[parts[0].trim()] = (parts[1] || "").trim();
+  });
   sandbox = await sandboxFn(sandbox, script);
   sandbox.delay = isNaN(sandbox.delay) ? 0 : +sandbox.delay;
-
   context.mockJson = sandbox.mockJson;
   context.resHeader = sandbox.resHeader;
   context.httpCode = sandbox.httpCode;
   context.delay = sandbox.delay;
 };
-
-
+/**
+ *
+ **/
 exports.createWebAPIRequest = function(ops) {
   return new Promise(function(resolve, reject) {
     let req = "";
