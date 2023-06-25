@@ -29,5 +29,5 @@
       "client/*": ["client/*"]
     }
   },
-  "include": ["client"]
+  "include": ["client", "server"]
 }
