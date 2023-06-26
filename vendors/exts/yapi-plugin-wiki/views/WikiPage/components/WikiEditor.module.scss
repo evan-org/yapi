@@ -2,7 +2,7 @@
 //require("../../../common/tui-editor/dist/tui-editor-contents.min.css"); // editor content
 .Editor {
   :global {
-    @import "../../../../common/tui-editor/dist/tui-editor.min.css";
-    @import "../../../../common/tui-editor/dist/tui-editor-contents.min.css";
+    @import "../../../../../common/tui-editor/dist/tui-editor.min.css";
+    @import "../../../../../common/tui-editor/dist/tui-editor-contents.min.css";
   }
 }

@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { Row, Col, Tooltip, Icon } from "antd";
-import { setBreadcrumb } from "../../../client/reducer/modules/user";
+import { setBreadcrumb } from "@/reducer/modules/user";
 import StatisChart from "./StatisticsChart/StatisticsChart";
 import StatisTable from "./StatisticsTable/StatisticsTable";
 import "./StatisticsClientPage.scss";

@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import { getToken } from '../../../client/reducer/modules/project.js'
+import { getToken } from '@/reducer/modules/project.js'
 
 
 import './GenServicesPage.scss';

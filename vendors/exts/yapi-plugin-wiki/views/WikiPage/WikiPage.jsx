@@ -5,10 +5,10 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import "./WikiPage.scss";
 //
-import { timeago } from "../../../common/utils";
+import { timeago } from "common/utils";
 import { Link } from "react-router-dom";
-import WikiView from "./lib/View.js";
-import WikiEditor from "./lib/WikiEditor.js";
+import WikiView from "./components/View.js";
+import WikiEditor from "./components/WikiEditor.js";
 //
 class WikiPage extends Component {
   constructor(props) {

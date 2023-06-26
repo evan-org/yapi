@@ -1,4 +1,4 @@
-import WikiPage from "./WikiPage/WikiPage";
+import WikiPage from "./views/WikiPage/WikiPage.js";
 // const WikiPage = require('./WikiPage/index')
 
 module.exports = function() {

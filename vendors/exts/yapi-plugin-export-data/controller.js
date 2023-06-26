@@ -1,4 +1,5 @@
 const baseController = require("controllers/base.js");
+//
 const interfaceModel = require("@server/models/modules/interface.js");
 const projectModel = require("@server/models/modules/project.js");
 // const wikiModel = require('../yapi-plugin-wiki/wikiModel.js');
@@ -7,7 +8,7 @@ const yapi = require("yapi.js");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const markdownItTableOfContents = require("markdown-it-table-of-contents");
-const defaultTheme = require("./defaultTheme.js");
+const defaultTheme = require("./views/defaultTheme.js");
 const md = require("../../common/markdown");
 
 // const htmlToPdf = require("html-pdf");

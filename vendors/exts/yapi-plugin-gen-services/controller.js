@@ -7,8 +7,8 @@ const yapi = require("yapi.js");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const markdownItTableOfContents = require("markdown-it-table-of-contents");
-const defaultTheme = require("./defaultTheme.js");
-const md = require("../../common/markdown");
+const defaultTheme = require("./views/defaultTheme.js");
+const md = require("../../common/markdown.js");
 
 // const htmlToPdf = require("html-pdf");
 class exportController extends baseController {

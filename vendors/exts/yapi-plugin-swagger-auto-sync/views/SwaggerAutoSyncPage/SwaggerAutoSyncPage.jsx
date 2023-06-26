@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { formatTime } from "../../../client/utils/common.js";
+import { formatTime } from "@/utils/common.js";
 import { Form, Switch, Button, Tooltip, message, Input, Select } from "antd";
 import Icon from "@ant-design/icons";
-import { handleSwaggerUrlData } from "../../../client/reducer/modules/project";
+import { handleSwaggerUrlData } from "@/reducer/modules/project";
 //
 import axios from "axios";
 // layout

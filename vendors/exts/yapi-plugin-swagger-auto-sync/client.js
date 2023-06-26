@@ -1,4 +1,4 @@
-import SwaggerAutoSyncPage from "./SwaggerAutoSyncPage/SwaggerAutoSyncPage.js"
+import SwaggerAutoSyncPage from "./views/SwaggerAutoSyncPage/SwaggerAutoSyncPage.jsx"
 
 function hander(routers) {
   routers.test = {
