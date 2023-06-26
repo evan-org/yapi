@@ -7,8 +7,8 @@ import "./WikiPage.scss";
 //
 import { timeago } from "common/utils";
 import { Link } from "react-router-dom";
-import WikiView from "./components/View.js";
-import WikiEditor from "./components/WikiEditor.js";
+import WikiView from "./components/View.jsx";
+import WikiEditor from "./components/WikiEditor.jsx";
 //
 class WikiPage extends Component {
   constructor(props) {

@@ -34,21 +34,23 @@ app.proxy = true;
 app.use(koaBodyparser())
 app.use(koaJson())
 app.use(koaLogger())
-// 中间件
-app.use(async function(ctx, next) {
-  let start = new Date()
-  await next()
-  let ms = new Date() - start
-  console.log("%s %s - %s", ctx.method, ctx.url, ms)
-})
 //
 app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
 app.use(mockServer);
 app.use(router.routes());
 app.use(historyApiFallback())
 app.use(router.allowedMethods());
-websocket(app);
 yapi.app = app;
+//
+websocket(app);
+// 中间件
+app.use(async function(ctx, next) {
+  let start = new Date()
+  await next()
+  let ms = new Date() - start
+  console.log("%s %s - %s", ctx.method, ctx.url, ms)
+});
+//
 app.use(async(ctx, next) => {
   if (/^\/(?!api)[\w/-]*$/i.test(ctx.path)) {
     ctx.path = "/";
