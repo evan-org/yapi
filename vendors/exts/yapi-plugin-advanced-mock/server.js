@@ -23,7 +23,6 @@ module.exports = function() {
   //
   yapi.connect.then(() => {
     let Col = mongoose.connection.db.collection("adv_mock");
-    console.log(Col)
     Col.createIndex({
       interface_id: 1
     });

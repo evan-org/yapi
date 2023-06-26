@@ -19,7 +19,6 @@ const axios = require("axios");
 const HanldeImportData = require("@common/HandleImportData.js");
 const _ = require("underscore");
 const createContex = require("@common/createContext.js")
-
 /**
  * {
  *    postman: require('./m')
@@ -27,7 +26,6 @@ const createContex = require("@common/createContext.js")
  */
 const importDataModule = {};
 yapi.emitHook("import_data", importDataModule);
-
 class openController extends baseController {
   constructor(ctx) {
     super(ctx);
@@ -71,15 +69,12 @@ class openController extends baseController {
       }
     };
   }
-
   async importData(ctx) {
     let type = ctx.params.type;
     let content = ctx.params.json;
     let project_id = ctx.params.project_id;
     let dataSync = ctx.params.merge;
-
     let warnMessage = ""
-
     /**
      * 因为以前接口文档写错了，做下兼容
      */
@@ -88,13 +83,13 @@ class openController extends baseController {
         warnMessage = "importData Api 已废弃 dataSync 传参，请联系管理员将 dataSync 改为 merge."
         dataSync = ctx.params.dataSync
       }
-    } catch (e) {}
-
+    } catch (e) {
+      console.error(e);
+    }
     let token = ctx.params.token;
     if (!type || !importDataModule[type]) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "不存在的导入方式"));
     }
-
     if (!content && !ctx.params.url) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "json 或者 url 参数，不能都为空"));
     }
@@ -102,7 +97,7 @@ class openController extends baseController {
       let request = require("request");// let Promise = require('Promise');
       let syncGet = function(url) {
         return new Promise(function(resolve, reject) {
-          request.get({url: url}, function(error, response, body) {
+          request.get({ url: url }, function(error, response, body) {
             if (error) {
               reject(error);
             } else {
@@ -120,7 +115,6 @@ class openController extends baseController {
     } catch (e) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "json 格式有误:" + e));
     }
-
     let menuList = await this.interfaceCatModel.list(project_id);
     /**
      * 防止分类被都被删除时取不到 selectCatid
@@ -141,7 +135,6 @@ class openController extends baseController {
     let selectCatid = menuList[0]._id;
     let projectData = await this.projectModel.get(project_id);
     let res = await importDataModule[type](content);
-
     let successMessage;
     let errorMessage = [];
     await HanldeImportData(
@@ -157,27 +150,24 @@ class openController extends baseController {
       (msg) => {
         successMessage = msg;
       },
-      () => {},
+      () => {
+      },
       token,
       yapi.WEBROOT_CONFIG.port
     );
-
     if (errorMessage.length > 0) {
       return (ctx.body = yapi.commons.resReturn(null, 404, errorMessage.join("\n")));
     }
     ctx.body = yapi.commons.resReturn(null, 0, successMessage + warnMessage);
   }
-
   async projectInterfaceData(ctx) {
     ctx.body = "projectInterfaceData";
   }
-
   handleValue(val, global) {
     let globalValue = ArrayToObject(global);
-    let context = Object.assign({}, {global: globalValue}, this.records);
+    let context = Object.assign({}, { global: globalValue }, this.records);
     return handleParamsValue(val, context);
   }
-
   handleEvnParams(params) {
     let result = [];
     Object.keys(params).map((item) => {
@@ -195,7 +185,6 @@ class openController extends baseController {
     }
     // console.log(1231312)
     const token = ctx.query.token;
-
     const projectId = ctx.params.project_id;
     const startTime = new Date().getTime();
     const records = (this.records = {});
@@ -203,14 +192,11 @@ class openController extends baseController {
     const testList = [];
     let id = ctx.params.id;
     let curEnvList = this.handleEvnParams(ctx.params);
-
     let colData = await this.interfaceColModel.get(id);
     if (!colData) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "id值不存在"));
     }
-
     let projectData = await this.projectModel.get(projectId);
-
     let caseList = await yapi.commons.getCaseList(id);
     if (caseList.errcode !== 0) {
       ctx.body = caseList;
@@ -219,10 +205,8 @@ class openController extends baseController {
     for (let i = 0, l = caseList.length; i < l; i++) {
       let item = caseList[i];
       let projectEvn = await this.projectModel.getByEnv(item.project_id);
-
       item.id = item._id;
       let curEnvItem = _.find(curEnvList, (key) => key.project_id == item.project_id);
-
       item.case_env = curEnvItem ? curEnvItem.curEnv || item.case_env : item.case_env;
       item.req_headers = this.handleReqHeader(item.req_headers, projectEvn.env, item.case_env);
       item.pre_script = projectData.pre_script;
@@ -235,7 +219,6 @@ class openController extends baseController {
       } catch (err) {
         result = err;
       }
-
       reports[item.id] = result;
       records[item.id] = {
         params: result.params,
@@ -243,7 +226,6 @@ class openController extends baseController {
       };
       testList.push(result);
     }
-
     function getMessage(testList) {
       let successNum = 0,
         failedNum = 0,
@@ -262,20 +244,16 @@ class openController extends baseController {
       } else {
         msg = `一共 ${len} 测试用例，${successNum} 个验证通过， ${failedNum} 个未通过。`;
       }
-
       return { msg, len, successNum, failedNum };
     }
-
     const endTime = new Date().getTime();
     const executionTime = (endTime - startTime) / 1000;
-
     let reportsResult = {
       message: getMessage(testList),
       runTime: executionTime + "s",
       numbs: testList.length,
       list: testList
     };
-
     if (ctx.params.email === true && reportsResult.message.failedNum !== 0) {
       let autoTestUrl = `${
         ctx.request.origin
@@ -308,7 +286,6 @@ class openController extends baseController {
       return (ctx.body = renderToHtml(reportsResult));
     }
   }
-
   async handleTest(interfaceData) {
     let requestParams = {};
     let options;
@@ -328,7 +305,6 @@ class openController extends baseController {
         interfaceData.interface_id
       ));
       let res = data.res;
-
       result = Object.assign(result, {
         status: res.status,
         statusText: res.statusText,
@@ -342,9 +318,7 @@ class openController extends baseController {
       if (options.data && typeof options.data === "object") {
         requestParams = Object.assign(requestParams, options.data);
       }
-
       let validRes = [];
-
       let responseData = Object.assign(
         {},
         {
@@ -354,7 +328,6 @@ class openController extends baseController {
           statusText: res.statusText
         }
       );
-
       await this.handleScriptTest(interfaceData, responseData, validRes, requestParams);
       result.params = requestParams;
       if (validRes.length === 0) {
@@ -373,12 +346,9 @@ class openController extends baseController {
         code: 400
       });
     }
-
     return result;
   }
-
   async handleScriptTest(interfaceData, response, validRes, requestParams) {
-
     try {
       let test = await yapi.commons.runCaseScript({
         response: response,
@@ -399,10 +369,8 @@ class openController extends baseController {
       });
     }
   }
-
   handleReqHeader(req_header, envData, curEnvName) {
     let currDomain = handleCurrDomain(envData, curEnvName);
-
     let header = currDomain.header;
     header.forEach((item) => {
       if (!checkNameIsExistInArray(item.name, req_header)) {
@@ -414,5 +382,4 @@ class openController extends baseController {
     return req_header;
   }
 }
-
 module.exports = openController;

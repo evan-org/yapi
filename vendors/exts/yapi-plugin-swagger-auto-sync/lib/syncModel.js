@@ -1,9 +1,6 @@
 const yapi = require("yapi.js");
 const baseModel = require("@server/models/modules/base.js");
 class syncModel extends baseModel {
-  constructor() {
-    super();
-  }
   getName() {
     return "interface_auto_sync";
   }
@@ -28,9 +25,7 @@ class syncModel extends baseModel {
     };
   }
   getByProjectId(id) {
-    return this.model.findOne({
-      project_id: id
-    })
+    return this.model.findOne({ project_id: id })
   }
   save(data) {
     data.up_time = yapi.commons.time();
@@ -38,11 +33,8 @@ class syncModel extends baseModel {
     return m.save();
   }
   listAll() {
-    return this.model
-    .find({})
-    .select(
-      "_id uid project_id add_time up_time is_sync_open sync_cron sync_json_url sync_mode old_swagger_content last_sync_time"
-    )
+    return this.model.find({})
+    .select("_id uid project_id add_time up_time is_sync_open sync_cron sync_json_url sync_mode old_swagger_content last_sync_time")
     .sort({ _id: -1 })
     .exec();
   }
@@ -50,26 +42,18 @@ class syncModel extends baseModel {
     let id = data.id;
     delete data.id;
     data.up_time = yapi.commons.time();
-    return this.model.update({
-      _id: id
-    }, data)
+    return this.model.update({ _id: id }, data)
   }
   upById(id, data) {
     delete data.id;
     data.up_time = yapi.commons.time();
-    return this.model.update({
-      _id: id
-    }, data)
+    return this.model.update({ _id: id }, data)
   }
   del(id) {
-    return this.model.remove({
-      _id: id
-    })
+    return this.model.remove({ _id: id })
   }
   delByProjectId(projectId) {
-    return this.model.remove({
-      project_id: projectId
-    })
+    return this.model.remove({ project_id: projectId })
   }
 }
 module.exports = syncModel;

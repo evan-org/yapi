@@ -181,7 +181,7 @@ class Postman extends Component {
       try {
         schema = json5.parse(req_body_other);
       } catch (e) {
-        console.log("e", e);
+        console.error("e", e);
         return;
       }
       let result = await axios.post("/api/interface/schema2json", {

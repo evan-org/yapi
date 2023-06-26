@@ -19,7 +19,7 @@ let indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
 const Koa = require("koa");
 const koaJson = require("koa-json");
 const koaLogger = require("koa-logger");
-const koaBodyparser = require("koa-bodyparser");
+// const koaBodyparser = require("koa-bodyparser");
 const historyApiFallback = require("koa2-history-api-fallback");
 const koaStatic = require("koa-static");
 const koaBody = require("koa-body");
@@ -31,7 +31,7 @@ const router = require("./routes/router.js");
 //
 const app = koaWebsocket(new Koa());
 app.proxy = true;
-app.use(koaBodyparser())
+// app.use(koaBodyparser())
 app.use(koaJson())
 app.use(koaLogger())
 yapi.app = app;

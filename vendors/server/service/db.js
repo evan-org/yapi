@@ -4,8 +4,8 @@ const autoIncrement = require("./mongooseAutoIncrement.js");
 const config = yapi.WEBROOT_CONFIG;
 //
 mongoose.Promise = global.Promise
-mongoose.set("debug", false);
-mongoose.set("strictQuery", true);
+// mongoose.set("debug", false);
+// mongoose.set("strictQuery", true);
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
@@ -38,7 +38,7 @@ function useCreate() {
     return { connectString, options }
   }
   let connectString = `mongodb://${config.db.user}:${config.db.pass}@${config.db.servername}:${config.db.port}/${config.db.DATABASE}`;
-  // let connectString = `mongodb://${config.db.user}:${config.db.pass}@${config.db.servername}:${config.db.port}/${config.db.DATABASE}`;
+  // let connectString = `mongodb://${config.db.servername}:${config.db.port}/${config.db.DATABASE}`;
   if (config.db.authSource) {
     connectString = connectString + `?authSource=${config.db.authSource}`;
   }
@@ -54,7 +54,7 @@ function useConnect() {
     console.log("Database connected successfully");
     yapi.commons.log("mongodb load success...");
     // 监听连接成功事件
-    mongoose.connection.once("connected", (connected) => {
+    mongoose.connection.on("connected", (connected) => {
       console.log("MongoDB connected");
     });
     // 监听连接失败事件
