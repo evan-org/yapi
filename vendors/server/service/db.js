@@ -59,7 +59,7 @@ function useConnect() {
     });
     // 监听连接失败事件
     mongoose.connection.on("error", (err) => {
-      console.log("MongoDB connection error: " + err);
+      console.log("MongoDB connection error: ");
     });
     // 监听连接断开事件
     mongoose.connection.on("disconnected", (disconnected) => {

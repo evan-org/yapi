@@ -429,7 +429,7 @@ class interfaceColController extends baseController {
           try {
             res = JSON.parse(handleReplaceStr(res));
           } catch (e) {
-            console.log("e ->", e);
+            console.error("e ->", e);
           }
         } else if (type === "[object String]" && data[name]) {
           res = handleReplaceStr(res);

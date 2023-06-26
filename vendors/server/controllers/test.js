@@ -76,7 +76,7 @@ class interfaceColController extends baseController {
         size += chunk.length;
       });
       req.on("finish", function() {
-        console.log(34343);
+        console.log("finish");
       });
       req.on("end", function() {
         let data = new Buffer(size);

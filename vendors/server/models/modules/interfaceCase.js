@@ -2,12 +2,10 @@ const yapi = require("@server/yapi.js");
 const baseModel = require("@server/models/modules/base.js");
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-
 class interfaceCase extends baseModel {
   getName() {
     return "interface_case";
   }
-
   getSchema() {
     return {
       casename: { type: String, required: true },
@@ -38,7 +36,6 @@ class interfaceCase extends baseModel {
           enable: { type: Boolean, default: true }
         }
       ],
-
       req_body_form: [
         {
           name: String,
@@ -55,17 +52,14 @@ class interfaceCase extends baseModel {
       test_script: String
     };
   }
-
   save(data) {
     let m = new this.model(data);
     return m.save();
   }
-
   // 获取全部测试接口信息
   getInterfaceCaseListCount() {
     return this.model.countDocuments({});
   }
-
   get(id) {
     return this.model
       .findOne({
@@ -73,7 +67,6 @@ class interfaceCase extends baseModel {
       })
       .exec();
   }
-
   list(col_id, select) {
     select = select || "casename uid col_id _id index interface_id project_id";
     if (select === "all") {
@@ -90,36 +83,30 @@ class interfaceCase extends baseModel {
       .select(select)
       .exec();
   }
-
   del(id) {
     return this.model.remove({
       _id: id
     });
   }
-
   delByProjectId(id) {
     return this.model.remove({
       project_id: id
     });
   }
-
   delByInterfaceId(id) {
     return this.model.remove({
       interface_id: id
     });
   }
-
   delByCol(id) {
     return this.model.remove({
       col_id: id
     });
   }
-
   up(id, data) {
     data.up_time = yapi.commons.time();
     return this.model.update({ _id: id }, data);
   }
-
   upCaseIndex(id, index) {
     return this.model.update(
       {
@@ -131,5 +118,4 @@ class interfaceCase extends baseModel {
     );
   }
 }
-
 module.exports = interfaceCase;
