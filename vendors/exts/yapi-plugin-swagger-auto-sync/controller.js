@@ -1,7 +1,7 @@
 const baseController = require("controllers/base.js");
 const yapi = require("yapi.js");
 const syncModel = require("./lib/syncModel.js");
-const projectModel = require("@root/models/modules/project.js");
+const projectModel = require("@server/models/modules/project.js");
 const interfaceSyncUtils = require("./lib/interfaceSyncUtils.js")
 
 class controller extends baseController {

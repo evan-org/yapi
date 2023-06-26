@@ -1,5 +1,5 @@
 module.exports = function storageCreator(id) {
-  const storageModel = require("@root/models/modules/storage.js");
+  const storageModel = require("@server/models/modules/storage.js");
   const yapi = require("../yapi.js");
   const defaultData = {}
   return {

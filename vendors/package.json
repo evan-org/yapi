@@ -197,7 +197,10 @@
     "ydoc-plugin-img-view": "^1.0.1"
   },
   "_moduleAliases": {
-    "@root": "./server"
+    "@server": "./server",
+    "@common": "./common",
+    "@client": "./client",
+    "@exts": "./exts"
   },
   "config": {},
   "engines": {

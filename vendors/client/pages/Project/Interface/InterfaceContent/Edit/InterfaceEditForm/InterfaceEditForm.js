@@ -17,8 +17,8 @@ import { MOCK_SOURCE } from "@/utils/variable";
 //
 import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
 // 注入tui-editor css
-import "../../../../../../../common/tui-editor/dist/tui-editor.min.css";
-import "../../../../../../../common/tui-editor/dist/tui-editor-contents.min.css";
+import "common/tui-editor/dist/tui-editor.min.css";
+import "common/tui-editor/dist/tui-editor-contents.min.css";
 //
 import schemaEditor from "json-schema-editor-visual/dist/main";
 const ResBodySchema = schemaEditor({ lang: "zh_CN", mock: MOCK_SOURCE });

@@ -141,7 +141,6 @@ module.exports = {
     // 别名
     alias: {
       "@": resolve("./client"),
-      "src": resolve("./client"),
       "client": resolve("./client"),
       "common": resolve("./common"),
       "exts": resolve("./exts"),

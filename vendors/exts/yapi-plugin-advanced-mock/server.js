@@ -1,10 +1,10 @@
-const controller = require("./controller");
+const path = require("path");
+const controller = require("./controller.js");
 const advModel = require("./lib/advMockModel.js");
 const caseModel = require("./lib/caseModel.js");
 const yapi = require("yapi.js");
 const mongoose = require("mongoose");
 const _ = require("underscore");
-const path = require("path");
 const lib = require(path.resolve(yapi.WEBROOT, "common/lib.js"));
 const Mock = require("mockjs");
 const mockExtra = require(path.resolve(yapi.WEBROOT, "common/mock-extra.js"));
@@ -20,7 +20,9 @@ function arrToObj(arr) {
   return obj;
 }
 module.exports = function() {
+  //
   yapi.connect.then(function() {
+    console.log("yapi-plugin-advanced-mock : ", mongoose)
     let Col = mongoose.connection.db.collection("adv_mock");
     Col.createIndex({
       interface_id: 1
@@ -45,12 +47,12 @@ module.exports = function() {
     //   数据库信息查询
     // 过滤 开启IP
     let listWithIp = await caseInst.model
-      .find({
-        interface_id: interfaceId,
-        ip_enable: true,
-        ip: ip
-      })
-      .select("_id params case_enable");
+    .find({
+      interface_id: interfaceId,
+      ip_enable: true,
+      ip: ip
+    })
+    .select("_id params case_enable");
     let matchList = [];
     listWithIp.forEach((item) => {
       let params = item.params;
@@ -61,11 +63,11 @@ module.exports = function() {
     // 其他数据
     if (matchList.length === 0) {
       let list = await caseInst.model
-        .find({
-          interface_id: interfaceId,
-          ip_enable: false
-        })
-        .select("_id params case_enable");
+      .find({
+        interface_id: interfaceId,
+        ip_enable: false
+      })
+      .select("_id params case_enable");
       list.forEach((item) => {
         let params = item.params;
         if (item.case_enable && lib.isDeepMatch(reqParams, params)) {
@@ -86,6 +88,7 @@ module.exports = function() {
     });
     return result;
   }
+  //
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: controller,
@@ -142,10 +145,12 @@ module.exports = function() {
       action: "hideCase"
     });
   });
+  //
   this.bindHook("interface_del", async function(id) {
     let inst = yapi.getInst(advModel);
     await inst.delByInterfaceId(id);
   });
+  //
   this.bindHook("project_del", async function(id) {
     let inst = yapi.getInst(advModel);
     await inst.delByProjectId(id);

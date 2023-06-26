@@ -3,10 +3,10 @@
  */
 const baseController = require("controllers/base.js");
 const statisMockModel = require("./lib/statisticsMockModel.js");
-const groupModel = require("@root/models/modules/group.js");
-const projectModel = require("@root/models/modules/project.js");
-const interfaceModel = require("@root/models/modules/interface.js");
-const interfaceCaseModel = require("@root/models/modules/interfaceCase.js");
+const groupModel = require("@server/models/modules/group.js");
+const projectModel = require("@server/models/modules/project.js");
+const interfaceModel = require("@server/models/modules/interface.js");
+const interfaceCaseModel = require("@server/models/modules/interfaceCase.js");
 
 const yapi = require("yapi.js");
 const config = require("./index.js");

@@ -15,10 +15,10 @@ import {
 } from "antd";
 import Icon from "@ant-design/icons";
 //
-import { safeAssign } from "../../../client/utils/common.js";
-import AceEditor from "../../../client/components/AceEditor/AceEditor";
-import constants from "../../../client/utils/variable.js";
-import { httpCodes } from "../index.js";
+import { safeAssign } from "../../../../client/utils/common.js";
+import AceEditor from "../../../../client/components/AceEditor/AceEditor";
+import constants from "../../../../client/utils/variable.js";
+import { httpCodes } from "../../index.js";
 import "./CaseDesModal.scss";
 import { connect } from "react-redux";
 import json5 from "json5";

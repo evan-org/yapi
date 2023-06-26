@@ -1,5 +1,5 @@
-import AdvMock from "./AdvMock/AdvMock"
-import mockCol from "./MockCol/mockColReducer.js"
+import AdvMock from "./views/AdvMock/AdvMock.js";
+import mockCol from "./views/MockCol/mockColReducer.js";
 
 module.exports = function() {
   this.bindHook("interface_tab", function(tabs) {

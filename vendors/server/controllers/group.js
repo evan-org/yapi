@@ -1,11 +1,11 @@
-const groupModel = require("@root/models/modules/group.js");
+const groupModel = require("@server/models/modules/group.js");
 const yapi = require("../yapi.js");
 const baseController = require("./base.js");
-const projectModel = require("@root/models/modules/project.js");
-const userModel = require("@root/models/modules/user.js");
-const interfaceModel = require("@root/models/modules/interface.js");
-const interfaceColModel = require("@root/models/modules/interfaceCol.js");
-const interfaceCaseModel = require("@root/models/modules/interfaceCase.js");
+const projectModel = require("@server/models/modules/project.js");
+const userModel = require("@server/models/modules/user.js");
+const interfaceModel = require("@server/models/modules/interface.js");
+const interfaceColModel = require("@server/models/modules/interfaceCol.js");
+const interfaceCaseModel = require("@server/models/modules/interfaceCase.js");
 const _ = require("underscore")
 const rolename = {
   owner: "组长",

@@ -1,4 +1,4 @@
-const baseModel = require("@root/models/modules/base.js");
+const baseModel = require("@server/models/modules/base.js");
 const mongoose = require("mongoose");
 
 class stroageModel extends baseModel {

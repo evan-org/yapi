@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import { Form, Switch, Button, message, Tooltip, Radio } from "antd";
 import Icon from "@ant-design/icons";
 import MockCol from "../MockCol/MockCol.js";
-import mockEditor from "../../../client/components/AceEditor/utils/mockEditor.js";
-import constants from "../../../client/utils/variable.js";
+import mockEditor from "../../../../client/components/AceEditor/utils/mockEditor.js";
+import constants from "../../../../client/utils/variable.js";
 //
 //
 class AdvMock extends Component {
