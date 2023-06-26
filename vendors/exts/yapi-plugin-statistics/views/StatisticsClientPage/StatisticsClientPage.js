@@ -4,19 +4,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { Row, Col, Tooltip, Icon } from "antd";
-import { setBreadcrumb } from "@/reducer/modules/user";
-import StatisChart from "./StatisticsChart/StatisticsChart";
-import StatisTable from "./StatisticsTable/StatisticsTable";
+import { setBreadcrumb } from "@/reducer/modules/user.js";
+import StatisChart from "./StatisticsChart/StatisticsChart.js";
+import StatisTable from "./StatisticsTable/StatisticsTable.js";
 import "./StatisticsClientPage.scss";
 
 function CountOverview(props) {
   return (
     <Row type="flex" justify="space-start" className="m-row">
       <Col className="gutter-row" span={6}>
-        <span>
-        分组总数
+        <span>分组总数
           <Tooltip placement="rightTop" title="统计yapi中一共开启了多少可见的公共分组">
             <Icon className="m-help" type="question-circle"/>
           </Tooltip>
@@ -55,11 +54,9 @@ function CountOverview(props) {
     </Row>
   )
 }
-
 // CountOverview.propTypes = {
 //   date: PropTypes.object
 // };
-
 function StatusOverview(props) {
   return (
     <Row type="flex" justify="space-start" className="m-row">
@@ -107,16 +104,13 @@ function StatusOverview(props) {
     </Row>
   )
 }
-
 // StatusOverview.propTypes = {
 //   data: PropTypes.object
 // };
-
 class StatisticsClientPage extends Component {
   // static propTypes = {
   //   setBreadcrumb: PropTypes.func
   // };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -136,14 +130,12 @@ class StatisticsClientPage extends Component {
       dataTotal: []
     };
   }
-
   async UNSAFE_componentWillMount() {
     this.props.setBreadcrumb([{ name: "系统信息" }]);
     this.getStatisData();
     this.getSystemStatusData();
     this.getGroupData();
   }
-
   // 获取统计数据
   async getStatisData() {
     let result = await axios.get("/api/plugin/statismock/count");
@@ -154,9 +146,7 @@ class StatisticsClientPage extends Component {
       });
     }
   }
-
   // 获取系统信息
-
   async getSystemStatusData() {
     let result = await axios.get("/api/plugin/statismock/get_system_status");
     if (result.data.errcode === 0) {
@@ -166,9 +156,7 @@ class StatisticsClientPage extends Component {
       });
     }
   }
-
   // 获取分组详细信息
-
   async getGroupData() {
     let result = await axios.get("/api/plugin/statismock/group_data_statis");
     if (result.data.errcode === 0) {
@@ -179,10 +167,8 @@ class StatisticsClientPage extends Component {
       });
     }
   }
-
   render() {
     const { count, status, dataTotal } = this.state;
-
     return (
       <div className="g-statistic">
         <div className="content">
@@ -201,7 +187,6 @@ class StatisticsClientPage extends Component {
     );
   }
 }
-
 export default connect(
   null,
   {

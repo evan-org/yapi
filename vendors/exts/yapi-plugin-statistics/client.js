@@ -1,7 +1,7 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-import StatisticsPage from "./views/StatisticsClientPage/StatisticsClientPage.jsx";
+import StatisticsPage from "./views/StatisticsClientPage/StatisticsClientPage.js";
 
 module.exports = function() {
   this.bindHook("header_menu", function(menu) {

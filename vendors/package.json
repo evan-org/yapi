@@ -86,6 +86,7 @@
     "koa-send": "3.2.0",
     "koa-session-minimal": "3.0.3",
     "koa-static": "3.0.0",
+    "koa-webpack-middleware": "^1.0.7",
     "koa-websocket": "4.0.0",
     "koa2-history-api-fallback": "^0.1.0",
     "ldapjs": "~2.3.3",
