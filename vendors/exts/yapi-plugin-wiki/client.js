@@ -1,4 +1,4 @@
-import WikiPage from "./views/WikiPage/WikiPage.jsx";
+import WikiPage from "@exts/yapi-plugin-wiki/views/WikiPage/WikiPage.js";
 // const WikiPage = require('./WikiPage/index')
 
 module.exports = function() {
