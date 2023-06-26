@@ -15,7 +15,7 @@ import { fetchGroupMsg } from "@/reducer/modules/group";
 import { setBreadcrumb } from "@/reducer/modules/user";
 import { getProject } from "@/reducer/modules/project";
 //
-const plugin = require("client/plugin.js");
+const plugin = require("@/plugin.js");
 class Project extends Component {
   static propTypes = {
     match: PropTypes.object,

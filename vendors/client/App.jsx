@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
 // project imports
-import NavigationScroll from "client/layout/NavigationScroll.jsx";
+import NavigationScroll from "@/layout/NavigationScroll.jsx";
 import themes from "@/themes/index.js";
 //
 // import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
@@ -19,7 +19,7 @@ import { AppRoute } from "@/router/oldIndex";
 // import zhCN from "antd/es/locale/zh_CN";
 // dayjs.locale("zh-cn");
 //
-const plugin = require("client/plugin.js");
+const plugin = require("@/plugin.js");
 // 增加路由钩子
 plugin.emitHook("app_route", AppRoute);
 //

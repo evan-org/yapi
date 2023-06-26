@@ -20,7 +20,7 @@ function createScript(plugin, pathAlias) {
   }
   return `"${plugin.name}" : {module: require('${pathAlias}/yapi-plugin-${plugin.name}/client.js'),options: ${options}}`;
 }
-let { exts: systemConfigPlugin } = require("./common/config");
+let { exts: systemConfigPlugin } = require("./common/config.js");
 const commonLib = require("./common/plugin.js");
 function initPlugins(configPlugin) {
   configPlugin = require("../config.json").plugins;
@@ -36,7 +36,7 @@ function initPlugins(configPlugin) {
   systemConfigPlugin = commonLib.initPlugins(systemConfigPlugin, "ext");
   systemConfigPlugin.forEach((plugin) => {
     if (plugin.client && plugin.enable) {
-      scripts.push(createScript(plugin, "exts"));
+      scripts.push(createScript(plugin, "@exts"));
     }
   });
   scripts = "module.exports = {" + scripts.join(",") + "}";
@@ -141,9 +141,9 @@ module.exports = {
     // 别名
     alias: {
       "@": resolve("./client"),
-      "client": resolve("./client"),
-      "common": resolve("./common"),
-      "exts": resolve("./exts"),
+      "@client": resolve("./client"),
+      "@common": resolve("./common"),
+      "@exts": resolve("./exts"),
       "@mui/styled-engine": "@mui/styled-engine-sc",
     },
     plugins: {

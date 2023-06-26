@@ -45,7 +45,7 @@ function initPlugins(configPlugin) {
   systemConfigPlugin = commonLib.initPlugins(systemConfigPlugin, 'ext');
   systemConfigPlugin.forEach(plugin => {
     if (plugin.client && plugin.enable) {
-      scripts.push(createScript(plugin, 'exts'));
+      scripts.push(createScript(plugin, '@exts'));
     }
   });
   scripts = 'module.exports = {' + scripts.join(',') + '}';

@@ -12,7 +12,7 @@ import menu from "./menu.js";
 import follow from "./follow.js";
 import mockCol from "./mockCol.js";
 
-import { emitHook } from "client/plugin.js";
+import { emitHook } from "@/plugin.js";
 
 const reducerModules = {
   customization: customizationReducer,

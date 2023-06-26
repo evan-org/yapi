@@ -8,13 +8,11 @@ const groupModel = require("@server/models/modules/group.js");
 const projectModel = require("@server/models/modules/project.js");
 const interfaceModel = require("@server/models/modules/interface.js");
 const interfaceCaseModel = require("@server/models/modules/interfaceCase.js");
-
 const yapi = require("yapi.js");
 const config = require("./index.js");
 const commons = require("./lib/util.js");
 const os = require("os");
 let cpu = require("cpu-load");
-
 class statisMockController extends baseController {
   constructor(ctx) {
     super(ctx);
@@ -24,7 +22,6 @@ class statisMockController extends baseController {
     this.interfaceModel = yapi.getInst(interfaceModel);
     this.interfaceCaseModel = yapi.getInst(interfaceCaseModel);
   }
-
   /**
    * 获取所有统计总数
    * @interface statismock/count
@@ -39,7 +36,6 @@ class statisMockController extends baseController {
       let projectCount = await this.projectModel.getProjectListCount();
       let interfaceCount = await this.interfaceModel.getInterfaceListCount();
       let interfaceCaseCount = await this.interfaceCaseModel.getInterfaceCaseListCount();
-
       return (ctx.body = yapi.commons.resReturn({
         groupCount,
         projectCount,
@@ -50,7 +46,6 @@ class statisMockController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 400, err.message);
     }
   }
-
   /**
    * 获取所有mock接口数据信息
    * @interface statismock/get
@@ -63,7 +58,6 @@ class statisMockController extends baseController {
     try {
       let mockCount = await this.Model.getTotalCount();
       let mockDateList = [];
-
       if (!this.getRole() === "admin") {
         return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
       }
@@ -75,7 +69,6 @@ class statisMockController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 400, err.message);
     }
   }
-
   /**
    * 获取邮箱状态信息
    * @interface statismock/getSystemStatus
@@ -93,14 +86,11 @@ class statisMockController extends baseController {
       } else {
         mail = "未配置";
       }
-
       let load = (await this.cupLoad()) * 100;
-
       let systemName = os.platform();
       let totalmem = commons.transformBytesToGB(os.totalmem());
       let freemem = commons.transformBytesToGB(os.freemem());
       let uptime = commons.transformSecondsToDay(os.uptime());
-
       let data = {
         mail,
         systemName,
@@ -114,7 +104,6 @@ class statisMockController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 400, err.message);
     }
   }
-
   checkEmail() {
     return new Promise((resolve, reject) => {
       let result = {};
@@ -129,7 +118,6 @@ class statisMockController extends baseController {
       });
     });
   }
-
   async groupDataStatis(ctx) {
     try {
       let groupData = await this.groupModel.list();
@@ -144,7 +132,6 @@ class statisMockController extends baseController {
           project: 0
         };
         result.push(data);
-
         let projectCount = await this.projectModel.listCount(groupId);
         let projectData = await this.projectModel.list(groupId);
         let interfaceCount = 0;
@@ -164,7 +151,6 @@ class statisMockController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 400, err.message);
     }
   }
-
   cupLoad() {
     return new Promise((resolve, reject) => {
       cpu(1000, function(load) {
@@ -173,5 +159,4 @@ class statisMockController extends baseController {
     });
   }
 }
-
 module.exports = statisMockController;

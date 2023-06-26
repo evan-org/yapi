@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Table, Button, message, Popconfirm, Tooltip, Icon } from 'antd';
-import { fetchMockCol } from '../../../../client/reducer/modules/mockCol';
+import { fetchMockCol } from '../../../../client/reducer/modules/mockCol.jsx';
 import { formatTime, json5_parse } from '../../../../client/utils/common.js';
 import constants from '../../../../client/utils/variable.js';
-import CaseDesModal from './CaseDesModal';
+//
+import CaseDesModal from '/CaseDesModal.jsx';
 import _ from 'underscore';
 
 @connect(

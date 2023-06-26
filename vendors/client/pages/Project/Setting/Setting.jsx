@@ -9,7 +9,7 @@ import ProjectMock from "./ProjectMock/index.js";
 import { connect } from "react-redux";
 
 //
-const plugin = require("client/plugin.js");
+const plugin = require("@/plugin.js");
 const routers = {}
 import "./Setting.scss";
 

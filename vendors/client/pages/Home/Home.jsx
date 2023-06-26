@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import LogoSVG from "../../components/LogoSVG/LogoSVG.jsx";
 import { changeMenuItem } from "@/reducer/modules/menu.js";
 
-const plugin = require("client/plugin.js");
+const plugin = require("@/plugin.js");
 const ThirdLogin = plugin.emitHook("third_login");
 function HomeGuest() {
   return (

@@ -27,9 +27,7 @@
       "@common/*": ["common/*"],
       "@client/*": ["client/*"],
       "@exts/*": ["exts/*"],
-      "common/*": ["common/*"],
-      "@/*": ["client/*"],
-      "client/*": ["client/*"]
+      "@/*": ["client/*"]
     }
   },
   "include": ["./client", "./common", "./server", "./exts"]

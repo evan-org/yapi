@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Form, Button, message } from 'antd';
 //
 //
-import AceEditor from 'client/components/AceEditor/AceEditor';
+import AceEditor from '@/components/AceEditor/AceEditor';
 import { updateProjectScript, getProject } from '@/reducer/modules/project.js';
 //
 import styles from './ProjectRequest.module.scss';

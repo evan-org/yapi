@@ -1,4 +1,4 @@
-import { AddProject, Follow, Group, Home, Login, Project, User } from "client/pages";
+import { AddProject, Follow, Group, Home, Login, Project, User } from "@/pages/index.js";
 
 export const AppRoute = {
   home: {

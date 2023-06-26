@@ -25,7 +25,7 @@ import LogoSVG from "../../../components/LogoSVG/LogoSVG.jsx";
 import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb.jsx";
 import GuideBtns from "../../../components/GuideBtns/GuideBtns.jsx";
 
-const plugin = require("client/plugin.js");
+const plugin = require("@/plugin.js");
 let HeaderMenu = {
   user: {
     path: "/user/profile",

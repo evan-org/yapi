@@ -14,9 +14,9 @@ import {
   Tooltip
 } from "antd";
 import PropTypes from "prop-types";
-import { fetchGroupMsg, fetchGroupMemberList } from "client/reducer/modules/group.js";
+import { fetchGroupMsg, fetchGroupMemberList } from "@/reducer/modules/group.js";
 import { connect } from "react-redux";
-import ErrMsg from "client/components/ErrMsg/ErrMsg.jsx";
+import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
 //
 import {
   fetchProjectList,
@@ -27,8 +27,8 @@ import {
   changeMemberRole,
   changeMemberEmailNotice
 } from "@/reducer/modules/project.js";
-import UsernameAutoComplete from "client/components/UsernameAutoComplete/UsernameAutoComplete.jsx";
-import "client/pages/Project/Setting/Setting.scss";
+import UsernameAutoComplete from "@/components/UsernameAutoComplete/UsernameAutoComplete.jsx";
+import "@/pages/Project/Setting/Setting.scss";
 //
 //
 const arrayAddKey = (arr) => arr.map((item, index) => ({

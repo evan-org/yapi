@@ -1,4 +1,4 @@
-import GenServicesPage from "@exts/yapi-plugin-gen-services/views/GenServicesPage/GenServicesPage.js";
+import GenServicesPage from "./views/GenServicesPage/GenServicesPage.js";
 
 function genServices(routers) {
   routers["services"] = {

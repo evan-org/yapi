@@ -56,9 +56,9 @@ function CountOverview(props) {
   )
 }
 
-CountOverview.propTypes = {
-  date: PropTypes.object
-};
+// CountOverview.propTypes = {
+//   date: PropTypes.object
+// };
 
 function StatusOverview(props) {
   return (
@@ -108,14 +108,14 @@ function StatusOverview(props) {
   )
 }
 
-StatusOverview.propTypes = {
-  data: PropTypes.object
-};
+// StatusOverview.propTypes = {
+//   data: PropTypes.object
+// };
 
 class StatisticsClientPage extends Component {
-  static propTypes = {
-    setBreadcrumb: PropTypes.func
-  };
+  // static propTypes = {
+  //   setBreadcrumb: PropTypes.func
+  // };
 
   constructor(props) {
     super(props);

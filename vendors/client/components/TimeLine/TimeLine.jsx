@@ -3,15 +3,15 @@ import { Timeline, Spin, Row, Col, Tag, Avatar, Button, Modal, AutoComplete } fr
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { formatTime } from "@/utils/common";
-import showDiffMsg from "../../../common/diff-view.js";
-import variable from "../../utils/variable";
+import showDiffMsg from "@common/diff-view.js";
+import variable from "@/utils/variable.js";
 import { Link } from "react-router-dom";
 //
 import { fetchNewsData, fetchMoreNews } from "@/reducer/modules/news";
 import { fetchInterfaceList } from "@/reducer/modules/interface";
 import ErrMsg from "../ErrMsg/ErrMsg.jsx";
 //
-import { timeago } from "common/utils.js";
+import { timeago } from "@common/utils.js";
 //
 const jsondiffpatch = require("jsondiffpatch/dist/jsondiffpatch.umd.js");
 const formattersHtml = jsondiffpatch.formatters.html;

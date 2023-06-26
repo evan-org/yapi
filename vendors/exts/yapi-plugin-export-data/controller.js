@@ -9,7 +9,7 @@ const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const markdownItTableOfContents = require("markdown-it-table-of-contents");
 const defaultTheme = require("./views/defaultTheme.js");
-const md = require("../../common/markdown");
+const md = require("@common/markdown.js");
 
 // const htmlToPdf = require("html-pdf");
 class exportController extends baseController {

@@ -28,7 +28,7 @@ import { handleSwaggerUrlData } from "@/reducer/modules/project.js";
 const plugin = require("@/plugin.js");
 const importDataModule = {};
 const exportDataModule = {};
-const HandleImportData = require("common/HandleImportData.js");
+const HandleImportData = require("@common/HandleImportData.js");
 function handleExportRouteParams(url, status, isWiki) {
   if (!url) {
     return;

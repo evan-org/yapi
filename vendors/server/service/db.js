@@ -3,11 +3,12 @@ const yapi = require("../yapi.js");
 const autoIncrement = require("./mongooseAutoIncrement.js");
 const config = yapi.WEBROOT_CONFIG;
 //
-console.log("", mongoose);
-mongoose.set("strictQuery", false);
-// mongoose.set("useNewUrlParser", true);
-// mongoose.set("useFindAndModify", false);
-// mongoose.set("useCreateIndex", true);
+mongoose.Promise = global.Promise
+mongoose.set("debug", false);
+mongoose.set("strictQuery", true);
+mongoose.set("useNewUrlParser", true);
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);
 //
 function useModel(model, schema) {
   if (!(schema instanceof mongoose.Schema)) {
@@ -19,7 +20,7 @@ function useModel(model, schema) {
 //
 function useCreate() {
   //
-  const options = Object.assign({}, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, config.db.options);
+  const options = Object.assign({}, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true }, config.db.options);
   //
   if (config.db.user) {
     options.user = config.db.user;
@@ -36,43 +37,40 @@ function useCreate() {
     const connectString = config.db.connectString;
     return { connectString, options }
   }
-  // let connectString = `mongodb://${config.db.user}:${config.db.pass}@${config.db.servername}:${config.db.port}/${config.db.DATABASE}`;
   let connectString = `mongodb://${config.db.user}:${config.db.pass}@${config.db.servername}:${config.db.port}/${config.db.DATABASE}`;
+  // let connectString = `mongodb://${config.db.user}:${config.db.pass}@${config.db.servername}:${config.db.port}/${config.db.DATABASE}`;
   if (config.db.authSource) {
     connectString = connectString + `?authSource=${config.db.authSource}`;
   }
   return { connectString, options }
 }
 //
-function useConnect(callback) {
-  return new Promise((resolve, reject) => {
-    //
+function useConnect() {
+  try {
     const { connectString, options } = useCreate();
     console.log(connectString, options);
     // 链接 MongoDB
-    mongoose.connect(connectString, options).then((db) => {
-      resolve(db)
-    }).catch((err) => {
-      console.error(err);
-      reject(err)
-    });
+    const db = mongoose.connect(connectString, options);
+    console.log("Database connected successfully");
+    yapi.commons.log("mongodb load success...");
     // 监听连接成功事件
-    mongoose.connection.once("open", (connected) => {
-      console.log("MongoDB connected", connected);
-      console.log("Database connected successfully");
-      yapi.commons.log("mongodb load success...");
-      // 用于创建自增ID。该插件会在数据库中创建一个名为IdentityCounter的集合，用于存储各个模型的自增ID计数器。
-      autoIncrement.initialize(db);
+    mongoose.connection.once("connected", (connected) => {
+      console.log("MongoDB connected");
     });
     // 监听连接失败事件
     mongoose.connection.on("error", (err) => {
       console.log("MongoDB connection error: " + err);
     });
     // 监听连接断开事件
-    mongoose.connection.on("close", (disconnected) => {
+    mongoose.connection.on("disconnected", (disconnected) => {
       console.log("MongoDB disconnected");
     });
-  })
+    // 用于创建自增ID。该插件会在数据库中创建一个名为IdentityCounter的集合，用于存储各个模型的自增ID计数器。
+    autoIncrement.initialize(db);
+    return db
+  } catch (e) {
+    throw new Error(e);
+  }
 }
 //
 yapi.db = useModel;

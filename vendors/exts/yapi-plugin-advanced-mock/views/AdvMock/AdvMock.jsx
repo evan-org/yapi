@@ -3,16 +3,17 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { Form, Switch, Button, message, Tooltip, Radio } from "antd";
 import Icon from "@ant-design/icons";
-import MockCol from "../MockCol/MockCol.js";
+//
+import MockCol from "../MockCol/MockCol.jsx";
 import mockEditor from "../../../../client/components/AceEditor/utils/mockEditor.js";
 import constants from "../../../../client/utils/variable.js";
 //
 //
 class AdvMock extends Component {
-  static propTypes = {
-    form: PropTypes.object,
-    match: PropTypes.object
-  };
+  // static propTypes = {
+  //   form: PropTypes.object,
+  //   match: PropTypes.object
+  // };
   constructor(props) {
     super(props);
     this.state = {

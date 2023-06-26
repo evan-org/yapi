@@ -21,18 +21,18 @@ import AceEditor from "@/components/AceEditor/AceEditor";
 import { initCrossRequest } from "@/components/Postman/CheckCrossInstall.jsx";
 import { InsertCodeMap } from "@/components/Postman/Postman.jsx"
 
-const plugin = require("client/plugin.js");
+const plugin = require("@/plugin.js");
 const {
   handleParams,
   crossRequest,
   handleCurrDomain,
   checkNameIsExistInArray
-} = require("common/postmanLib.js");
-const { handleParamsValue, json_parse, ArrayToObject } = require("common/utils.js");
-import CaseEnv from "client/components/CaseEnv/CaseEnv";
-import Label from "../../../../components/Label/Label.jsx";
+} = require("@common/postmanLib.js");
+const { handleParamsValue, json_parse, ArrayToObject } = require("@common/utils.js");
+import CaseEnv from "@/components/CaseEnv/CaseEnv.jsx";
+import Label from "@/components/Label/Label.jsx";
 //
-const createContext = require("common/createContext")
+const createContext = require("@common/createContext.js")
 import copy from "copy-to-clipboard";
 
 const defaultModalStyle = {

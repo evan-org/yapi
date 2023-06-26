@@ -8,7 +8,6 @@ const autoIncrement = require("@server/service/mongooseAutoIncrement.js");
 
 class BaseModel {
   constructor() {
-    console.log(this);
     this.schema = new mongoose.Schema(this.getSchema());
     this.name = this.getName();
 

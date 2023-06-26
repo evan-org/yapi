@@ -3,11 +3,11 @@ require("module").Module._initPaths();
 require("module-alias/register")
 //
 const yapi = require("./yapi.js");
-const commons = require("./utils/commons");
+const commons = require("./utils/commons.js");
 yapi.commons = commons;
 const dbModule = require("./service/db.js");
 yapi.connect = dbModule.connect();
-const mockServer = require("./middleware/mockServer.js");
+//
 require("./plugins/plugin.js");
 require("./utils/notice.js");
 //
@@ -35,6 +35,8 @@ app.use(koaBodyparser())
 app.use(koaJson())
 app.use(koaLogger())
 yapi.app = app;
+//
+const mockServer = require("./middleware/mockServer.js");
 //
 app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
 app.use(mockServer);

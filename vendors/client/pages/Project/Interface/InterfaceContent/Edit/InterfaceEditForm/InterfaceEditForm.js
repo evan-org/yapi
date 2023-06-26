@@ -10,12 +10,12 @@ import { message, Affix, Tabs, Modal, Form, Select, Input, Tooltip, Button, Row,
 import Icon from "@ant-design/icons";
 //
 import EasyDragSort from "@/components/EasyDragSort/EasyDragSort.jsx";
-import mockEditor from "@/components/AceEditor/utils/mockEditor";
-import AceEditor from "@/components/AceEditor/AceEditor";
+import mockEditor from "@/components/AceEditor/utils/mockEditor.js";
+import AceEditor from "@/components/AceEditor/AceEditor.jsx";
 import axios from "axios";
-import { MOCK_SOURCE } from "@/utils/variable";
+import { MOCK_SOURCE } from "@/utils/variable.js";
 //
-import Editor from "../../../../../../../common/tui-editor/dist/tui-editor-Editor-all.min.js";
+import Editor from "@common/tui-editor/dist/tui-editor-Editor-all.min.js";
 // 注入tui-editor css
 import "../../../../../../../common/tui-editor/dist/tui-editor.min.css";
 import "../../../../../../../common/tui-editor/dist/tui-editor-contents.min.css";

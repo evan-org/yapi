@@ -17,9 +17,9 @@ import {
 } from "antd";
 import Icon from "@ant-design/icons";
 import constants from "../../utils/variable.js";
-import AceEditor from "client/components/AceEditor/AceEditor";
+import AceEditor from "@/components/AceEditor/AceEditor";
 import _ from "underscore";
-import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
+import { isJson, deepCopyJson, json5_parse } from "@/utils/common.js";
 import axios from "axios";
 import ModalPostman from "../ModalPostman/ModalPostman.jsx";
 import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.jsx";
@@ -27,16 +27,16 @@ import ProjectEnv from "../ProjectEnv/ProjectEnv.jsx";
 import json5 from "json5";
 import styles from "./Postman.module.scss";
 
-const { handleParamsValue, ArrayToObject, schemaValidator } = require("common/utils.js");
+const { handleParamsValue, ArrayToObject, schemaValidator } = require("@common/utils.js");
 const {
   handleParams,
   checkRequestBodyIsRaw,
   handleContentType,
   crossRequest,
   checkNameIsExistInArray
-} = require("common/postmanLib.js");
-const plugin = require("client/plugin.js");
-const createContext = require("common/createContext")
+} = require("@common/postmanLib.js");
+const plugin = require("@/plugin.js");
+const createContext = require("@common/createContext")
 const HTTP_METHOD = constants.HTTP_METHOD;
 export const InsertCodeMap = [
   {

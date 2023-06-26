@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Row, Col, Form, Input, Select, Button, AutoComplete, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 //
-import constants from "client/utils/variable.js";
+import constants from "@/utils/variable.js";
 //
 const initMap = {
   header: [
