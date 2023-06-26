@@ -34,13 +34,13 @@ app.proxy = true;
 app.use(koaBodyparser())
 app.use(koaJson())
 app.use(koaLogger())
+yapi.app = app;
 //
 app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
 app.use(mockServer);
 app.use(router.routes());
 app.use(historyApiFallback())
 app.use(router.allowedMethods());
-yapi.app = app;
 //
 websocket(app);
 // 中间件

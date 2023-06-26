@@ -36,21 +36,19 @@ function run() {
     };
   };
 
-  yapi.connect
-    .then(function() {
-      let logCol = mongoose.connection.db.collection("statis_mock");
-      let arr = [];
-      for (let i = 0; i < 11; i++) {
-        if (arr.length >= 5) {
-          logCol.insert(arr);
-          arr = [];
-        }
-        arr.push(data(i));
+  yapi.connect.then(() => {
+    let logCol = mongoose.connection.db.collection("statis_mock");
+    let arr = [];
+    for (let i = 0; i < 11; i++) {
+      if (arr.length >= 5) {
+        logCol.insert(arr);
+        arr = [];
       }
-    })
-    .catch(function(err) {
-      throw new Error(err.message);
-    });
+      arr.push(data(i));
+    }
+  }).catch(function(err) {
+    throw new Error(err.message);
+  });
 }
 
 run();

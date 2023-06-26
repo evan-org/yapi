@@ -1,29 +1,15 @@
 const yapi = require("@server/yapi.js");
-const baseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/modules/base.js");
 
-class projectModel extends baseModel {
-  getName() {
-    return "project";
-  }
+class projectModel extends BaseModel {
 
-  constructor() {
-    super()
+  constructor(model) {
+    super(model)
+    // this.model = this.model.bind(this)
     this.handleEnvNullData = this.handleEnvNullData.bind(this)
   }
-
-  getAuthList(uid) {
-    return this.model.find({
-      $or: [{
-        "members.uid": uid,
-        project_type: "private"
-      }, {
-        uid,
-        project_type: "private"
-      }, {
-        project_type: "public"
-      }]
-    }).select("group_id")
-      .exec();
+  getName() {
+    return "project";
   }
 
   getSchema() {
@@ -44,10 +30,12 @@ class projectModel extends baseModel {
           email_notice: { type: Boolean, default: true }
         }
       ],
-      env: [{ name: String, domain: String, header: Array, global: [{
-        name: String,
-        value: String
-      }] }],
+      env: [{
+        name: String, domain: String, header: Array, global: [{
+          name: String,
+          value: String
+        }]
+      }],
       icon: String,
       color: String,
       add_time: Number,
@@ -58,10 +46,24 @@ class projectModel extends baseModel {
       is_mock_open: { type: Boolean, default: false },
       strice: { type: Boolean, default: false },
       is_json5: { type: Boolean, default: true },
-      tag: [{name: String, desc: String}]
+      tag: [{ name: String, desc: String }]
     };
   }
 
+  getAuthList(uid) {
+    return this.model.find({
+      $or: [{
+        "members.uid": uid,
+        project_type: "private"
+      }, {
+        uid,
+        project_type: "private"
+      }, {
+        project_type: "public"
+      }]
+    }).select("group_id")
+      .exec();
+  }
   updateMember(data) {
     return this.model.update(
       {

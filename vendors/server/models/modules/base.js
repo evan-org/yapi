@@ -1,13 +1,14 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("yapi.js");
 const mongoose = require("mongoose");
-const autoIncrement = require("@server/utils/mongooseAutoIncrement.js");
+const autoIncrement = require("@server/service/mongooseAutoIncrement.js");
 
 /**
  * 所有的model都需要继承baseModel, 且需要 getSchema和getName方法，不然会报错
  */
 
-class baseModel {
+class BaseModel {
   constructor() {
+    console.log(this);
     this.schema = new mongoose.Schema(this.getSchema());
     this.name = this.getName();
 
@@ -39,11 +40,13 @@ class baseModel {
    */
   getSchema() {
     yapi.commons.log("Model Class need getSchema function", "error");
+    return {}
   }
 
   getName() {
     yapi.commons.log("Model Class need name", "error");
+    return ""
   }
 }
 
-module.exports = baseModel;
+module.exports = BaseModel;

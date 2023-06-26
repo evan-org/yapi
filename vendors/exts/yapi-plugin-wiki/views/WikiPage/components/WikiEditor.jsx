@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Button, Checkbox } from "antd";
 //
-import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
+import Editor from "../../../../../common/tui-editor/dist/tui-editor-Editor-all.min.js";
 //
 import styles from "./WikiEditor.module.scss";
 

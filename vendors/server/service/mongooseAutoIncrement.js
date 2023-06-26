@@ -8,6 +8,7 @@ exports.initialize = function(connection) {
   try {
     IdentityCounter = mongoose.model("IdentityCounter");
   } catch (ex) {
+    console.error(ex);
     if (ex.name === "MissingSchemaError") {
       // Create new counter schema.
       counterSchema = new mongoose.Schema({

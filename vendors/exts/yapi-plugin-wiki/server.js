@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const controller = require("./controller");
 
 module.exports = function() {
-  yapi.connect.then(function() {
+  yapi.connect.then(() => {
     let Col = mongoose.connection.db.collection("wiki");
     Col.createIndex({
       project_id: 1

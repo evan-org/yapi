@@ -21,9 +21,9 @@ function arrToObj(arr) {
 }
 module.exports = function() {
   //
-  yapi.connect.then(function() {
-    console.log("yapi-plugin-advanced-mock : ", mongoose)
+  yapi.connect.then(() => {
     let Col = mongoose.connection.db.collection("adv_mock");
+    console.log(Col)
     Col.createIndex({
       interface_id: 1
     });
