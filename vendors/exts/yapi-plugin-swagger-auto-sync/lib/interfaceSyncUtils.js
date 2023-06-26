@@ -6,7 +6,7 @@ const tokenModel = require("@server/models/modules/token.js");
 const yapi = require("yapi.js")
 const sha = require("sha.js");
 const md5 = require("md5");
-const { getToken } = require("utils/token");
+const { getToken } = require("@server/utils/token.js");
 const jobMap = new Map();
 
 class syncUtils {
