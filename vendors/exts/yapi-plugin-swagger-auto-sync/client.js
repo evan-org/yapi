@@ -1,4 +1,4 @@
-import SwaggerAutoSyncPage from "./views/SwaggerAutoSyncPage/SwaggerAutoSyncPage.jsx"
+import SwaggerAutoSyncPage from "@exts/yapi-plugin-swagger-auto-sync/views/SwaggerAutoSyncPage/SwaggerAutoSyncPage.js"
 
 function hander(routers) {
   routers.test = {
