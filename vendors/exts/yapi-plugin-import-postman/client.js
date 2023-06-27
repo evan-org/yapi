@@ -1,16 +1,14 @@
 import { message } from "antd";
-import URL from "url";
 import _ from "underscore";
+
 const GenerateSchema = require("generate-schema/src/schemas/json.js");
-import { json_parse } from "../../common/utils.js";
+import { json_parse } from "@common/utils.js";
 
 function postman(importDataModule) {
   let folders = [];
-
   function parseUrl(url) {
-    return URL.parse(url);
+    return new URL(url);
   }
-
   function checkInterRepeat(interData) {
     let obj = {};
     let arr = [];
@@ -19,13 +17,12 @@ function postman(importDataModule) {
       if (!obj[interData[item].url + "-" + interData[item].method + "-" + interData[item].method]) {
         arr.push(interData[item]);
         obj[
-          interData[item].url + "-" + interData[item].method + "-" + interData[item].method
-        ] = true;
+        interData[item].url + "-" + interData[item].method + "-" + interData[item].method
+          ] = true;
       }
     }
     return arr;
   }
-
   function handleReq_query(query) {
     let res = [];
     if (query && query.length) {
@@ -55,7 +52,6 @@ function postman(importDataModule) {
     }
     return res;
   }
-
   function handleReq_body_form(body_form) {
     let res = [];
     if (body_form && body_form.length) {
@@ -72,27 +68,24 @@ function postman(importDataModule) {
     }
     return res;
   }
-
   function handlePath(path) {
     path = parseUrl(path).pathname;
     path = decodeURIComponent(path);
-    if (!path) {return "";}
-
+    if (!path) {
+      return "";
+    }
     path = path.replace(/\{\{.*\}\}/g, "");
-
     if (path[0] != "/") {
       path = "/" + path;
     }
     return path;
   }
-
   function run(res) {
     try {
       res = JSON.parse(res);
       let interData = res.requests;
       let interfaceData = { apis: [], cats: [] };
       interData = checkInterRepeat.bind(this)(interData);
-
       if (res.folders && Array.isArray(res.folders)) {
         res.folders.forEach((tag) => {
           interfaceData.cats.push({
@@ -101,24 +94,20 @@ function postman(importDataModule) {
           });
         });
       }
-
       if (_.find(res.folders, (item) => item.collectionId === res.id)) {
         folders = res.folders;
       }
-
       if (interData && interData.length) {
         for (let item in interData) {
           let data = importPostman.bind(this)(interData[item]);
           interfaceData.apis.push(data);
         }
       }
-
       return interfaceData;
     } catch (e) {
       message.error("文件格式必须为JSON");
     }
   }
-
   function importPostman(data, key) {
     let reflect = {
       // 数据字段映射关系
@@ -207,7 +196,7 @@ function postman(importDataModule) {
           let response = handleResponses(data["responses"]);
           if (response) {
             (res["res_body"] = response["res_body"]),
-            (res["res_body_type"] = response["res_body_type"]);
+              (res["res_body_type"] = response["res_body_type"]);
           }
         } else {
           res[item] = data[reflect[item]];
@@ -219,7 +208,6 @@ function postman(importDataModule) {
     }
     return res;
   }
-
   const handleResponses = (data) => {
     if (data && data.length) {
       let res = data[0];
@@ -234,32 +222,25 @@ function postman(importDataModule) {
       }
       return response;
     }
-
     return null;
   };
-
   const transformJsonToSchema = (json) => {
     json = json || {};
     let jsonData = json_parse(json);
-
     jsonData = GenerateSchema(jsonData);
-
     let schemaData = JSON.stringify(jsonData);
     return schemaData;
   };
-
   if (!importDataModule || typeof importDataModule !== "object") {
     console.error("obj参数必需是一个对象");
     return null;
   }
-
   importDataModule.postman = {
     name: "Postman",
     run: run,
     desc: "注意：只支持json格式数据"
   };
 }
-
 module.exports = function() {
   this.bindHook("import_data", postman);
 };

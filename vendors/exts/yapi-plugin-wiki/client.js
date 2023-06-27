@@ -1,6 +1,4 @@
-import WikiPage from "@exts/yapi-plugin-wiki/views/WikiPage/WikiPage.js";
-// const WikiPage = require('./WikiPage/index')
-
+import WikiPage from "./views/WikiPage/WikiPage.js";
 module.exports = function() {
   this.bindHook("sub_nav", function(app) {
     app.wiki = {

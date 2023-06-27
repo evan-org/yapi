@@ -1,7 +1,6 @@
 const yapi = require("yapi.js");
 const mongoose = require("mongoose");
 const controller = require("./controller");
-
 module.exports = function() {
   yapi.connect.then(() => {
     let Col = mongoose.connection.db.collection("wiki");
@@ -9,7 +8,6 @@ module.exports = function() {
       project_id: 1
     });
   });
-
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       // 获取wiki信息
@@ -18,7 +16,6 @@ module.exports = function() {
       path: "wiki_desc/get",
       action: "getWikiDesc"
     });
-
     addRouter({
       // 更新wiki信息
       controller: controller,
@@ -27,7 +24,6 @@ module.exports = function() {
       action: "uplodaWikiDesc"
     });
   });
-
   this.bindHook("add_ws_router", function(wsRouter) {
     wsRouter({
       controller: controller,

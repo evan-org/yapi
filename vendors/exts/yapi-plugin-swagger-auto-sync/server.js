@@ -1,10 +1,9 @@
 const controller = require("./controller.js");
 const yapi = require("yapi.js");
 const interfaceSyncUtils = require("./lib/interfaceSyncUtils.js");
-
 module.exports = function() {
+  //
   yapi.getInst(interfaceSyncUtils);
-
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: controller,
@@ -19,5 +18,4 @@ module.exports = function() {
       action: "upSync"
     });
   });
-
 };

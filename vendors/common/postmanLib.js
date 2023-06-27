@@ -302,7 +302,6 @@ async function crossRequest(defaultOptions, preScript, afterScript, commonContex
 
   let scriptEnable = false;
   try {
-    console.log('11111111111111111111', global.DEFINE_YAPI);
     const yapi = require("../server/yapi");
     scriptEnable = yapi.WEBCONFIG.scriptEnable === true;
   } catch (err) {}

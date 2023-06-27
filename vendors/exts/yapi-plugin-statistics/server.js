@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 const controller = require("./controller");
 const statisModel = require("./lib/statisticsMockModel.js");
 const commons = require("./lib/util.js");
-
 module.exports = function() {
   yapi.connect.then(function() {
     let Col = mongoose.connection.db.collection("statis_mock");
@@ -26,7 +25,7 @@ module.exports = function() {
       date: 1
     });
   });
-
+  //
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: controller,
@@ -34,7 +33,6 @@ module.exports = function() {
       path: "statismock/count",
       action: "getStatisCount"
     });
-
     addRouter({
       controller: controller,
       method: "get",
@@ -54,7 +52,6 @@ module.exports = function() {
       action: "groupDataStatis"
     });
   });
-
   // MockServer生成mock数据后触发
   this.bindHook("mock_after", function(context) {
     let interfaceId = context.interfaceData._id;
@@ -62,7 +59,6 @@ module.exports = function() {
     let groupId = context.projectData.group_id;
     // let ip = context.ctx.originalUrl;
     let ip = yapi.commons.getIp(context.ctx);
-
     let data = {
       interface_id: interfaceId,
       project_id: projectId,
@@ -72,7 +68,6 @@ module.exports = function() {
       date: commons.formatYMD(new Date())
     };
     let inst = yapi.getInst(statisModel);
-
     try {
       inst.save(data).then();
     } catch (e) {

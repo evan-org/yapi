@@ -4,10 +4,8 @@ const commons = require("../../server/utils/commons");
 const dbModule = require("@server/helper/mongodb.js");
 const userModel = require("@server/models/modules/user.js");
 const mongoose = require("mongoose");
-
 yapi.commons = commons;
 yapi.connect = dbModule.connect();
-
 const convert2Decimal = (num) => (num > 9 ? num : `0${num}`);
 const formatYMD = (val, joinStr = "-") => {
   let date = val;
@@ -21,7 +19,6 @@ const formatYMD = (val, joinStr = "-") => {
     convert2Decimal(date.getDate())
   ].join(joinStr)}`;
 };
-
 function run() {
   let time = yapi.commons.time() - 10000000;
   let data = (i) => {
@@ -35,7 +32,6 @@ function run() {
       date: formatYMD(time)
     };
   };
-
   yapi.connect.then(() => {
     let logCol = mongoose.connection.db.collection("statis_mock");
     let arr = [];
@@ -50,5 +46,4 @@ function run() {
     throw new Error(err.message);
   });
 }
-
 run();

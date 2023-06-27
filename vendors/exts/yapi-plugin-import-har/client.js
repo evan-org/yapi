@@ -1,22 +1,19 @@
+import { json_parse, unbase64 } from "@common/utils.js";
 import { message } from "antd";
 import URL from "url";
 const GenerateSchema = require("generate-schema/src/schemas/json.js");
-import { json_parse, unbase64 } from "@common/utils.js";
-
 const transformJsonToSchema = (json) => {
   json = json || {};
   let jsonData = json_parse(json);
 
   jsonData = GenerateSchema(jsonData);
 
-  let schemaData = JSON.stringify(jsonData);
-
-  return schemaData;
+  return JSON.stringify(jsonData);
 };
 
 function postman(importDataModule) {
   function parseUrl(url) {
-    return URL.parse(url);
+    return new URL(url);
   }
 
   function checkInterRepeat(interData) {

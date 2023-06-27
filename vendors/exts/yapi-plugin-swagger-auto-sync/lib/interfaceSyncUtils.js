@@ -76,7 +76,7 @@ class syncUtils {
     }
     let newSwaggerJsonData;
     try {
-      newSwaggerJsonData = await this.getSwaggerContent(swaggerUrl)
+      newSwaggerJsonData = await this.getSwaggerContent(swaggerUrl);
       if (!newSwaggerJsonData || typeof newSwaggerJsonData !== "object") {
         yapi.commons.log("数据格式出错，请检查")
         this.saveSyncLog(0, syncMode, "数据格式出错，请检查", uid, projectId);
@@ -88,7 +88,7 @@ class syncUtils {
     }
     let oldSyncJob = await this.syncModel.getByProjectId(projectId);
     // 更新之前判断本次swagger json数据是否跟上次的相同,相同则不更新
-    if (newSwaggerJsonData && oldSyncJob.old_swagger_content && oldSyncJob.old_swagger_content == md5(newSwaggerJsonData)) {
+    if (newSwaggerJsonData && oldSyncJob.old_swagger_content && oldSyncJob.old_swagger_content === md5(newSwaggerJsonData)) {
       // 记录日志
       // this.saveSyncLog(0, syncMode, "接口无更新", uid, projectId);
       oldSyncJob.last_sync_time = yapi.commons.time();
@@ -107,7 +107,7 @@ class syncUtils {
     };
     await this.openController.importData(requestObj);
     // 同步成功就更新同步表的数据
-    if (requestObj.body.errcode == 0) {
+    if (requestObj.body.errcode === 0) {
       // 修改sync_model的属性
       oldSyncJob.last_sync_time = yapi.commons.time();
       oldSyncJob.old_swagger_content = md5(newSwaggerJsonData);
@@ -135,7 +135,7 @@ class syncUtils {
    */
   saveSyncLog(errcode, syncMode, moremsg, uid, projectId) {
     yapi.commons.saveLog({
-      content: "自动同步接口状态:" + (errcode == 0 ? "成功," : "失败,") + "合并模式:" + this.getSyncModeName(syncMode) + ",更多信息:" + moremsg,
+      content: "自动同步接口状态:" + (errcode === 0 ? "成功," : "失败,") + "合并模式:" + this.getSyncModeName(syncMode) + ",更多信息:" + moremsg,
       type: "project",
       uid: uid,
       username: "自动同步用户",
@@ -175,11 +175,11 @@ class syncUtils {
    * @param {*} syncMode 合并模式
    */
   getSyncModeName(syncMode) {
-    if (syncMode == "good") {
+    if (syncMode === "good") {
       return "智能合并";
-    } else if (syncMode == "normal") {
+    } else if (syncMode === "normal") {
       return "普通模式";
-    } else if (syncMode == "merge") {
+    } else if (syncMode === "merge") {
       return "完全覆盖";
     }
     return "";
