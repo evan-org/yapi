@@ -69,6 +69,7 @@ class Project extends Component {
       setting: { name: "设置", path: "/project/:id/setting", component: Setting }
     };
     plugin.emitHook("sub_nav", routers);
+    //
     let key, defaultName;
     for (key in routers) {
       if (

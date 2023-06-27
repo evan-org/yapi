@@ -1,31 +1,28 @@
-import typography from "@/views/utilities/Typography.js";
+import React, { useEffect } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+//
 import { Box, AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, InputBase, Badge } from "@mui/material";
-import { styled, alpha, useTheme } from "@mui/material/styles";
-import MenuIcon from "@mui/icons-material/Menu";
+import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 //
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Dropdown, message, Tooltip, Popover, Tag } from "antd";
 import Icon from "@ant-design/icons";
 import { checkLoginState, logoutActions, loginTypeAction } from "@/reducer/modules/user.js";
 import { changeMenuItem } from "@/reducer/modules/menu.js";
 import Search from "./Search/Search";
-// import Notify from "../../../components/Notify/Notify";
 //
 import styles from "./Header.module.scss";
 //
 import LogoSVG from "../../../components/LogoSVG/LogoSVG.jsx";
 import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb.jsx";
 import GuideBtns from "../../../components/GuideBtns/GuideBtns.jsx";
-
-const plugin = require("@/plugin.js");
+//
 let HeaderMenu = {
   user: {
     path: "/user/profile",
@@ -38,9 +35,14 @@ let HeaderMenu = {
     name: "用户管理",
     icon: "solution",
     adminFlag: true
+  },
+  statisticsPage: {
+    path: "/statistic",
+    name: "系统信息",
+    icon: "bar-chart",
+    adminFlag: true
   }
 };
-plugin.emitHook("header_menu", HeaderMenu);
 //
 function MenuUser(props) {
   return (
