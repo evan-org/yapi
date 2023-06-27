@@ -2,12 +2,22 @@ process.env.NODE_PATH = __dirname;
 require("module").Module._initPaths();
 require("module-alias/register");
 //
+const Koa = require("koa");
+const koaJson = require("koa-json");
+const koaLogger = require("koa-logger");
+// const koaBodyparser = require("koa-bodyparser");
+const historyApiFallback = require("koa2-history-api-fallback");
+const koaStatic = require("koa-static");
+const koaBody = require("koa-body");
+const koaWebsocket = require("koa-websocket");
+//
+const websocket = require("./service/websocket.js");
+//
 const yapi = require("./yapi.js");
-//
 const commons = require("./utils/commons.js");
-yapi.commons = commons;
-//
 const dbModule = require("./service/db.js");
+//
+yapi.commons = commons;
 yapi.connect = dbModule.connect();
 //
 const ExtsPlugin = require("./plugins/ExtsPlugin.js");
@@ -20,17 +30,6 @@ const storageCreator = require("./utils/storage.js");
 global.storageCreator = storageCreator;
 //
 let indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
-//
-const Koa = require("koa");
-const koaJson = require("koa-json");
-const koaLogger = require("koa-logger");
-// const koaBodyparser = require("koa-bodyparser");
-const historyApiFallback = require("koa2-history-api-fallback");
-const koaStatic = require("koa-static");
-const koaBody = require("koa-body");
-const koaWebsocket = require("koa-websocket");
-//
-const websocket = require("./service/websocket.js");
 //
 const router = require("./routes/router.js");
 //

@@ -19,7 +19,7 @@ const noticeObj = {
   }
 }
 
-function NoticePlugin() {
+const NoticePlugin = () => {
   /*  */
   yapi.emitHook("addNotice", noticeObj)
   yapi.commons.sendNotice = async function(projectId, data) {
@@ -32,9 +32,7 @@ function NoticePlugin() {
     const list = await followInst.listByProjectId(projectId);
     const starUsers = list.map((item) => item.uid);
     const projectList = await projectInst.get(projectId);
-    const projectMenbers = projectList.members
-      .filter((item) => item.email_notice)
-      .map((item) => item.uid);
+    const projectMenbers = projectList.members.filter((item) => item.email_notice).map((item) => item.uid);
     const users = arrUnique(projectMenbers, starUsers);
     const usersInfo = await userInst.findByUids(users);
     const emails = usersInfo.map((item) => item.email).join(",");
@@ -58,4 +56,4 @@ function NoticePlugin() {
   };
 }
 
-module.exports = NoticePlugin
+module.exports = NoticePlugin;

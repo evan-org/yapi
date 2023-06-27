@@ -33,9 +33,9 @@ const defaultOptions = {
 };
 // formats.forEach(item => {
 //   item = item.name;
-//   jsf.format(item, () => {
+//   jsonSchemaFaker.format(item, () => {
 //     if (item === 'mobile') {
-//       return jsf.random.randexp('^[1][34578][0-9]{9}$');
+//       return jsonSchemaFaker.random.randexp('^[1][34578][0-9]{9}$');
 //     }
 //     return Mock.mock('@' + item);
 //   });
@@ -45,14 +45,14 @@ const defaultOptions = {
  * */
 exports.schemaToJson = function(schema, options = {}) {
   Object.assign(options, defaultOptions);
-  jsf.option(options);
+  jsonSchemaFaker.option(options);
   let result;
   try {
-    result = jsf(schema);
+    result = jsonSchemaFaker(schema);
   } catch (err) {
     result = err.message;
   }
-  jsf.option(defaultOptions);
+  jsonSchemaFaker.option(defaultOptions);
   return result;
 };
 /**
@@ -395,7 +395,7 @@ exports.saveLog = (logData) => {
     };
     logInst.save(data).then();
   } catch (e) {
-    yapi.commons.log(e, 'error'); // eslint-disable-line
+    yapi.commons.log(e, "error"); // eslint-disable-line
   }
 };
 /**
