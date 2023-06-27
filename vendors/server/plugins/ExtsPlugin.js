@@ -90,31 +90,31 @@ let hooks = {
     listener: []
   },
   /**
-     * 导出 markdown 数据
-     * @param context Object
-     * {
-     *  projectData: project,
+   * 导出 markdown 数据
+   * @param context Object
+   * {
+   *  projectData: project,
         interfaceData: interfaceData,
         ctx: ctx,
         mockJson: res
-     * }
-     *
-     */
+   * }
+   *
+   */
   export_markdown: {
     type: "multi",
     listener: []
   },
   /**
-     * MockServer生成mock数据后触发
-     * @param context Object
-     * {
-     *  projectData: project,
+   * MockServer生成mock数据后触发
+   * @param context Object
+   * {
+   *  projectData: project,
         interfaceData: interfaceData,
         ctx: ctx,
         mockJson: res
-     * }
-     *
-     */
+   * }
+   *
+   */
   mock_after: {
     type: "multi",
     listener: []
@@ -192,7 +192,9 @@ let hooks = {
 };
 
 function bindHook(name, listener) {
-  if (!name) {throw new Error("缺少hookname");}
+  if (!name) {
+    throw new Error("缺少hookname");
+  }
   if (name in hooks === false) {
     throw new Error("不存在的hookname");
   }
@@ -208,7 +210,7 @@ function bindHook(name, listener) {
 
 /**
  *
- * @param {*} hookname
+ * @param {*} name
  * @return promise
  */
 function emitHook(name) {
@@ -228,46 +230,53 @@ function emitHook(name) {
   }
 }
 
-yapi.bindHook = bindHook;
-yapi.emitHook = emitHook;
-yapi.emitHookSync = emitHook;
+function ExtsPlugin() {
+  //
+  yapi.bindHook = bindHook;
+  yapi.emitHook = emitHook;
+  yapi.emitHookSync = emitHook;
 
-let pluginsConfig = initPlugins(yapi.WEBROOT_CONFIG.plugins, "plugin");
-pluginsConfig.forEach((plugin) => {
-  if (!plugin || plugin.enable === false || plugin.server === false) {return null;}
+  let pluginsConfig = initPlugins(yapi.WEBROOT_CONFIG.plugins, "plugin");
+  pluginsConfig.forEach((plugin) => {
+    if (!plugin || plugin.enable === false || plugin.server === false) {
+      return null;
+    }
 
-  if (
-    !yapi.commons.fileExist(
-      yapi.path.join(plugin_path, "yapi-plugin-" + plugin.name + "/server.js")
-    )
-  ) {
-    throw new Error(`config.json配置了插件${plugin},但plugins目录没有找到此插件，请安装此插件`);
-  }
-  let pluginModule = require(yapi.path.join(
-    plugin_path,
-    "yapi-plugin-" + plugin.name + "/server.js"
-  ));
-  pluginModule.call(yapi, plugin.options);
-});
+    if (
+      !yapi.commons.fileExist(
+        yapi.path.join(plugin_path, "yapi-plugin-" + plugin.name + "/server.js")
+      )
+    ) {
+      throw new Error(`config.json配置了插件${plugin},但plugins目录没有找到此插件，请安装此插件`);
+    }
+    let pluginModule = require(yapi.path.join(
+      plugin_path,
+      "yapi-plugin-" + plugin.name + "/server.js"
+    ));
+    pluginModule.call(yapi, plugin.options);
+  });
 
-extConfig = initPlugins(extConfig, "ext");
+  extConfig = initPlugins(extConfig, "ext");
 
-extConfig.forEach((plugin) => {
-  if (!plugin || plugin.enable === false || plugin.server === false) {return null;}
+  extConfig.forEach((plugin) => {
+    if (!plugin || plugin.enable === false || plugin.server === false) {
+      return null;
+    }
 
-  if (
-    !yapi.commons.fileExist(
-      yapi.path.join(plugin_system_path, "yapi-plugin-" + plugin.name + "/server.js")
-    )
-  ) {
-    throw new Error(`config.json配置了插件${plugin},但plugins目录没有找到此插件，请安装此插件`);
-  }
-  let pluginModule = require(yapi.path.join(
-    plugin_system_path,
-    "yapi-plugin-" + plugin.name + "/server.js"
-  ));
-  pluginModule.call(yapi, plugin.options);
-});
+    if (!yapi.commons.fileExist(yapi.path.join(plugin_system_path, "yapi-plugin-" + plugin.name + "/server.js"))) {
+      throw new Error(`config.json配置了插件${plugin},但plugins目录没有找到此插件，请安装此插件`);
+    }
+    let pluginModule = require(yapi.path.join(
+      plugin_system_path,
+      "yapi-plugin-" + plugin.name + "/server.js"
+    ));
+    pluginModule.call(yapi, plugin.options);
+  });
 
-// delete bindHook方法，避免误操作
-delete yapi.bindHook;
+  // delete bindHook方法，避免误操作
+  delete yapi.bindHook;
+  //
+  console.info("--------------------------ExtsPlugin successfully!------------------------------------------");
+}
+
+module.exports = ExtsPlugin

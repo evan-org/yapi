@@ -1,15 +1,20 @@
 process.env.NODE_PATH = __dirname;
 require("module").Module._initPaths();
-require("module-alias/register")
+require("module-alias/register");
 //
 const yapi = require("./yapi.js");
+//
 const commons = require("./utils/commons.js");
 yapi.commons = commons;
+//
 const dbModule = require("./service/db.js");
 yapi.connect = dbModule.connect();
 //
-require("./plugins/plugin.js");
-require("./utils/notice.js");
+const ExtsPlugin = require("./plugins/ExtsPlugin.js");
+ExtsPlugin();
+//
+const NoticePlugin = require("./plugins/NoticePlugin.js");
+NoticePlugin();
 //
 const storageCreator = require("./utils/storage.js");
 global.storageCreator = storageCreator;
@@ -34,8 +39,8 @@ yapi.app = app;
 app.proxy = true;
 // app.use(koaBodyparser())
 app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
-app.use(koaJson())
-app.use(koaLogger())
+app.use(koaJson());
+app.use(koaLogger());
 app.use(router.routes());
 app.use(historyApiFallback())
 app.use(router.allowedMethods());
@@ -45,7 +50,7 @@ websocket(app);
 const mockServer = require("@server/middleware/mockServer.js");
 app.use(mockServer);
 // 中间件
-app.use(async function(ctx, next) {
+app.use(async(ctx, next) => {
   let start = new Date()
   await next()
   let ms = new Date() - start

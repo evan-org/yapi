@@ -44,18 +44,25 @@ function useCreate() {
   }
   return { connectString, options }
 }
-//
+/**
+ * @returns {object}
+ * */
 function useConnect() {
   try {
     const { connectString, options } = useCreate();
     console.log(connectString, options);
     // 链接 MongoDB
-    const db = mongoose.connect(connectString, options);
+    const db = mongoose.connect(connectString, options).then(() => {
+      console.info("connect db success!")
+    }).catch((error) => {
+      console.log(`connect error: ${error}`);
+    });
+    console.log(mongoose.connection, db);
     console.log("Database connected successfully");
     yapi.commons.log("mongodb load success...");
     // 监听连接成功事件
     mongoose.connection.on("connected", (connected) => {
-      console.log("MongoDB connected");
+      console.log("MongoDB connection connected");
     });
     // 监听连接失败事件
     mongoose.connection.on("error", (err) => {
@@ -63,7 +70,7 @@ function useConnect() {
     });
     // 监听连接断开事件
     mongoose.connection.on("disconnected", (disconnected) => {
-      console.log("MongoDB disconnected");
+      console.log("MongoDB connection disconnected");
     });
     // 用于创建自增ID。该插件会在数据库中创建一个名为IdentityCounter的集合，用于存储各个模型的自增ID计数器。
     autoIncrement.initialize(db);
