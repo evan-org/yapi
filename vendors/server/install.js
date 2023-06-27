@@ -1,5 +1,5 @@
 const fs = require("fs-extra");
-const yapi = require("./yapi.js");
+const yapi = require("@server/yapi.js");
 const commons = require("./utils/commons");
 const mongodbModule = require("@server/helper/mongodb.js");
 const userModel = require("@server/models/modules/user.js");

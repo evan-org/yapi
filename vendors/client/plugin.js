@@ -1,11 +1,9 @@
 let hooks, pluginModule;
-
 /**
  * type component  组件
  *      listener   监听函数
  * mulit 是否绑定多个监听函数
  */
-
 hooks = {
   /**
    * 第三方登录 //可参考 yapi-plugin-qsso 插件
@@ -74,7 +72,7 @@ hooks = {
   /**
    * 在运行页面或单个测试也里每次发送请求前调用
    * 可以用插件针对某个接口的请求头或者数据进行修改或者记录
-  */
+   */
   before_request: {
     type: "listener",
     mulit: true,
@@ -88,7 +86,7 @@ hooks = {
    *   projectId: string,
    *   interfaceId: string
    * }
-  */
+   */
   after_request: {
     type: "listener",
     mulit: true,
@@ -96,7 +94,7 @@ hooks = {
   },
   /**
    * 在测试集里运行每次发送请求前调用
-  */
+   */
   before_col_request: {
     type: "listener",
     mulit: true,
@@ -111,7 +109,7 @@ hooks = {
    *   projectId: string,
    *   interfaceId: string
    * }
-  */
+   */
   after_col_request: {
     type: "listener",
     mulit: true,
@@ -194,7 +192,7 @@ hooks = {
     component: Login
   }
 };
-};
+   };
    */
   app_route: {
     type: "listener",
@@ -208,14 +206,12 @@ hooks = {
    * @info
    * importDataModule = {};
    */
-
   add_reducer: {
     type: "listener",
     mulit: true,
     listener: []
   },
-
-  /*
+  /**
    * 添加 subnav 钩子
    * @param Object reducerModules
    *
@@ -232,13 +228,13 @@ hooks = {
     mulit: true,
     listener: []
   },
-  /*
+  /**
    * 添加项目设置 nav
    * @param Object routers
    *
-   *  let routers = {
-      interface: { name: 'xxx', component: Xxx },
-    }
+   * let routers = {
+   *   interface: { name: 'xxx', component: Xxx },
+   * }
    */
   sub_setting_nav: {
     type: "listener",
@@ -246,7 +242,6 @@ hooks = {
     listener: []
   }
 };
-
 function bindHook(name, listener) {
   if (!name) {
     throw new Error("缺少hookname");
@@ -260,7 +255,6 @@ function bindHook(name, listener) {
     hooks[name].listener = listener;
   }
 }
-
 function emitHook(name, ...args) {
   if (!hooks[name]) {
     throw new Error("不存在的hook name");
@@ -271,6 +265,7 @@ function emitHook(name, ...args) {
       let promiseAll = [];
       hook.listener.forEach((item) => {
         if (typeof item === "function") {
+          console.warn("11111111111111111", pluginModule, ...args);
           promiseAll.push(Promise.resolve(item.call(pluginModule, ...args)));
         }
       });
@@ -284,7 +279,6 @@ function emitHook(name, ...args) {
     return hook.listener;
   }
 }
-
 pluginModule = {
   hooks: hooks,
   bindHook: bindHook,
@@ -296,12 +290,12 @@ try {
 } catch (err) {
   pluginModuleList = {};
 }
-
 Object.keys(pluginModuleList).forEach((plugin) => {
-  if (!pluginModuleList[plugin]) {return null;}
+  if (!pluginModuleList[plugin]) {
+    return null;
+  }
   if (pluginModuleList[plugin] && typeof pluginModuleList[plugin].module === "function") {
     pluginModuleList[plugin].module.call(pluginModule, pluginModuleList[plugin].options);
   }
 });
-
 module.exports = pluginModule;

@@ -1,8 +1,8 @@
-const yapi = require("yapi.js");
+const yapi = require("@server/yapi.js");
 const plugin_path = yapi.path.join(yapi.WEBROOT, "node_modules");
 const plugin_system_path = yapi.path.join(yapi.WEBROOT, "exts");
 const initPlugins = require("@common/plugin.js").initPlugins;
-let extConfig = require("@common/config.js").exts;
+let extsConfig = require("@common/config.js").exts;
 
 /**
  * 钩子配置
@@ -256,7 +256,7 @@ function ExtsPlugin() {
     pluginModule.call(yapi, plugin.options);
   });
 
-  extConfig = initPlugins(extConfig, "ext");
+  const extConfig = initPlugins(extsConfig, "ext");
 
   extConfig.forEach((plugin) => {
     if (!plugin || plugin.enable === false || plugin.server === false) {

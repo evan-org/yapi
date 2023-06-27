@@ -1,4 +1,4 @@
-const yapi = require("yapi.js");
+const yapi = require("@server/yapi.js");
 const baseModel = require("@server/models/modules/base.js");
 const mongoose = require("mongoose");
 

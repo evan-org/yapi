@@ -1,5 +1,5 @@
 const storageModel = require("@server/models/modules/storage.js");
-const yapi = require("../yapi.js");
+const yapi = require("@server/yapi.js");
 function storageCreator(id) {
 
   const defaultData = {}

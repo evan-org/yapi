@@ -1,8 +1,8 @@
-const baseController = require("controllers/base.js");
+const baseController = require("@server/controllers/base.js");
 const interfaceModel = require("@server/models/modules/interface.js");
 const projectModel = require("@server/models/modules/project.js");
 const interfaceCatModel = require("@server/models/modules/interfaceCat.js");
-const yapi = require("yapi.js");
+const yapi = require("@server/yapi.js");
 
 
 class exportSwaggerController extends baseController {

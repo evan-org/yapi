@@ -1,7 +1,7 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-const yapi = require("yapi.js");
+const yapi = require("@server/yapi.js");
 const mongoose = require("mongoose");
 const controller = require("./controller");
 const statisModel = require("./lib/statisticsMockModel.js");

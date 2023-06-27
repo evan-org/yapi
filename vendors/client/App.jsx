@@ -19,10 +19,6 @@ import { AppRoute } from "@/router/oldIndex";
 // import zhCN from "antd/es/locale/zh_CN";
 // dayjs.locale("zh-cn");
 //
-const plugin = require("@/plugin.js");
-// 增加路由钩子
-plugin.emitHook("app_route", AppRoute);
-//
 /* const showConfirm = (msg, callback) => {
   // 自定义 window.confirm
   // http://reacttraining.cn/web/api/BrowserRouter/getUserConfirmation-func

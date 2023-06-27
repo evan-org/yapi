@@ -16,11 +16,11 @@ const smp = new SpeedMeasurePlugin();
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
   if (pathAlias === "node_modules") {
-    return `"${plugin.name}" : {module: require('yapi-plugin-${plugin.name}/client.js'),options: ${options}}`;
+    return `"${plugin.name}": { module: require("yapi-plugin-${plugin.name}/client.js"), options: ${options} }`;
   }
-  return `"${plugin.name}" : {module: require('${pathAlias}/yapi-plugin-${plugin.name}/client.js'),options: ${options}}`;
+  return `"${plugin.name}": { module: require("${pathAlias}/yapi-plugin-${plugin.name}/client.js"), options: ${options} }`;
 }
-let { exts: systemConfigPlugin } = require("./common/config.js");
+let { exts: extsConfig } = require("./common/config.js");
 const commonLib = require("./common/plugin.js");
 function initPlugins(configPlugin) {
   configPlugin = require("../config.json").plugins;
@@ -33,8 +33,8 @@ function initPlugins(configPlugin) {
       }
     });
   }
-  systemConfigPlugin = commonLib.initPlugins(systemConfigPlugin, "ext");
-  systemConfigPlugin.forEach((plugin) => {
+  const extConfig = commonLib.initPlugins(extsConfig, "ext");
+  extConfig.forEach((plugin) => {
     if (plugin.client && plugin.enable) {
       scripts.push(createScript(plugin, "@exts"));
     }

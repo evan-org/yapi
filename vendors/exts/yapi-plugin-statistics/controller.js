@@ -1,14 +1,14 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-const baseController = require("controllers/base.js");
+const baseController = require("@server/controllers/base.js");
 const statisMockModel = require("./lib/statisticsMockModel.js");
 //
 const groupModel = require("@server/models/modules/group.js");
 const projectModel = require("@server/models/modules/project.js");
 const interfaceModel = require("@server/models/modules/interface.js");
 const interfaceCaseModel = require("@server/models/modules/interfaceCase.js");
-const yapi = require("yapi.js");
+const yapi = require("@server/yapi.js");
 const config = require("./index.js");
 const commons = require("./lib/util.js");
 const os = require("os");

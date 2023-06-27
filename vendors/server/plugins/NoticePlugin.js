@@ -1,4 +1,4 @@
-const yapi = require("../yapi.js");
+const yapi = require("@server/yapi.js");
 function arrUnique(arr1, arr2) {
   let arr = arr1.concat(arr2);
   return arr.filter(function(item, index, arr) {

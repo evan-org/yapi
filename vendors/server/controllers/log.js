@@ -1,5 +1,5 @@
 const logModel = require("@server/models/modules/log.js");
-const yapi = require("../yapi.js");
+const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const groupModel = require("@server/models/modules/group.js");
 const projectModel = require("@server/models/modules/project.js");

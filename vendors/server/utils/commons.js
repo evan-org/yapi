@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs-extra");
-const yapi = require("../yapi.js");
+const yapi = require("@server/yapi.js");
 //
 const sha1 = require("sha1");
 const json5 = require("json5");

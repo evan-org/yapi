@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const yapi = require("../yapi.js");
+const yapi = require("@server/yapi.js");
 const autoIncrement = require("./mongooseAutoIncrement.js");
 const config = yapi.WEBROOT_CONFIG;
 //

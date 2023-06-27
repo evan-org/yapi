@@ -1,5 +1,5 @@
 const projectModel = require("@server/models/modules/project.js");
-const yapi = require("../yapi.js");
+const yapi = require("@server/yapi.js");
 const _ = require("underscore");
 const baseController = require("./base.js");
 const interfaceModel = require("@server/models/modules/interface.js");

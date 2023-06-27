@@ -1,4 +1,5 @@
-const yapi = require("yapi.js");
+const yapi = require("@server/yapi.js");
+//
 const mongoose = require("mongoose");
 const controller = require("./controller");
 module.exports = function() {

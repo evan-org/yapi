@@ -1,4 +1,4 @@
-const yapi = require("../yapi.js");
+const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const followModel = require("@server/models/modules/follow.js");
 const projectModel = require("@server/models/modules/project.js");

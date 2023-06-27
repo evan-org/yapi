@@ -1,6 +1,5 @@
-const yapi = require("yapi.js");
 const baseModel = require("@server/models/modules/base.js");
-
+//
 class wikiModel extends baseModel {
   getName() {
     return "wiki";
