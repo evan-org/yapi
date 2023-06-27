@@ -47,6 +47,7 @@ initPlugins();
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
+console.log("craco.config.js =-=================> ", global);
 //
 module.exports = {
   // 配置打包后的文件位置

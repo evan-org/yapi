@@ -21,7 +21,6 @@ global.DEFINE_YAPI = yapi;
 //
 const commons = require("./utils/commons.js");
 const mongodb = require("@server/helper/mongodb.js");
-
 //
 yapi.commons = commons;
 yapi.connect = mongodb.connect();
@@ -31,10 +30,16 @@ ExtsPlugin();
 //
 const NoticePlugin = require("./plugins/NoticePlugin.js");
 NoticePlugin();
-
 //
 const app = koaWebsocket(new Koa());
+app.context.commons = commons;
+app.context.mongodb = mongodb.connect();
 yapi.app = app;
+const { websocketMiddleware, mockServerMiddleware, requestMiddleware, routeMiddleware } = require("@server/middleware/index.js");
+app.use(mockServerMiddleware);
+app.use(routeMiddleware);
+app.use(requestMiddleware);
+//
 const router = require("./routes/router.js");
 app.proxy = true;
 // app.use(koaBodyparser())
@@ -47,11 +52,6 @@ app.use(historyApiFallback({
   index: "../dist/index.html", // 入口 HTML 文件路径
   whiteList: ["/api"], // 排除不需要拦截的请求
 }));
-//
-const { websocketMiddleware, mockServerMiddleware, requestMiddleware, routeMiddleware } = require("@server/middleware/index.js");
-app.use(mockServerMiddleware);
-app.use(routeMiddleware);
-app.use(requestMiddleware);
 //
 websocketMiddleware(app);
 //
