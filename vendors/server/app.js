@@ -2,6 +2,8 @@ process.env.NODE_PATH = __dirname;
 require("module").Module._initPaths();
 require("module-alias/register");
 //
+const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
+//
 const Koa = require("koa");
 const koaJson = require("koa-json");
 const koaLogger = require("koa-logger");
@@ -11,7 +13,8 @@ const koaStatic = require("koa-static");
 const koaBody = require("koa-body");
 const koaWebsocket = require("koa-websocket");
 //
-const websocket = require("./service/websocket.js");
+const storageCreator = require("./utils/storage.js");
+global.storageCreator = storageCreator;
 //
 const yapi = require("./yapi.js");
 const commons = require("./utils/commons.js");
@@ -26,11 +29,6 @@ ExtsPlugin();
 const NoticePlugin = require("./plugins/NoticePlugin.js");
 NoticePlugin();
 //
-const storageCreator = require("./utils/storage.js");
-global.storageCreator = storageCreator;
-//
-let indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
-//
 const router = require("./routes/router.js");
 //
 const app = koaWebsocket(new Koa());
@@ -41,40 +39,15 @@ app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "
 app.use(koaJson());
 app.use(koaLogger());
 app.use(router.routes());
-app.use(historyApiFallback())
 app.use(router.allowedMethods());
+app.use(historyApiFallback())
 //
-websocket(app);
+const { websocketMiddleware, mockServerMiddleware, requestMiddleware, routeMiddleware } = require("@server/middleware/index.js");
+app.use(mockServerMiddleware);
+app.use(routeMiddleware);
+app.use(requestMiddleware);
 //
-const mockServer = require("@server/middleware/mockServer.js");
-app.use(mockServer);
-// 中间件
-app.use(async(ctx, next) => {
-  let start = new Date()
-  await next()
-  let ms = new Date() - start
-  console.log("%s %s - %s", ctx.method, ctx.url, ms)
-});
-//
-app.use(async(ctx, next) => {
-  if (/^\/(?!api)[\w/-]*$/i.test(ctx.path)) {
-    ctx.path = "/";
-    await next();
-  } else {
-    await next();
-  }
-});
-//
-app.use(async(ctx, next) => {
-  if (ctx.path.indexOf("/prd") === 0) {
-    ctx.set("Cache-Control", "max-age=8640000000");
-    if (yapi.commons.fileExist(yapi.path.join(yapi.WEBROOT, "static", ctx.path + ".gz"))) {
-      ctx.set("Content-Encoding", "gzip");
-      ctx.path = ctx.path + ".gz";
-    }
-  }
-  await next();
-});
+websocketMiddleware(app);
 //
 app.use(koaStatic(yapi.path.join(yapi.WEBROOT, "static"), { index: indexFile, gzip: true }));
 // run

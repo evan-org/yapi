@@ -276,7 +276,7 @@ const ExtsPlugin = () => {
   // delete bindHook方法，避免误操作
   delete yapi.bindHook;
   //
-  console.info("--------------------------ExtsPlugin successfully!------------------------------------------");
+  console.info("------------------------------------------ExtsPlugin successfully!------------------------------------------");
 }
 
 module.exports = ExtsPlugin;

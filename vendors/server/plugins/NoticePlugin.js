@@ -54,6 +54,7 @@ const NoticePlugin = () => {
       yapi.commons.log("发送失败：" + e, "error");
     }
   };
+  console.info("------------------------------------------NoticePlugin successfully!------------------------------------------");
 }
 
 module.exports = NoticePlugin;

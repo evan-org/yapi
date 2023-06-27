@@ -13,7 +13,7 @@ function storageCreator(id) {
       }
       return data;
     },
-    setItem: async(name, value) => {
+    setItem: async(name = "", value) => {
       let inst = yapi.getInst(storageModel);
       let curData = await inst.get(id);
       let data = curData || defaultData;
