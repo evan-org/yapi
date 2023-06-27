@@ -15,21 +15,23 @@ const koaWebsocket = require("koa-websocket");
 //
 const storageCreator = require("./utils/storage.js");
 global.storageCreator = storageCreator;
-//
+// 全局挂载
 const yapi = require("./yapi.js");
+global.DEFINE_YAPI = yapi;
+//
 const commons = require("./utils/commons.js");
-const dbModule = require("@server/helper/mongodb.js");
+const mongodb = require("@server/helper/mongodb.js");
+const router = require("./routes/router.js");
 //
 yapi.commons = commons;
-yapi.connect = dbModule.connect();
+yapi.connect = mongodb.connect();
 //
 const ExtsPlugin = require("./plugins/ExtsPlugin.js");
 ExtsPlugin(yapi);
 //
 const NoticePlugin = require("./plugins/NoticePlugin.js");
 NoticePlugin(yapi);
-//
-const router = require("./routes/router.js");
+
 //
 const app = koaWebsocket(new Koa());
 yapi.app = app;
