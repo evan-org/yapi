@@ -2,17 +2,15 @@ const path = require("path");
 const fs = require("fs-extra");
 const nodemailer = require("nodemailer");
 const config = require("../../config.json");
-const insts = new Map();
-let mail;
+const insets = new Map();
 const WEBROOT = path.resolve(__dirname, ".."); // 路径
 const WEBROOT_SERVER = __dirname;
 const WEBROOT_RUNTIME = path.resolve(__dirname, "../..");
 const WEBROOT_LOG = path.join(WEBROOT_RUNTIME, "log");
 const WEBROOT_CONFIG = config;
 fs.ensureDirSync(WEBROOT_LOG);
-if (WEBROOT_CONFIG.mail && WEBROOT_CONFIG.mail.enable) {
-  mail = nodemailer.createTransport(WEBROOT_CONFIG.mail);
-}
+//
+let mail = WEBROOT_CONFIG.mail && WEBROOT_CONFIG.mail.enable ? nodemailer.createTransport(WEBROOT_CONFIG.mail) : null;
 /**
  * 获取一个model实例，如果不存在则创建一个新的返回
  * @param Class
@@ -21,17 +19,17 @@ if (WEBROOT_CONFIG.mail && WEBROOT_CONFIG.mail.enable) {
  * yapi.getInst(groupModel, arg1, arg2)
  */
 function getInst(Class, ...args) {
-  if (!insts.get(Class)) {
-    insts.set(Class, new Class(args));
+  if (!insets.get(Class)) {
+    insets.set(Class, new Class(args));
   }
-  return insts.get(Class);
+  return insets.get(Class);
 }
 /**
  * @param {string} className
  * */
 function delInst(className) {
   try {
-    insts.delete(className);
+    insets.delete(className);
   } catch (err) {
     console.error(err); // eslint-disable-line
   }
@@ -47,11 +45,10 @@ const yapi = {
   WEBROOT_CONFIG: WEBROOT_CONFIG,
   getInst: getInst,
   delInst: delInst,
-  getInsts: insts
+  getInsets: insets
 };
 //
 if (mail) {
   yapi.mail = mail;
 }
-yapi.commons = {};
 module.exports = yapi;

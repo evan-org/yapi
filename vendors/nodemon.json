@@ -2,7 +2,7 @@
   "watch": [
     "server/",
     "common/",
-    "plugins",
+    "plugins/",
     "exts/"
   ],
   "ext": "js,json,hbs",

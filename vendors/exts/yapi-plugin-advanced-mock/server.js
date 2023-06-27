@@ -19,9 +19,7 @@ function arrToObj(arr) {
   });
   return obj;
 }
-module.exports = function() {
-  //
-  console.log('1111', global);
+module.exports = function() {;
   //
   yapi.connect.then(() => {
     let Col = mongoose.connection.db.collection("adv_mock");

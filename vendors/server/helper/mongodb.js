@@ -50,7 +50,7 @@ function useCreate() {
 function useConnect() {
   try {
     const { connectString, options } = useCreate();
-    console.log(connectString, options);
+    console.log(connectString, "\n", JSON.stringify(options));
     // 链接 MongoDB
     const db = mongoose.connect(connectString, options);
     console.log("Database connected successfully");
