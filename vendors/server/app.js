@@ -18,7 +18,7 @@ global.storageCreator = storageCreator;
 //
 const yapi = require("./yapi.js");
 const commons = require("./utils/commons.js");
-const dbModule = require("@server/helper/db.js");
+const dbModule = require("@server/helper/mongodb.js");
 //
 yapi.commons = commons;
 yapi.connect = dbModule.connect();
