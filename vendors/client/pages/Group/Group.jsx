@@ -10,6 +10,7 @@ import { fetchMyGroup, setCurrGroup } from "@/reducer/modules/group.js";
 import styles from "./Group.module.scss";
 //
 function Group(props) {
+  console.log(props);
   const navigate = useNavigate();
   const { groupId: paramsGroupId } = useParams();
   //
@@ -21,7 +22,7 @@ function Group(props) {
       const group = response.payload.data.data;
       await setCurrGroup(group, "time");
       if (!paramsGroupId) {
-        navigate({pathname: "/group/" + group._id})
+        navigate({ pathname: "/group/" + group._id })
       }
     } catch (e) {
       console.error(e)
@@ -42,12 +43,10 @@ function Group(props) {
     </Grid>
   )
 }
-export default connect(
-  (state) => ({
-    currentGroupId: state.group.currentGroupId,
-  }),
-  {
-    setCurrGroup,
-    fetchMyGroup
-  }
-)(Group)
+export default connect((state) => ({
+  currentGroupId: state.group.currentGroupId,
+}),
+{
+  setCurrGroup,
+  fetchMyGroup
+})(Group)

@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { APP_NAME } from "@/utils/config";
 import Loading from "@/components/Loading/Loading.jsx";
-import { createBrowserRouter, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 //
 /*
 * let routers = {
@@ -148,8 +148,8 @@ const plugin = require("@/plugin.js");
 plugin.emitHook("app_route", router);
 // routes
 console.log("111111", router);
-import MainRoutes from "./MainRoutes";
-import AuthenticationRoutes from "./AuthenticationRoutes";
+// import MainRoutes from "./MainRoutes";
+// import AuthenticationRoutes from "./AuthenticationRoutes";
 // ==============================|| ROUTING RENDER ||============================== //
 export default function ThemeRoutes() {
   return useRoutes([...router]);
