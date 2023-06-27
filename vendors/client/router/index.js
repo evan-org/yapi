@@ -1,4 +1,3 @@
-import { AppRoute } from "@/router/oldIndex.js";
 import React, { lazy, Suspense } from "react";
 import { APP_NAME } from "@/utils/config";
 import Loading from "@/components/Loading/Loading.jsx";
@@ -144,7 +143,6 @@ const router = [
     meta: { title: "什么也没找到", auth: false },
   }
 ];
-
 const plugin = require("@/plugin.js");
 // 增加路由钩子
 plugin.emitHook("app_route", router);
@@ -178,4 +176,4 @@ const generateRouter = (routers) => routers.map((Item) => {
 // 组成路由
 const asyncRouter = generateRouter(router);
 //
-export const routes = createBrowserRouter([...asyncRouter]);
+export const routes = () => useRoutes([...asyncRouter]);
