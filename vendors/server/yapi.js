@@ -10,7 +10,7 @@ const WEBROOT_LOG = path.join(WEBROOT_RUNTIME, "log");
 const WEBROOT_CONFIG = config;
 fs.ensureDirSync(WEBROOT_LOG);
 //
-let mail = WEBROOT_CONFIG.mail && WEBROOT_CONFIG.mail.enable ? nodemailer.createTransport(WEBROOT_CONFIG.mail) : null;
+let mail = WEBROOT_CONFIG.mail && WEBROOT_CONFIG.mail.enable ? nodemailer.createTransport(WEBROOT_CONFIG.mail) : {};
 /**
  * 获取一个model实例，如果不存在则创建一个新的返回
  * @param Class
@@ -43,6 +43,7 @@ const yapi = {
   WEBROOT_RUNTIME: WEBROOT_RUNTIME,
   WEBROOT_LOG: WEBROOT_LOG,
   WEBROOT_CONFIG: WEBROOT_CONFIG,
+  WEBCONFIG: WEBROOT_CONFIG,
   getInst: getInst,
   delInst: delInst,
   getInsets: insets

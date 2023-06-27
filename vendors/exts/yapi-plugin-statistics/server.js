@@ -3,11 +3,13 @@
  */
 const yapi = require("@server/yapi.js");
 const mongoose = require("mongoose");
-const controller = require("./controller");
+//
+const controller = require("./controller.js");
 const statisModel = require("./lib/statisticsMockModel.js");
 const commons = require("./lib/util.js");
 module.exports = function() {
-  yapi.connect.then(function() {
+  yapi.connect.then(function(db) {
+    console.log("yapi-plugin-statistics", db);
     let Col = mongoose.connection.db.collection("statis_mock");
     Col.createIndex({
       interface_id: 1
@@ -48,8 +50,8 @@ module.exports = function() {
     addRouter({
       controller: controller,
       method: "get",
-      path: "statismock/group_data_statis",
-      action: "groupDataStatis"
+      path: "statismock/group_data_stats",
+      action: "groupDataStats"
     });
   });
   // MockServer生成mock数据后触发

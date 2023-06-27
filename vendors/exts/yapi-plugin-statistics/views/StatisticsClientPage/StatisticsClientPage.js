@@ -158,7 +158,7 @@ class StatisticsClientPage extends Component {
   }
   // 获取分组详细信息
   async getGroupData() {
-    let result = await axios.get("/api/plugin/statismock/group_data_statis");
+    let result = await axios.get("/api/plugin/statismock/group_data_stats");
     if (result.data.errcode === 0) {
       let statusData = result.data.data;
       statusData.map((item) => (item["key"] = item.name));

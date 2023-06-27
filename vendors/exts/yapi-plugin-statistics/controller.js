@@ -58,7 +58,7 @@ class statisMockController extends baseController {
     try {
       let mockCount = await this.Model.getTotalCount();
       let mockDateList = [];
-      if (!this.getRole() === "admin") {
+      if (!(this.getRole() === "admin")) {
         return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
       }
       //  默认时间是30 天为一周期
@@ -80,7 +80,7 @@ class statisMockController extends baseController {
   async getSystemStatus(ctx) {
     try {
       let mail = "";
-      if (yapi.WEBCONFIG.mail && yapi.WEBCONFIG.mail.enable) {
+      if (yapi.WEBROOT_CONFIG.mail && yapi.WEBROOT_CONFIG.mail.enable) {
         mail = await this.checkEmail();
         // return ctx.body = yapi.commons.resReturn(result);
       } else {
@@ -118,7 +118,7 @@ class statisMockController extends baseController {
       });
     });
   }
-  async groupDataStatis(ctx) {
+  async groupDataStats(ctx) {
     try {
       let groupData = await this.groupModel.list();
       let result = [];

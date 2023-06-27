@@ -3,12 +3,10 @@
  */
 const yapi = require("@server/yapi.js");
 const baseModel = require("@server/models/modules/base.js");
-
 class StatisticsMockModel extends baseModel {
   getName() {
     return "statis_mock";
   }
-
   getSchema() {
     return {
       interface_id: { type: Number, required: true },
@@ -19,26 +17,23 @@ class StatisticsMockModel extends baseModel {
       date: String
     };
   }
-
   countByGroupId(id) {
     return this.model.countDocuments({
       group_id: id
     })
   }
-
   save(data) {
     let m = new this.model(data);
     return m.save();
   }
-
   getTotalCount() {
     return this.model.countDocuments({});
   }
-
   async getDayCount(timeInterval) {
     let end = timeInterval[1];
     let start = timeInterval[0];
     let data = [];
+    console.log('getDayCount', timeInterval, this.model);
     const cursor = this.model.aggregate([
       {
         $match: {
@@ -54,16 +49,14 @@ class StatisticsMockModel extends baseModel {
       {
         $sort: { _id: 1 }
       }
-    ]).cursor({}).exec();
-    await cursor.eachAsync((doc) => data.push(doc));
+    ]).exec();
+    console.log(cursor);
+    // await cursor.eachAsync((doc) => data.push(doc));
     return data;
-
   }
-
   list() {
     return this.model.find({}).select("date").exec();
   }
-
   up(id, data) {
     data.up_time = yapi.commons.time();
     return this.model.updateOne({
@@ -71,5 +64,4 @@ class StatisticsMockModel extends baseModel {
     }, data, { runValidators: true });
   }
 }
-
 module.exports = StatisticsMockModel;

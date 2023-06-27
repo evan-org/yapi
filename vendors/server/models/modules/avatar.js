@@ -1,4 +1,3 @@
-const yapi = require("@server/yapi.js");
 const baseModel = require("@server/models/modules/base.js");
 
 class avatarModel extends baseModel {

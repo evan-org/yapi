@@ -302,8 +302,8 @@ async function crossRequest(defaultOptions, preScript, afterScript, commonContex
 
   let scriptEnable = false;
   try {
-    const yapi = require("../server/yapi");
-    scriptEnable = yapi.WEBCONFIG.scriptEnable === true;
+    const yapi = require("../server/yapi.js");
+    scriptEnable = yapi.WEBROOT_CONFIG.scriptEnable === true;
   } catch (err) {}
 
   if (preScript && scriptEnable) {
