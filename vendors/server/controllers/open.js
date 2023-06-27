@@ -5,7 +5,7 @@ const interfaceModel = require("@server/models/modules/interface.js");
 const interfaceCatModel = require("@server/models/modules/interfaceCat.js");
 const followModel = require("@server/models/modules/follow.js");
 const userModel = require("@server/models/modules/user.js");
-const yapi = require("../yapi.js");
+const yapi = require("yapi.js");
 const baseController = require("./base.js");
 const {
   handleParams,

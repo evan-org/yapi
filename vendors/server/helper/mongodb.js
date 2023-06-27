@@ -5,10 +5,10 @@ const config = yapi.WEBROOT_CONFIG;
 //
 mongoose.Promise = global.Promise
 // mongoose.set("debug", false);
-// mongoose.set("strictQuery", true);
-mongoose.set("useNewUrlParser", true);
-mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
+mongoose.set("strictQuery", true);
+// mongoose.set("useNewUrlParser", true);
+// mongoose.set("useFindAndModify", false);
+// mongoose.set("useCreateIndex", true);
 //
 function useModel(model, schema) {
   if (!(schema instanceof mongoose.Schema)) {
@@ -20,7 +20,7 @@ function useModel(model, schema) {
 //
 function useCreate() {
   //
-  const options = Object.assign({}, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true }, config.db.options);
+  const options = Object.assign({}, { useNewUrlParser: true, useUnifiedTopology: true }, config.db.options);
   //
   if (config.db.user) {
     options.user = config.db.user;
@@ -45,7 +45,7 @@ function useCreate() {
   return { connectString, options }
 }
 /**
- * @returns {object}
+ * @returns Promise
  * */
 function useConnect() {
   try {
@@ -53,9 +53,6 @@ function useConnect() {
     console.log(connectString, options);
     // 链接 MongoDB
     const db = mongoose.connect(connectString, options);
-    db.then(function(e) {
-      console.log(e);
-    })
     console.log("Database connected successfully");
     yapi.commons.log("mongodb load success...");
     // 监听连接成功事件

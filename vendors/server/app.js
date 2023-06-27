@@ -21,20 +21,21 @@ global.DEFINE_YAPI = yapi;
 //
 const commons = require("./utils/commons.js");
 const mongodb = require("@server/helper/mongodb.js");
-const router = require("./routes/router.js");
+
 //
 yapi.commons = commons;
 yapi.connect = mongodb.connect();
 //
 const ExtsPlugin = require("./plugins/ExtsPlugin.js");
-ExtsPlugin(yapi);
+ExtsPlugin();
 //
 const NoticePlugin = require("./plugins/NoticePlugin.js");
-NoticePlugin(yapi);
+NoticePlugin();
 
 //
 const app = koaWebsocket(new Koa());
 yapi.app = app;
+const router = require("./routes/router.js");
 app.proxy = true;
 // app.use(koaBodyparser())
 app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));

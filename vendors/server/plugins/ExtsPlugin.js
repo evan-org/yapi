@@ -230,7 +230,7 @@ function emitHook(name) {
   }
 }
 
-function ExtsPlugin(app) {
+function ExtsPlugin() {
   //
   yapi.bindHook = bindHook;
   yapi.emitHook = emitHook;
