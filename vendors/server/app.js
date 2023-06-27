@@ -41,7 +41,7 @@ app.use(koaLogger());
 app.use(router.routes());
 app.use(router.allowedMethods());
 app.use(historyApiFallback({
-  index: "/index.html", // 入口 HTML 文件路径
+  index: "../dist/index.html", // 入口 HTML 文件路径
   whiteList: ["/api"], // 排除不需要拦截的请求
 }));
 //

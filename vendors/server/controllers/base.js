@@ -6,7 +6,7 @@ const groupModel = require("@server/models/modules/group.js");
 const tokenModel = require("@server/models/modules/token.js");
 const _ = require("underscore");
 const jwt = require("jsonwebtoken");
-const {parseToken} = require("../utils/token")
+const {parseToken} = require("../utils/token.js");
 
 class baseController {
   constructor(ctx) {
