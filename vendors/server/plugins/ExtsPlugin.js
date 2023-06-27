@@ -1,4 +1,4 @@
-const yapi = require("../yapi.js");
+const yapi = require("yapi.js");
 const plugin_path = yapi.path.join(yapi.WEBROOT, "node_modules");
 const plugin_system_path = yapi.path.join(yapi.WEBROOT, "exts");
 const initPlugins = require("@common/plugin.js").initPlugins;
@@ -230,7 +230,7 @@ function emitHook(name) {
   }
 }
 
-const ExtsPlugin = () => {
+function ExtsPlugin(app) {
   //
   yapi.bindHook = bindHook;
   yapi.emitHook = emitHook;

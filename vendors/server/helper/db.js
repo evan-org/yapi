@@ -52,11 +52,7 @@ function useConnect() {
     const { connectString, options } = useCreate();
     console.log(connectString, options);
     // 链接 MongoDB
-    const db = mongoose.connect(connectString, options).then(() => {
-      console.info("connect db success!")
-    }).catch((error) => {
-      console.log(`connect error: ${error}`);
-    });
+    const db = mongoose.connect(connectString, options);
     console.log(mongoose.connection, db);
     console.log("Database connected successfully");
     yapi.commons.log("mongodb load success...");

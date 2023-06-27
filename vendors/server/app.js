@@ -24,10 +24,10 @@ yapi.commons = commons;
 yapi.connect = dbModule.connect();
 //
 const ExtsPlugin = require("./plugins/ExtsPlugin.js");
-ExtsPlugin();
+ExtsPlugin(yapi);
 //
 const NoticePlugin = require("./plugins/NoticePlugin.js");
-NoticePlugin();
+NoticePlugin(yapi);
 //
 const router = require("./routes/router.js");
 //
@@ -40,7 +40,10 @@ app.use(koaJson());
 app.use(koaLogger());
 app.use(router.routes());
 app.use(router.allowedMethods());
-app.use(historyApiFallback())
+app.use(historyApiFallback({
+  index: "/index.html", // 入口 HTML 文件路径
+  whiteList: ["/api"], // 排除不需要拦截的请求
+}));
 //
 const { websocketMiddleware, mockServerMiddleware, requestMiddleware, routeMiddleware } = require("@server/middleware/index.js");
 app.use(mockServerMiddleware);
