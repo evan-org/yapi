@@ -1,8 +1,9 @@
+const path = require("path");
 const _ = require("underscore");
 function getPluginConfig(name, type) {
   let pluginConfig;
   if (type === "ext") {
-    pluginConfig = require("@exts/yapi-plugin-" + name);
+    pluginConfig = require("../exts/yapi-plugin-" + name + "/index.js");
   } else {
     pluginConfig = require("yapi-plugin-" + name);
   }
