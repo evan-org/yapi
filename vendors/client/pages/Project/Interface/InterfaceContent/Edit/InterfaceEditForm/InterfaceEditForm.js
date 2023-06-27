@@ -2,9 +2,8 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import _ from "underscore";
-import constants from "../../../../../../utils/variable.js";
-import { handlePath, nameLengthLimit } from "@/utils/common";
-import { changeEditStatus } from "@/reducer/modules/interface";
+import { handlePath, nameLengthLimit } from "@/utils/common.js";
+import { changeEditStatus } from "@/reducer/modules/interface.js";
 import json5 from "json5";
 import { message, Affix, Tabs, Modal, Form, Select, Input, Tooltip, Button, Row, Col, Radio, AutoComplete, Switch } from "antd";
 import Icon from "@ant-design/icons";
@@ -13,7 +12,7 @@ import EasyDragSort from "@/components/EasyDragSort/EasyDragSort.jsx";
 import mockEditor from "@/components/AceEditor/utils/mockEditor.js";
 import AceEditor from "@/components/AceEditor/AceEditor.jsx";
 import axios from "axios";
-import { MOCK_SOURCE } from "@/utils/variable.js";
+import { MOCK_SOURCE, HTTP_METHOD, HTTP_REQUEST_HEADER } from "@/utils/variable.js";
 //
 import Editor from "@common/tui-editor/dist/tui-editor-Editor-all.min.js";
 // 注入tui-editor css
@@ -21,6 +20,7 @@ import "../../../../../../../common/tui-editor/dist/tui-editor.min.css";
 import "../../../../../../../common/tui-editor/dist/tui-editor-contents.min.css";
 //
 import schemaEditor from "json-schema-editor-visual/dist/main";
+
 const ResBodySchema = schemaEditor({ lang: "zh_CN", mock: MOCK_SOURCE });
 const ReqBodySchema = schemaEditor({ lang: "zh_CN", mock: MOCK_SOURCE });
 // require("common/tui-editor/dist/tui-editor.min.css"); // editor ui
@@ -49,8 +49,6 @@ function checkIsJsonSchema(json) {
     return false;
   }
 }
-
-let EditFormContext;
 const validJson = (json) => {
   try {
     json5.parse(json);
@@ -60,7 +58,6 @@ const validJson = (json) => {
   }
 };
 //
-
 const Json5Example = `
   {
     /**
@@ -71,7 +68,6 @@ const Json5Example = `
   }
 
 `;
-
 //
 const dataTpl = {
   req_query: { name: "", required: "1", desc: "", example: "" },
@@ -85,20 +81,8 @@ const dataTpl = {
     example: ""
   }
 };
-
-const HTTP_METHOD = constants.HTTP_METHOD;
 const HTTP_METHOD_KEYS = Object.keys(HTTP_METHOD);
-const HTTP_REQUEST_HEADER = constants.HTTP_REQUEST_HEADER;
-
-@connect(
-  (state) => ({
-    custom_field: state.group.field,
-    projectMsg: state.project.currProject
-  }),
-  {
-    changeEditStatus
-  }
-)
+//
 class InterfaceEditForm extends Component {
   static propTypes = {
     custom_field: PropTypes.object,
@@ -114,7 +98,6 @@ class InterfaceEditForm extends Component {
     projectMsg: PropTypes.object,
     onTagClick: PropTypes.func
   };
-
   initState(curdata) {
     this.startTime = new Date().getTime();
     if (curdata.req_query && curdata.req_query.length === 0) {
@@ -151,9 +134,7 @@ class InterfaceEditForm extends Component {
         path: "",
         status: "undone",
         method: "get",
-
         req_params: [],
-
         req_query: [
           {
             name: "",
@@ -161,7 +142,6 @@ class InterfaceEditForm extends Component {
             required: "1"
           }
         ],
-
         req_headers: [
           {
             name: "",
@@ -169,7 +149,6 @@ class InterfaceEditForm extends Component {
             required: "1"
           }
         ],
-
         req_body_type: "form",
         req_body_form: [
           {
@@ -179,7 +158,6 @@ class InterfaceEditForm extends Component {
           }
         ],
         req_body_other: "",
-
         res_body_type: "json",
         res_body: "",
         desc: "",
@@ -194,14 +172,33 @@ class InterfaceEditForm extends Component {
       curdata
     );
   }
-
   constructor(props) {
     super(props);
     const { curdata } = this.props;
     // console.log('custom_field1', this.props.custom_field);
     this.state = this.initState(curdata);
+    //
+    this.state.req_radio_type = HTTP_METHOD[this.state.method].request_body ? "req-body" : "req-query";
   }
-
+  componentDidMount() {
+    this._isMounted = true;
+    this.mockPreview = mockEditor({
+      container: "mock-preview",
+      data: "",
+      readOnly: true
+    });
+    this.editor = new Editor({
+      el: document.querySelector("#desc"),
+      initialEditType: "wysiwyg",
+      height: "500px",
+      initialValue: this.state.markdown || this.state.desc
+    });
+  }
+  componentWillUnmount() {
+    this.props.changeEditStatus(false);
+    this._isMounted = false;
+  }
+  //
   handleSubmit = (e) => {
     e.preventDefault();
     this.setState({
@@ -243,7 +240,6 @@ class InterfaceEditForm extends Component {
               values.req_body_other = this.state.req_body_other;
             }
           }
-
           values.method = this.state.method;
           values.req_params = values.req_params || [];
           values.req_headers = values.req_headers || [];
@@ -256,7 +252,6 @@ class InterfaceEditForm extends Component {
                 isfile = true;
               }
             });
-
             values.req_headers.map((item) => {
               if (item.name === "Content-Type") {
                 item.value = isfile ? "multipart/form-data" : "application/x-www-form-urlencoded";
@@ -289,7 +284,6 @@ class InterfaceEditForm extends Component {
           values.req_headers = values.req_headers
             ? values.req_headers.filter((item) => item.name !== "")
             : [];
-
           values.req_body_form = values.req_body_form
             ? values.req_body_form.filter((item) => item.name !== "")
             : [];
@@ -299,11 +293,9 @@ class InterfaceEditForm extends Component {
           values.req_query = values.req_query
             ? values.req_query.filter((item) => item.name !== "")
             : [];
-
           if (HTTP_METHOD[values.method].request_body !== true) {
             values.req_body_form = [];
           }
-
           if (
             values.req_body_is_json_schema &&
             values.req_body_other &&
@@ -324,9 +316,8 @@ class InterfaceEditForm extends Component {
               return message.error("返回数据 json-schema 格式有误");
             }
           }
-
           this.props.onSubmit(values);
-          EditFormContext.props.changeEditStatus(false);
+          this.props.changeEditStatus(false);
         }
       });
     } catch (e) {
@@ -336,7 +327,6 @@ class InterfaceEditForm extends Component {
       });
     }
   };
-
   onChangeMethod = (val) => {
     let radio = [];
     if (HTTP_METHOD[val].request_body) {
@@ -347,46 +337,16 @@ class InterfaceEditForm extends Component {
     this.setState({
       req_radio_type: radio.join("-")
     });
-
     this.setState({ method: val }, () => {
       this._changeRadioGroup(radio[0], radio[1]);
     });
   };
-
-  componentDidMount() {
-    EditFormContext = this;
-    this._isMounted = true;
-    this.setState({
-      req_radio_type: HTTP_METHOD[this.state.method].request_body ? "req-body" : "req-query"
-    });
-
-    this.mockPreview = mockEditor({
-      container: "mock-preview",
-      data: "",
-      readOnly: true
-    });
-
-    this.editor = new Editor({
-      el: document.querySelector("#desc"),
-      initialEditType: "wysiwyg",
-      height: "500px",
-      initialValue: this.state.markdown || this.state.desc
-    });
-  }
-
-  componentWillUnmount() {
-    EditFormContext.props.changeEditStatus(false);
-    EditFormContext = null;
-    this._isMounted = false;
-  }
-
   addParams = (name, data) => {
     let newValue = {};
     data = data || dataTpl[name];
     newValue[name] = [].concat(this.state[name], data);
     this.setState(newValue);
   };
-
   delParams = (key, name) => {
     let curValue = this.props.form.getFieldValue(name);
     let newValue = {};
@@ -394,10 +354,8 @@ class InterfaceEditForm extends Component {
     this.props.form.setFieldsValue(newValue);
     this.setState(newValue);
   };
-
   handleMockPreview = async() => {
     let str = "";
-
     try {
       if (this.props.form.getFieldValue("res_body_is_json_schema")) {
         let schema = json5.parse(this.props.form.getFieldValue("res_body"));
@@ -416,7 +374,6 @@ class InterfaceEditForm extends Component {
     }
     this.mockPreview.setValue(str);
   };
-
   handleJsonType = (key) => {
     key = key || "tpl";
     if (key === "preview") {
@@ -426,11 +383,9 @@ class InterfaceEditForm extends Component {
       jsonType: key
     });
   };
-
   handlePath = (e) => {
     let val = e.target.value,
       queue = [];
-
     let insertParams = (name) => {
       let findExist = _.find(this.state.req_params, { name: name });
       if (findExist) {
@@ -454,18 +409,15 @@ class InterfaceEditForm extends Component {
         }
       }
     }
-
     if (val && val.length > 3) {
       val.replace(/\{(.+?)\}/g, function(str, match) {
         insertParams(match);
       });
     }
-
     this.setState({
       req_params: queue
     });
   };
-
   // 点击切换radio
   changeRadioGroup = (e) => {
     const res = e.target.value.split("-");
@@ -476,7 +428,6 @@ class InterfaceEditForm extends Component {
     }
     this._changeRadioGroup(res[0], res[1]);
   };
-
   _changeRadioGroup = (group, item) => {
     const obj = {};
     // 先全部隐藏
@@ -492,7 +443,6 @@ class InterfaceEditForm extends Component {
       }
     });
   };
-
   handleDragMove = (name) => (data) => {
     let newValue = {
       [name]: data
@@ -500,31 +450,27 @@ class InterfaceEditForm extends Component {
     this.props.form.setFieldsValue(newValue);
     this.setState(newValue);
   };
-
   // 处理res_body Editor
   handleResBody = (d) => {
     const initResBody = this.state.res_body;
     this.setState({
       res_body: d.text
     });
-    EditFormContext.props.changeEditStatus(initResBody !== d.text);
+    this.props.changeEditStatus(initResBody !== d.text);
   };
-
   // 处理 req_body_other Editor
   handleReqBody = (d) => {
     const initReqBody = this.state.req_body_other;
     this.setState({
       req_body_other: d.text
     });
-    EditFormContext.props.changeEditStatus(initReqBody !== d.text);
+    this.props.changeEditStatus(initReqBody !== d.text);
   };
-
   // 处理批量导入参数
   handleBulkOk = () => {
     let curValue = this.props.form.getFieldValue(this.state.bulkName) || [];
     // { name: '', required: '1', desc: '', example: '' }
     let newValue = [];
-
     this.state.bulkValue.split("\n").forEach((item, index) => {
       let valueItem = Object.assign({}, curValue[index] || dataTpl[this.state.bulkName]);
       let indexOfColon = item.indexOf(":");
@@ -534,7 +480,6 @@ class InterfaceEditForm extends Component {
         newValue.push(valueItem);
       }
     });
-
     this.props.form.setFieldsValue({ [this.state.bulkName]: newValue });
     this.setState({
       visible: false,
@@ -543,7 +488,6 @@ class InterfaceEditForm extends Component {
       [this.state.bulkName]: newValue
     });
   };
-
   // 取消批量导入参数
   handleBulkCancel = () => {
     this.setState({
@@ -552,41 +496,29 @@ class InterfaceEditForm extends Component {
       bulkName: null
     });
   };
-
   showBulk = (name) => {
     let value = this.props.form.getFieldValue(name);
-
     let bulkValue = "";
     if (value) {
       value.forEach((item) => (bulkValue += item.name ? `${item.name}:${item.example || ""}\n` : ""));
     }
-
     this.setState({
       visible: true,
       bulkValue,
       bulkName: name
     });
   };
-
   handleBulkValueInput = (e) => {
     this.setState({
       bulkValue: e.target.value
     });
   };
-
   render() {
     const { getFieldDecorator } = this.props.form;
     const { custom_field, projectMsg } = this.props;
-
-    const formItemLayout = {
-      labelCol: { span: 4 },
-      wrapperCol: { span: 18 }
-    };
-
+    const formItemLayout = { labelCol: { span: 4 }, wrapperCol: { span: 18 } };
     const res_body_use_schema_editor = checkIsJsonSchema(this.state.res_body) || "";
-
     const req_body_other_use_schema_editor = checkIsJsonSchema(this.state.req_body_other) || "";
-
     const queryTpl = (data, index) => (
       <Row key={index} className="interface-edit-item-content">
         <Col
@@ -630,7 +562,6 @@ class InterfaceEditForm extends Component {
         </Col>
       </Row>
     );
-
     const headerTpl = (data, index) => (
       <Row key={index} className="interface-edit-item-content">
         <Col
@@ -677,7 +608,6 @@ class InterfaceEditForm extends Component {
         </Col>
       </Row>
     );
-
     const requestBodyTpl = (data, index) => (
       <Row key={index} className="interface-edit-item-content">
         <Col
@@ -731,7 +661,6 @@ class InterfaceEditForm extends Component {
         </Col>
       </Row>
     );
-
     const paramsTpl = (data, index) => (
       <Row key={index} className="interface-edit-item-content">
         <Col span="6" className="interface-edit-item-content-col">
@@ -751,41 +680,23 @@ class InterfaceEditForm extends Component {
         </Col>
       </Row>
     );
-
     const paramsList = this.state.req_params.map((item, index) => paramsTpl(item, index));
-
     const QueryList = this.state.req_query.map((item, index) => queryTpl(item, index));
-
     const headerList = this.state.req_headers
       ? this.state.req_headers.map((item, index) => headerTpl(item, index))
       : [];
-
     const requestBodyList = this.state.req_body_form.map((item, index) => requestBodyTpl(item, index));
-
     const DEMOPATH = "/api/user/{id}";
-
     return (
       <div className={styles.InterfaceEditForm}>
-        <Modal
-          title="批量添加参数"
-          width={680}
-          visible={this.state.visible}
-          onOk={this.handleBulkOk}
-          onCancel={this.handleBulkCancel}
-          okText="导入">
+        <Modal title="批量添加参数" width={680} visible={this.state.visible} onOk={this.handleBulkOk} onCancel={this.handleBulkCancel} okText="导入">
           <div>
-            <Input.TextArea
-              placeholder="每行一个name:examples"
-              autosize={{ minRows: 6, maxRows: 10 }}
-              value={this.state.bulkValue}
-              onChange={this.handleBulkValueInput}
-            />
+            <Input.TextArea placeholder="每行一个name:examples" autosize={{ minRows: 6, maxRows: 10 }}
+              value={this.state.bulkValue} onChange={this.handleBulkValueInput}/>
           </div>
         </Modal>
         <Form onSubmit={this.handleSubmit}>
-          <h2 className="interface-title" style={{ marginTop: 0 }}>
-            基本设置
-          </h2>
+          <h2 className="interface-title" style={{ marginTop: 0 }}>基本设置</h2>
           <div className="panel-sub">
             <Form.Item className="interface-edit-item" {...formItemLayout} label="接口名称">
               {getFieldDecorator("title", {
@@ -1061,9 +972,8 @@ class InterfaceEditForm extends Component {
                       this.setState({
                         req_body_other: text
                       });
-
                       if (new Date().getTime() - this.startTime > 1000) {
-                        EditFormContext.props.changeEditStatus(true);
+                        this.props.changeEditStatus(true);
                       }
                     }}
                     isMock
@@ -1173,7 +1083,7 @@ class InterfaceEditForm extends Component {
                             res_body: text
                           });
                           if (new Date().getTime() - this.startTime > 1000) {
-                            EditFormContext.props.changeEditStatus(true);
+                            this.props.changeEditStatus(true);
                           }
                         }}
                         isMock
@@ -1283,5 +1193,12 @@ class InterfaceEditForm extends Component {
     );
   }
 }
-
-export default InterfaceEditForm;
+export default connect(
+  (state) => ({
+    custom_field: state.group.field,
+    projectMsg: state.project.currProject
+  }),
+  {
+    changeEditStatus
+  }
+)(InterfaceEditForm);

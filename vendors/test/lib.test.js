@@ -1,7 +1,7 @@
 import test from "ava";
 
 const rewire = require("rewire");
-const lib = rewire("../common/lib.js");
+const lib = rewire("@common/lib.js");
 
 const plugin = rewire("../common/plugin.js")
 const initPlugins = plugin.initPlugins;

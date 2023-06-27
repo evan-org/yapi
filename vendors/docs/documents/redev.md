@@ -88,8 +88,7 @@ npm run dev
     |-- test
     |-- webpack.alias.js
     |-- yapi-base-flow.jpg
-    |-- ydocfile.js
-    `-- ykit.config.js
+    `-- ydocfile.js
 ```
 
 

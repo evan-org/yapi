@@ -47,7 +47,6 @@ initPlugins();
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
-console.log("craco.config.js =-=================> ", global);
 //
 module.exports = {
   // 配置打包后的文件位置
@@ -172,7 +171,9 @@ module.exports = {
       paths.swSrc = resolve("./client/service-worker.js");
       paths.testsSetup = resolve("./client/testsSetup.js");
       paths.proxySetup = resolve("./client/proxySetup.js");
+      paths.publicUrlOrPath = "";
       webpackConfig.entry = resolve("./client/index.jsx");
+      // console.log(paths);
       //
       const resolveUrlLoader = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
       const babels = getLoader(webpackConfig, loaderByName("babel-loader"));

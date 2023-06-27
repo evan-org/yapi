@@ -21,10 +21,10 @@ function Compare(objA, objB) {
     if (isArray(objA) && isArray(objB)) {
       return CompareArray(objA, objB, true);
     }
-    return objA == objB;
+    return objA === objB;
   }
   if (!isObj(objA) || !isObj(objB)) {return false;}
-  if (getLength(objA) != getLength(objB)) {return false;}
+  if (getLength(objA) !== getLength(objB)) {return false;}
   return CompareObj(objA, objB, true);
 }
 

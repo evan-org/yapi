@@ -1,13 +1,14 @@
-const path = require("path");
+const yapi = require("yapi.js");
+//
 const controller = require("./controller.js");
 const advModel = require("./lib/advMockModel.js");
 const caseModel = require("./lib/caseModel.js");
-const yapi = require("yapi.js");
+//
 const mongoose = require("mongoose");
 const _ = require("underscore");
-const lib = require(path.resolve(yapi.WEBROOT, "common/lib.js"));
+const lib = require("@common/lib.js");
 const Mock = require("mockjs");
-const mockExtra = require(path.resolve(yapi.WEBROOT, "common/mock-extra.js"));
+const mockExtra = require("@common/mock-extra.js");
 function arrToObj(arr) {
   let obj = { "Set-Cookie": [] };
   arr.forEach((item) => {

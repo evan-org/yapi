@@ -1,14 +1,16 @@
-const baseController = require("controllers/base.js");
+const yapi = require("yapi.js");
+//
+const baseController = require("@server/controllers/base.js");
 const interfaceModel = require("@server/models/modules/interface.js");
 const projectModel = require("@server/models/modules/project.js");
 // const wikiModel = require('../yapi-plugin-wiki/wikiModel.js');
 const interfaceCatModel = require("@server/models/modules/interfaceCat.js");
-const yapi = require("yapi.js");
+//
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const markdownItTableOfContents = require("markdown-it-table-of-contents");
 const defaultTheme = require("./views/defaultTheme.js");
-const md = require("../../common/markdown.js");
+const md = require("@common/markdown.js");
 
 // const htmlToPdf = require("html-pdf");
 class exportController extends baseController {
