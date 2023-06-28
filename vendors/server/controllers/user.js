@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const common = require("../utils/commons.js");
 const ldap = require("../utils/ldap.js");
-const baseController = require("./base.js");
+const baseController = require("@server/controllers/BaseController.js");
 //
 const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = require("@server/models/index.js");
 //

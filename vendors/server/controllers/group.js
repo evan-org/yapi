@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 // controller
-const baseController = require("./base.js");
+const baseController = require("@server/controllers/BaseController.js");
 // model
 const GroupModel = require("@server/models/GroupModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");

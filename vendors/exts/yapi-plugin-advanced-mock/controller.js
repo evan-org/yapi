@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
-const baseController = require("@server/controllers/base.js");
+const baseController = require("@server/controllers/BaseController.js");
 //
 const advModel = require("./lib/advMockModel.js");
 const caseModel = require("./lib/caseModel.js");

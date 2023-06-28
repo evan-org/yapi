@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
-const baseController = require("./base.js");
+const baseController = require("@server/controllers/BaseController.js");
 const fs = require("fs"); // 引入文件模块
 const path = require("path");
 class interfaceColController extends baseController {

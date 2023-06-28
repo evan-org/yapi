@@ -19,7 +19,7 @@ const ignoreRouter = [
   "/api/user/avatar",
   "/api/user/login_by_ldap"
 ];
-class baseController {
+class BaseController {
   constructor(ctx) {
     this.ctx = ctx;
     // 网站上线后，role对象key是不能修改的，value可以修改
@@ -285,4 +285,4 @@ class baseController {
     return false;
   }
 }
-module.exports = baseController;
+module.exports = BaseController;

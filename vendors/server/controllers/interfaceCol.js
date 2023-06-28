@@ -5,7 +5,7 @@ const InterfaceColModel = require("@server/models/InterfaceColModel.js");
 const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
-const baseController = require("./base.js");
+const baseController = require("@server/controllers/BaseController.js");
 //
 class interfaceColController extends baseController {
   constructor(ctx) {

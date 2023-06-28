@@ -2,7 +2,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const yapi = require("@server/yapi.js");
 //
-const baseController = require("./base.js");
+const baseController = require("@server/controllers/BaseController.js");
 //
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
