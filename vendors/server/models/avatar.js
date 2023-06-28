@@ -1,6 +1,6 @@
 const BaseModel = require("@server/models/base.js");
 
-class avatarModel extends BaseModel {
+class AvatarModel extends BaseModel {
   constructor() {
     super();
   }
@@ -17,25 +17,12 @@ class avatarModel extends BaseModel {
   }
 
   get(uid) {
-    return this.model.findOne({
-      uid: uid
-    });
+    return this.model.findOne({ uid: uid });
   }
 
   up(uid, basecode, type) {
-    return this.model.update(
-      {
-        uid: uid
-      },
-      {
-        type: type,
-        basecode: basecode
-      },
-      {
-        upsert: true
-      }
-    );
+    return this.model.update({ uid: uid }, { type: type, basecode: basecode }, { upsert: true });
   }
 }
 
-module.exports = avatarModel;
+module.exports = AvatarModel;

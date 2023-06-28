@@ -21,21 +21,15 @@ class advMockModel extends BaseModel {
   }
 
   get(interface_id) {
-    return this.model.findOne({
-      interface_id: interface_id
-    });
+    return this.model.findOne({ interface_id: interface_id });
   }
 
   delByInterfaceId(interface_id) {
-    return this.model.remove({
-      interface_id: interface_id
-    });
+    return this.model.remove({ interface_id: interface_id });
   }
 
   delByProjectId(project_id) {
-    return this.model.remove({
-      project_id: project_id
-    })
+    return this.model.remove({ project_id: project_id });
   }
 
   save(data) {
@@ -46,16 +40,20 @@ class advMockModel extends BaseModel {
 
   up(data) {
     data.up_time = yapi.commons.time();
-    return this.model.update({
-      interface_id: data.interface_id
-    }, {
-      uid: data.uid,
-      up_time: data.up_time,
-      mock_script: data.mock_script,
-      enable: data.enable
-    }, {
-      upsert: true
-    })
+    return this.model.update(
+      {
+        interface_id: data.interface_id
+      },
+      {
+        uid: data.uid,
+        up_time: data.up_time,
+        mock_script: data.mock_script,
+        enable: data.enable
+      },
+      {
+        upsert: true
+      }
+    )
   }
 
 }

@@ -47,11 +47,7 @@ class groupModel extends BaseModel {
   }
 
   get(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .exec();
+    return this.model.findOne({ _id: id }).exec();
   }
 
   updateMember(data) {
@@ -70,28 +66,19 @@ class groupModel extends BaseModel {
   }
 
   getByPrivateUid(uid) {
-    return this.model
-      .findOne({
-        uid: uid,
-        type: "private"
-      })
+    return this.model.findOne({ uid: uid, type: "private" })
       .select("group_name _id group_desc add_time up_time type custom_field1")
       .exec();
   }
 
   getGroupById(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
+    return this.model.findOne({ _id: id })
       .select("uid group_name group_desc add_time up_time type custom_field1")
       .exec();
   }
 
   checkRepeat(name) {
-    return this.model.countDocuments({
-      group_name: name
-    });
+    return this.model.countDocuments({ group_name: name });
   }
   //  分组数量统计
   getGroupListCount() {
@@ -100,9 +87,7 @@ class groupModel extends BaseModel {
 
   addMember(id, data) {
     return this.model.update(
-      {
-        _id: id
-      },
+      { _id: id },
       {
         // $push: { members: data },
         $push: { members: { $each: data } }

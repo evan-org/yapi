@@ -1,6 +1,6 @@
 const BaseModel = require("@server/models/base.js");
 
-class followModel extends BaseModel {
+class FollowModel extends BaseModel {
   constructor() {
     super();
   }
@@ -39,49 +39,28 @@ class followModel extends BaseModel {
   }
 
   del(projectid, uid) {
-    return this.model.remove({
-      projectid: projectid,
-      uid: uid
-    });
+    return this.model.remove({ projectid: projectid, uid: uid });
   }
 
   delByProjectId(projectid) {
-    return this.model.remove({
-      projectid: projectid
-    })
+    return this.model.remove({ projectid: projectid })
   }
 
   list(uid) {
-    return this.model
-      .find({
-        uid: uid
-      })
-      .exec();
+    return this.model.find({ uid: uid }).exec();
   }
 
   listByProjectId(projectid) {
-    return this.model.find({
-      projectid: projectid
-    });
+    return this.model.find({ projectid: projectid });
   }
 
   checkProjectRepeat(uid, projectid) {
-    return this.model.countDocuments({
-      uid: uid,
-      projectid: projectid
-    });
+    return this.model.countDocuments({ uid: uid, projectid: projectid });
   }
 
   updateById(id, typeid, data) {
-    return this.model.update(
-      {
-        uid: id,
-        projectid: typeid
-      },
-      data,
-      { runValidators: true }
-    );
+    return this.model.update({ uid: id, projectid: typeid }, data, { runValidators: true });
   }
 }
 
-module.exports = followModel;
+module.exports = FollowModel;

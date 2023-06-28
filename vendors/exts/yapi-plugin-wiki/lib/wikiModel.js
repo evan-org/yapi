@@ -27,31 +27,15 @@ class wikiModel extends BaseModel {
   }
 
   get(project_id) {
-    return this.model
-      .findOne({
-        project_id: project_id
-      })
-      .exec();
+    return this.model.findOne({ project_id: project_id }).exec();
   }
 
   up(id, data) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      data,
-      { runValidators: true }
-    );
+    return this.model.update({ _id: id }, data, { runValidators: true });
   }
 
   upEditUid(id, uid) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      { edit_uid: uid },
-      { runValidators: true }
-    );
+    return this.model.update({ _id: id }, { edit_uid: uid }, { runValidators: true });
   }
 }
 

@@ -21,9 +21,7 @@ class StatisticsMockModel extends BaseModel {
     };
   }
   countByGroupId(id) {
-    return this.model.countDocuments({
-      group_id: id
-    })
+    return this.model.countDocuments({ group_id: id })
   }
   save(data) {
     const m = new this.model(data);
@@ -62,9 +60,7 @@ class StatisticsMockModel extends BaseModel {
   }
   up(id, data) {
     data.up_time = yapi.commons.time();
-    return this.model.updateOne({
-      _id: id
-    }, data, { runValidators: true });
+    return this.model.updateOne({ _id: id }, data, { runValidators: true });
   }
 }
 module.exports = StatisticsMockModel;

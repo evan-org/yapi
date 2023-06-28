@@ -36,21 +36,15 @@ class caseModel extends BaseModel {
   }
 
   list(id) {
-    return this.model.find({
-      interface_id: id
-    })
+    return this.model.find({ interface_id: id })
   }
 
   delByInterfaceId(interface_id) {
-    return this.model.remove({
-      interface_id: interface_id
-    });
+    return this.model.remove({ interface_id: interface_id });
   }
 
   delByProjectId(project_id) {
-    return this.model.remove({
-      project_id: project_id
-    })
+    return this.model.remove({ project_id: project_id })
   }
 
   save(data) {
@@ -63,17 +57,12 @@ class caseModel extends BaseModel {
     let id = data.id;
     delete data.id;
     data.up_time = yapi.commons.time();
-    return this.model.update({
-      _id: id
-    }, data)
+    return this.model.update({ _id: id }, data)
   }
 
   del(id) {
-    return this.model.remove({
-      _id: id
-    })
+    return this.model.remove({ _id: id })
   }
-
 }
 
 module.exports = caseModel;
