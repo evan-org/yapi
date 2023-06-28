@@ -14,7 +14,7 @@ const logModel = require("@server/models/LogModel.js");
 const projectModel = require("@server/models/ProjectModel.js");
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const userModel = require("@server/models/UserModel.js");
 const followModel = require("@server/models/FollowModel.js");
 //
@@ -477,7 +477,7 @@ exports.getCaseList = async function getCaseList(id) {
   const caseInst = yapi.getInst(interfaceCaseModel);
   const colInst = yapi.getInst(interfaceColModel);
   const projectInst = yapi.getInst(projectModel);
-  const interfaceInst = yapi.getInst(interfaceModel);
+  const interfaceInst = yapi.getInst(InterfaceModel);
   let resultList = await caseInst.list(id, "all");
   let colData = await colInst.get(id);
   for (let index = 0; index < resultList.length; index++) {
@@ -549,7 +549,7 @@ exports.runCaseScript = async function runCaseScript(params, colId, interfaceId)
       }
     }
     if (colData.checkResponseSchema) {
-      const interfaceInst = yapi.getInst(interfaceModel);
+      const interfaceInst = yapi.getInst(InterfaceModel);
       let interfaceData = await interfaceInst.get(interfaceId);
       if (interfaceData.res_body_is_json_schema && interfaceData.res_body) {
         let schema = JSON.parse(interfaceData.res_body);

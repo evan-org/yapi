@@ -1,7 +1,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 //
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const followModel = require("@server/models/FollowModel.js");
@@ -60,7 +60,7 @@ function handleHeaders(values) {
 class interfaceController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(interfaceModel);
+    this.Model = yapi.getInst(InterfaceModel);
     this.catModel = yapi.getInst(interfaceCatModel);
     this.projectModel = yapi.getInst(projectModel);
     this.caseModel = yapi.getInst(interfaceCaseModel);

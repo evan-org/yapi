@@ -3,7 +3,7 @@ const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const groupModel = require("@server/models/GroupModel.js");
 const projectModel = require("@server/models/ProjectModel.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 
 class logController extends baseController {
   constructor(ctx) {
@@ -11,7 +11,7 @@ class logController extends baseController {
     this.Model = yapi.getInst(logModel);
     this.groupModel = yapi.getInst(groupModel);
     this.projectModel = yapi.getInst(projectModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
+    this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.schemaMap = {
       listByUpdate: {
         "*type": "string",
@@ -118,7 +118,7 @@ class logController extends baseController {
         if (basePath) {
           api.path = api.path.indexOf(basePath) === 0 ? api.path.substr(basePath.length) : api.path;
         }
-        let interfaceIdList = await this.interfaceModel.getByPath(
+        let interfaceIdList = await this.InterfaceModel.getByPath(
           typeid,
           api.path,
           api.method,

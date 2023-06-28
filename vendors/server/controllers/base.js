@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const projectModel = require("@server/models/ProjectModel.js");
 const userModel = require("@server/models/UserModel.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const groupModel = require("@server/models/GroupModel.js");
 const tokenModel = require("@server/models/TokenModel.js");
 //
@@ -199,7 +199,7 @@ class baseController {
         return "admin";
       }
       if (type === "interface") {
-        let interfaceInst = yapi.getInst(interfaceModel);
+        let interfaceInst = yapi.getInst(InterfaceModel);
         let interfaceData = await interfaceInst.get(id);
         result.interfaceData = interfaceData;
         // 项目创建者相当于 owner

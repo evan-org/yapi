@@ -2,7 +2,7 @@ const projectModel = require("@server/models/ProjectModel.js");
 const yapi = require("@server/yapi.js");
 const _ = require("underscore");
 const baseController = require("./base.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
@@ -23,7 +23,7 @@ class projectController extends baseController {
     // this.logModel = yapi.getInst(logModel);
     this.followModel = yapi.getInst(followModel);
     this.tokenModel = yapi.getInst(tokenModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
+    this.InterfaceModel = yapi.getInst(InterfaceModel);
     const id = "number";
     const member_uid = ["number"];
     const name = {
@@ -301,7 +301,7 @@ class projectController extends baseController {
           };
           let catResult = await catInst.save(catDate);
           // 获取每个集合中的interface
-          let interfaceData = await this.interfaceModel.listByInterStatus(item._id);
+          let interfaceData = await this.InterfaceModel.listByInterStatus(item._id);
           // 将interfaceData存到新的catID中
           for (let key = 0; key < interfaceData.length; key++) {
             let interfaceItem = interfaceData[key].toObject();
@@ -313,7 +313,7 @@ class projectController extends baseController {
               up_time: yapi.commons.time()
             });
             delete data._id;
-            await this.interfaceModel.save(data);
+            await this.InterfaceModel.save(data);
           }
         }
       }
@@ -564,7 +564,7 @@ class projectController extends baseController {
     if ((await this.checkAuth(id, "project", "danger")) !== true) {
       return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
     }
-    let interfaceInst = yapi.getInst(interfaceModel);
+    let interfaceInst = yapi.getInst(InterfaceModel);
     let interfaceColInst = yapi.getInst(interfaceColModel);
     let interfaceCaseInst = yapi.getInst(interfaceCaseModel);
     await interfaceInst.delByProjectId(id);
@@ -979,7 +979,7 @@ class projectController extends baseController {
     }
     let projectList = await this.Model.search(q);
     let groupList = await this.groupModel.search(q);
-    let interfaceList = await this.interfaceModel.search(q);
+    let interfaceList = await this.InterfaceModel.search(q);
     let projectRules = [
       "_id",
       "name",

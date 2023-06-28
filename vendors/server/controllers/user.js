@@ -1,21 +1,15 @@
 const yapi = require("@server/yapi.js");
 const common = require("../utils/commons.js");
 const ldap = require("../utils/ldap.js");
-
 const baseController = require("./base.js");
 //
-const userModel = require("@server/models/UserModel.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
-const groupModel = require("@server/models/GroupModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
-const avatarModel = require("@server/models/AvatarModel.js");
-
+const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = require("@server/models/index.js");
+//
 const jwt = require("jsonwebtoken");
-
 class UserController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(userModel);
+    this.Model = yapi.getInst(UserModel);
   }
   /**
    * 用户登录接口
@@ -30,25 +24,21 @@ class UserController extends baseController {
    */
   async login(ctx) {
     // 登录
-    let userInst = yapi.getInst(userModel); // 创建user实体
+    let userInst = yapi.getInst(UserModel); // 创建user实体
     let email = ctx.request.body.email;
     email = (email || "").trim();
     let password = ctx.request.body.password;
-
     if (!email) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "email不能为空"));
     }
     if (!password) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "密码不能为空"));
     }
-
     let result = await userInst.findByEmail(email);
-
     if (!result) {
       return (ctx.body = yapi.commons.resReturn(null, 404, "该用户不存在"));
     } else if (yapi.commons.generatePassword(password, result.passsalt) === result.password) {
       this.setLoginCookie(result._id, result.passsalt);
-
       return (ctx.body = yapi.commons.resReturn(
         {
           username: result.username,
@@ -67,7 +57,6 @@ class UserController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 405, "密码错误"));
     }
   }
-
   /**
    * 退出登录接口
    * @interface /user/logout
@@ -83,7 +72,6 @@ class UserController extends baseController {
     ctx.cookies.set("_yapi_uid", null);
     ctx.body = yapi.commons.resReturn("ok");
   }
-
   /**
    * 更新
    * @interface /user/up_study
@@ -95,7 +83,7 @@ class UserController extends baseController {
    */
 
   async upStudy(ctx) {
-    let userInst = yapi.getInst(userModel); // 创建user实体
+    let userInst = yapi.getInst(UserModel); // 创建user实体
     let data = {
       up_time: yapi.commons.time(),
       study: true
@@ -107,7 +95,6 @@ class UserController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 401, e.message);
     }
   }
-
   async loginByToken(ctx) {
     try {
       let ret = await yapi.emitHook("third_login", ctx);
@@ -121,7 +108,6 @@ class UserController extends baseController {
       ctx.redirect("/");
     }
   }
-
   /**
    * ldap登录
    * @interface /user/login_by_ldap
@@ -140,16 +126,13 @@ class UserController extends baseController {
       const { info: ldapInfo } = await ldap.ldapQuery(email, password);
       const emailPrefix = email.split(/\@/g)[0];
       const emailPostfix = yapi.WEBROOT_CONFIG.ldapLogin.emailPostfix;
-
       const emailParams =
         ldapInfo[yapi.WEBROOT_CONFIG.ldapLogin.emailKey || "mail"] ||
         (emailPostfix ? emailPrefix + emailPostfix : email);
       const username = ldapInfo[yapi.WEBROOT_CONFIG.ldapLogin.usernameKey] || emailPrefix;
-
       let login = await this.handleThirdLogin(emailParams, username);
-
       if (login === true) {
-        let userInst = yapi.getInst(userModel); // 创建user实体
+        let userInst = yapi.getInst(UserModel); // 创建user实体
         let result = await userInst.findByEmail(emailParams);
         return (ctx.body = yapi.commons.resReturn(
           {
@@ -171,15 +154,12 @@ class UserController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 401, e.message));
     }
   }
-
   // 处理第三方登录
   async handleThirdLogin(email, username) {
     let user, data, passsalt;
-    let userInst = yapi.getInst(userModel);
-
+    let userInst = yapi.getInst(UserModel);
     try {
       user = await userInst.findByEmail(email);
-
       // 新建用户信息
       if (!user || !user._id) {
         passsalt = yapi.commons.randStr();
@@ -200,7 +180,6 @@ class UserController extends baseController {
           contents: `<h3>亲爱的用户：</h3><p>您好，感谢使用YApi平台，你的邮箱账号是：${email}</p>`
         });
       }
-
       this.setLoginCookie(user._id, user.passsalt);
       return true;
     } catch (e) {
@@ -208,7 +187,6 @@ class UserController extends baseController {
       throw new Error(`third_login: ${e.message}`);
     }
   }
-
   /**
    * 修改用户密码
    * @interface /user/change_password
@@ -222,31 +200,25 @@ class UserController extends baseController {
    */
   async changePassword(ctx) {
     let params = ctx.request.body;
-    let userInst = yapi.getInst(userModel);
-
+    let userInst = yapi.getInst(UserModel);
     if (!params.uid) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "uid不能为空"));
     }
-
     if (!params.password) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "密码不能为空"));
     }
-
     let user = await userInst.findById(params.uid);
     if (this.getRole() !== "admin" && params.uid != this.getUid()) {
       return (ctx.body = yapi.commons.resReturn(null, 402, "没有权限"));
     }
-
     if (this.getRole() !== "admin" || user.role === "admin") {
       if (!params.old_password) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "旧密码不能为空"));
       }
-
       if (yapi.commons.generatePassword(params.old_password, user.passsalt) !== user.password) {
         return (ctx.body = yapi.commons.resReturn(null, 402, "旧密码错误"));
       }
     }
-
     let passsalt = yapi.commons.randStr();
     let data = {
       up_time: yapi.commons.time(),
@@ -260,9 +232,8 @@ class UserController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 401, e.message);
     }
   }
-
   async handlePrivateGroup(uid) {
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = yapi.getInst(GroupModel);
     await groupInst.save({
       uid: uid,
       group_name: "User-" + uid,
@@ -271,10 +242,8 @@ class UserController extends baseController {
       type: "private"
     });
   }
-
   setLoginCookie(uid, passsalt) {
     let token = jwt.sign({ uid: uid }, passsalt, { expiresIn: "7 days" });
-
     this.ctx.cookies.set("_yapi_token", token, {
       expires: yapi.commons.expireDate(7),
       httpOnly: true
@@ -284,7 +253,6 @@ class UserController extends baseController {
       httpOnly: true
     });
   }
-
   /**
    * 用户注册接口
    * @interface /user/reg
@@ -302,29 +270,23 @@ class UserController extends baseController {
     if (yapi.WEBROOT_CONFIG.closeRegister) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "禁止注册，请联系管理员"));
     }
-    let userInst = yapi.getInst(userModel);
+    let userInst = yapi.getInst(UserModel);
     let params = ctx.request.body; // 获取请求的参数,检查是否存在用户名和密码
-
     params = yapi.commons.handleParams(params, {
       username: "string",
       password: "string",
       email: "string"
     });
-
     if (!params.email) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "邮箱不能为空"));
     }
-
     if (!params.password) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "密码不能为空"));
     }
-
     let checkRepeat = await userInst.checkRepeat(params.email); // 然后检查是否已经存在该用户
-
     if (checkRepeat > 0) {
       return (ctx.body = yapi.commons.resReturn(null, 401, "该email已经注册"));
     }
-
     let passsalt = yapi.commons.randStr();
     let data = {
       username: params.username,
@@ -336,14 +298,11 @@ class UserController extends baseController {
       up_time: yapi.commons.time(),
       type: "site"
     };
-
     if (!data.username) {
       data.username = data.email.substr(0, data.email.indexOf("@"));
     }
-
     try {
       let user = await userInst.save(data);
-
       this.setLoginCookie(user._id, user.passsalt);
       await this.handlePrivateGroup(user._id, user.username, user.email);
       ctx.body = yapi.commons.resReturn({
@@ -366,7 +325,6 @@ class UserController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 401, e.message);
     }
   }
-
   /**
    * 获取用户列表
    * @interface /user/list
@@ -381,8 +339,7 @@ class UserController extends baseController {
   async list(ctx) {
     let page = ctx.request.query.page || 1,
       limit = ctx.request.query.limit || 10;
-
-    const userInst = yapi.getInst(userModel);
+    const userInst = yapi.getInst(UserModel);
     try {
       let user = await userInst.listWithPaging(page, limit);
       let count = await userInst.listCount();
@@ -395,7 +352,6 @@ class UserController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 402, e.message));
     }
   }
-
   /**
    * 获取用户个人信息
    * @interface /user/find
@@ -409,23 +365,18 @@ class UserController extends baseController {
   async findById(ctx) {
     // 根据id获取用户信息
     try {
-      let userInst = yapi.getInst(userModel);
+      let userInst = yapi.getInst(UserModel);
       let id = ctx.request.query.id;
-
       if (this.getRole() !== "admin" && id != this.getUid()) {
         return (ctx.body = yapi.commons.resReturn(null, 401, "没有权限"));
       }
-
       if (!id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "uid不能为空"));
       }
-
       let result = await userInst.findById(id);
-
       if (!result) {
         return (ctx.body = yapi.commons.resReturn(null, 402, "不存在的用户"));
       }
-
       return (ctx.body = yapi.commons.resReturn({
         uid: result._id,
         username: result.username,
@@ -439,7 +390,6 @@ class UserController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 402, e.message));
     }
   }
-
   /**
    * 删除用户,只有admin用户才有此权限
    * @interface /user/del
@@ -456,8 +406,7 @@ class UserController extends baseController {
       if (this.getRole() !== "admin") {
         return (ctx.body = yapi.commons.resReturn(null, 402, "Without permission."));
       }
-
-      let userInst = yapi.getInst(userModel);
+      let userInst = yapi.getInst(UserModel);
       let id = ctx.request.body.id;
       if (id == this.getUid()) {
         return (ctx.body = yapi.commons.resReturn(null, 403, "禁止删除管理员"));
@@ -465,15 +414,12 @@ class UserController extends baseController {
       if (!id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "uid不能为空"));
       }
-
       let result = await userInst.del(id);
-
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 更新用户个人信息
    * @interface /user/update
@@ -491,59 +437,48 @@ class UserController extends baseController {
     // 更新用户信息
     try {
       let params = ctx.request.body;
-
       params = yapi.commons.handleParams(params, {
         username: "string",
         email: "string"
       });
-
       if (this.getRole() !== "admin" && params.uid != this.getUid()) {
         return (ctx.body = yapi.commons.resReturn(null, 401, "没有权限"));
       }
-
-      let userInst = yapi.getInst(userModel);
+      let userInst = yapi.getInst(UserModel);
       let id = params.uid;
-
       if (!id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "uid不能为空"));
       }
-
       let userData = await userInst.findById(id);
       if (!userData) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "uid不存在"));
       }
-
       let data = {
         up_time: yapi.commons.time()
       };
-
       params.username && (data.username = params.username);
       params.email && (data.email = params.email);
-
       if (data.email) {
         let checkRepeat = await userInst.checkRepeat(data.email); // 然后检查是否已经存在该用户
         if (checkRepeat > 0) {
           return (ctx.body = yapi.commons.resReturn(null, 401, "该email已经注册"));
         }
       }
-
       let member = {
         uid: id,
         username: data.username || userData.username,
         email: data.email || userData.email
       };
-      let groupInst = yapi.getInst(groupModel);
+      let groupInst = yapi.getInst(GroupModel);
       await groupInst.updateMember(member);
-      let projectInst = yapi.getInst(projectModel);
+      let projectInst = yapi.getInst(ProjectModel);
       await projectInst.updateMember(member);
-
       let result = await userInst.update(id, data);
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
-
   /**
    * 上传用户头像
    * @interface /user/upload_avatar
@@ -576,15 +511,13 @@ class UserController extends baseController {
       if (parseInt(strLength - (strLength / 8) * 2) > 200000) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "图片大小不能超过200kb"));
       }
-
-      let avatarInst = yapi.getInst(avatarModel);
+      let avatarInst = yapi.getInst(AvatarModel);
       let result = await avatarInst.up(this.getUid(), basecode, type);
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 401, e.message);
     }
   }
-
   /**
    * 根据用户uid头像
    * @interface /user/avatar
@@ -598,7 +531,7 @@ class UserController extends baseController {
   async avatar(ctx) {
     try {
       let uid = ctx.query.uid ? ctx.query.uid : this.getUid();
-      let avatarInst = yapi.getInst(avatarModel);
+      let avatarInst = yapi.getInst(AvatarModel);
       let data = await avatarInst.get(uid);
       let dataBuffer, type;
       if (!data || !data.basecode) {
@@ -608,14 +541,12 @@ class UserController extends baseController {
         type = data.type;
         dataBuffer = new Buffer(data.basecode, "base64");
       }
-
       ctx.set("Content-type", type);
       ctx.body = dataBuffer;
     } catch (err) {
       ctx.body = "error:" + err.message;
     }
   }
-
   /**
    * 模糊搜索用户名或者email
    * @interface /user/search
@@ -628,15 +559,12 @@ class UserController extends baseController {
    */
   async search(ctx) {
     const { q } = ctx.request.query;
-
     if (!q) {
       return (ctx.body = yapi.commons.resReturn(void 0, 400, "No keyword."));
     }
-
     if (!yapi.commons.validateSearchKeyword(q)) {
       return (ctx.body = yapi.commons.resReturn(void 0, 400, "Bad query."));
     }
-
     let queryList = await this.Model.search(q);
     let rules = [
       {
@@ -655,12 +583,9 @@ class UserController extends baseController {
         alias: "upTime"
       }
     ];
-
     let filteredRes = common.filterRes(queryList, rules);
-
     return (ctx.body = yapi.commons.resReturn(filteredRes, 0, "ok"));
   }
-
   /**
    * 根据路由id初始化项目数据
    * @interface /user/project
@@ -677,15 +602,14 @@ class UserController extends baseController {
     let result = {};
     try {
       if (type === "interface") {
-        let interfaceInst = yapi.getInst(interfaceModel);
+        let interfaceInst = yapi.getInst(InterfaceModel);
         let interfaceData = await interfaceInst.get(id);
         result.interface = interfaceData;
         type = "project";
         id = interfaceData.project_id;
       }
-
       if (type === "project") {
-        let projectInst = yapi.getInst(projectModel);
+        let projectInst = yapi.getInst(ProjectModel);
         let projectData = await projectInst.get(id);
         result.project = projectData.toObject();
         let ownerAuth = await this.checkAuth(id, "project", "danger"),
@@ -703,9 +627,8 @@ class UserController extends baseController {
         type = "group";
         id = projectData.group_id;
       }
-
       if (type === "group") {
-        let groupInst = yapi.getInst(groupModel);
+        let groupInst = yapi.getInst(GroupModel);
         let groupData = await groupInst.get(id);
         result.group = groupData.toObject();
         let ownerAuth = await this.checkAuth(id, "group", "danger"),
@@ -721,12 +644,10 @@ class UserController extends baseController {
           }
         }
       }
-
       return (ctx.body = yapi.commons.resReturn(result));
     } catch (e) {
       return (ctx.body = yapi.commons.resReturn(result, 422, e.message));
     }
   }
 }
-
 module.exports = UserController;

@@ -1,7 +1,7 @@
 const projectModel = require("@server/models/ProjectModel.js");
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const followModel = require("@server/models/FollowModel.js");
 const userModel = require("@server/models/UserModel.js");
@@ -31,7 +31,7 @@ class openController extends baseController {
     this.projectModel = yapi.getInst(projectModel);
     this.interfaceColModel = yapi.getInst(interfaceColModel);
     this.interfaceCaseModel = yapi.getInst(interfaceCaseModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
+    this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.interfaceCatModel = yapi.getInst(interfaceCatModel);
     this.followModel = yapi.getInst(followModel);
     this.userModel = yapi.getInst(userModel);

@@ -3,7 +3,7 @@ const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const projectModel = require("@server/models/ProjectModel.js");
 const userModel = require("@server/models/UserModel.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const _ = require("underscore")
@@ -424,7 +424,7 @@ class groupController extends baseController {
     }
     let groupInst = yapi.getInst(groupModel);
     let projectInst = yapi.getInst(projectModel);
-    let interfaceInst = yapi.getInst(interfaceModel);
+    let interfaceInst = yapi.getInst(InterfaceModel);
     let interfaceColInst = yapi.getInst(interfaceColModel);
     let interfaceCaseInst = yapi.getInst(interfaceCaseModel);
     let id = ctx.params.id;

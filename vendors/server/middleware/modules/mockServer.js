@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 const projectModel = require("@server/models/ProjectModel.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const mockExtra = require("@common/mock-extra.js");
 const { schemaValidator } = require("@common/utils.js");
 const _ = require("underscore");
@@ -153,7 +153,7 @@ module.exports = async(ctx, next) => {
     return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的项目"));
   }
   let interfaceData, newpath;
-  let interfaceInst = yapi.getInst(interfaceModel);
+  let interfaceInst = yapi.getInst(InterfaceModel);
   try {
     newpath = path.substr(project.basepath.length);
     interfaceData = await interfaceInst.getByPath(project._id, newpath, ctx.method);

@@ -1,5 +1,5 @@
 const baseController = require("@server/controllers/base.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const projectModel = require("@server/models/ProjectModel.js");
 const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const yapi = require("@server/yapi.js");
@@ -9,7 +9,7 @@ class exportSwaggerController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.catModel = yapi.getInst(interfaceCatModel);
-    this.interModel = yapi.getInst(interfaceModel);
+    this.interModel = yapi.getInst(InterfaceModel);
     this.projectModel = yapi.getInst(projectModel);
   }
 

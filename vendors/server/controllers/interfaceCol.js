@@ -1,6 +1,6 @@
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const interfaceModel = require("@server/models/InterfaceModel.js");
+const InterfaceModel = require("@server/models/InterfaceModel.js");
 const projectModel = require("@server/models/ProjectModel.js");
 const baseController = require("./base.js");
 const yapi = require("@server/yapi.js");
@@ -10,7 +10,7 @@ class interfaceColController extends baseController {
     super(ctx);
     this.colModel = yapi.getInst(interfaceColModel);
     this.caseModel = yapi.getInst(interfaceCaseModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
+    this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.projectModel = yapi.getInst(projectModel);
   }
   /**
@@ -39,7 +39,7 @@ class interfaceColController extends baseController {
         let caseList = await this.caseModel.list(result[i]._id);
         for (let j = 0; j < caseList.length; j++) {
           let item = caseList[j].toObject();
-          let interfaceData = await this.interfaceModel.getBaseinfo(item.interface_id);
+          let interfaceData = await this.InterfaceModel.getBaseinfo(item.interface_id);
           item.path = interfaceData.path;
           caseList[j] = item;
         }
@@ -216,7 +216,7 @@ class interfaceColController extends baseController {
           query,
           bodyParams,
           pathParams;
-        let data = await this.interfaceModel.get(result.interface_id);
+        let data = await this.InterfaceModel.get(result.interface_id);
         if (!data) {
           await this.caseModel.del(result._id);
           continue;
@@ -354,7 +354,7 @@ class interfaceColController extends baseController {
         col_id: params.col_id
       };
       for (let i = 0; i < params.interface_list.length; i++) {
-        let interfaceData = await this.interfaceModel.get(params.interface_list[i]);
+        let interfaceData = await this.InterfaceModel.get(params.interface_list[i]);
         data.interface_id = params.interface_list[i];
         data.casename = interfaceData.title;
         // 处理json schema 解析
@@ -554,7 +554,7 @@ class interfaceColController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的case"));
       }
       result = result.toObject();
-      let data = await this.interfaceModel.get(result.interface_id);
+      let data = await this.InterfaceModel.get(result.interface_id);
       if (!data) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "找不到对应的接口，请联系管理员"));
       }
