@@ -1,4 +1,4 @@
-const projectModel = require("@server/models/project.js");
+const projectModel = require("@server/models/ProjectModel.js");
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const interfaceModel = require("@server/models/InterfaceModel.js");

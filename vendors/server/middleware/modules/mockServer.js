@@ -1,5 +1,5 @@
 const yapi = require("@server/yapi.js");
-const projectModel = require("@server/models/project.js");
+const projectModel = require("@server/models/ProjectModel.js");
 const interfaceModel = require("@server/models/InterfaceModel.js");
 const mockExtra = require("@common/mock-extra.js");
 const { schemaValidator } = require("@common/utils.js");

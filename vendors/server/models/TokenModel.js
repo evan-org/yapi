@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
 const BaseModel = require("@server/models/BaseModel.js");
 
-class tokenModel extends BaseModel {
+class TokenModel extends BaseModel {
   constructor() {
     super();
   }
@@ -48,4 +48,4 @@ class tokenModel extends BaseModel {
   }
 }
 
-module.exports = tokenModel;
+module.exports = TokenModel;

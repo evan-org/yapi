@@ -5,7 +5,7 @@ const baseController = require("@server/controllers/base.js");
 const statisMockModel = require("./lib/statisticsMockModel.js");
 //
 const groupModel = require("@server/models/GroupModel.js");
-const projectModel = require("@server/models/project.js");
+const projectModel = require("@server/models/ProjectModel.js");
 const interfaceModel = require("@server/models/InterfaceModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const yapi = require("@server/yapi.js");

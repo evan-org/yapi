@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
 const BaseModel = require("@server/models/BaseModel.js");
 
-class projectModel extends BaseModel {
+class ProjectModel extends BaseModel {
   constructor() {
     super()
     this.handleEnvNullData = this.handleEnvNullData.bind(this)
@@ -303,4 +303,4 @@ class projectModel extends BaseModel {
   }
 }
 
-module.exports = projectModel;
+module.exports = ProjectModel;

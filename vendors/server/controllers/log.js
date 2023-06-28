@@ -2,7 +2,7 @@ const logModel = require("@server/models/LogModel.js");
 const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const groupModel = require("@server/models/GroupModel.js");
-const projectModel = require("@server/models/project.js");
+const projectModel = require("@server/models/ProjectModel.js");
 const interfaceModel = require("@server/models/InterfaceModel.js");
 
 class logController extends baseController {

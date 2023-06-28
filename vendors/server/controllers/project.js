@@ -1,4 +1,4 @@
-const projectModel = require("@server/models/project.js");
+const projectModel = require("@server/models/ProjectModel.js");
 const yapi = require("@server/yapi.js");
 const _ = require("underscore");
 const baseController = require("./base.js");
@@ -11,7 +11,7 @@ const commons = require("../utils/commons.js");
 const userModel = require("@server/models/user.js");
 const logModel = require("@server/models/LogModel.js");
 const followModel = require("@server/models/FollowModel.js");
-const tokenModel = require("@server/models/token.js");
+const tokenModel = require("@server/models/TokenModel.js");
 const {getToken} = require("../utils/token")
 const sha = require("sha.js");
 const axios = require("axios").default;

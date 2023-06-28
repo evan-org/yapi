@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/base.js");
 const wikiModel = require("./lib/wikiModel.js");
-const projectModel = require("@server/models/project.js");
+const projectModel = require("@server/models/ProjectModel.js");
 const userModel = require("@server/models/user.js");
 //
 const jsondiffpatch = require("jsondiffpatch");
