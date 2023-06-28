@@ -1,7 +1,7 @@
 const BaseModel = require("@server/models/BaseModel.js");
 // import BaseModel from "@server/models/base.mjs";
 
-class userModel extends BaseModel {
+class UserModel extends BaseModel {
   constructor() {
     super();
   }
@@ -115,4 +115,4 @@ class userModel extends BaseModel {
   }
 }
 
-module.exports = userModel;
+module.exports = UserModel;

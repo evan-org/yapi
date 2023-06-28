@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 const projectModel = require("@server/models/ProjectModel.js");
-const userModel = require("@server/models/user.js");
+const userModel = require("@server/models/UserModel.js");
 const interfaceModel = require("@server/models/InterfaceModel.js");
 const groupModel = require("@server/models/GroupModel.js");
 const tokenModel = require("@server/models/TokenModel.js");

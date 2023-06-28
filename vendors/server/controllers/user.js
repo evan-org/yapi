@@ -1,4 +1,4 @@
-const userModel = require("@server/models/user.js");
+const userModel = require("@server/models/UserModel.js");
 const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const common = require("../utils/commons.js");
