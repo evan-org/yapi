@@ -1,6 +1,6 @@
-process.env.NODE_PATH = __dirname;
-require("module").Module._initPaths();
 require("module-alias/register");
+const dotEnv = require("dotenv");
+dotEnv.config();
 //
 const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
 //

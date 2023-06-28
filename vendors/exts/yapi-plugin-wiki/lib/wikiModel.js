@@ -1,6 +1,9 @@
 const BaseModel = require("@server/models/base.js");
 //
 class wikiModel extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "wiki";
   }
@@ -19,8 +22,7 @@ class wikiModel extends BaseModel {
   }
 
   save(data) {
-    // eslint-disable-next-line new-cap
-    let m = new this.model(data);
+    const m = new this.model(data);
     return m.save();
   }
 

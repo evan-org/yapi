@@ -1,18 +1,11 @@
 const BaseModel = require("@server/models/base.js");
 const mongoose = require("mongoose");
 
-class stroageModel extends BaseModel {
+class storageModel extends BaseModel {
   constructor() {
     super()
     let storageCol = mongoose.connection.db.collection("storage");
-    storageCol.createIndex(
-      {
-        key: 1
-      },
-      {
-        unique: true
-      }
-    );
+    storageCol.createIndex({ key: 1 }, { unique: true });
   }
 
   getName() {
@@ -35,8 +28,8 @@ class stroageModel extends BaseModel {
       data: JSON.stringify(data, null, 2)
     };
     if (isInsert) {
-      let r = new this.model(saveData);
-      return r.save();
+      const m = new this.model(saveData);
+      return m.save();
     }
     return this.model.updateOne({
       key
@@ -67,4 +60,4 @@ class stroageModel extends BaseModel {
   }
 }
 
-module.exports = stroageModel;
+module.exports = storageModel;

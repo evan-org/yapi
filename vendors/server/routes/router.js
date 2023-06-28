@@ -580,7 +580,7 @@ let routerConfig = {
 };
 let pluginsRouterPath = [];
 function addPluginRouter(config) {
-  console.log("addPluginRouter", config);
+  // console.log("addPluginRouter", config);
   if (!config.path || !config.controller || !config.action) {
     throw new Error("Plugin Route config Error");
   }

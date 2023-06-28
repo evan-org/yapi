@@ -2,6 +2,9 @@ const yapi = require("@server/yapi.js");
 const BaseModel = require("@server/models/base.js");
 
 class advMockModel extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "adv_mock";
   }
@@ -38,7 +41,7 @@ class advMockModel extends BaseModel {
 
   save(data) {
     data.up_time = yapi.commons.time();
-    let m = new this.model(data);
+    const m = new this.model(data);
     return m.save();
   }
 

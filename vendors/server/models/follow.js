@@ -1,6 +1,9 @@
 const BaseModel = require("@server/models/base.js");
 
 class followModel extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "follow";
   }
@@ -31,8 +34,8 @@ class followModel extends BaseModel {
       icon: data.icon,
       color: data.color
     };
-    let follow = new this.model(saveData);
-    return follow.save();
+    const m = new this.model(saveData);
+    return m.save();
   }
 
   del(projectid, uid) {

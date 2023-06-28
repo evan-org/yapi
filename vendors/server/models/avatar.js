@@ -1,6 +1,9 @@
 const BaseModel = require("@server/models/base.js");
 
 class avatarModel extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "avatar";
   }

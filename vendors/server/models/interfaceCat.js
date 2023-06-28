@@ -5,6 +5,9 @@ const BaseModel = require("@server/models/base.js");
  * 接口分类
  */
 class interfaceCat extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "interface_cat";
   }
@@ -22,64 +25,37 @@ class interfaceCat extends BaseModel {
   }
 
   save(data) {
-    let m = new this.model(data);
+    const m = new this.model(data);
     return m.save();
   }
 
   get(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .exec();
+    return this.model.findOne({ _id: id }).exec();
   }
 
   checkRepeat(name) {
-    return this.model.countDocuments({
-      name: name
-    });
+    return this.model.countDocuments({ name: name });
   }
 
   list(project_id) {
-    return this.model
-      .find({
-        project_id: project_id
-      })
-      .sort({ index: 1 })
-      .exec();
+    return this.model.find({ project_id: project_id }).sort({ index: 1 }).exec();
   }
 
   del(id) {
-    return this.model.remove({
-      _id: id
-    });
+    return this.model.remove({ _id: id });
   }
 
   delByProjectId(id) {
-    return this.model.remove({
-      project_id: id
-    });
+    return this.model.remove({ project_id: id });
   }
 
   up(id, data) {
     data.up_time = yapi.commons.time();
-    return this.model.update(
-      {
-        _id: id
-      },
-      data
-    );
+    return this.model.update({ _id: id }, data);
   }
 
   upCatIndex(id, index) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      {
-        index: index
-      }
-    );
+    return this.model.update({ _id: id }, { index: index });
   }
 }
 

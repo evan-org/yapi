@@ -2,6 +2,9 @@ const yapi = require("@server/yapi.js");
 const BaseModel = require("@server/models/base.js");
 
 class interfaceCol extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "interface_col";
   }
@@ -53,7 +56,7 @@ class interfaceCol extends BaseModel {
   }
 
   save(data) {
-    let m = new this.model(data);
+    const m = new this.model(data);
     return m.save();
   }
 

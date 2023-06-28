@@ -1,4 +1,5 @@
 const BaseModel = require("@server/models/base.js");
+// import BaseModel from "@server/models/base.mjs";
 
 class userModel extends BaseModel {
   constructor() {
@@ -32,9 +33,8 @@ class userModel extends BaseModel {
   }
 
   save(data) {
-    // eslint-disable-next-line new-cap
-    let user = new this.model(data);
-    return user.save();
+    const m = new this.model(data);
+    return m.save();
   }
 
   checkRepeat(email) {

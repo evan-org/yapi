@@ -2,10 +2,8 @@ const yapi = require("@server/yapi.js");
 const BaseModel = require("@server/models/base.js");
 
 class projectModel extends BaseModel {
-
-  constructor(model) {
-    super(model)
-    // this.model = this.model.bind(this)
+  constructor() {
+    super()
     this.handleEnvNullData = this.handleEnvNullData.bind(this)
   }
   getName() {
@@ -79,7 +77,7 @@ class projectModel extends BaseModel {
   }
 
   save(data) {
-    let m = new this.model(data);
+    const m = new this.model(data);
     return m.save();
   }
 

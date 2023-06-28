@@ -3,6 +3,9 @@ const BaseModel = require("@server/models/base.js");
 const mongoose = require("mongoose");
 
 class caseModel extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "adv_mock_case";
   }
@@ -52,7 +55,7 @@ class caseModel extends BaseModel {
 
   save(data) {
     data.up_time = yapi.commons.time();
-    let m = new this.model(data);
+    const m = new this.model(data);
     return m.save();
   }
 

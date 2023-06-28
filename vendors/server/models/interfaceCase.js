@@ -3,6 +3,9 @@ const BaseModel = require("@server/models/base.js");
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 class interfaceCase extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "interface_case";
   }
@@ -53,7 +56,7 @@ class interfaceCase extends BaseModel {
     };
   }
   save(data) {
-    let m = new this.model(data);
+    const m = new this.model(data);
     return m.save();
   }
   // 获取全部测试接口信息
@@ -61,11 +64,7 @@ class interfaceCase extends BaseModel {
     return this.model.countDocuments({});
   }
   get(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .exec();
+    return this.model.findOne({ _id: id }).exec();
   }
   list(col_id, select) {
     select = select || "casename uid col_id _id index interface_id project_id";

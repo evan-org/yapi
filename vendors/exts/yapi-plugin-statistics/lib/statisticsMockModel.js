@@ -4,6 +4,9 @@
 const yapi = require("@server/yapi.js");
 const BaseModel = require("@server/models/base.js");
 class StatisticsMockModel extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "statis_mock";
   }
@@ -23,7 +26,7 @@ class StatisticsMockModel extends BaseModel {
     })
   }
   save(data) {
-    let m = new this.model(data);
+    const m = new this.model(data);
     return m.save();
   }
   getTotalCount() {

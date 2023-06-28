@@ -4,6 +4,9 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 class logModel extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "log";
   }
@@ -42,10 +45,8 @@ class logModel extends BaseModel {
       add_time: yapi.commons.time(),
       data: data.data
     };
-
-    let log = new this.model(saveData);
-
-    return log.save();
+    const m = new this.model(saveData);
+    return m.save();
   }
 
   del(id) {
