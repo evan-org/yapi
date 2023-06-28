@@ -36,7 +36,7 @@ const {
   checkNameIsExistInArray
 } = require("@common/postmanLib.js");
 const plugin = require("@/plugin.js");
-const createContext = require("@common/createContext")
+const createContext = require("@common/createContext.js");
 const HTTP_METHOD = constants.HTTP_METHOD;
 export const InsertCodeMap = [
   {

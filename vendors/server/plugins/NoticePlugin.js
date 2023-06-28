@@ -27,9 +27,11 @@ const NoticePlugin = () => {
     const ProjectModel = require("@server/models/ProjectModel.js");
     const UserModel = require("@server/models/UserModel.js");
     const FollowModel = require("@server/models/FollowModel.js");
+    //
     const followInst = yapi.getInst(FollowModel);
     const userInst = yapi.getInst(UserModel);
     const projectInst = yapi.getInst(ProjectModel);
+    //
     const list = await followInst.listByProjectId(projectId);
     const starUsers = list.map((item) => item.uid);
     const projectList = await projectInst.get(projectId);

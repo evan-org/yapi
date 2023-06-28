@@ -16,7 +16,6 @@ const InterfaceColModel = require("@server/models/InterfaceColModel.js");
 const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const UserModel = require("@server/models/UserModel.js");
-const FollowModel = require("@server/models/FollowModel.js");
 //
 const sandboxFn = require("./sandbox.js");
 const { schemaValidator } = require("@common/utils.js");
@@ -274,7 +273,7 @@ exports.verifyPath = (path) => {
  * 沙盒执行 js 代码
  * @sandbox Object context
  * @script String script
- * @return sandbox
+ * @returns sandbox
  *
  * @example let a = sandbox({a: 1}, 'a=2')
  * a = {a: 2}
@@ -284,13 +283,15 @@ exports.sandbox = (sandbox, script) => {
     const vm = require("vm");
     sandbox = sandbox || {};
     script = new vm.Script(script);
+    // eslint-disable-next-line new-cap
     const context = new vm.createContext(sandbox);
     script.runInContext(context, {
       timeout: 3000
     });
     return sandbox
   } catch (err) {
-    throw err
+    console.error(err);
+    throw new Error(err)
   }
 };
 /**
@@ -411,8 +412,8 @@ exports.saveLog = (logData) => {
  */
 // eslint-disable-next-line max-params
 exports.createAction = (router, baseurl, RouterController, action, path, method, ws) => {
-  console.log("exports.createAction ==> ", router, baseurl, RouterController, action, path, method, ws);
-  console.log("exports.createAction ==> 1", router[method]);
+  // console.log("exports.createAction ==> ", router, baseurl, RouterController, action, path, method, ws);
+  // console.log("exports.createAction ==> 1", router[method]);
   router[method](baseurl + path, async(ctx) => {
     const inst = new RouterController(ctx);
     try {

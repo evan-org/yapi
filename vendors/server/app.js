@@ -18,7 +18,7 @@ global.storageCreator = storageCreator;
 // 全局挂载
 const yapi = require("@server/yapi.js");
 //
-const commons = require("./utils/commons.js");
+const commons = require("@server/utils/commons.js");
 const mongodb = require("@server/helper/mongodb.js");
 //
 yapi.commons = commons;

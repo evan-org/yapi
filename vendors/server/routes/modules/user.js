@@ -83,16 +83,18 @@ const user = [
     method: "post"
   }
 ];
-router.get("/", async(ctx) => {
+router.get("/demouser/", async(ctx) => {
   ctx.body = "Hello, world!";
 });
 
-router.get("/users", async(ctx) => {
+router.get("/demouser/users", async(ctx) => {
   // 处理获取用户列表的逻辑
+  ctx.body = "Hello, world!1";
 });
 
-router.get("/users/:id", async(ctx) => {
+router.get("demouser/users/:id", async(ctx) => {
   // 处理获取特定用户的逻辑
+  ctx.body = "Hello, world!";
 });
 
 module.exports = router;

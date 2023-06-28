@@ -1,11 +1,11 @@
 const yapi = require("@server/yapi.js");
 //
-const interfaceController = require("@server/controllers/InterfaceController.js");
+const InterfaceController = require("@server/controllers/InterfaceController.js");
 //
 const Router = require("@koa/router");
 const router = new Router();
 //
-const { createAction } = require("../../utils/commons.js");
+const { createAction } = require("@server/utils/commons.js");
 const pluginsRouterPath = [];
 //
 function addPluginRouter(config) {
@@ -18,11 +18,13 @@ function addPluginRouter(config) {
     throw new Error("Plugin Route path conflict, please try rename the path")
   }
   pluginsRouterPath.push(routerPath);
+  //
   createAction(router, "/api", config.controller, config.action, routerPath, method, true);
 }
 //
 function websocket(app) {
-  createAction(router, "/api", interfaceController, "solveConflict", "/interface/solve_conflict", "get");
+  createAction(router, "/api", InterfaceController, "solveConflict", "/interface/solve_conflict", "get", false);
+  //
   yapi.emitHookSync("add_ws_router", addPluginRouter);
   app.ws.use(router.routes())
   app.ws.use(router.allowedMethods());

@@ -606,9 +606,5 @@ for (const ctrl in routerConfig) {
     createAction(router, "/api", RouterController, item.action, path, item.method, false);
   });
 }
-
-const indexRoute = require("./index.js");
-
-console.log(indexRoute);
 //
 module.exports = router;
