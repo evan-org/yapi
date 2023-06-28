@@ -9,11 +9,7 @@ class AvatarModel extends BaseModel {
   }
 
   getSchema() {
-    return {
-      uid: { type: Number, required: true },
-      basecode: String,
-      type: String
-    };
+    return { uid: { type: Number, required: true }, basecode: String, type: String };
   }
 
   get(uid) {
