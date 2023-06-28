@@ -5,7 +5,7 @@ const common = require("../utils/commons.js");
 const ldap = require("../utils/ldap.js");
 
 const interfaceModel = require("@server/models/interface.js");
-const groupModel = require("@server/models/group.js");
+const groupModel = require("@server/models/GroupModel.js");
 const projectModel = require("@server/models/project.js");
 const avatarModel = require("@server/models/AvatarModel.js");
 

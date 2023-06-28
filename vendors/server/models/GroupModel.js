@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
 const BaseModel = require("@server/models/BaseModel.js");
 
-class groupModel extends BaseModel {
+class GroupModel extends BaseModel {
   constructor() {
     super();
   }
@@ -196,4 +196,4 @@ class groupModel extends BaseModel {
   }
 }
 
-module.exports = groupModel;
+module.exports = GroupModel;

@@ -7,7 +7,7 @@ import { Postman } from '../../../../../components';
 import AddColModal from './AddColModal/AddColModal';
 
 // import {
-// } from '../../../reducer/modules/group.js'
+// } from '../../../reducer/modules/GroupModel.js'
 
 import './Run.scss';
 

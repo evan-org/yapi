@@ -4,7 +4,7 @@
 const baseController = require("@server/controllers/base.js");
 const statisMockModel = require("./lib/statisticsMockModel.js");
 //
-const groupModel = require("@server/models/group.js");
+const groupModel = require("@server/models/GroupModel.js");
 const projectModel = require("@server/models/project.js");
 const interfaceModel = require("@server/models/interface.js");
 const interfaceCaseModel = require("@server/models/interfaceCase.js");
