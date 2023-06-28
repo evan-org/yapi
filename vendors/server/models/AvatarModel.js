@@ -1,4 +1,4 @@
-const BaseModel = require("@server/models/base.js");
+const BaseModel = require("@server/models/BaseModel.js");
 
 class AvatarModel extends BaseModel {
   constructor() {
