@@ -1,7 +1,7 @@
 const baseController = require("@server/controllers/base.js");
-const interfaceModel = require("@server/models/interface.js");
+const interfaceModel = require("@server/models/InterfaceModel.js");
 const projectModel = require("@server/models/project.js");
-const interfaceCatModel = require("@server/models/interfaceCat.js");
+const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const yapi = require("@server/yapi.js");
 
 

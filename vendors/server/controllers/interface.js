@@ -1,9 +1,9 @@
 const fs = require("fs-extra");
 const path = require("path");
 //
-const interfaceModel = require("@server/models/interface.js");
-const interfaceCatModel = require("@server/models/interfaceCat.js");
-const interfaceCaseModel = require("@server/models/interfaceCase.js");
+const interfaceModel = require("@server/models/InterfaceModel.js");
+const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
+const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const followModel = require("@server/models/FollowModel.js");
 const groupModel = require("@server/models/GroupModel.js");
 const _ = require("underscore");

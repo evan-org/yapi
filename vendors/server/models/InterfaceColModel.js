@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
 const BaseModel = require("@server/models/BaseModel.js");
 
-class interfaceCol extends BaseModel {
+class InterfaceColModel extends BaseModel {
   constructor() {
     super();
   }
@@ -117,4 +117,4 @@ class interfaceCol extends BaseModel {
   }
 }
 
-module.exports = interfaceCol;
+module.exports = InterfaceColModel;

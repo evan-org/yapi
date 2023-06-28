@@ -3,7 +3,7 @@ const BaseModel = require("@server/models/BaseModel.js");
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
-class logModel extends BaseModel {
+class LogModel extends BaseModel {
   constructor() {
     super();
   }
@@ -153,4 +153,4 @@ class logModel extends BaseModel {
   }
 }
 
-module.exports = logModel;
+module.exports = LogModel;

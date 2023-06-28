@@ -10,11 +10,11 @@ const Mock = require("mockjs");
 const easyJsonScheme = require("easy-json-schema");
 const jsonSchemaFaker = require("json-schema-faker");
 //
-const logModel = require("@server/models/log.js");
+const logModel = require("@server/models/LogModel.js");
 const projectModel = require("@server/models/project.js");
-const interfaceColModel = require("@server/models/interfaceCol.js");
-const interfaceCaseModel = require("@server/models/interfaceCase.js");
-const interfaceModel = require("@server/models/interface.js");
+const interfaceColModel = require("@server/models/InterfaceColModel.js");
+const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
+const interfaceModel = require("@server/models/InterfaceModel.js");
 const userModel = require("@server/models/user.js");
 const followModel = require("@server/models/FollowModel.js");
 const sandboxFn = require("./sandbox.js");

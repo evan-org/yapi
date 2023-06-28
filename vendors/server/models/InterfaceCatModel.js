@@ -4,7 +4,7 @@ const BaseModel = require("@server/models/BaseModel.js");
 /**
  * 接口分类
  */
-class interfaceCat extends BaseModel {
+class InterfaceCatModel extends BaseModel {
   constructor() {
     super();
   }
@@ -59,4 +59,4 @@ class interfaceCat extends BaseModel {
   }
 }
 
-module.exports = interfaceCat;
+module.exports = InterfaceCatModel;

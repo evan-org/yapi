@@ -3,9 +3,9 @@ const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const projectModel = require("@server/models/project.js");
 const userModel = require("@server/models/user.js");
-const interfaceModel = require("@server/models/interface.js");
-const interfaceColModel = require("@server/models/interfaceCol.js");
-const interfaceCaseModel = require("@server/models/interfaceCase.js");
+const interfaceModel = require("@server/models/InterfaceModel.js");
+const interfaceColModel = require("@server/models/InterfaceColModel.js");
+const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const _ = require("underscore")
 const rolename = {
   owner: "组长",
