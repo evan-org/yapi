@@ -1,12 +1,12 @@
 const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
-const followModel = require("@server/models/FollowModel.js");
+const FollowModel = require("@server/models/FollowModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 
 class followController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(followModel);
+    this.Model = yapi.getInst(FollowModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
 

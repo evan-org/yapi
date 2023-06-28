@@ -1,15 +1,16 @@
-const logModel = require("@server/models/LogModel.js");
 const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
-const groupModel = require("@server/models/GroupModel.js");
+//
+const GroupModel = require("@server/models/GroupModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-
+const LogModel = require("@server/models/LogModel.js");
+//
 class logController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(logModel);
-    this.groupModel = yapi.getInst(groupModel);
+    this.Model = yapi.getInst(LogModel);
+    this.GroupModel = yapi.getInst(GroupModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.schemaMap = {

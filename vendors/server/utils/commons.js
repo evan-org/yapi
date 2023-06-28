@@ -10,13 +10,13 @@ const Mock = require("mockjs");
 const easyJsonScheme = require("easy-json-schema");
 const jsonSchemaFaker = require("json-schema-faker");
 //
-const logModel = require("@server/models/LogModel.js");
+const LogModel = require("@server/models/LogModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
-const interfaceColModel = require("@server/models/InterfaceColModel.js");
-const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
+const InterfaceColModel = require("@server/models/InterfaceColModel.js");
+const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const userModel = require("@server/models/UserModel.js");
-const followModel = require("@server/models/FollowModel.js");
+const UserModel = require("@server/models/UserModel.js");
+const FollowModel = require("@server/models/FollowModel.js");
 //
 const sandboxFn = require("./sandbox.js");
 const { schemaValidator } = require("@common/utils.js");
@@ -385,7 +385,7 @@ exports.validateParams = (schema2, params) => {
  */
 exports.saveLog = (logData) => {
   try {
-    let logInst = yapi.getInst(logModel);
+    let logInst = yapi.getInst(LogModel);
     let data = {
       content: logData.content,
       type: logData.type,
@@ -474,8 +474,8 @@ exports.handleParamsValue = handleParamsValue;
  *
  * */
 exports.getCaseList = async function getCaseList(id) {
-  const caseInst = yapi.getInst(interfaceCaseModel);
-  const colInst = yapi.getInst(interfaceColModel);
+  const caseInst = yapi.getInst(InterfaceCaseModel);
+  const colInst = yapi.getInst(InterfaceColModel);
   const projectInst = yapi.getInst(ProjectModel);
   const interfaceInst = yapi.getInst(InterfaceModel);
   let resultList = await caseInst.list(id, "all");
@@ -521,7 +521,7 @@ function convertString(variable) {
  *
  * */
 exports.runCaseScript = async function runCaseScript(params, colId, interfaceId) {
-  const colInst = yapi.getInst(interfaceColModel);
+  const colInst = yapi.getInst(InterfaceColModel);
   let colData = await colInst.get(colId);
   const logs = [];
   const context = {
@@ -586,7 +586,7 @@ exports.runCaseScript = async function runCaseScript(params, colId, interfaceId)
  * */
 exports.getUserdata = async function getUserdata(uid, role) {
   role = role || "dev";
-  let userInst = yapi.getInst(userModel);
+  let userInst = yapi.getInst(UserModel);
   let userData = await userInst.findById(uid);
   if (!userData) {
     return null;

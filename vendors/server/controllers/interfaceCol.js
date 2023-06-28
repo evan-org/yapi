@@ -1,15 +1,17 @@
-const interfaceColModel = require("@server/models/InterfaceColModel.js");
-const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
+const yapi = require("@server/yapi.js");
+const _ = require("underscore");
+// model
+const InterfaceColModel = require("@server/models/InterfaceColModel.js");
+const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const baseController = require("./base.js");
-const yapi = require("@server/yapi.js");
-const _ = require("underscore");
+//
 class interfaceColController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.colModel = yapi.getInst(interfaceColModel);
-    this.caseModel = yapi.getInst(interfaceCaseModel);
+    this.colModel = yapi.getInst(InterfaceColModel);
+    this.caseModel = yapi.getInst(InterfaceCaseModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
   }

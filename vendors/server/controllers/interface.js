@@ -1,17 +1,20 @@
 const fs = require("fs-extra");
 const path = require("path");
 //
+const baseController = require("./base.js");
+//
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
-const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const followModel = require("@server/models/FollowModel.js");
-const groupModel = require("@server/models/GroupModel.js");
+const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
+const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
+const FollowModel = require("@server/models/FollowModel.js");
+const GroupModel = require("@server/models/GroupModel.js");
+const UserModel = require("@server/models/UserModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
+//
 const _ = require("underscore");
 const url = require("url");
-const baseController = require("./base.js");
+
 const yapi = require("@server/yapi.js");
-const userModel = require("@server/models/UserModel.js");
-const ProjectModel = require("@server/models/ProjectModel.js");
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
 const showDiffMsg = require("@common/diff-view.js");
@@ -61,12 +64,12 @@ class interfaceController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(InterfaceModel);
-    this.catModel = yapi.getInst(interfaceCatModel);
+    this.catModel = yapi.getInst(InterfaceCatModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
-    this.caseModel = yapi.getInst(interfaceCaseModel);
-    this.followModel = yapi.getInst(followModel);
-    this.userModel = yapi.getInst(userModel);
-    this.groupModel = yapi.getInst(groupModel);
+    this.caseModel = yapi.getInst(InterfaceCaseModel);
+    this.FollowModel = yapi.getInst(FollowModel);
+    this.UserModel = yapi.getInst(UserModel);
+    this.GroupModel = yapi.getInst(GroupModel);
     const minLengthStringField = {
       type: "string",
       minLength: 1
@@ -420,7 +423,7 @@ class interfaceController extends baseController {
       if (!result) {
         return (ctx.body = yapi.commons.resReturn(null, 490, "不存在的"));
       }
-      let userinfo = await this.userModel.findById(result.uid);
+      let userinfo = await this.UserModel.findById(result.uid);
       let project = await this.ProjectModel.getBaseInfo(result.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
@@ -824,7 +827,7 @@ class interfaceController extends baseController {
       }
       result = await this.Model.get(id);
       if (result.edit_uid !== 0 && result.edit_uid !== this.getUid()) {
-        userInst = yapi.getInst(userModel);
+        userInst = yapi.getInst(UserModel);
         userinfo = await userInst.findById(result.edit_uid);
         data = {
           errno: result.edit_uid,
@@ -1002,7 +1005,7 @@ class interfaceController extends baseController {
     let customFieldValue = params[customFieldName];
     try {
       //  查找有customFieldName的分组（group）
-      let groups = await this.groupModel.getcustomFieldName(customFieldName);
+      let groups = await this.GroupModel.getcustomFieldName(customFieldName);
       if (groups.length === 0) {
         return (ctx.body = yapi.commons.resReturn(null, 404, "没有找到对应自定义接口"));
       }

@@ -3,15 +3,15 @@ const yapi = require("@server/yapi.js");
 const _ = require("underscore");
 const baseController = require("./base.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const interfaceColModel = require("@server/models/InterfaceColModel.js");
-const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
-const groupModel = require("@server/models/GroupModel.js");
+const InterfaceColModel = require("@server/models/InterfaceColModel.js");
+const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
+const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
+const GroupModel = require("@server/models/GroupModel.js");
 const commons = require("@server/utils/commons.js");
-const userModel = require("@server/models/UserModel.js");
-// const logModel = require("@server/models/LogModel.js");
-const followModel = require("@server/models/FollowModel.js");
-const tokenModel = require("@server/models/TokenModel.js");
+const UserModel = require("@server/models/UserModel.js");
+// const LogModel = require("@server/models/LogModel.js");
+const FollowModel = require("@server/models/FollowModel.js");
+const TokenModel = require("@server/models/TokenModel.js");
 const { getToken } = require("../utils/token")
 const sha = require("sha.js");
 const axios = require("axios").default;
@@ -19,10 +19,10 @@ class projectController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(ProjectModel);
-    this.groupModel = yapi.getInst(groupModel);
-    // this.logModel = yapi.getInst(logModel);
-    this.followModel = yapi.getInst(followModel);
-    this.tokenModel = yapi.getInst(tokenModel);
+    this.GroupModel = yapi.getInst(GroupModel);
+    // this.LogModel = yapi.getInst(LogModel);
+    this.FollowModel = yapi.getInst(FollowModel);
+    this.TokenModel = yapi.getInst(TokenModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
     const id = "number";
     const member_uid = ["number"];
@@ -203,8 +203,8 @@ class projectController extends baseController {
       env: [{ name: "local", domain: "http://127.0.0.1" }]
     };
     let result = await this.Model.save(data);
-    let colInst = yapi.getInst(interfaceColModel);
-    let catInst = yapi.getInst(interfaceCatModel);
+    let colInst = yapi.getInst(InterfaceColModel);
+    let catInst = yapi.getInst(InterfaceCatModel);
     if (result._id) {
       await colInst.save({
         name: "公共测试集",
@@ -275,8 +275,8 @@ class projectController extends baseController {
       });
       delete data._id;
       let result = await this.Model.save(data);
-      let colInst = yapi.getInst(interfaceColModel);
-      let catInst = yapi.getInst(interfaceCatModel);
+      let colInst = yapi.getInst(InterfaceColModel);
+      let catInst = yapi.getInst(InterfaceCatModel);
       // 增加集合
       if (result._id) {
         await colInst.save({
@@ -423,7 +423,7 @@ class projectController extends baseController {
       let result = await this.Model.delMember(params.id, params.member_uid);
       let username = this.getUsername();
       yapi
-        .getInst(userModel)
+        .getInst(UserModel)
         .findById(params.member_uid)
         .then((member) => {
           yapi.commons.saveLog({
@@ -484,7 +484,7 @@ class projectController extends baseController {
       }
     }
     result = result.toObject();
-    let catInst = yapi.getInst(interfaceCatModel);
+    let catInst = yapi.getInst(InterfaceCatModel);
     let cat = await catInst.list(params.id);
     result.cat = cat;
     if (result.env.length === 0) {
@@ -508,14 +508,14 @@ class projectController extends baseController {
   async list(ctx) {
     let group_id = ctx.params.group_id,
       project_list = [];
-    let groupData = await this.groupModel.get(group_id);
+    let groupData = await this.GroupModel.get(group_id);
     let isPrivateGroup = false;
     if (groupData.type === "private" && this.getUid() === groupData.uid) {
       isPrivateGroup = true;
     }
     let auth = await this.checkAuth(group_id, "group", "view");
     let result = await this.Model.list(group_id);
-    let follow = await this.followModel.list(this.getUid());
+    let follow = await this.FollowModel.list(this.getUid());
     if (isPrivateGroup === false) {
       for (let index = 0, item, r = 1; index < result.length; index++) {
         item = result[index].toObject();
@@ -565,12 +565,12 @@ class projectController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
     }
     let interfaceInst = yapi.getInst(InterfaceModel);
-    let interfaceColInst = yapi.getInst(interfaceColModel);
-    let interfaceCaseInst = yapi.getInst(interfaceCaseModel);
+    let interfaceColInst = yapi.getInst(InterfaceColModel);
+    let interfaceCaseInst = yapi.getInst(InterfaceCaseModel);
     await interfaceInst.delByProjectId(id);
     await interfaceCaseInst.delByProjectId(id);
     await interfaceColInst.delByProjectId(id);
-    await this.followModel.delByProjectId(id);
+    await this.FollowModel.delByProjectId(id);
     yapi.emitHook("project_del", id).then();
     let result = await this.Model.del(id);
     ctx.body = yapi.commons.resReturn(result);
@@ -606,7 +606,7 @@ class projectController extends baseController {
     let result = await projectInst.changeMemberRole(params.id, params.member_uid, params.role);
     let username = this.getUsername();
     yapi
-      .getInst(userModel)
+      .getInst(UserModel)
       .findById(params.member_uid)
       .then((member) => {
         yapi.commons.saveLog({
@@ -681,7 +681,7 @@ class projectController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
     try {
-      this.followModel.updateById(this.getUid(), id, data).then(() => {
+      this.FollowModel.updateById(this.getUid(), id, data).then(() => {
         let username = this.getUsername();
         yapi.commons.saveLog({
           content: `<a href="/user/profile/${this.getUid()}">${username}</a> 修改了项目图标、颜色`,
@@ -909,7 +909,7 @@ class projectController extends baseController {
   async token(ctx) {
     try {
       let project_id = ctx.params.project_id;
-      let data = await this.tokenModel.get(project_id);
+      let data = await this.TokenModel.get(project_id);
       let token;
       if (!data) {
         let passsalt = yapi.commons.randStr();
@@ -917,7 +917,7 @@ class projectController extends baseController {
           .update(passsalt)
           .digest("hex")
           .substr(0, 20);
-        await this.tokenModel.save({ project_id, token });
+        await this.TokenModel.save({ project_id, token });
       } else {
         token = data.token;
       }
@@ -940,7 +940,7 @@ class projectController extends baseController {
   async updateToken(ctx) {
     try {
       let project_id = ctx.params.project_id;
-      let data = await this.tokenModel.get(project_id);
+      let data = await this.TokenModel.get(project_id);
       let token, result;
       if (data && data.token) {
         let passsalt = yapi.commons.randStr();
@@ -948,7 +948,7 @@ class projectController extends baseController {
           .update(passsalt)
           .digest("hex")
           .substr(0, 20);
-        result = await this.tokenModel.up(project_id, token);
+        result = await this.TokenModel.up(project_id, token);
         token = getToken(token);
         result.token = token;
       } else {
@@ -978,7 +978,7 @@ class projectController extends baseController {
       return (ctx.body = yapi.commons.resReturn(void 0, 400, "Bad query."));
     }
     let projectList = await this.Model.search(q);
-    let groupList = await this.groupModel.search(q);
+    let groupList = await this.GroupModel.search(q);
     let interfaceList = await this.InterfaceModel.search(q);
     let projectRules = [
       "_id",

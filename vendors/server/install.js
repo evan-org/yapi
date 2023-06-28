@@ -2,7 +2,7 @@ const fs = require("fs-extra");
 const yapi = require("@server/yapi.js");
 const commons = require("./utils/commons");
 const mongodbModule = require("@server/helper/mongodb.js");
-const userModel = require("@server/models/UserModel.js");
+const UserModel = require("@server/models/UserModel.js");
 const mongoose = require("mongoose");
 yapi.commons = commons;
 yapi.connect = mongodbModule.connect();
@@ -17,7 +17,7 @@ function install() {
   setupSql();
 }
 function setupSql() {
-  let userInst = yapi.getInst(userModel);
+  let userInst = yapi.getInst(UserModel);
   let passsalt = yapi.commons.randStr();
   let result = userInst.save({
     username: yapi.WEBROOT_CONFIG.adminAccount.substring(0, yapi.WEBROOT_CONFIG.adminAccount.indexOf("@")),

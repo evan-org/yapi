@@ -1,10 +1,10 @@
 const ProjectModel = require("@server/models/ProjectModel.js");
-const interfaceColModel = require("@server/models/InterfaceColModel.js");
-const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
+const InterfaceColModel = require("@server/models/InterfaceColModel.js");
+const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
-const followModel = require("@server/models/FollowModel.js");
-const userModel = require("@server/models/UserModel.js");
+const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
+const FollowModel = require("@server/models/FollowModel.js");
+const UserModel = require("@server/models/UserModel.js");
 const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const {
@@ -29,12 +29,12 @@ class openController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.ProjectModel = yapi.getInst(ProjectModel);
-    this.interfaceColModel = yapi.getInst(interfaceColModel);
-    this.interfaceCaseModel = yapi.getInst(interfaceCaseModel);
+    this.InterfaceColModel = yapi.getInst(InterfaceColModel);
+    this.InterfaceCaseModel = yapi.getInst(InterfaceCaseModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
-    this.interfaceCatModel = yapi.getInst(interfaceCatModel);
-    this.followModel = yapi.getInst(followModel);
-    this.userModel = yapi.getInst(userModel);
+    this.InterfaceCatModel = yapi.getInst(InterfaceCatModel);
+    this.FollowModel = yapi.getInst(FollowModel);
+    this.UserModel = yapi.getInst(UserModel);
     this.handleValue = this.handleValue.bind(this);
     this.schemaMap = {
       runAutoTest: {
@@ -114,13 +114,13 @@ class openController extends baseController {
     } catch (e) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "json 格式有误:" + e));
     }
-    let menuList = await this.interfaceCatModel.list(project_id);
+    let menuList = await this.InterfaceCatModel.list(project_id);
     /**
      * 防止分类被都被删除时取不到 selectCatid
      * 如果没有分类,增加一个默认分类
      */
     if (menuList.length === 0) {
-      const catInst = yapi.getInst(interfaceCatModel);
+      const catInst = yapi.getInst(InterfaceCatModel);
       const menu = await catInst.save({
         name: "默认分类",
         project_id: project_id,
@@ -191,7 +191,7 @@ class openController extends baseController {
     const testList = [];
     let id = ctx.params.id;
     let curEnvList = this.handleEvnParams(ctx.params);
-    let colData = await this.interfaceColModel.get(id);
+    let colData = await this.InterfaceColModel.get(id);
     if (!colData) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "id值不存在"));
     }

@@ -3,7 +3,7 @@ const yapi = require("@server/yapi.js");
 const baseController = require("@server/controllers/base.js");
 const wikiModel = require("./lib/wikiModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
-const userModel = require("@server/models/UserModel.js");
+const UserModel = require("@server/models/UserModel.js");
 //
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
@@ -213,7 +213,7 @@ class wikiController extends baseController {
   async editorFunc(result) {
     let userInst, userinfo, data;
     if (result && result.edit_uid !== 0 && result.edit_uid !== this.getUid()) {
-      userInst = yapi.getInst(userModel);
+      userInst = yapi.getInst(UserModel);
       userinfo = await userInst.findById(result.edit_uid);
       data = {
         errno: result.edit_uid,

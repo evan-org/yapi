@@ -2,7 +2,7 @@ const baseController = require("@server/controllers/base.js");
 const yapi = require("@server/yapi.js");
 const advModel = require("./lib/advMockModel.js");
 const caseModel = require("./lib/caseModel.js");
-const userModel = require("@server/models/UserModel.js");
+const UserModel = require("@server/models/UserModel.js");
 const config = require("./index.js");
 
 class advMockController extends baseController {
@@ -10,7 +10,7 @@ class advMockController extends baseController {
     super(ctx);
     this.Model = yapi.getInst(advModel);
     this.caseModel = yapi.getInst(caseModel);
-    this.userModel = yapi.getInst(userModel);
+    this.UserModel = yapi.getInst(UserModel);
   }
 
   async getMock(ctx) {
@@ -66,7 +66,7 @@ class advMockController extends baseController {
       }
       let result = await this.caseModel.list(id);
       for (let i = 0, len = result.length; i < len; i++) {
-        let userinfo = await this.userModel.findById(result[i].uid);
+        let userinfo = await this.UserModel.findById(result[i].uid);
         result[i] = result[i].toObject();
         // if (userinfo) {
         result[i].username = userinfo.username;

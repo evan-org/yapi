@@ -3,7 +3,7 @@ const baseController = require("@server/controllers/base.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 // const wikiModel = require('../yapi-plugin-wiki/wikiModel.js');
-const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
+const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const yapi = require("@server/yapi.js");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
@@ -15,7 +15,7 @@ const md = require("@common/markdown.js");
 class exportController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = yapi.getInst(interfaceCatModel);
+    this.catModel = yapi.getInst(InterfaceCatModel);
     this.interModel = yapi.getInst(InterfaceModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
 

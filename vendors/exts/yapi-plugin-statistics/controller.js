@@ -4,10 +4,10 @@
 const baseController = require("@server/controllers/base.js");
 const statisMockModel = require("./lib/statisticsMockModel.js");
 //
-const groupModel = require("@server/models/GroupModel.js");
+const GroupModel = require("@server/models/GroupModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
+const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const yapi = require("@server/yapi.js");
 const config = require("./index.js");
 const commons = require("./lib/util.js");
@@ -17,10 +17,10 @@ class statisMockController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(statisMockModel);
-    this.groupModel = yapi.getInst(groupModel);
+    this.GroupModel = yapi.getInst(GroupModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
-    this.interfaceCaseModel = yapi.getInst(interfaceCaseModel);
+    this.InterfaceCaseModel = yapi.getInst(InterfaceCaseModel);
   }
   /**
    * 获取所有统计总数
@@ -32,10 +32,10 @@ class statisMockController extends baseController {
    */
   async getStatisCount(ctx) {
     try {
-      let groupCount = await this.groupModel.getGroupListCount();
+      let groupCount = await this.GroupModel.getGroupListCount();
       let projectCount = await this.ProjectModel.getProjectListCount();
       let interfaceCount = await this.InterfaceModel.getInterfaceListCount();
-      let interfaceCaseCount = await this.interfaceCaseModel.getInterfaceCaseListCount();
+      let interfaceCaseCount = await this.InterfaceCaseModel.getInterfaceCaseListCount();
       return (ctx.body = yapi.commons.resReturn({
         groupCount,
         projectCount,
@@ -120,7 +120,7 @@ class statisMockController extends baseController {
   }
   async groupDataStats(ctx) {
     try {
-      let groupData = await this.groupModel.list();
+      let groupData = await this.GroupModel.list();
       let result = [];
       for (let i = 0; i < groupData.length; i++) {
         let group = groupData[i];

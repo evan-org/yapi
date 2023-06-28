@@ -1,10 +1,10 @@
 const yapi = require("@server/yapi.js");
 //
 const ProjectModel = require("@server/models/ProjectModel.js");
-const userModel = require("@server/models/UserModel.js");
+const UserModel = require("@server/models/UserModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const groupModel = require("@server/models/GroupModel.js");
-const tokenModel = require("@server/models/TokenModel.js");
+const GroupModel = require("@server/models/GroupModel.js");
+const TokenModel = require("@server/models/TokenModel.js");
 //
 const _ = require("underscore");
 const jwt = require("jsonwebtoken");
@@ -30,7 +30,7 @@ class baseController {
   }
   async init(ctx) {
     this.$user = null;
-    this.tokenModel = yapi.getInst(tokenModel);
+    this.TokenModel = yapi.getInst(TokenModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     //
     if (ignoreRouter.indexOf(ctx.path) > -1) {
@@ -94,7 +94,7 @@ class baseController {
         if (tokenUid === oldTokenUid) {
           result = { _id: tokenUid, role: "member", username: "system" }
         } else {
-          let userInst = yapi.getInst(userModel); // 创建user实体
+          let userInst = yapi.getInst(UserModel); // 创建user实体
           result = await userInst.findById(tokenUid);
         }
         this.$user = result;
@@ -103,7 +103,7 @@ class baseController {
     }
   }
   async getProjectIdByToken(token) {
-    let projectId = await this.tokenModel.findId(token);
+    let projectId = await this.TokenModel.findId(token);
     if (projectId) {
       return projectId.toObject().project_id;
     }
@@ -118,7 +118,7 @@ class baseController {
       if (!token || !uid) {
         return false;
       }
-      let userInst = yapi.getInst(userModel); // 创建user实体
+      let userInst = yapi.getInst(UserModel); // 创建user实体
       let result = await userInst.findById(uid);
       if (!result) {
         return false;
@@ -234,7 +234,7 @@ class baseController {
         id = projectData.group_id;
       }
       if (type === "group") {
-        let groupInst = yapi.getInst(groupModel);
+        let groupInst = yapi.getInst(GroupModel);
         let groupData = await groupInst.get(id);
         // 建立分组的人
         if (groupData.uid === this.getUid()) {

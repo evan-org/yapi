@@ -4,7 +4,7 @@ const schedule = require("node-schedule");
 const openController = require("@server/controllers/open.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const syncModel = require("./syncModel.js");
-const tokenModel = require("@server/models/TokenModel.js");
+const TokenModel = require("@server/models/TokenModel.js");
 
 const sha = require("sha.js");
 const md5 = require("md5");
@@ -16,7 +16,7 @@ class syncUtils {
     this.ctx = ctx;
     this.openController = yapi.getInst(openController);
     this.syncModel = yapi.getInst(syncModel);
-    this.tokenModel = yapi.getInst(tokenModel)
+    this.TokenModel = yapi.getInst(TokenModel)
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.init()
   }
@@ -151,7 +151,7 @@ class syncUtils {
    */
   async getProjectToken(project_id, uid) {
     try {
-      let data = await this.tokenModel.get(project_id);
+      let data = await this.TokenModel.get(project_id);
       let token;
       if (!data) {
         let passsalt = yapi.commons.randStr();
@@ -159,7 +159,7 @@ class syncUtils {
         .update(passsalt)
         .digest("hex")
         .substr(0, 20);
-        await this.tokenModel.save({ project_id, token });
+        await this.TokenModel.save({ project_id, token });
       } else {
         token = data.token;
       }

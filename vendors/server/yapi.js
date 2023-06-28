@@ -16,7 +16,7 @@ let mail = WEBROOT_CONFIG.mail && WEBROOT_CONFIG.mail.enable ? nodemailer.create
  * @param Class
  * @param args
  * @example
- * yapi.getInst(groupModel, arg1, arg2)
+ * yapi.getInst(GroupModel, arg1, arg2)
  */
 function getInst(Class, ...args) {
   if (!insets.get(Class)) {
