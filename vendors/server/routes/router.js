@@ -1,16 +1,16 @@
 const yapi = require("@server/yapi.js");
 // controllers
-const interfaceController = require("../controllers/interface.js");
-const groupController = require("../controllers/group.js");
-const userController = require("../controllers/user.js");
-const interfaceColController = require("../controllers/interfaceCol.js");
-const testController = require("../controllers/test.js");
-const projectController = require("../controllers/project.js");
-const logController = require("../controllers/log.js");
-const followController = require("../controllers/follow.js");
-const openController = require("../controllers/open.js");
+const interfaceController = require("@server/controllers/interface.js");
+const groupController = require("@server/controllers/group.js");
+const userController = require("@server/controllers/user.js");
+const interfaceColController = require("@server/controllers/interfaceCol.js");
+const testController = require("@server/controllers/test.js");
+const projectController = require("@server/controllers/project.js");
+const logController = require("@server/controllers/log.js");
+const followController = require("@server/controllers/FollowController.js");
+const openController = require("@server/controllers/open.js");
 //
-const { createAction } = require("../utils/commons.js");
+const { createAction } = require("@server/utils/commons.js");
 const Router = require("@koa/router");
 const router = new Router();
 //
