@@ -1,5 +1,5 @@
 const yapi = require("@server/yapi.js");
-const BaseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/base.js");
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 class interfaceCase extends BaseModel {

@@ -1,4 +1,4 @@
-const storageModel = require("@server/models/modules/storage.js");
+const storageModel = require("@server/models/storage.js");
 const yapi = require("@server/yapi.js");
 function storageCreator(id) {
 

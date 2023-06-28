@@ -40,7 +40,9 @@ class BaseModel {
     yapi.commons.log("Model Class need getSchema function", "error");
     return {}
   }
-
+  /**
+   *
+   * */
   getName() {
     yapi.commons.log("Model Class need name", "error");
     return ""

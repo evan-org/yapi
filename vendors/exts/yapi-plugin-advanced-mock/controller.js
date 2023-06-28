@@ -2,7 +2,7 @@ const baseController = require("@server/controllers/base.js");
 const yapi = require("@server/yapi.js");
 const advModel = require("./lib/advMockModel.js");
 const caseModel = require("./lib/caseModel.js");
-const userModel = require("@server/models/modules/user.js");
+const userModel = require("@server/models/user.js");
 const config = require("./index.js");
 
 class advMockController extends baseController {

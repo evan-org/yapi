@@ -4,10 +4,10 @@
 const baseController = require("@server/controllers/base.js");
 const statisMockModel = require("./lib/statisticsMockModel.js");
 //
-const groupModel = require("@server/models/modules/group.js");
-const projectModel = require("@server/models/modules/project.js");
-const interfaceModel = require("@server/models/modules/interface.js");
-const interfaceCaseModel = require("@server/models/modules/interfaceCase.js");
+const groupModel = require("@server/models/group.js");
+const projectModel = require("@server/models/project.js");
+const interfaceModel = require("@server/models/interface.js");
+const interfaceCaseModel = require("@server/models/interfaceCase.js");
 const yapi = require("@server/yapi.js");
 const config = require("./index.js");
 const commons = require("./lib/util.js");

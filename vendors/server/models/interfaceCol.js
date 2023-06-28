@@ -1,12 +1,9 @@
 const yapi = require("@server/yapi.js");
-const BaseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/base.js");
 
-/**
- * 接口分类
- */
-class interfaceCat extends BaseModel {
+class interfaceCol extends BaseModel {
   getName() {
-    return "interface_cat";
+    return "interface_col";
   }
 
   getSchema() {
@@ -17,7 +14,41 @@ class interfaceCat extends BaseModel {
       desc: String,
       add_time: Number,
       up_time: Number,
-      index: { type: Number, default: 0 }
+      index: { type: Number, default: 0 },
+      test_report: { type: String, default: "{}" },
+      checkHttpCodeIs200: {
+        type: Boolean,
+        default: false
+      },
+      checkResponseSchema: {
+        type: Boolean,
+        default: false
+      },
+      checkResponseField: {
+        name: {
+          type: String,
+          required: true,
+          default: "code"
+        },
+        value: {
+          type: String,
+          required: true,
+          default: "0"
+        },
+        enable: {
+          type: Boolean,
+          default: false
+        }
+      },
+      checkScript: {
+        content: {
+          type: String
+        },
+        enable: {
+          type: Boolean,
+          default: false
+        }
+      }
     };
   }
 
@@ -45,7 +76,7 @@ class interfaceCat extends BaseModel {
       .find({
         project_id: project_id
       })
-      .sort({ index: 1 })
+      .select("name uid project_id desc add_time up_time, index")
       .exec();
   }
 
@@ -71,7 +102,7 @@ class interfaceCat extends BaseModel {
     );
   }
 
-  upCatIndex(id, index) {
+  upColIndex(id, index) {
     return this.model.update(
       {
         _id: id
@@ -83,4 +114,4 @@ class interfaceCat extends BaseModel {
   }
 }
 
-module.exports = interfaceCat;
+module.exports = interfaceCol;

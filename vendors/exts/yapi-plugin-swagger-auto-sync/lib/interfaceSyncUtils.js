@@ -2,9 +2,9 @@ const yapi = require("@server/yapi.js")
 //
 const schedule = require("node-schedule");
 const openController = require("@server/controllers/open.js");
-const projectModel = require("@server/models/modules/project.js");
+const projectModel = require("@server/models/project.js");
 const syncModel = require("./syncModel.js");
-const tokenModel = require("@server/models/modules/token.js");
+const tokenModel = require("@server/models/token.js");
 
 const sha = require("sha.js");
 const md5 = require("md5");

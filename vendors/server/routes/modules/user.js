@@ -1,6 +1,6 @@
 import Router from "koa-router";
 import { Container } from "typedi";
-import { UserService } from "../../models/modules/user";
+import { UserService } from "../../models/user";
 
 export const userRouter = new Router();
 
