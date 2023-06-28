@@ -60,7 +60,7 @@ function handleHeaders(values) {
     }
   }
 }
-class interfaceController extends baseController {
+class InterfaceController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(InterfaceModel);
@@ -326,7 +326,7 @@ class interfaceController extends baseController {
     }
     let result = await this.Model.getByPath(params.project_id, params.path, params.method, "_id res_body");
     if (result.length > 0) {
-      result.forEach(async(item) => {
+      for (const item of result) {
         params.id = item._id;
         // console.log(this.schemaMap['up'])
         let validParams = Object.assign({}, params)
@@ -340,13 +340,14 @@ class interfaceController extends baseController {
               let old_res_body = yapi.commons.json_parse(item.res_body)
               data.params.res_body = JSON.stringify(mergeJsonSchema(old_res_body, new_res_body), null, 2);
             } catch (err) {
+              console.error(err);
             }
           }
           await this.up(data);
         } else {
-          return (ctx.body = yapi.commons.resReturn(null, 400, validResult.message));
+          (ctx.body = yapi.commons.resReturn(null, 400, validResult.message));
         }
-      });
+      }
     } else {
       let validResult = yapi.commons.validateParams(this.schemaMap["add"], params);
       if (validResult.valid) {
@@ -1146,4 +1147,4 @@ class interfaceController extends baseController {
     }
   }
 }
-module.exports = interfaceController;
+module.exports = InterfaceController;

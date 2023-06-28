@@ -15,7 +15,7 @@ const rolename = {
   dev: "开发者",
   guest: "访客"
 };
-class groupController extends baseController {
+class GroupController extends baseController {
   constructor(ctx) {
     super(ctx);
     const id = "number";
@@ -476,4 +476,4 @@ class groupController extends baseController {
     ctx.body = yapi.commons.resReturn(result);
   }
 }
-module.exports = groupController;
+module.exports = GroupController;

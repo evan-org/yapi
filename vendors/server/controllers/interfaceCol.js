@@ -7,7 +7,7 @@ const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const baseController = require("@server/controllers/BaseController.js");
 //
-class interfaceColController extends baseController {
+class InterfaceColController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.colModel = yapi.getInst(InterfaceColModel);
@@ -786,4 +786,4 @@ class interfaceColController extends baseController {
     return arr.map((item) => item[compare]);
   }
 }
-module.exports = interfaceColController;
+module.exports = InterfaceColController;

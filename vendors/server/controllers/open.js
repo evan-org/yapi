@@ -10,12 +10,7 @@ const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const FollowModel = require("@server/models/FollowModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
-const {
-  handleParams,
-  crossRequest,
-  handleCurrDomain,
-  checkNameIsExistInArray
-} = require("@common/postmanLib.js");
+const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.js");
 const { handleParamsValue, ArrayToObject } = require("@common/utils.js");
 const renderToHtml = require("../views/reportHtml/index.js");
 const HanldeImportData = require("@common/HandleImportData.js");
@@ -28,7 +23,7 @@ const createContex = require("@common/createContext.js")
  */
 const importDataModule = {};
 yapi.emitHook("import_data", importDataModule);
-class openController extends baseController {
+class OpenController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.ProjectModel = yapi.getInst(ProjectModel);
@@ -384,4 +379,4 @@ class openController extends baseController {
     return req_header;
   }
 }
-module.exports = openController;
+module.exports = OpenController;

@@ -19,7 +19,7 @@ const commons = require("@server/utils/commons.js");
 const { getToken } = require("../utils/token")
 const sha = require("sha.js");
 const axios = require("axios").default;
-class projectController extends baseController {
+class ProjectController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(ProjectModel);
@@ -1035,4 +1035,4 @@ class projectController extends baseController {
     }
   }
 }
-module.exports = projectController;
+module.exports = ProjectController;

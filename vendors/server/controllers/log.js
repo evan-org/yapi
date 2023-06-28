@@ -6,7 +6,7 @@ const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const LogModel = require("@server/models/LogModel.js");
 //
-class logController extends baseController {
+class LogController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(LogModel);
@@ -143,4 +143,4 @@ class logController extends baseController {
   }
 }
 
-module.exports = logController;
+module.exports = LogController;

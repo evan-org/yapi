@@ -143,11 +143,7 @@ class BaseController {
   }
   async checkRegister() {
     // console.log('config', yapi.WEBROOT_CONFIG);
-    if (yapi.WEBROOT_CONFIG.closeRegister) {
-      return false;
-    } else {
-      return true;
-    }
+    return !yapi.WEBROOT_CONFIG.closeRegister;
   }
   async checkLDAP() {
     // console.log('config', yapi.WEBROOT_CONFIG);
