@@ -8,7 +8,7 @@ const testController = require("@server/controllers/test.js");
 const projectController = require("@server/controllers/project.js");
 const logController = require("@server/controllers/LogController.js");
 const followController = require("@server/controllers/FollowController.js");
-const openController = require("@server/controllers/open.js");
+const openController = require("@server/controllers/OpenController.js");
 //
 const { createAction } = require("@server/utils/commons.js");
 const Router = require("@koa/router");
