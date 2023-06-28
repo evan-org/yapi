@@ -1,9 +1,10 @@
-const userModel = require("@server/models/UserModel.js");
 const yapi = require("@server/yapi.js");
-const baseController = require("./base.js");
 const common = require("../utils/commons.js");
 const ldap = require("../utils/ldap.js");
 
+const baseController = require("./base.js");
+//
+const userModel = require("@server/models/UserModel.js");
 const interfaceModel = require("@server/models/InterfaceModel.js");
 const groupModel = require("@server/models/GroupModel.js");
 const projectModel = require("@server/models/ProjectModel.js");
@@ -11,7 +12,7 @@ const avatarModel = require("@server/models/AvatarModel.js");
 
 const jwt = require("jsonwebtoken");
 
-class userController extends baseController {
+class UserController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(userModel);
@@ -728,4 +729,4 @@ class userController extends baseController {
   }
 }
 
-module.exports = userController;
+module.exports = UserController;

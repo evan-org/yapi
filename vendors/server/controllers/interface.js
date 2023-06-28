@@ -19,8 +19,8 @@ const mergeJsonSchema = require("@common/mergeJsonSchema.js");
 // const annotatedCss = require("jsondiffpatch/public/formatters-styles/annotated.css");
 // const htmlCss = require("jsondiffpatch/public/formatters-styles/html.css");
 function handleHeaders(values) {
-  let isfile = false,
-    isHaveContentType = false;
+  let isfile = false;
+  let isHaveContentType = false;
   if (values.req_body_type === "form") {
     values.req_body_form.forEach((item) => {
       if (item.type === "file") {

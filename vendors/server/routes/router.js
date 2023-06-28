@@ -1,4 +1,4 @@
-const koaRouter = require("koa-router");
+const Router = require("@koa/router");
 const yapi = require("@server/yapi.js");
 // controllers
 const interfaceController = require("../controllers/interface.js");
@@ -12,9 +12,9 @@ const followController = require("../controllers/follow.js");
 const openController = require("../controllers/open.js");
 //
 const { createAction } = require("../utils/commons.js");
-const router = koaRouter();
+const router = new Router();
 //
-let INTERFACE_CONFIG = {
+const INTERFACE_CONFIG = {
   interface: {
     prefix: "/interface/",
     controller: interfaceController
@@ -53,7 +53,7 @@ let INTERFACE_CONFIG = {
   }
 };
 //
-let routerConfig = {
+const routerConfig = {
   group: [
     {
       action: "getMyGroup",
@@ -578,6 +578,7 @@ let routerConfig = {
     }
   ]
 };
+//
 let pluginsRouterPath = [];
 function addPluginRouter(config) {
   // console.log("addPluginRouter", config);
@@ -597,14 +598,17 @@ function addPluginRouter(config) {
 //
 yapi.emitHookSync("add_router", addPluginRouter);
 //
-console.log("Plugin Route", router);
-//
-for (let ctrl in routerConfig) {
+for (const ctrl in routerConfig) {
   let actions = routerConfig[ctrl];
   actions.forEach((item) => {
-    let RouterController = INTERFACE_CONFIG[ctrl].controller;
-    let routerPath = INTERFACE_CONFIG[ctrl].prefix + item.path;
-    createAction(router, "/api", RouterController, item.action, routerPath, item.method);
+    const RouterController = INTERFACE_CONFIG[ctrl].controller;
+    const path = INTERFACE_CONFIG[ctrl].prefix + item.path;
+    createAction(router, "/api", RouterController, item.action, path, item.method, false);
   });
 }
+
+const indexRoute = require("./index.js");
+
+console.log(indexRoute);
+//
 module.exports = router;

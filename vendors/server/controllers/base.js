@@ -1,13 +1,24 @@
 const yapi = require("@server/yapi.js");
+//
 const projectModel = require("@server/models/ProjectModel.js");
 const userModel = require("@server/models/UserModel.js");
 const interfaceModel = require("@server/models/InterfaceModel.js");
 const groupModel = require("@server/models/GroupModel.js");
 const tokenModel = require("@server/models/TokenModel.js");
+//
 const _ = require("underscore");
 const jwt = require("jsonwebtoken");
-const {parseToken} = require("../utils/token.js");
-
+const { parseToken } = require("../utils/token.js");
+// 不需要登录校验的API
+const ignoreRouter = [
+  "/api/user/login_by_token",
+  "/api/user/login",
+  "/api/user/reg",
+  "/api/user/status",
+  "/api/user/logout",
+  "/api/user/avatar",
+  "/api/user/login_by_ldap"
+];
 class baseController {
   constructor(ctx) {
     this.ctx = ctx;
@@ -17,27 +28,18 @@ class baseController {
       member: "网站会员"
     };
   }
-
   async init(ctx) {
     this.$user = null;
     this.tokenModel = yapi.getInst(tokenModel);
     this.projectModel = yapi.getInst(projectModel);
-    let ignoreRouter = [
-      "/api/user/login_by_token",
-      "/api/user/login",
-      "/api/user/reg",
-      "/api/user/status",
-      "/api/user/logout",
-      "/api/user/avatar",
-      "/api/user/login_by_ldap"
-    ];
+    //
     if (ignoreRouter.indexOf(ctx.path) > -1) {
       this.$auth = true;
     } else {
       await this.checkLogin(ctx);
     }
-
-    let openApiRouter = [
+    // openAPI 不需要任何权限
+    const openApiRouter = [
       "/api/open/run_auto_test",
       "/api/open/import_data",
       "/api/interface/add",
@@ -54,36 +56,30 @@ class baseController {
       "/api/project/up",
       "/api/plugin/exportSwagger"
     ];
-
+    //
     let params = Object.assign({}, ctx.query, ctx.request.body);
     let token = params.token;
-
     // 如果前缀是 /api/open，执行 parse token 逻辑
     if (token && typeof token === "string" && (openApiRouter.indexOf(ctx.path) > -1 || ctx.path.indexOf("/api/open/") === 0)) {
-
       let tokens = parseToken(token)
-
       const oldTokenUid = "999999"
-
       let tokenUid = oldTokenUid;
-
       if (!tokens) {
         let checkId = await this.getProjectIdByToken(token);
-        if (!checkId) {return;}
+        if (!checkId) {
+          return;
+        }
       } else {
         token = tokens.projectToken;
         tokenUid = tokens.uid;
       }
-
       // if (this.$auth) {
       //   ctx.params.project_id = await this.getProjectIdByToken(token);
-
       //   if (!ctx.params.project_id) {
       //     return (this.$tokenAuth = false);
       //   }
       //   return (this.$tokenAuth = true);
       // }
-
       let checkId = await this.getProjectIdByToken(token);
       if (!checkId) {
         ctx.body = yapi.commons.resReturn(null, 42014, "token 无效");
@@ -96,33 +92,25 @@ class baseController {
         this.$uid = tokenUid;
         let result;
         if (tokenUid === oldTokenUid) {
-          result = {
-            _id: tokenUid,
-            role: "member",
-            username: "system"
-          }
+          result = { _id: tokenUid, role: "member", username: "system" }
         } else {
           let userInst = yapi.getInst(userModel); // 创建user实体
           result = await userInst.findById(tokenUid);
         }
-
         this.$user = result;
         this.$auth = true;
       }
     }
   }
-
   async getProjectIdByToken(token) {
     let projectId = await this.tokenModel.findId(token);
     if (projectId) {
       return projectId.toObject().project_id;
     }
   }
-
   getUid() {
     return parseInt(this.$uid, 10);
   }
-
   async checkLogin(ctx) {
     let token = ctx.cookies.get("_yapi_token");
     let uid = ctx.cookies.get("_yapi_uid");
@@ -135,28 +123,24 @@ class baseController {
       if (!result) {
         return false;
       }
-
       let decoded;
       try {
         decoded = jwt.verify(token, result.passsalt);
       } catch (err) {
         return false;
       }
-
       if (decoded.uid == uid) {
         this.$uid = uid;
         this.$auth = true;
         this.$user = result;
         return true;
       }
-
       return false;
     } catch (e) {
       yapi.commons.log(e, "error");
       return false;
     }
   }
-
   async checkRegister() {
     // console.log('config', yapi.WEBROOT_CONFIG);
     if (yapi.WEBROOT_CONFIG.closeRegister) {
@@ -165,7 +149,6 @@ class baseController {
       return true;
     }
   }
-
   async checkLDAP() {
     // console.log('config', yapi.WEBROOT_CONFIG);
     if (!yapi.WEBROOT_CONFIG.ldapLogin) {
@@ -196,24 +179,19 @@ class baseController {
     } else {
       body = yapi.commons.resReturn(null, 40011, "请登录...");
     }
-
     body.ladp = await this.checkLDAP();
     body.canRegister = await this.checkRegister();
     ctx.body = body;
   }
-
   getRole() {
     return this.$user.role;
   }
-
   getUsername() {
     return this.$user.username;
   }
-
   getEmail() {
     return this.$user.email;
   }
-
   async getProjectRole(id, type) {
     let result = {};
     try {
@@ -231,7 +209,6 @@ class baseController {
         type = "project";
         id = interfaceData.project_id;
       }
-
       if (type === "project") {
         let projectInst = yapi.getInst(projectModel);
         let projectData = await projectInst.get(id);
@@ -244,7 +221,6 @@ class baseController {
             return true;
           }
         });
-
         if (memberData && memberData.role) {
           if (memberData.role === "owner") {
             return "owner";
@@ -257,7 +233,6 @@ class baseController {
         type = "group";
         id = projectData.group_id;
       }
-
       if (type === "group") {
         let groupInst = yapi.getInst(groupModel);
         let groupData = await groupInst.get(id);
@@ -265,7 +240,6 @@ class baseController {
         if (groupData.uid === this.getUid()) {
           return "owner";
         }
-
         let groupMemberData = _.find(groupData.members, (m) => {
           if (m.uid === this.getUid()) {
             return true;
@@ -281,7 +255,6 @@ class baseController {
           }
         }
       }
-
       return "member";
     } catch (e) {
       yapi.commons.log(e, "error");
@@ -296,7 +269,6 @@ class baseController {
    */
   async checkAuth(id, type, action) {
     let role = await this.getProjectRole(id, type);
-
     if (action === "danger") {
       if (role === "admin" || role === "owner") {
         return true;
@@ -313,5 +285,4 @@ class baseController {
     return false;
   }
 }
-
 module.exports = baseController;

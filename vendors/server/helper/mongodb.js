@@ -3,12 +3,7 @@ const yapi = require("@server/yapi.js");
 const autoIncrement = require("./mongooseAutoIncrement.js");
 const config = yapi.WEBROOT_CONFIG;
 //
-mongoose.Promise = global.Promise
-// mongoose.set("debug", false);
 mongoose.set("strictQuery", true);
-// mongoose.set("useNewUrlParser", true);
-// mongoose.set("useFindAndModify", false);
-// mongoose.set("useCreateIndex", true);
 //
 function useModel(model, schema) {
   if (!(schema instanceof mongoose.Schema)) {

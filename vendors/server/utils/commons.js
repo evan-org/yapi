@@ -411,11 +411,14 @@ exports.saveLog = (logData) => {
  */
 // eslint-disable-next-line max-params
 exports.createAction = (router, baseurl, RouterController, action, path, method, ws) => {
+  console.log("exports.createAction ==> ", router, baseurl, RouterController, action, path, method, ws);
+  console.log("exports.createAction ==> 1", router[method]);
   router[method](baseurl + path, async(ctx) => {
-    let inst = new RouterController(ctx);
+    const inst = new RouterController(ctx);
     try {
       await inst.init(ctx);
       ctx.params = Object.assign({}, ctx.request.query, ctx.request.body, ctx.params);
+      //
       if (inst.schemaMap && typeof inst.schemaMap === "object" && inst.schemaMap[action]) {
         let validResult = yapi.commons.validateParams(inst.schemaMap[action], ctx.params);
         if (!validResult.valid) {
