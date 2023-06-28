@@ -1,10 +1,11 @@
+const yapi = require("@server/yapi.js");
+//
 const baseController = require("@server/controllers/base.js");
+// model
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
-const yapi = require("@server/yapi.js");
-
-
+//
 class exportSwaggerController extends baseController {
   constructor(ctx) {
     super(ctx);
@@ -12,12 +13,10 @@ class exportSwaggerController extends baseController {
     this.interModel = yapi.getInst(InterfaceModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
-
   /*
        handleListClass,handleExistId is same as the exportController(yapi-plugin-export-data).
        No DRY,but i have no idea to optimize it.
     */
-
   async handleListClass(pid, status) {
     let result = await this.catModel.list(pid),
       newResult = [];
@@ -30,13 +29,13 @@ class exportSwaggerController extends baseController {
         newResult.push(item);
       }
     }
-
     return newResult;
   }
-
   handleExistId(data) {
     function delArrId(arr, fn) {
-      if (!Array.isArray(arr)) {return;}
+      if (!Array.isArray(arr)) {
+        return;
+      }
       arr.forEach((item) => {
         delete item._id;
         delete item.__v;
@@ -44,11 +43,11 @@ class exportSwaggerController extends baseController {
         delete item.edit_uid;
         delete item.catid;
         delete item.project_id;
-
-        if (typeof fn === "function") {fn(item);}
+        if (typeof fn === "function") {
+          fn(item);
+        }
       });
     }
-
     delArrId(data, function(item) {
       delArrId(item.list, function(api) {
         delArrId(api.req_body_form);
@@ -60,15 +59,12 @@ class exportSwaggerController extends baseController {
         }
       });
     });
-
     return data;
   }
-
   async exportData(ctx) {
     let pid = ctx.request.query.pid;
     let type = ctx.request.query.type;
     let status = ctx.request.query.status;
-
     if (!pid) {
       ctx.body = yapi.commons.resReturn(null, 200, "pid 不为空");
     }
@@ -78,18 +74,15 @@ class exportSwaggerController extends baseController {
       curProject = await this.ProjectModel.get(pid);
       ctx.set("Content-Type", "application/octet-stream");
       const list = await this.handleListClass(pid, status);
-
       switch (type) {
-        case "OpenAPIV2":
-        { // in this time, only implemented OpenAPI V2.0
+        case "OpenAPIV2": { // in this time, only implemented OpenAPI V2.0
           let data = this.handleExistId(list);
           let model = await convertToSwaggerV2Model(data);
           tp = JSON.stringify(model, null, 2);
           ctx.set("Content-Disposition", "attachment; filename=swaggerApi.json");
           return (ctx.body = tp);
         }
-        default:
-        {
+        default: {
           ctx.body = yapi.commons.resReturn(null, 400, "type 无效参数")
         }
       }
@@ -97,7 +90,6 @@ class exportSwaggerController extends baseController {
       yapi.commons.log(error, "error");
       ctx.body = yapi.commons.resReturn(null, 502, "下载出错");
     }
-
     // Convert to SwaggerV2.0 (OpenAPI 2.0)
     async function convertToSwaggerV2Model(list) {
       const swaggerObj = {
@@ -192,8 +184,7 @@ class exportSwaggerController extends baseController {
                   }
                   switch (api.req_body_type) // Body parameters
                   {
-                    case "form":
-                    {
+                    case "form": {
                       for (let p of api.req_body_form) {
                         paramArray.push({
                           name: p.name,
@@ -205,8 +196,7 @@ class exportSwaggerController extends baseController {
                       }
                       break;
                     }
-                    case "json":
-                    {
+                    case "json": {
                       if (api.req_body_other) {
                         let jsonParam = JSON.parse(api.req_body_other);
                         if (jsonParam) {
@@ -220,8 +210,7 @@ class exportSwaggerController extends baseController {
                       }
                       break;
                     }
-                    case "file":
-                    {
+                    case "file": {
                       paramArray.push({
                         name: "upfile",
                         in: "formData", // use formData
@@ -230,8 +219,7 @@ class exportSwaggerController extends baseController {
                       });
                       break;
                     }
-                    case "raw":
-                    {
+                    case "raw": {
                       paramArray.push({
                         name: "raw",
                         in: "body",
@@ -282,5 +270,4 @@ class exportSwaggerController extends baseController {
     }
   }
 }
-
 module.exports = exportSwaggerController;

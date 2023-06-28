@@ -1,11 +1,12 @@
-const fs = require("fs-extra");
 const yapi = require("@server/yapi.js");
-const commons = require("../../server/utils/commons");
+//
+const commons = require("@server/utils/commons.js");
 const dbModule = require("@server/helper/mongodb.js");
-const UserModel = require("@server/models/UserModel.js");
+//
 const mongoose = require("mongoose");
 yapi.commons = commons;
 yapi.connect = dbModule.connect();
+//
 const convert2Decimal = (num) => (num > 9 ? num : `0${num}`);
 const formatYMD = (val, joinStr = "-") => {
   let date = val;

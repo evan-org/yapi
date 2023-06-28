@@ -1,5 +1,6 @@
 const fs = require("fs-extra");
 const path = require("path");
+const yapi = require("@server/yapi.js");
 //
 const baseController = require("./base.js");
 //
@@ -13,8 +14,7 @@ const ProjectModel = require("@server/models/ProjectModel.js");
 //
 const _ = require("underscore");
 const url = require("url");
-
-const yapi = require("@server/yapi.js");
+//
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
 const showDiffMsg = require("@common/diff-view.js");

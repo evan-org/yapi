@@ -1,6 +1,7 @@
 const yapi = require("@server/yapi.js");
 //
 const BaseModel = require("@server/models/BaseModel.js");
+//
 class syncModel extends BaseModel {
   constructor() {
     super();

@@ -1,4 +1,4 @@
-const yapi = require("../yapi")
+const yapi = require("@server/yapi.js");
 const crypto = require("crypto");
 /*
  下面是使用加密算法

@@ -9,6 +9,7 @@ const _ = require("underscore");
 const lib = require("@common/lib.js");
 const Mock = require("mockjs");
 const mockExtra = require("@common/mock-extra.js");
+//
 function arrToObj(arr) {
   let obj = { "Set-Cookie": [] };
   arr.forEach((item) => {
@@ -20,7 +21,8 @@ function arrToObj(arr) {
   });
   return obj;
 }
-module.exports = function() {;
+module.exports = function() {
+  ;
   //
   yapi.connect.then(() => {
     let Col = mongoose.connection.db.collection("adv_mock");

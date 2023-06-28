@@ -2,6 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const mongoose = require("mongoose");
 const controller = require("./controller");
+//
 module.exports = function() {
   yapi.connect.then(() => {
     let Col = mongoose.connection.db.collection("wiki");

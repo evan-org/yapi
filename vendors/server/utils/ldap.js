@@ -1,6 +1,7 @@
-const ldap = require("ldapjs");
 const yapi = require("@server/yapi.js");
-const util = require("util");
+//
+const ldap = require("ldapjs");
+//
 exports.ldapQuery = (username, password) =>
   // const deferred = Q.defer();
   new Promise((resolve, reject) => {

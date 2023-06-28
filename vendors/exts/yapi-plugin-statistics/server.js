@@ -2,11 +2,14 @@
  * Created by gxl.gao on 2017/10/24.
  */
 const yapi = require("@server/yapi.js");
+//
 const mongoose = require("mongoose");
 //
 const controller = require("./controller.js");
 const statisModel = require("./lib/statisticsMockModel.js");
+//
 const commons = require("./lib/util.js");
+//
 module.exports = function() {
   yapi.connect.then(function() {
     // console.log("yapi-plugin-statistics", db);

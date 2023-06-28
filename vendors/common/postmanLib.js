@@ -1,3 +1,5 @@
+const yapi = require("@server/yapi.js");
+//
 const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("./utils");
 const constants = require("../client/utils/variable.js");
 const _ = require("underscore");
@@ -302,7 +304,6 @@ async function crossRequest(defaultOptions, preScript, afterScript, commonContex
 
   let scriptEnable = false;
   try {
-    const yapi = require("../server/yapi.js");
     scriptEnable = yapi.WEBROOT_CONFIG.scriptEnable === true;
   } catch (err) {}
 

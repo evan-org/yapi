@@ -1,4 +1,3 @@
-const Router = require("@koa/router");
 const yapi = require("@server/yapi.js");
 // controllers
 const interfaceController = require("../controllers/interface.js");
@@ -12,6 +11,7 @@ const followController = require("../controllers/follow.js");
 const openController = require("../controllers/open.js");
 //
 const { createAction } = require("../utils/commons.js");
+const Router = require("@koa/router");
 const router = new Router();
 //
 const INTERFACE_CONFIG = {

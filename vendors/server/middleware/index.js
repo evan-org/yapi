@@ -1,4 +1,4 @@
-const yapi = require("@server/yapi");
+const yapi = require("@server/yapi.js");
 //
 const mockServer = require("./modules/mockServer.js");
 const websocket = require("./modules/websocket.js");
