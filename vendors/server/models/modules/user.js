@@ -1,6 +1,9 @@
 const BaseModel = require("@server/models/modules/base.js");
 
 class userModel extends BaseModel {
+  constructor() {
+    super();
+  }
   getName() {
     return "user";
   }
@@ -29,6 +32,7 @@ class userModel extends BaseModel {
   }
 
   save(data) {
+    // eslint-disable-next-line new-cap
     let user = new this.model(data);
     return user.save();
   }
