@@ -2,10 +2,10 @@ const yapi = require("@server/yapi.js");
 // controllers
 const interfaceController = require("@server/controllers/InterfaceController.js");
 const groupController = require("@server/controllers/GroupController.js");
-const userController = require("@server/controllers/user.js");
+const userController = require("@server/controllers/UserController.js");
 const interfaceColController = require("@server/controllers/InterfaceColController.js");
-const testController = require("@server/controllers/test.js");
-const projectController = require("@server/controllers/project.js");
+const testController = require("@server/controllers/TestController.js");
+const projectController = require("@server/controllers/ProjectController.js");
 const logController = require("@server/controllers/LogController.js");
 const followController = require("@server/controllers/FollowController.js");
 const openController = require("@server/controllers/OpenController.js");
