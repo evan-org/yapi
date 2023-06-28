@@ -1,4 +1,4 @@
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const yapi = require("@server/yapi.js");
 const _ = require("underscore");
 const baseController = require("./base.js");
@@ -9,7 +9,7 @@ const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const groupModel = require("@server/models/GroupModel.js");
 const commons = require("@server/utils/commons.js");
 const userModel = require("@server/models/UserModel.js");
-const logModel = require("@server/models/LogModel.js");
+// const logModel = require("@server/models/LogModel.js");
 const followModel = require("@server/models/FollowModel.js");
 const tokenModel = require("@server/models/TokenModel.js");
 const { getToken } = require("../utils/token")
@@ -18,7 +18,7 @@ const axios = require("axios").default;
 class projectController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(projectModel);
+    this.Model = yapi.getInst(ProjectModel);
     this.groupModel = yapi.getInst(groupModel);
     // this.logModel = yapi.getInst(logModel);
     this.followModel = yapi.getInst(followModel);
@@ -589,7 +589,7 @@ class projectController extends baseController {
    */
   async changeMemberRole(ctx) {
     let params = ctx.request.body;
-    let projectInst = yapi.getInst(projectModel);
+    let projectInst = yapi.getInst(ProjectModel);
     let check = await projectInst.checkMemberRepeat(params.id, params.member_uid);
     if (check === 0) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目成员不存在"));
@@ -636,7 +636,7 @@ class projectController extends baseController {
   async changeMemberEmailNotice(ctx) {
     try {
       let params = ctx.request.body;
-      let projectInst = yapi.getInst(projectModel);
+      let projectInst = yapi.getInst(ProjectModel);
       let check = await projectInst.checkMemberRepeat(params.id, params.member_uid);
       if (check === 0) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "项目成员不存在"));

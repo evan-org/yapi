@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js")
 //
 const schedule = require("node-schedule");
 const openController = require("@server/controllers/open.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const syncModel = require("./syncModel.js");
 const tokenModel = require("@server/models/TokenModel.js");
 
@@ -17,7 +17,7 @@ class syncUtils {
     this.openController = yapi.getInst(openController);
     this.syncModel = yapi.getInst(syncModel);
     this.tokenModel = yapi.getInst(tokenModel)
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
     this.init()
   }
   // 初始化定时任务
@@ -60,7 +60,7 @@ class syncUtils {
     yapi.commons.log("定时器触发, syncJsonUrl:" + swaggerUrl + ",合并模式:" + syncMode);
     let oldPorjectData;
     try {
-      oldPorjectData = await this.projectModel.get(projectId);
+      oldPorjectData = await this.ProjectModel.get(projectId);
     } catch (e) {
       yapi.commons.log("获取项目:" + projectId + "失败");
       this.deleteSyncJob(projectId);

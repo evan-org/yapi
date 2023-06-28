@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/base.js");
 const wikiModel = require("./lib/wikiModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const userModel = require("@server/models/UserModel.js");
 //
 const jsondiffpatch = require("jsondiffpatch");
@@ -16,7 +16,7 @@ class wikiController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(wikiModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
   }
 
   /**
@@ -117,7 +117,7 @@ class wikiController extends baseController {
           path.resolve(yapi.WEBROOT, "node_modules/jsondiffpatch/dist/formatters-styles/html.css"),
           "utf8"
         );
-        let project = await this.projectModel.getBaseInfo(params.project_id);
+        let project = await this.ProjectModel.getBaseInfo(params.project_id);
 
         yapi.commons.sendNotice(params.project_id, {
           title: `${username} 更新了wiki说明`,

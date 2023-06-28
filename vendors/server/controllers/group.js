@@ -1,7 +1,7 @@
 const groupModel = require("@server/models/GroupModel.js");
 const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const userModel = require("@server/models/UserModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
@@ -355,7 +355,7 @@ class groupController extends baseController {
    */
   async list(ctx) {
     let groupInst = yapi.getInst(groupModel);
-    let projectInst = yapi.getInst(projectModel);
+    let projectInst = yapi.getInst(ProjectModel);
     let privateGroup = await groupInst.getByPrivateUid(this.getUid());
     let newResult = [];
     if (!privateGroup) {
@@ -423,7 +423,7 @@ class groupController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 401, "没有权限"));
     }
     let groupInst = yapi.getInst(groupModel);
-    let projectInst = yapi.getInst(projectModel);
+    let projectInst = yapi.getInst(ProjectModel);
     let interfaceInst = yapi.getInst(InterfaceModel);
     let interfaceColInst = yapi.getInst(interfaceColModel);
     let interfaceCaseInst = yapi.getInst(interfaceCaseModel);

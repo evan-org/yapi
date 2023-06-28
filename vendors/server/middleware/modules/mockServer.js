@@ -1,5 +1,5 @@
 const yapi = require("@server/yapi.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const mockExtra = require("@common/mock-extra.js");
 const { schemaValidator } = require("@common/utils.js");
@@ -142,7 +142,7 @@ module.exports = async(ctx, next) => {
   if (!projectId) {
     return (ctx.body = yapi.commons.resReturn(null, 400, "projectId不能为空"));
   }
-  let projectInst = yapi.getInst(projectModel),
+  let projectInst = yapi.getInst(ProjectModel),
     project;
   try {
     project = await projectInst.get(projectId);

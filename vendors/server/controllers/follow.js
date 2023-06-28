@@ -1,13 +1,13 @@
 const yapi = require("@server/yapi.js");
 const baseController = require("./base.js");
 const followModel = require("@server/models/FollowModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 
 class followController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(followModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
   }
 
   /**
@@ -105,7 +105,7 @@ class followController extends baseController {
     }
 
     try {
-      let project = await this.projectModel.get(params.projectid);
+      let project = await this.ProjectModel.get(params.projectid);
       let data = {
         uid: uid,
         projectid: params.projectid,

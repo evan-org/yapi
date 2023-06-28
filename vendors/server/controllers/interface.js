@@ -11,7 +11,7 @@ const url = require("url");
 const baseController = require("./base.js");
 const yapi = require("@server/yapi.js");
 const userModel = require("@server/models/UserModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
 const showDiffMsg = require("@common/diff-view.js");
@@ -62,7 +62,7 @@ class interfaceController extends baseController {
     super(ctx);
     this.Model = yapi.getInst(InterfaceModel);
     this.catModel = yapi.getInst(interfaceCatModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
     this.caseModel = yapi.getInst(interfaceCaseModel);
     this.followModel = yapi.getInst(followModel);
     this.userModel = yapi.getInst(userModel);
@@ -250,9 +250,9 @@ class interfaceController extends baseController {
     if (this.getRole() !== "admin" && uid !== 999999) {
       let userdata = await yapi.commons.getUserdata(uid, "dev");
       // 检查一下是否有这个人
-      let check = await this.projectModel.checkMemberRepeat(params.project_id, uid);
+      let check = await this.ProjectModel.checkMemberRepeat(params.project_id, uid);
       if (check === 0 && userdata) {
-        await this.projectModel.addMember(params.project_id, [userdata]);
+        await this.ProjectModel.addMember(params.project_id, [userdata]);
       }
     }
     let result = await this.Model.save(data);
@@ -271,7 +271,7 @@ class interfaceController extends baseController {
         username: username,
         typeid: params.project_id
       });
-      this.projectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
+      this.ProjectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
     });
     await this.autoAddTag(params);
     ctx.body = yapi.commons.resReturn(result);
@@ -361,7 +361,7 @@ class interfaceController extends baseController {
     // 检查是否提交了目前不存在的tag
     let tags = params.tag;
     if (tags && Array.isArray(tags) && tags.length > 0) {
-      let projectData = await this.projectModel.get(params.project_id);
+      let projectData = await this.ProjectModel.get(params.project_id);
       let tagsInProject = projectData.tag;
       let needUpdate = false;
       if (tagsInProject && Array.isArray(tagsInProject) && tagsInProject.length > 0) {
@@ -389,7 +389,7 @@ class interfaceController extends baseController {
           tag: tagsInProject,
           up_time: yapi.commons.time()
         };
-        await this.projectModel.up(params.project_id, data);
+        await this.ProjectModel.up(params.project_id, data);
       }
     }
   }
@@ -421,7 +421,7 @@ class interfaceController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 490, "不存在的"));
       }
       let userinfo = await this.userModel.findById(result.uid);
-      let project = await this.projectModel.getBaseInfo(result.project_id);
+      let project = await this.ProjectModel.getBaseInfo(result.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
@@ -455,7 +455,7 @@ class interfaceController extends baseController {
       limit = ctx.request.query.limit || 10;
     let status = ctx.request.query.status,
       tag = ctx.request.query.tag;
-    let project = await this.projectModel.getBaseInfo(project_id);
+    let project = await this.ProjectModel.getBaseInfo(project_id);
     if (!project) {
       return (ctx.body = yapi.commons.resReturn(null, 407, "不存在的项目"));
     }
@@ -521,7 +521,7 @@ class interfaceController extends baseController {
     }
     try {
       let catdata = await this.catModel.get(catid);
-      let project = await this.projectModel.getBaseInfo(catdata.project_id);
+      let project = await this.ProjectModel.getBaseInfo(catdata.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
@@ -558,7 +558,7 @@ class interfaceController extends baseController {
     if (!project_id) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
     }
-    let project = await this.projectModel.getBaseInfo(project_id);
+    let project = await this.ProjectModel.getBaseInfo(project_id);
     if (!project) {
       return (ctx.body = yapi.commons.resReturn(null, 406, "不存在的项目"));
     }
@@ -713,7 +713,7 @@ class interfaceController extends baseController {
         data: logData
       });
     });
-    this.projectModel.up(interfaceData.project_id, { up_time: new Date().getTime() }).then();
+    this.ProjectModel.up(interfaceData.project_id, { up_time: new Date().getTime() }).then();
     if (params.switch_notice === true) {
       let diffView = showDiffMsg(jsondiffpatch, formattersHtml, logData);
       let annotatedCss = fs.readFileSync(
@@ -727,7 +727,7 @@ class interfaceController extends baseController {
         path.resolve(yapi.WEBROOT, "node_modules/jsondiffpatch/dist/formatters-styles/html.css"),
         "utf8"
       );
-      let project = await this.projectModel.getBaseInfo(interfaceData.project_id);
+      let project = await this.ProjectModel.getBaseInfo(interfaceData.project_id);
       let interfaceUrl = `${ctx.request.origin}/project/${
         interfaceData.project_id
       }/interface/api/${id}`;
@@ -805,7 +805,7 @@ class interfaceController extends baseController {
           typeid: cate.project_id
         });
       });
-      this.projectModel.up(data.project_id, { up_time: new Date().getTime() }).then();
+      this.ProjectModel.up(data.project_id, { up_time: new Date().getTime() }).then();
       ctx.body = yapi.commons.resReturn(result);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
@@ -971,7 +971,7 @@ class interfaceController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
     }
     try {
-      let project = await this.projectModel.getBaseInfo(project_id);
+      let project = await this.ProjectModel.getBaseInfo(project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "edit")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
@@ -1009,7 +1009,7 @@ class interfaceController extends baseController {
       // 在每个分组（group）下查找对应project的id值
       let interfaces = [];
       for (let i = 0; i < groups.length; i++) {
-        let projects = await this.projectModel.list(groups[i]._id);
+        let projects = await this.ProjectModel.list(groups[i]._id);
         // 在每个项目（project）中查找interface下的custom_field_value
         for (let j = 0; j < projects.length; j++) {
           let data = {};
@@ -1115,7 +1115,7 @@ class interfaceController extends baseController {
     if (!project_id) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
     }
-    let project = await this.projectModel.getBaseInfo(project_id);
+    let project = await this.ProjectModel.getBaseInfo(project_id);
     if (!project) {
       return (ctx.body = yapi.commons.resReturn(null, 406, "不存在的项目"));
     }

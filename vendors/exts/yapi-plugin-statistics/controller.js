@@ -5,7 +5,7 @@ const baseController = require("@server/controllers/base.js");
 const statisMockModel = require("./lib/statisticsMockModel.js");
 //
 const groupModel = require("@server/models/GroupModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const yapi = require("@server/yapi.js");
@@ -18,7 +18,7 @@ class statisMockController extends baseController {
     super(ctx);
     this.Model = yapi.getInst(statisMockModel);
     this.groupModel = yapi.getInst(groupModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.interfaceCaseModel = yapi.getInst(interfaceCaseModel);
   }
@@ -33,7 +33,7 @@ class statisMockController extends baseController {
   async getStatisCount(ctx) {
     try {
       let groupCount = await this.groupModel.getGroupListCount();
-      let projectCount = await this.projectModel.getProjectListCount();
+      let projectCount = await this.ProjectModel.getProjectListCount();
       let interfaceCount = await this.InterfaceModel.getInterfaceListCount();
       let interfaceCaseCount = await this.interfaceCaseModel.getInterfaceCaseListCount();
       return (ctx.body = yapi.commons.resReturn({
@@ -132,8 +132,8 @@ class statisMockController extends baseController {
           project: 0
         };
         result.push(data);
-        let projectCount = await this.projectModel.listCount(groupId);
-        let projectData = await this.projectModel.list(groupId);
+        let projectCount = await this.ProjectModel.listCount(groupId);
+        let projectData = await this.ProjectModel.list(groupId);
         let interfaceCount = 0;
         for (let j = 0; j < projectData.length; j++) {
           let project = projectData[j];

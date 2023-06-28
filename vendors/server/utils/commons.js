@@ -11,7 +11,7 @@ const easyJsonScheme = require("easy-json-schema");
 const jsonSchemaFaker = require("json-schema-faker");
 //
 const logModel = require("@server/models/LogModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
@@ -476,7 +476,7 @@ exports.handleParamsValue = handleParamsValue;
 exports.getCaseList = async function getCaseList(id) {
   const caseInst = yapi.getInst(interfaceCaseModel);
   const colInst = yapi.getInst(interfaceColModel);
-  const projectInst = yapi.getInst(projectModel);
+  const projectInst = yapi.getInst(ProjectModel);
   const interfaceInst = yapi.getInst(InterfaceModel);
   let resultList = await caseInst.list(id, "all");
   let colData = await colInst.get(id);

@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const userModel = require("@server/models/UserModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const groupModel = require("@server/models/GroupModel.js");
@@ -31,7 +31,7 @@ class baseController {
   async init(ctx) {
     this.$user = null;
     this.tokenModel = yapi.getInst(tokenModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
     //
     if (ignoreRouter.indexOf(ctx.path) > -1) {
       this.$auth = true;
@@ -84,7 +84,7 @@ class baseController {
       if (!checkId) {
         ctx.body = yapi.commons.resReturn(null, 42014, "token 无效");
       }
-      let projectData = await this.projectModel.get(checkId);
+      let projectData = await this.ProjectModel.get(checkId);
       if (projectData) {
         ctx.query.pid = checkId; // 兼容：/api/plugin/export
         ctx.params.project_id = checkId;
@@ -210,7 +210,7 @@ class baseController {
         id = interfaceData.project_id;
       }
       if (type === "project") {
-        let projectInst = yapi.getInst(projectModel);
+        let projectInst = yapi.getInst(ProjectModel);
         let projectData = await projectInst.get(id);
         if (projectData.uid === this.getUid()) {
           // 建立项目的人

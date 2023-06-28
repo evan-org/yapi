@@ -1,4 +1,4 @@
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
@@ -28,7 +28,7 @@ yapi.emitHook("import_data", importDataModule);
 class openController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
     this.interfaceColModel = yapi.getInst(interfaceColModel);
     this.interfaceCaseModel = yapi.getInst(interfaceCaseModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
@@ -132,7 +132,7 @@ class openController extends baseController {
       menuList.push(menu);
     }
     let selectCatid = menuList[0]._id;
-    let projectData = await this.projectModel.get(project_id);
+    let projectData = await this.ProjectModel.get(project_id);
     let res = await importDataModule[type](content);
     let successMessage;
     let errorMessage = [];
@@ -195,7 +195,7 @@ class openController extends baseController {
     if (!colData) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "id值不存在"));
     }
-    let projectData = await this.projectModel.get(projectId);
+    let projectData = await this.ProjectModel.get(projectId);
     let caseList = await yapi.commons.getCaseList(id);
     if (caseList.errcode !== 0) {
       ctx.body = caseList;
@@ -203,7 +203,7 @@ class openController extends baseController {
     caseList = caseList.data;
     for (let i = 0, l = caseList.length; i < l; i++) {
       let item = caseList[i];
-      let projectEvn = await this.projectModel.getByEnv(item.project_id);
+      let projectEvn = await this.ProjectModel.getByEnv(item.project_id);
       item.id = item._id;
       let curEnvItem = _.find(curEnvList, (key) => key.project_id == item.project_id);
       item.case_env = curEnvItem ? curEnvItem.curEnv || item.case_env : item.case_env;

@@ -1,6 +1,6 @@
 const baseController = require("@server/controllers/base.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const yapi = require("@server/yapi.js");
 
@@ -10,7 +10,7 @@ class exportSwaggerController extends baseController {
     super(ctx);
     this.catModel = yapi.getInst(interfaceCatModel);
     this.interModel = yapi.getInst(InterfaceModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
   }
 
   /*
@@ -75,7 +75,7 @@ class exportSwaggerController extends baseController {
     let curProject;
     let tp = "";
     try {
-      curProject = await this.projectModel.get(pid);
+      curProject = await this.ProjectModel.get(pid);
       ctx.set("Content-Type", "application/octet-stream");
       const list = await this.handleListClass(pid, status);
 

@@ -1,7 +1,7 @@
 const interfaceColModel = require("@server/models/InterfaceColModel.js");
 const interfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 const baseController = require("./base.js");
 const yapi = require("@server/yapi.js");
 const _ = require("underscore");
@@ -11,7 +11,7 @@ class interfaceColController extends baseController {
     this.colModel = yapi.getInst(interfaceColModel);
     this.caseModel = yapi.getInst(interfaceCaseModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
   }
   /**
    * 获取所有接口集
@@ -26,7 +26,7 @@ class interfaceColController extends baseController {
   async list(ctx) {
     try {
       let id = ctx.query.project_id;
-      let project = await this.projectModel.getBaseInfo(id);
+      let project = await this.ProjectModel.getBaseInfo(id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
@@ -100,7 +100,7 @@ class interfaceColController extends baseController {
         username: username,
         typeid: params.project_id
       });
-      // this.projectModel.up(params.project_id,{up_time: new Date().getTime()}).then();
+      // this.ProjectModel.up(params.project_id,{up_time: new Date().getTime()}).then();
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
@@ -123,7 +123,7 @@ class interfaceColController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 407, "col_id不能为空"));
       }
       let colData = await this.colModel.get(id);
-      let project = await this.projectModel.getBaseInfo(colData.project_id);
+      let project = await this.ProjectModel.getBaseInfo(colData.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
@@ -151,7 +151,7 @@ class interfaceColController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 407, "col_id不能为空"));
       }
       let colData = await this.colModel.get(id);
-      let project = await this.projectModel.getBaseInfo(colData.project_id);
+      let project = await this.ProjectModel.getBaseInfo(colData.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
@@ -164,7 +164,7 @@ class interfaceColController extends baseController {
       // 遍历projectList 找到项目和env
       let projectEnvList = [];
       for (let i = 0; i < projectList.length; i++) {
-        let result = await this.projectModel.getBaseInfo(projectList[i], "name  env");
+        let result = await this.ProjectModel.getBaseInfo(projectList[i], "name  env");
         projectEnvList.push(result);
       }
       ctx.body = yapi.commons.resReturn(projectEnvList);
@@ -203,7 +203,7 @@ class interfaceColController extends baseController {
       if (resultList.length === 0) {
         return (ctx.body = yapi.commons.resReturn([]));
       }
-      let project = await this.projectModel.getBaseInfo(resultList[0].project_id);
+      let project = await this.ProjectModel.getBaseInfo(resultList[0].project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
@@ -319,7 +319,7 @@ class interfaceColController extends baseController {
           typeid: params.project_id
         });
       });
-      this.projectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
+      this.ProjectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
@@ -388,7 +388,7 @@ class interfaceColController extends baseController {
           });
         });
       }
-      this.projectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
+      this.ProjectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
       ctx.body = yapi.commons.resReturn("ok");
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
@@ -466,7 +466,7 @@ class interfaceColController extends baseController {
         let newCase = await this.caseModel.save(caseData);
         newCaseList.push(newCase._id);
       }
-      this.projectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
+      this.ProjectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
       ctx.body = yapi.commons.resReturn("ok");
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
@@ -529,7 +529,7 @@ class interfaceColController extends baseController {
           typeid: caseData.project_id
         });
       });
-      this.projectModel.up(caseData.project_id, { up_time: new Date().getTime() }).then();
+      this.ProjectModel.up(caseData.project_id, { up_time: new Date().getTime() }).then();
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
@@ -559,7 +559,7 @@ class interfaceColController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 400, "找不到对应的接口，请联系管理员"));
       }
       data = data.toObject();
-      let projectData = await this.projectModel.getBaseInfo(data.project_id);
+      let projectData = await this.ProjectModel.getBaseInfo(data.project_id);
       result.path = projectData.basepath + data.path;
       result.method = data.method;
       result.req_body_type = data.req_body_type;
@@ -762,7 +762,7 @@ class interfaceColController extends baseController {
           typeid: caseData.project_id
         });
       });
-      this.projectModel.up(caseData.project_id, { up_time: new Date().getTime() }).then();
+      this.ProjectModel.up(caseData.project_id, { up_time: new Date().getTime() }).then();
       return (ctx.body = yapi.commons.resReturn(result));
     } catch (e) {
       yapi.commons.resReturn(null, 400, e.message);

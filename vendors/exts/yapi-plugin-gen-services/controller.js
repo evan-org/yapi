@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/base.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
-const projectModel = require("@server/models/ProjectModel.js");
+const ProjectModel = require("@server/models/ProjectModel.js");
 // const wikiModel = require('../yapi-plugin-wiki/wikiModel.js');
 const interfaceCatModel = require("@server/models/InterfaceCatModel.js");
 //
@@ -18,7 +18,7 @@ class exportController extends baseController {
     super(ctx);
     this.catModel = yapi.getInst(interfaceCatModel);
     this.interModel = yapi.getInst(InterfaceModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
 
   }
 
@@ -86,7 +86,7 @@ class exportController extends baseController {
     let curProject, wikiData;
     let tp = "";
     try {
-      curProject = await this.projectModel.get(pid);
+      curProject = await this.ProjectModel.get(pid);
       const basepath = curProject.basepath;
       if (isWiki === "true") {
         const wikiModel = require("../yapi-plugin-wiki/lib/wikiModel.js");
