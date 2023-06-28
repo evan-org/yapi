@@ -1,8 +1,8 @@
 const yapi = require("@server/yapi.js");
-const baseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/modules/base.js");
 const mongoose = require("mongoose");
 
-class caseModel extends baseModel {
+class caseModel extends BaseModel {
   getName() {
     return "adv_mock_case";
   }

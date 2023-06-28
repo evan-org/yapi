@@ -2,8 +2,8 @@
  * Created by gxl.gao on 2017/10/24.
  */
 const yapi = require("@server/yapi.js");
-const baseModel = require("@server/models/modules/base.js");
-class StatisticsMockModel extends baseModel {
+const BaseModel = require("@server/models/modules/base.js");
+class StatisticsMockModel extends BaseModel {
   getName() {
     return "statis_mock";
   }

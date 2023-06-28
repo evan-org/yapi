@@ -61,7 +61,7 @@ listener //监听函数，可以是普通函数，也可以是 asyncFunction
 ### controller 和 model
 新增 controller 需要继承 baseController(controller/base.js)
 
-新增 model 需要继承 baseModel(model/base.js)
+新增 model 需要继承 BaseModel(model/base.js)
 
 ## client.js
 ### 绑定钩子(同后端 server.js )

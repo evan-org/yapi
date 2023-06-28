@@ -1,10 +1,10 @@
 const yapi = require("@server/yapi.js");
-const baseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/modules/base.js");
 
 /**
  * 接口分类
  */
-class interfaceCat extends baseModel {
+class interfaceCat extends BaseModel {
   getName() {
     return "interface_cat";
   }

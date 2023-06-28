@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
 //
-const baseModel = require("@server/models/modules/base.js");
-class syncModel extends baseModel {
+const BaseModel = require("@server/models/modules/base.js");
+class syncModel extends BaseModel {
   getName() {
     return "interface_auto_sync";
   }

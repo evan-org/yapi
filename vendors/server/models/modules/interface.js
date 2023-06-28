@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
-const baseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/modules/base.js");
 
-class interfaceModel extends baseModel {
+class interfaceModel extends BaseModel {
   getName() {
     return "interface";
   }

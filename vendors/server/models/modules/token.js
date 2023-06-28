@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
-const baseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/modules/base.js");
 
-class tokenModel extends baseModel {
+class tokenModel extends BaseModel {
   getName() {
     return "token";
   }

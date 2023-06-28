@@ -1,6 +1,6 @@
-const baseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/modules/base.js");
 //
-class wikiModel extends baseModel {
+class wikiModel extends BaseModel {
   getName() {
     return "wiki";
   }

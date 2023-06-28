@@ -1,6 +1,6 @@
-const baseModel = require("@server/models/modules/base.js");
+const BaseModel = require("@server/models/modules/base.js");
 
-class followModel extends baseModel {
+class followModel extends BaseModel {
   getName() {
     return "follow";
   }
