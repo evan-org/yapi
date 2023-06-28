@@ -21,7 +21,6 @@ class advMockModel extends BaseModel {
   }
 
   get(interface_id) {
-
     return this.model.findOne({
       interface_id: interface_id
     });
