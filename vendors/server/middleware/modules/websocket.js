@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
-const interfaceController = require("@server/controllers/interface.js");
+const interfaceController = require("@server/controllers/InterfaceController.js");
 //
 const Router = require("@koa/router");
 const router = new Router();
