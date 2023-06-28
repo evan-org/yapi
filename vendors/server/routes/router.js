@@ -13,6 +13,7 @@ const openController = require("../controllers/open.js");
 //
 const { createAction } = require("../utils/commons.js");
 const router = koaRouter();
+//
 let INTERFACE_CONFIG = {
   interface: {
     prefix: "/interface/",
@@ -51,6 +52,7 @@ let INTERFACE_CONFIG = {
     controller: openController
   }
 };
+//
 let routerConfig = {
   group: [
     {
@@ -594,6 +596,8 @@ function addPluginRouter(config) {
 }
 //
 yapi.emitHookSync("add_router", addPluginRouter);
+//
+console.log("Plugin Route", router);
 //
 for (let ctrl in routerConfig) {
   let actions = routerConfig[ctrl];

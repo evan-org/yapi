@@ -168,8 +168,7 @@ export function changeStudyTip() {
     type: CHANGE_STUDY_TIP
   };
 }
-export async function finishStudy(actionType = FINISH_STUDY) {
-  // createAction(FINISH_STUDY, axios.get("/api/user/up_study"))
+export async function finishStudy() {
   return {
     type: FINISH_STUDY,
     payload: await axios.get("/api/user/up_study")

@@ -77,6 +77,7 @@
     "koa": "^2.14.2",
     "koa-body": "^2.6.0",
     "koa-bodyparser": "^4.4.1",
+    "koa-combine-routers": "^4.0.2",
     "koa-json": "^2.0.2",
     "koa-jwt": "^4.0.4",
     "koa-logger": "^3.2.1",

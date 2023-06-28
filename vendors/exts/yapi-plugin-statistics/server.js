@@ -8,8 +8,8 @@ const controller = require("./controller.js");
 const statisModel = require("./lib/statisticsMockModel.js");
 const commons = require("./lib/util.js");
 module.exports = function() {
-  yapi.connect.then(function(db) {
-    console.log("yapi-plugin-statistics", db);
+  yapi.connect.then(function() {
+    // console.log("yapi-plugin-statistics", db);
     let Col = mongoose.connection.db.collection("statis_mock");
     Col.createIndex({
       interface_id: 1
