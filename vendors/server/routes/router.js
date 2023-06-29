@@ -593,9 +593,19 @@ function addPluginRouter(config) {
     throw new Error("Plugin Route path conflict, please try rename the path");
   }
   pluginsRouterPath.push(routerPath);
+  // let a = `/**
+  // *@controller ${config.controller.name}
+  // *@action ${config.action}
+  // *@method ${method}
+  // *@name ""
+  // **/
+  // router.${method}("/${config.path}", async(ctx) => {
+  //   ctx.body = "";
+  // });
+  // `
+  // console.log(a, config);
   createAction(router, "/api", config.controller, config.action, routerPath, method, false);
 }
-console.log("111", pluginsRouterPath);
 //
 yapi.emitHookSync("add_router", addPluginRouter);
 //

@@ -1,6 +1,6 @@
 const Router = require("@koa/router");
 const router = new Router({ prefix: "/interface" });
-//
+// controller: interfaceController
 /**
  *module interface
  *action add

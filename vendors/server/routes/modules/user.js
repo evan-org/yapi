@@ -1,6 +1,6 @@
 const Router = require("@koa/router");
 const router = new Router({ prefix: "/user" });
-//
+// controller: userController
 /**
  *module user
  *action login

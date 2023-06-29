@@ -2,16 +2,16 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/BaseController.js");
 //
-const advModel = require("./lib/advMockModel.js");
+const AdvModel = require("./lib/advMockModel.js");
 const caseModel = require("./lib/caseModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
 const config = require("./index.js");
 
-class advMockController extends baseController {
+class AdvMockController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(advModel);
+    this.Model = yapi.getInst(AdvModel);
     this.caseModel = yapi.getInst(caseModel);
     this.UserModel = yapi.getInst(UserModel);
   }
@@ -186,4 +186,4 @@ class advMockController extends baseController {
   }
 }
 
-module.exports = advMockController;
+module.exports = AdvMockController;

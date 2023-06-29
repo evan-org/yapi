@@ -6,7 +6,7 @@ const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 //
-class exportSwaggerController extends baseController {
+class ExportSwaggerController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.catModel = yapi.getInst(InterfaceCatModel);
@@ -14,7 +14,7 @@ class exportSwaggerController extends baseController {
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
   /*
-       handleListClass,handleExistId is same as the exportController(yapi-plugin-export-data).
+       handleListClass,handleExistId is same as the GenServicesController(yapi-plugin-export-data).
        No DRY,but i have no idea to optimize it.
     */
   async handleListClass(pid, status) {
@@ -270,4 +270,4 @@ class exportSwaggerController extends baseController {
     }
   }
 }
-module.exports = exportSwaggerController;
+module.exports = ExportSwaggerController;

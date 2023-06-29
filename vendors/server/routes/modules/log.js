@@ -1,5 +1,6 @@
 const Router = require("@koa/router");
 const router = new Router({ prefix: "/log" });
+// controller: logController
 /**
  *module log
  *action list

@@ -1,6 +1,30 @@
+const yapi = require("@server/yapi.js");
 const Router = require("@koa/router");
 const router = new Router({ prefix: "/col" });
+// controller: interfaceColController
+const InterfaceColController = require("@server/controllers/InterfaceColController.js");
 //
+async function ctxAction(ctx, action = "") {
+  // const action = "addCol";
+  if (!action) {
+    ctx.body = yapi.commons.resReturn(null, 40011, "服务器出错...");
+    return
+  }
+  try {
+    const inst = new InterfaceColController(ctx);
+    await inst.init(ctx);
+    ctx.params = Object.assign({}, ctx.request.query, ctx.request.body, ctx.params);
+    //
+    if (inst.$auth === true) {
+      await inst[action].call(inst, ctx);
+    } else {
+      ctx.body = yapi.commons.resReturn(null, 40011, "请登录...");
+    }
+  } catch (err) {
+    ctx.body = yapi.commons.resReturn(null, 40011, "服务器出错...");
+    yapi.commons.log(err, "error");
+  }
+}
 /**
  *module col
  *action addCol
@@ -8,7 +32,7 @@ const router = new Router({ prefix: "/col" });
  *@name ""
  **/
 router.post("/add_col", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "addCol");
 });
 /**
  *module col
@@ -17,7 +41,7 @@ router.post("/add_col", async(ctx) => {
  *@name ""
  **/
 router.post("/add_case_list", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "addCaseList");
 });
 /**
  *module col
@@ -26,7 +50,7 @@ router.post("/add_case_list", async(ctx) => {
  *@name ""
  **/
 router.post("/clone_case_list", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "cloneCaseList");
 });
 /**
  *module col
@@ -35,7 +59,7 @@ router.post("/clone_case_list", async(ctx) => {
  *@name ""
  **/
 router.get("/list", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "list");
 });
 /**
  *module col
@@ -44,7 +68,7 @@ router.get("/list", async(ctx) => {
  *@name ""
  **/
 router.get("/case_list", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "getCaseList");
 });
 /**
  *module col
@@ -53,7 +77,7 @@ router.get("/case_list", async(ctx) => {
  *@name ""
  **/
 router.get("/case_list_by_var_params", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "getCaseListByVariableParams");
 });
 /**
  *module col
@@ -62,7 +86,7 @@ router.get("/case_list_by_var_params", async(ctx) => {
  *@name ""
  **/
 router.post("/add_case", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "addCase");
 });
 /**
  *module col
@@ -71,7 +95,7 @@ router.post("/add_case", async(ctx) => {
  *@name ""
  **/
 router.post("/up_case", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "upCase");
 });
 /**
  *module col
@@ -80,7 +104,7 @@ router.post("/up_case", async(ctx) => {
  *@name ""
  **/
 router.get("/case", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "getCase");
 });
 /**
  *module col
@@ -89,7 +113,7 @@ router.get("/case", async(ctx) => {
  *@name ""
  **/
 router.post("/up_col", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "upCol");
 });
 /**
  *module col
@@ -98,7 +122,7 @@ router.post("/up_col", async(ctx) => {
  *@name ""
  **/
 router.post("/up_case_index", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "upCaseIndex");
 });
 /**
  *module col
@@ -107,7 +131,7 @@ router.post("/up_case_index", async(ctx) => {
  *@name ""
  **/
 router.post("/up_col_index", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "upColIndex");
 });
 /**
  *module col
@@ -116,7 +140,7 @@ router.post("/up_col_index", async(ctx) => {
  *@name ""
  **/
 router.get("/del_col", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "delCol");
 });
 /**
  *module col
@@ -125,7 +149,7 @@ router.get("/del_col", async(ctx) => {
  *@name ""
  **/
 router.get("/del_case", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "delCase");
 });
 /**
  *module col
@@ -134,7 +158,7 @@ router.get("/del_case", async(ctx) => {
  *@name ""
  **/
 router.post("/run_script", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "runCaseScript");
 });
 /**
  *module col
@@ -143,7 +167,7 @@ router.post("/run_script", async(ctx) => {
  *@name ""
  **/
 router.get("/case_env_list", async(ctx) => {
-  ctx.body = "";
+  await ctxAction(ctx, "getCaseEnvList");
 });
 //
 module.exports = router;

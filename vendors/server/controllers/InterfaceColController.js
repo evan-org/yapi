@@ -59,11 +59,9 @@ class InterfaceColController extends baseController {
    * @method POST
    * @category col
    * @foldnumber 10
-   * @param {Number} project_id
-   * @param {String} name
-   * @param {String} desc
    * @returns {Object}
    * @example
+   * @param ctx
    */
 
   async addCol(ctx) {
@@ -114,9 +112,9 @@ class InterfaceColController extends baseController {
    * @method GET
    * @category col
    * @foldnumber 10
-   * @param {String} col_id 接口集id
    * @returns {Object}
    * @example
+   * @param ctx
    */
   async getCaseList(ctx) {
     try {
@@ -142,9 +140,9 @@ class InterfaceColController extends baseController {
    * @method GET
    * @category col
    * @foldnumber 10
-   * @param {String} col_id 接口集id
    * @returns {Object}
    * @example
+   * @param ctx
    */
   async getCaseEnvList(ctx) {
     try {
@@ -190,9 +188,9 @@ class InterfaceColController extends baseController {
    * @method GET
    * @category col
    * @foldnumber 10
-   * @param {String} col_id 接口集id
    * @returns {Object}
    * @example
+   * @param ctx
    */
 
   async getCaseListByVariableParams(ctx) {
@@ -261,19 +259,9 @@ class InterfaceColController extends baseController {
    * @method POST
    * @category col
    * @foldnumber 10
-   * @param {String} casename
-   * @param {Number} col_id
-   * @param {Number} project_id
-   * @param {String} domain
-   * @param {String} path
-   * @param {String} method
-   * @param {Object} req_query
-   * @param {Object} req_headers
-   * @param {String} req_body_type
-   * @param {Array} req_body_form
-   * @param {String} req_body_other
    * @returns {Object}
    * @example
+   * @param ctx
    */
 
   async addCase(ctx) {
@@ -480,18 +468,9 @@ class InterfaceColController extends baseController {
    * @method POST
    * @category col
    * @foldnumber 10
-   * @param {number} id
-   * @param {String} casename
-   * @param {String} domain
-   * @param {String} path
-   * @param {String} method
-   * @param {Object} req_query
-   * @param {Object} req_headers
-   * @param {String} req_body_type
-   * @param {Array} req_body_form
-   * @param {String} req_body_other
    * @returns {Object}
    * @example
+   * @param ctx
    */
 
   async upCase(ctx) {
@@ -543,9 +522,10 @@ class InterfaceColController extends baseController {
    * @method GET
    * @category col
    * @foldnumber 10
-   * @param {String} caseid
+   * @query {String} caseid
    * @returns {Object}
    * @example
+   * @param ctx
    */
 
   async getCase(ctx) {

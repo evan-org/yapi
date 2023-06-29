@@ -1,6 +1,6 @@
 const Router = require("@koa/router");
 const router = new Router({ prefix: "/test" });
-//
+// controller: testController
 /**
  *module test
  *action testPost

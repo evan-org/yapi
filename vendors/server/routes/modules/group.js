@@ -1,6 +1,6 @@
 const Router = require("@koa/router");
 const router = new Router({ prefix: "/group" });
-//
+// controller: groupController
 /**
  *module group
  *action getMyGroup

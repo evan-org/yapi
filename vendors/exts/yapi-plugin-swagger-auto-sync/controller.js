@@ -6,7 +6,7 @@ const syncModel = require("./lib/syncModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const interfaceSyncUtils = require("./lib/interfaceSyncUtils.js");
 
-class controller extends baseController {
+class SwaggerAutoSyncController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.syncModel = yapi.getInst(syncModel);
@@ -61,4 +61,4 @@ class controller extends baseController {
 }
 
 
-module.exports = controller;
+module.exports = SwaggerAutoSyncController;

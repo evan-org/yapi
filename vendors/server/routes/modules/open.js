@@ -1,6 +1,6 @@
 const Router = require("@koa/router");
 const router = new Router({ prefix: "/open" });
-//
+// controller: openController
 /**
  *module open
  *action projectInterfaceData
