@@ -7,22 +7,20 @@ const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
 const Koa = require("koa");
 const koaJson = require("koa-json");
 const koaLogger = require("koa-logger");
-// const koaBodyparser = require("koa-bodyparser");
 const historyApiFallback = require("koa2-history-api-fallback");
 const koaStatic = require("koa-static");
 const koaBody = require("koa-body");
 const koaWebsocket = require("koa-websocket");
-//
-const storageCreator = require("./utils/storage.js");
-global.storageCreator = storageCreator;
+/* ******************************************************************************** */
 // 全局挂载
 const yapi = require("@server/yapi.js");
-//
 const commons = require("@server/utils/commons.js");
 const useMongodb = require("@server/helper/mongodb.js");
-//
+const storageCreator = require("@server/utils/storage.js");
 yapi.commons = commons;
 yapi.connect = useMongodb.connect();
+yapi.storageCreator = storageCreator;
+/* ******************************************************************************** */
 //
 const ExtsPlugin = require("./plugins/ExtsPlugin.js");
 ExtsPlugin();
@@ -31,8 +29,6 @@ const NoticePlugin = require("./plugins/NoticePlugin.js");
 NoticePlugin();
 //
 const app = koaWebsocket(new Koa());
-app.context.commons = commons;
-app.context.mongodb = mongodb.connect();
 yapi.app = app;
 const { websocketMiddleware, mockServerMiddleware, requestMiddleware, routeMiddleware } = require("@server/middleware/index.js");
 app.use(mockServerMiddleware);

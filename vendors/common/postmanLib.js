@@ -24,8 +24,9 @@ const ContentTypeMap = {
 
 const getStorage = async(id) => {
   try {
-    if (isNode) {
-      let storage = global.storageCreator(id);
+    // node 环境
+    if (isNode && yapi.storageCreator) {
+      let storage = yapi.storageCreator(id);
       let data = await storage.getItem();
       return {
         getItem: (name) => data[name],
@@ -35,6 +36,7 @@ const getStorage = async(id) => {
         }
       }
     } else {
+      // window 浏览器
       return {
         getItem: (name) => window.localStorage.getItem(name),
         setItem: (name, value) =>  window.localStorage.setItem(name, value)

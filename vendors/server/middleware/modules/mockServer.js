@@ -132,7 +132,9 @@ module.exports = async(ctx, next) => {
   let path = ctx.path;
   let header = ctx.request.header;
   if (path.indexOf("/mock/") !== 0) {
-    if (next) {await next();}
+    if (next) {
+      await next();
+    }
     return true;
   }
   let paths = path.split("/");
@@ -162,21 +164,17 @@ module.exports = async(ctx, next) => {
     interfaceData = await interfaceInst.getByPath(project._id, newpath, ctx.method);
     let queryPathInterfaceData = await interfaceInst.getByQueryPath(project._id, newpath, ctx.method);
     // 处理query_path情况  url 中有 ?params=xxx
-    if (!interfaceData || interfaceData.length != queryPathInterfaceData.length) {
-      let i,
-        l,
-        j,
-        len,
-        curQuery,
-        match = false;
-      for (i = 0, l = queryPathInterfaceData.length; i < l; i++) {
-        match = false;
+    if ((!interfaceData) || (interfaceData.length !== queryPathInterfaceData.length)) {
+      const l = queryPathInterfaceData.length;
+      for (let i = 0; i < l; i++) {
+        let match = false;
         let currentInterfaceData = queryPathInterfaceData[i];
-        curQuery = currentInterfaceData.query_path;
+        let curQuery = currentInterfaceData.query_path;
         if (!curQuery || typeof curQuery !== "object" || !curQuery.path) {
           continue;
         }
-        for (j = 0, len = curQuery.params.length; j < len; j++) {
+        let len = curQuery.params.length;
+        for (let j = 0; j < len; j++) {
           if (ctx.query[curQuery.params[j].name] !== curQuery.params[j].value) {
             continue;
           }
@@ -194,7 +192,7 @@ module.exports = async(ctx, next) => {
       }
     }
     // 处理动态路由
-    if (!interfaceData || interfaceData.length === 0) {
+    if ((!interfaceData) || (interfaceData.length === 0)) {
       let newData = await interfaceInst.getVar(project._id, ctx.method);
       let findInterface;
       let weight = 0;
@@ -241,9 +239,8 @@ module.exports = async(ctx, next) => {
         ));
       }
     }
-    let res;
     // mock 返回值处理
-    res = interfaceData.res_body;
+    let res = interfaceData.res_body;
     try {
       if (interfaceData.res_body_type === "json") {
         if (interfaceData.res_body_is_json_schema === true) {
@@ -327,7 +324,6 @@ module.exports = async(ctx, next) => {
       }
       ctx.status = context.httpCode;
       ctx.body = context.mockJson;
-      return;
     } catch (e) {
       yapi.commons.log(e, "error");
       return (ctx.body = {

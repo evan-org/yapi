@@ -43,7 +43,6 @@ const yapi = {
   WEBROOT_RUNTIME: WEBROOT_RUNTIME,
   WEBROOT_LOG: WEBROOT_LOG,
   WEBROOT_CONFIG: WEBROOT_CONFIG,
-  WEBCONFIG: WEBROOT_CONFIG,
   getInst: getInst,
   delInst: delInst,
   getInsets: insets
