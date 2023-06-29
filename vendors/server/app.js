@@ -2,8 +2,6 @@ require("module-alias/register");
 const dotEnv = require("dotenv");
 dotEnv.config();
 //
-const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
-//
 const Koa = require("koa");
 const koaJson = require("koa-json");
 const koaLogger = require("koa-logger");
@@ -29,7 +27,6 @@ const NoticePlugin = require("./plugins/NoticePlugin.js");
 NoticePlugin();
 //
 const app = koaWebsocket(new Koa());
-yapi.app = app;
 const { websocketMiddleware, mockServerMiddleware, requestMiddleware, routeMiddleware } = require("@server/middleware/index.js");
 app.use(mockServerMiddleware);
 app.use(routeMiddleware);
@@ -50,6 +47,7 @@ app.use(historyApiFallback({
 //
 websocketMiddleware(app);
 //
+const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
 app.use(koaStatic(yapi.path.join(yapi.WEBROOT, "static"), { index: indexFile, gzip: true }));
 // run
 const server = app.listen(yapi.WEBROOT_CONFIG.port);
