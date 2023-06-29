@@ -9,6 +9,7 @@
     "dev-client": "craco start",
     "dev-server": "cross-env NODE_ENV=development nodemon -L dev",
     "build-client": "craco build",
+    "build-server": "cross-env NODE_ENV=production nodemon -L prod",
     "start": "node server/app.js",
     "test": "ava",
     "npm-publish": "node ./npm-publish.js",

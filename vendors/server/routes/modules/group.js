@@ -1,100 +1,95 @@
 const Router = require("@koa/router");
-const router = new Router();
+const router = new Router({ prefix: "/group" });
 //
-const user = [
-  {
-    action: "login",
-    path: "login",
-    method: "post"
-  },
-  {
-    action: "reg",
-    path: "reg",
-    method: "post"
-  },
-  {
-    action: "list",
-    path: "list",
-    method: "get"
-  },
-  {
-    action: "findById",
-    path: "find",
-    method: "get"
-  },
-  {
-    action: "update",
-    path: "update",
-    method: "post"
-  },
-  {
-    action: "del",
-    path: "del",
-    method: "post"
-  },
-  {
-    action: "getLoginStatus",
-    path: "status",
-    method: "get"
-  },
-  {
-    action: "logout",
-    path: "logout",
-    method: "get"
-  },
-  {
-    action: "loginByToken",
-    path: "login_by_token",
-    method: "all"
-  },
-  {
-    action: "getLdapAuth",
-    path: "login_by_ldap",
-    method: "all"
-  },
-  {
-    action: "upStudy",
-    path: "up_study",
-    method: "get"
-  },
-  {
-    action: "changePassword",
-    path: "change_password",
-    method: "post"
-  },
-  {
-    action: "search",
-    path: "search",
-    method: "get"
-  },
-  {
-    action: "project",
-    path: "project",
-    method: "get"
-  },
-  {
-    action: "avatar",
-    path: "avatar",
-    method: "get"
-  },
-  {
-    action: "uploadAvatar",
-    path: "upload_avatar",
-    method: "post"
-  }
-];
-router.get("/demogroup/", async(ctx) => {
-  ctx.body = "Hello, world!";
+/**
+ *module group
+ *action getMyGroup
+ *method get
+ *@name ""
+ **/
+router.get("/get_mygroup", async(ctx) => {
+  ctx.body = "";
 });
-
-router.get("demogroup/group", async(ctx) => {
-  // 处理获取用户列表的逻辑
-  ctx.body = "Hello, world!";
+/**
+ *module group
+ *action list
+ *method get
+ *@name ""
+ **/
+router.get("/list", async(ctx) => {
+  ctx.body = "";
 });
-
-router.get("demogroup/group/:id", async(ctx) => {
-  // 处理获取特定用户的逻辑
-  ctx.body = "Hello, world!";
+/**
+ *module group
+ *action add
+ *method post
+ *@name ""
+ **/
+router.post("/add", async(ctx) => {
+  ctx.body = "";
 });
-
+/**
+ *module group
+ *action up
+ *method post
+ *@name ""
+ **/
+router.post("/up", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module group
+ *action del
+ *method post
+ *@name ""
+ **/
+router.post("/del", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module group
+ *action addMember
+ *method post
+ *@name ""
+ **/
+router.post("/add_member", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module group
+ *action changeMemberRole
+ *method post
+ *@name ""
+ **/
+router.post("/change_member_role", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module group
+ *action delMember
+ *method post
+ *@name ""
+ **/
+router.post("/del_member", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module group
+ *action getMemberList
+ *method get
+ *@name ""
+ **/
+router.get("/get_member_list", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module group
+ *action get
+ *method get
+ *@name ""
+ **/
+router.get("/get", async(ctx) => {
+  ctx.body = "";
+});
+//
 module.exports = router;

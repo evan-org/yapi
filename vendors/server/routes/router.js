@@ -595,6 +595,7 @@ function addPluginRouter(config) {
   pluginsRouterPath.push(routerPath);
   createAction(router, "/api", config.controller, config.action, routerPath, method, false);
 }
+console.log("111", pluginsRouterPath);
 //
 yapi.emitHookSync("add_router", addPluginRouter);
 //

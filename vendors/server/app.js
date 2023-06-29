@@ -1,6 +1,8 @@
+const path = require("path");
 require("module-alias/register");
 const dotEnv = require("dotenv");
-dotEnv.config();
+dotEnv.config({ path: path.resolve(__dirname, "../.env.development") });
+console.log(process.argv);
 /* ******************************************************************************** */
 const Koa = require("koa");
 const koaJson = require("koa-json");
@@ -30,14 +32,18 @@ const { websocketMiddleware, mockServerMiddleware, routeMiddleware } = require("
 app.use(mockServerMiddleware);
 app.use(routeMiddleware);
 //
+const routeri = require("./routes/index.js");
+app.use(routeri())
+//
 const router = require("./routes/router.js");
-console.log(app);
+// console.log(app);
 app.proxy = true;
 // app.use(koaBodyparser())
 app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
 app.use(koaJson());
 app.use(koaLogger());
 app.use(router.routes());
+console.log("router.routes()", router.routes());
 app.use(router.allowedMethods());
 //
 websocketMiddleware(app);

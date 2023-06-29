@@ -10,7 +10,7 @@
     "node_modules"
   ],
   "execMap": {
-    "dev": "npm run server/app.js dev",
+    "dev": "npm run server/app.js",
     "prod": "npm run server/app.js"
   }
 }

@@ -1,100 +1,150 @@
 const Router = require("@koa/router");
-const router = new Router({prefix: "/user"});
+const router = new Router({ prefix: "/user" });
 //
-const user = [
-  {
-    action: "login",
-    path: "login",
-    method: "post"
-  },
-  {
-    action: "reg",
-    path: "reg",
-    method: "post"
-  },
-  {
-    action: "list",
-    path: "list",
-    method: "get"
-  },
-  {
-    action: "findById",
-    path: "find",
-    method: "get"
-  },
-  {
-    action: "update",
-    path: "update",
-    method: "post"
-  },
-  {
-    action: "del",
-    path: "del",
-    method: "post"
-  },
-  {
-    action: "getLoginStatus",
-    path: "status",
-    method: "get"
-  },
-  {
-    action: "logout",
-    path: "logout",
-    method: "get"
-  },
-  {
-    action: "loginByToken",
-    path: "login_by_token",
-    method: "all"
-  },
-  {
-    action: "getLdapAuth",
-    path: "login_by_ldap",
-    method: "all"
-  },
-  {
-    action: "upStudy",
-    path: "up_study",
-    method: "get"
-  },
-  {
-    action: "changePassword",
-    path: "change_password",
-    method: "post"
-  },
-  {
-    action: "search",
-    path: "search",
-    method: "get"
-  },
-  {
-    action: "project",
-    path: "project",
-    method: "get"
-  },
-  {
-    action: "avatar",
-    path: "avatar",
-    method: "get"
-  },
-  {
-    action: "uploadAvatar",
-    path: "upload_avatar",
-    method: "post"
-  }
-];
-router.get("/login", async(ctx) => {
-  ctx.body = "Hello, world!";
+/**
+ *module user
+ *action login
+ *method post
+ *@name ""
+ **/
+router.post("/login", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action reg
+ *method post
+ *@name ""
+ **/
+router.post("/reg", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action list
+ *method get
+ *@name ""
+ **/
+router.get("/list", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action findById
+ *method get
+ *@name ""
+ **/
+router.get("/find", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action update
+ *method post
+ *@name ""
+ **/
+router.post("/update", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action del
+ *method post
+ *@name ""
+ **/
+router.post("/del", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action getLoginStatus
+ *method get
+ *@name ""
+ **/
+router.get("/status", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action logout
+ *method get
+ *@name ""
+ **/
+router.get("/logout", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action loginByToken
+ *method all
+ *@name ""
+ **/
+router.all("/login_by_token", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action getLdapAuth
+ *method all
+ *@name ""
+ **/
+router.all("/login_by_ldap", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action upStudy
+ *method get
+ *@name ""
+ **/
+router.get("/up_study", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action changePassword
+ *method post
+ *@name ""
+ **/
+router.post("/change_password", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action search
+ *method get
+ *@name ""
+ **/
+router.get("/search", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action project
+ *method get
+ *@name ""
+ **/
+router.get("/project", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action avatar
+ *method get
+ *@name ""
+ **/
+router.get("/avatar", async(ctx) => {
+  ctx.body = "";
+});
+/**
+ *module user
+ *action uploadAvatar
+ *method post
+ *@name ""
+ **/
+router.post("/upload_avatar", async(ctx) => {
+  ctx.body = "";
 });
 
-router.get("/demouser/users", async(ctx) => {
-  // 处理获取用户列表的逻辑
-  ctx.body = "Hello, world!1";
-});
-
-router.get("demouser/users/:id", async(ctx) => {
-  // 处理获取特定用户的逻辑
-  ctx.body = "Hello, world!";
-});
-
+//
 module.exports = router;
