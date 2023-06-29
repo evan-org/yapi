@@ -150,11 +150,6 @@ hooks = {
   }
 };
    */
-  header_menu: {
-    type: "listener",
-    mulit: true,
-    listener: []
-  },
   /**
    * Route路由列表钩子
    * @param AppRoute

@@ -22,7 +22,6 @@ function arrToObj(arr) {
   return obj;
 }
 module.exports = function() {
-  ;
   //
   yapi.connect.then(() => {
     let Col = mongoose.connection.db.collection("adv_mock");

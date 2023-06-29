@@ -5,13 +5,13 @@ const yapi = require("@server/yapi.js");
 //
 const mongoose = require("mongoose");
 //
-const controller = require("./controller.js");
-const statisModel = require("./lib/statisticsMockModel.js");
+const controller = require("@server/controllers/StatisticsMockController.js");
+const StatisticsMockModel = require("@server/models/StatisticsMockModel.js");
 //
 const commons = require("./lib/util.js");
 //
 module.exports = function() {
-  yapi.connect.then(function() {
+  yapi.connect.then(() => {
     // console.log("yapi-plugin-statistics", db);
     let Col = mongoose.connection.db.collection("statis_mock");
     Col.createIndex({
@@ -72,7 +72,7 @@ module.exports = function() {
       ip: ip,
       date: commons.formatYMD(new Date())
     };
-    let inst = yapi.getInst(statisModel);
+    let inst = yapi.getInst(StatisticsMockModel);
     try {
       inst.save(data).then();
     } catch (e) {

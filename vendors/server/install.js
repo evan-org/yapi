@@ -1,11 +1,12 @@
 const fs = require("fs-extra");
 const yapi = require("@server/yapi.js");
+//
 const commons = require("@server/utils/commons.js");
-const mongodbModule = require("@server/helper/mongodb.js");
+const useMongodb = require("@server/helper/mongodb.js");
 const UserModel = require("@server/models/UserModel.js");
 const mongoose = require("mongoose");
 yapi.commons = commons;
-yapi.connect = mongodbModule.connect();
+yapi.connect = useMongodb.connect();
 //
 function install() {
   let exist = yapi.commons.fileExist(yapi.path.join(yapi.WEBROOT_RUNTIME, "init.lock"));
@@ -29,7 +30,7 @@ function setupSql() {
     up_time: yapi.commons.time()
   });
   // 初始化数据库
-  yapi.connect.then(function() {
+  yapi.connect.then(() => {
     //
     const userCol = mongoose.connection.db.collection("user");
     userCol.createIndex({ username: 1 });

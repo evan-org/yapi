@@ -10,12 +10,13 @@ const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 //
-const statisMockModel = require("./lib/statisticsMockModel.js");
-// const config = require("./index.js");
-const commons = require("./lib/util.js");
+const statisMockModel = require("@server/models/StatisticsMockModel.js");
+//
+const commons = require("@exts/yapi-plugin-statistics/lib/util.js");
+//
 const os = require("os");
 let cpu = require("cpu-load");
-class statisMockController extends baseController {
+class StatisticsMockController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(statisMockModel);
@@ -161,4 +162,4 @@ class statisMockController extends baseController {
     });
   }
 }
-module.exports = statisMockController;
+module.exports = StatisticsMockController;

@@ -19,10 +19,10 @@ global.storageCreator = storageCreator;
 const yapi = require("@server/yapi.js");
 //
 const commons = require("@server/utils/commons.js");
-const mongodb = require("@server/helper/mongodb.js");
+const useMongodb = require("@server/helper/mongodb.js");
 //
 yapi.commons = commons;
-yapi.connect = mongodb.connect();
+yapi.connect = useMongodb.connect();
 //
 const ExtsPlugin = require("./plugins/ExtsPlugin.js");
 ExtsPlugin();

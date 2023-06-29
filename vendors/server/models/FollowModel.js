@@ -19,15 +19,15 @@ class FollowModel extends BaseModel {
   }
 
   /**
-   * @param {Number} uid 用户id
-   * @param {Number} projectid 项目id
-   * @param {String} projectname 项目名
-   * @param {String} icon 项目图标
+   * @param {Object} data
+   * @params {Number} uid 用户id
+   * @params {Number} projectid 项目id
+   * @params {String} projectname 项目名
+   * @params {String} icon 项目图标
    */
-
   save(data) {
     // 关注
-    let saveData = {
+    const saveData = {
       uid: data.uid,
       projectid: data.projectid,
       projectname: data.projectname,

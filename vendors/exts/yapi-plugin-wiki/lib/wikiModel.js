@@ -7,7 +7,6 @@ class wikiModel extends BaseModel {
   getName() {
     return "wiki";
   }
-
   getSchema() {
     return {
       project_id: { type: Number, required: true },
@@ -20,23 +19,18 @@ class wikiModel extends BaseModel {
       up_time: Number
     };
   }
-
   save(data) {
     const m = new this.model(data);
     return m.save();
   }
-
   get(project_id) {
     return this.model.findOne({ project_id: project_id }).exec();
   }
-
   up(id, data) {
     return this.model.update({ _id: id }, data, { runValidators: true });
   }
-
   upEditUid(id, uid) {
     return this.model.update({ _id: id }, { edit_uid: uid }, { runValidators: true });
   }
 }
-
 module.exports = wikiModel;

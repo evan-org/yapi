@@ -4,14 +4,6 @@
 import StatisticsPage from "./views/StatisticsClientPage/StatisticsClientPage.js";
 
 module.exports = function() {
-  this.bindHook("header_menu", function(menu) {
-    menu.statisticsPage = {
-      path: "/statistic",
-      name: "系统信息",
-      icon: "bar-chart",
-      adminFlag: true
-    }
-  })
   this.bindHook("app_route", function(app) {
     if (app instanceof Object) {
       app.statisticsPage = {

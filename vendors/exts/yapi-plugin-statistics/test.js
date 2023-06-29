@@ -1,11 +1,11 @@
 const yapi = require("@server/yapi.js");
 //
 const commons = require("@server/utils/commons.js");
-const dbModule = require("@server/helper/mongodb.js");
+const useMongodb = require("@server/helper/mongodb.js");
 //
 const mongoose = require("mongoose");
 yapi.commons = commons;
-yapi.connect = dbModule.connect();
+yapi.connect = useMongodb.connect();
 //
 const convert2Decimal = (num) => (num > 9 ? num : `0${num}`);
 const formatYMD = (val, joinStr = "-") => {
