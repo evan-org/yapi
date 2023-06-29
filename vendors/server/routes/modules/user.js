@@ -1,5 +1,5 @@
 const Router = require("@koa/router");
-const router = new Router();
+const router = new Router({prefix: "/user"});
 //
 const user = [
   {
@@ -83,7 +83,7 @@ const user = [
     method: "post"
   }
 ];
-router.get("/demouser/", async(ctx) => {
+router.get("/login", async(ctx) => {
   ctx.body = "Hello, world!";
 });
 
