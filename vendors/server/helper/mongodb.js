@@ -6,7 +6,7 @@ const config = yapi.WEBROOT_CONFIG;
 //
 mongoose.set("strictQuery", true);
 //
-function useModel(model, schema) {
+function UseModel(model, schema) {
   if (!(schema instanceof mongoose.Schema)) {
     schema = new mongoose.Schema(schema);
   }
@@ -14,7 +14,7 @@ function useModel(model, schema) {
   return mongoose.model(model, schema, model);
 }
 //
-function useCreate() {
+function UseCreate() {
   //
   const options = Object.assign({}, { useNewUrlParser: true, useUnifiedTopology: true }, config.db.options);
   //
@@ -43,9 +43,9 @@ function useCreate() {
 /**
  * @returns Promise
  * */
-function useConnect() {
+function UseConnect() {
   try {
-    const { connectString, options } = useCreate();
+    const { connectString, options } = UseCreate();
     console.log(connectString, "\n", JSON.stringify(options));
     // 链接 MongoDB
     const db = mongoose.connect(connectString, options);
@@ -71,9 +71,7 @@ function useConnect() {
   }
 }
 //
-yapi.db = useModel;
-//
 module.exports = {
-  model: useModel,
-  connect: useConnect
+  UseModel: UseModel,
+  connect: UseConnect
 };

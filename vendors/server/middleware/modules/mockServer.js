@@ -56,6 +56,7 @@ function matchApi(apiPath, apiRule) {
       }
     }
   }
+  console.log("matchApi", pathParams);
   return pathParams;
 }
 function parseCookie(str) {

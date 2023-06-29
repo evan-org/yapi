@@ -1,12 +1,11 @@
 const yapi = require("@server/yapi.js");
 //
+const { UseModel } = require("@server/helper/mongodb.js");
 const mongoose = require("mongoose");
 const autoIncrement = require("@server/helper/mongooseAutoIncrement.js");
-
 /**
  * 所有的model都需要继承BaseModel, 且需要 getSchema和getName方法，不然会报错
  */
-
 class BaseModel {
   constructor() {
     this.schema = new mongoose.Schema(this.getSchema());
@@ -19,21 +18,17 @@ class BaseModel {
         incrementBy: yapi.commons.rand(1, 10)
       });
     }
-
-    this.model = yapi.db(this.name, this.schema);
+    this.model = UseModel(this.name, this.schema);
   }
-
   isNeedAutoIncrement() {
     return true;
   }
-
   /**
    * 可通过覆盖此方法生成其他自增字段
    */
   getPrimaryKey() {
     return "_id";
   }
-
   /**
    * 获取collection的schema结构
    */
@@ -49,5 +44,4 @@ class BaseModel {
     return ""
   }
 }
-
 module.exports = BaseModel;
