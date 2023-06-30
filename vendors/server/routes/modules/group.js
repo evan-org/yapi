@@ -1,4 +1,6 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+const Controller = require("@server/controllers/GroupController.js");
 const router = new Router({ prefix: "/group" });
 // controller: groupController
 /**
@@ -8,7 +10,7 @@ const router = new Router({ prefix: "/group" });
  *@name ""
  **/
 router.get("/get_mygroup", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "getMyGroup");
 });
 /**
  *module group
@@ -17,7 +19,7 @@ router.get("/get_mygroup", async(ctx) => {
  *@name ""
  **/
 router.get("/list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "list");
 });
 /**
  *module group
@@ -26,7 +28,7 @@ router.get("/list", async(ctx) => {
  *@name ""
  **/
 router.post("/add", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "add");
 });
 /**
  *module group
@@ -35,7 +37,7 @@ router.post("/add", async(ctx) => {
  *@name ""
  **/
 router.post("/up", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "up");
 });
 /**
  *module group
@@ -44,7 +46,7 @@ router.post("/up", async(ctx) => {
  *@name ""
  **/
 router.post("/del", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "del");
 });
 /**
  *module group
@@ -53,7 +55,7 @@ router.post("/del", async(ctx) => {
  *@name ""
  **/
 router.post("/add_member", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "addMember");
 });
 /**
  *module group
@@ -62,7 +64,7 @@ router.post("/add_member", async(ctx) => {
  *@name ""
  **/
 router.post("/change_member_role", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "changeMemberRole");
 });
 /**
  *module group
@@ -71,16 +73,17 @@ router.post("/change_member_role", async(ctx) => {
  *@name ""
  **/
 router.post("/del_member", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "delMember");
 });
 /**
- *module group
- *action getMemberList
- *method get
- *@name ""
+ * module group
+ * Controller GroupController
+ * action getMemberList
+ * method get
+ * @name ""
  **/
 router.get("/get_member_list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "getMemberList");
 });
 /**
  *module group
@@ -89,7 +92,7 @@ router.get("/get_member_list", async(ctx) => {
  *@name ""
  **/
 router.get("/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "get");
 });
 //
 module.exports = router;

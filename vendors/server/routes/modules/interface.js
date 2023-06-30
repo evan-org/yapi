@@ -1,4 +1,6 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+const Controller = require("@server/controllers/InterfaceController.js");
 const router = new Router({ prefix: "/interface" });
 // controller: interfaceController
 /**
@@ -8,7 +10,7 @@ const router = new Router({ prefix: "/interface" });
  *@name ""
  **/
 router.post("/add", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "add");
 });
 /**
  *module interface
@@ -17,7 +19,7 @@ router.post("/add", async(ctx) => {
  *@name ""
  **/
 router.get("/download_crx", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "downloadCrx");
 });
 /**
  *module interface
@@ -26,7 +28,7 @@ router.get("/download_crx", async(ctx) => {
  *@name ""
  **/
 router.get("/getCatMenu", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "getCatMenu");
 });
 /**
  *module interface
@@ -35,7 +37,7 @@ router.get("/getCatMenu", async(ctx) => {
  *@name ""
  **/
 router.get("/list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "list");
 });
 /**
  *module interface
@@ -44,7 +46,7 @@ router.get("/list", async(ctx) => {
  *@name ""
  **/
 router.get("/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "get");
 });
 /**
  *module interface
@@ -53,7 +55,7 @@ router.get("/get", async(ctx) => {
  *@name ""
  **/
 router.post("/up", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "up");
 });
 /**
  *module interface
@@ -62,7 +64,7 @@ router.post("/up", async(ctx) => {
  *@name ""
  **/
 router.post("/del", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "del");
 });
 /**
  *module interface
@@ -71,7 +73,7 @@ router.post("/del", async(ctx) => {
  *@name ""
  **/
 router.post("/interUpload", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "interUpload");
 });
 /**
  *module interface
@@ -80,7 +82,7 @@ router.post("/interUpload", async(ctx) => {
  *@name ""
  **/
 router.get("/list_cat", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "listByCat");
 });
 /**
  *module interface
@@ -89,7 +91,7 @@ router.get("/list_cat", async(ctx) => {
  *@name ""
  **/
 router.get("/list_menu", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "listByMenu");
 });
 /**
  *module interface
@@ -98,7 +100,7 @@ router.get("/list_menu", async(ctx) => {
  *@name ""
  **/
 router.get("/list_open", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "listByOpen");
 });
 /**
  *module interface
@@ -107,7 +109,7 @@ router.get("/list_open", async(ctx) => {
  *@name ""
  **/
 router.post("/add_cat", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "addCat");
 });
 /**
  *module interface
@@ -116,7 +118,7 @@ router.post("/add_cat", async(ctx) => {
  *@name ""
  **/
 router.post("/up_cat", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "upCat");
 });
 /**
  *module interface
@@ -125,7 +127,7 @@ router.post("/up_cat", async(ctx) => {
  *@name ""
  **/
 router.post("/del_cat", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "delCat");
 });
 /**
  *module interface
@@ -134,7 +136,7 @@ router.post("/del_cat", async(ctx) => {
  *@name ""
  **/
 router.get("/get_custom_field", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "getCustomField");
 });
 /**
  *module interface
@@ -143,7 +145,7 @@ router.get("/get_custom_field", async(ctx) => {
  *@name ""
  **/
 router.post("/save", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "save");
 });
 /**
  *module interface
@@ -152,7 +154,7 @@ router.post("/save", async(ctx) => {
  *@name ""
  **/
 router.post("/up_index", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "upIndex");
 });
 /**
  *module interface
@@ -161,16 +163,16 @@ router.post("/up_index", async(ctx) => {
  *@name ""
  **/
 router.post("/up_cat_index", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "upCatIndex");
 });
 /**
- *module interface
- *action schema2json
- *method post
- *@name ""
+ * module interface
+ * action schema2json
+ * method post
+ * @name ""
  **/
 router.post("/schema2json", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "schema2json");
 });
 //
 module.exports = router;

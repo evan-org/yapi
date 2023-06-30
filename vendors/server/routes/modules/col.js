@@ -3,28 +3,7 @@ const Router = require("@koa/router");
 const router = new Router({ prefix: "/col" });
 // controller: interfaceColController
 const InterfaceColController = require("@server/controllers/InterfaceColController.js");
-//
-async function ctxAction(ctx, Controller, action = "") {
-  // const action = "addCol";
-  if (!action) {
-    ctx.body = yapi.commons.resReturn(null, 40011, "服务器出错...");
-    return
-  }
-  try {
-    const inst = new Controller(ctx);
-    await inst.init(ctx);
-    ctx.params = Object.assign({}, ctx.request.query, ctx.request.body, ctx.params);
-    //
-    if (inst.$auth === true) {
-      await inst[action].call(inst, ctx);
-    } else {
-      ctx.body = yapi.commons.resReturn(null, 40011, "请登录...");
-    }
-  } catch (err) {
-    ctx.body = yapi.commons.resReturn(null, 40011, "服务器出错...");
-    yapi.commons.log(err, "error");
-  }
-}
+const requestAction = require("@server/utils/requestAction.js");
 /**
  *module col
  *action addCol
@@ -32,7 +11,7 @@ async function ctxAction(ctx, Controller, action = "") {
  *@name ""
  **/
 router.post("/add_col", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "addCol");
+  await requestAction(ctx, InterfaceColController, "addCol");
 });
 /**
  *module col
@@ -41,7 +20,7 @@ router.post("/add_col", async(ctx) => {
  *@name ""
  **/
 router.post("/add_case_list", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "addCaseList");
+  await requestAction(ctx, InterfaceColController, "addCaseList");
 });
 /**
  *module col
@@ -50,7 +29,7 @@ router.post("/add_case_list", async(ctx) => {
  *@name ""
  **/
 router.post("/clone_case_list", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "cloneCaseList");
+  await requestAction(ctx, InterfaceColController, "cloneCaseList");
 });
 /**
  *module col
@@ -59,7 +38,7 @@ router.post("/clone_case_list", async(ctx) => {
  *@name ""
  **/
 router.get("/list", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "list");
+  await requestAction(ctx, InterfaceColController, "list");
 });
 /**
  *module col
@@ -68,7 +47,7 @@ router.get("/list", async(ctx) => {
  *@name ""
  **/
 router.get("/case_list", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "getCaseList");
+  await requestAction(ctx, InterfaceColController, "getCaseList");
 });
 /**
  *module col
@@ -77,7 +56,7 @@ router.get("/case_list", async(ctx) => {
  *@name ""
  **/
 router.get("/case_list_by_var_params", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "getCaseListByVariableParams");
+  await requestAction(ctx, InterfaceColController, "getCaseListByVariableParams");
 });
 /**
  *module col
@@ -86,7 +65,7 @@ router.get("/case_list_by_var_params", async(ctx) => {
  *@name ""
  **/
 router.post("/add_case", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "addCase");
+  await requestAction(ctx, InterfaceColController, "addCase");
 });
 /**
  *module col
@@ -95,7 +74,7 @@ router.post("/add_case", async(ctx) => {
  *@name ""
  **/
 router.post("/up_case", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "upCase");
+  await requestAction(ctx, InterfaceColController, "upCase");
 });
 /**
  *module col
@@ -104,7 +83,7 @@ router.post("/up_case", async(ctx) => {
  *@name ""
  **/
 router.get("/case", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "getCase");
+  await requestAction(ctx, InterfaceColController, "getCase");
 });
 /**
  *module col
@@ -113,7 +92,7 @@ router.get("/case", async(ctx) => {
  *@name ""
  **/
 router.post("/up_col", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "upCol");
+  await requestAction(ctx, InterfaceColController, "upCol");
 });
 /**
  *module col
@@ -122,7 +101,7 @@ router.post("/up_col", async(ctx) => {
  *@name ""
  **/
 router.post("/up_case_index", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "upCaseIndex");
+  await requestAction(ctx, InterfaceColController, "upCaseIndex");
 });
 /**
  *module col
@@ -131,7 +110,7 @@ router.post("/up_case_index", async(ctx) => {
  *@name ""
  **/
 router.post("/up_col_index", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "upColIndex");
+  await requestAction(ctx, InterfaceColController, "upColIndex");
 });
 /**
  *module col
@@ -140,7 +119,7 @@ router.post("/up_col_index", async(ctx) => {
  *@name ""
  **/
 router.get("/del_col", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "delCol");
+  await requestAction(ctx, InterfaceColController, "delCol");
 });
 /**
  *module col
@@ -149,7 +128,7 @@ router.get("/del_col", async(ctx) => {
  *@name ""
  **/
 router.get("/del_case", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "delCase");
+  await requestAction(ctx, InterfaceColController, "delCase");
 });
 /**
  *module col
@@ -158,7 +137,7 @@ router.get("/del_case", async(ctx) => {
  *@name ""
  **/
 router.post("/run_script", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "runCaseScript");
+  await requestAction(ctx, InterfaceColController, "runCaseScript");
 });
 /**
  *module col
@@ -167,7 +146,7 @@ router.post("/run_script", async(ctx) => {
  *@name ""
  **/
 router.get("/case_env_list", async(ctx) => {
-  await ctxAction(ctx, InterfaceColController, "getCaseEnvList");
+  await requestAction(ctx, InterfaceColController, "getCaseEnvList");
 });
 //
 module.exports = router;

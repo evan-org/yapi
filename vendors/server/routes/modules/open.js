@@ -1,4 +1,9 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+const Controller = require("@server/controllers/OpenController.js");
+//
+const GenServicesController = require("")
+//
 const router = new Router({ prefix: "/open" });
 // controller: openController
 /**
@@ -8,7 +13,7 @@ const router = new Router({ prefix: "/open" });
  *@name ""
  **/
 router.get("/project_interface_data", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "projectInterfaceData");
 });
 /**
  *module open
@@ -17,7 +22,7 @@ router.get("/project_interface_data", async(ctx) => {
  *@name ""
  **/
 router.get("/run_auto_test", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "runAutoTest");
 });
 /**
  *module open
@@ -26,7 +31,7 @@ router.get("/run_auto_test", async(ctx) => {
  *@name ""
  **/
 router.post("/import_data", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "importData");
 });
 /**
  *@controller GenServicesController
@@ -35,7 +40,7 @@ router.post("/import_data", async(ctx) => {
  *@name ""
  **/
 router.get("/plugin/export-full", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "exportFullData");
 });
 //
 module.exports = router;

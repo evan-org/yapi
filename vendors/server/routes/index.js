@@ -14,18 +14,20 @@ const testRouter = require("./modules/test.js");
 const userRouter = require("./modules/user.js");
 //
 // Combine the routers with the prefix
-const router = combineRouters(...[
-  colRouter.prefix("/api"),
-  followRouter.prefix("/api"),
-  groupRouter.prefix("/api"),
-  interfaceRouter.prefix("/api"),
-  logRouter.prefix("/api"),
-  openRouter.prefix("/api"),
-  pluginRouter.prefix("/api"),
-  projectRouter.prefix("/api"),
-  testRouter.prefix("/api"),
-  userRouter.prefix("/api")
-])
+const router = combineRouters(
+  ...[
+    colRouter,
+    followRouter,
+    groupRouter,
+    interfaceRouter,
+    logRouter,
+    openRouter,
+    pluginRouter,
+    projectRouter,
+    testRouter,
+    userRouter
+  ].map((e) => e.prefix("/api1"))
+)
 //
 //
 console.log("router-routes()", router());

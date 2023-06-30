@@ -14,7 +14,7 @@ const defaultTheme = require("./views/defaultTheme.js");
 const md = require("@common/markdown.js");
 
 // const htmlToPdf = require("html-pdf");
-class GenServicesController extends baseController {
+class ExportDataController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.catModel = yapi.getInst(InterfaceCatModel);
@@ -187,4 +187,4 @@ class GenServicesController extends baseController {
   }
 }
 
-module.exports = GenServicesController;
+module.exports = ExportDataController;

@@ -1,4 +1,6 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+const Controller = require("@server/controllers/FollowController.js");
 const router = new Router({ prefix: "/follow" });
 // controller: followController
 /**
@@ -8,7 +10,7 @@ const router = new Router({ prefix: "/follow" });
  *@name ""
  **/
 router.get("/list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "list");
 });
 /**
  *module follow
@@ -17,7 +19,7 @@ router.get("/list", async(ctx) => {
  *@name ""
  **/
 router.post("/add", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "add");
 });
 /**
  *module follow
@@ -26,7 +28,7 @@ router.post("/add", async(ctx) => {
  *@name ""
  **/
 router.post("/del", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "del");
 });
 //
 module.exports = router;

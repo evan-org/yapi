@@ -1,5 +1,8 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+const Controller = require("@server/controllers/LogController.js");
 const router = new Router({ prefix: "/log" });
+
 // controller: logController
 /**
  *module log
@@ -8,7 +11,7 @@ const router = new Router({ prefix: "/log" });
  *@name ""
  **/
 router.get("/list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "list");
 });
 /**
  *module log
@@ -17,7 +20,7 @@ router.get("/list", async(ctx) => {
  *@name ""
  **/
 router.post("/list_by_update", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "listByUpdate");
 });
 
 module.exports = router;

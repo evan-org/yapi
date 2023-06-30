@@ -103,7 +103,7 @@ router.get("/statismock/group_data_stats", async(ctx) => {
 });
 /* ******************************************************************************** */
 /**
- *@controller GenServicesController
+ *@controller ExportDataController
  *@action exportData
  *@method get
  *@name ""

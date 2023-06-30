@@ -14,7 +14,7 @@ class ExportSwaggerController extends baseController {
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
   /*
-       handleListClass,handleExistId is same as the GenServicesController(yapi-plugin-export-data).
+       handleListClass,handleExistId is same as the ExportDataController(yapi-plugin-export-data).
        No DRY,but i have no idea to optimize it.
     */
   async handleListClass(pid, status) {
