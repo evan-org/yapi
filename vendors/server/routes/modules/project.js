@@ -1,5 +1,8 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+const Controller = require("@server/controllers/ProjectController.js");
 const router = new Router({ prefix: "/project" });
+
 // controller: projectController
 /**
  *module project
@@ -8,7 +11,7 @@ const router = new Router({ prefix: "/project" });
  *@name ""
  **/
 router.post("/upset", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "upSet");
 });
 /**
  *module project
@@ -17,7 +20,7 @@ router.post("/upset", async(ctx) => {
  *@name ""
  **/
 router.get("/get_env", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "getEnv");
 });
 /**
  *module project
@@ -26,7 +29,7 @@ router.get("/get_env", async(ctx) => {
  *@name ""
  **/
 router.post("/add", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "add");
 });
 /**
  *module project
@@ -35,7 +38,7 @@ router.post("/add", async(ctx) => {
  *@name ""
  **/
 router.get("/list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "list");
 });
 /**
  *module project
@@ -44,7 +47,7 @@ router.get("/list", async(ctx) => {
  *@name ""
  **/
 router.get("/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "get");
 });
 /**
  *module project
@@ -53,7 +56,7 @@ router.get("/get", async(ctx) => {
  *@name ""
  **/
 router.post("/up", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "up");
 });
 /**
  *module project
@@ -62,7 +65,7 @@ router.post("/up", async(ctx) => {
  *@name ""
  **/
 router.post("/del", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "del");
 });
 /**
  *module project
@@ -71,7 +74,7 @@ router.post("/del", async(ctx) => {
  *@name ""
  **/
 router.post("/add_member", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "addMember");
 });
 /**
  *module project
@@ -80,7 +83,7 @@ router.post("/add_member", async(ctx) => {
  *@name ""
  **/
 router.post("/del_member", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "delMember");
 });
 /**
  *module project
@@ -89,7 +92,7 @@ router.post("/del_member", async(ctx) => {
  *@name ""
  **/
 router.post("/change_member_role", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "changeMemberRole");
 });
 /**
  *module project
@@ -98,7 +101,7 @@ router.post("/change_member_role", async(ctx) => {
  *@name ""
  **/
 router.post("/change_member_email_notice", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "changeMemberEmailNotice");
 });
 /**
  *module project
@@ -107,7 +110,7 @@ router.post("/change_member_email_notice", async(ctx) => {
  *@name ""
  **/
 router.get("/get_member_list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "getMemberList");
 });
 /**
  *module project
@@ -116,7 +119,7 @@ router.get("/get_member_list", async(ctx) => {
  *@name ""
  **/
 router.get("/search", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "search");
 });
 /**
  *module project
@@ -125,7 +128,7 @@ router.get("/search", async(ctx) => {
  *@name ""
  **/
 router.post("/up_env", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "upEnv");
 });
 /**
  *module project
@@ -134,7 +137,7 @@ router.post("/up_env", async(ctx) => {
  *@name ""
  **/
 router.post("/up_tag", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "upTag");
 });
 /**
  *module project
@@ -143,7 +146,7 @@ router.post("/up_tag", async(ctx) => {
  *@name ""
  **/
 router.get("/token", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "token");
 });
 /**
  *module project
@@ -152,7 +155,7 @@ router.get("/token", async(ctx) => {
  *@name ""
  **/
 router.get("/update_token", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "updateToken");
 });
 /**
  *module project
@@ -161,7 +164,7 @@ router.get("/update_token", async(ctx) => {
  *@name ""
  **/
 router.get("/check_project_name", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "checkProjectName");
 });
 /**
  *module project
@@ -170,7 +173,7 @@ router.get("/check_project_name", async(ctx) => {
  *@name ""
  **/
 router.post("/copy", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "copy");
 });
 /**
  *module project
@@ -179,6 +182,6 @@ router.post("/copy", async(ctx) => {
  *@name ""
  **/
 router.get("/swagger_url", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "swaggerUrl");
 });
 module.exports = router;

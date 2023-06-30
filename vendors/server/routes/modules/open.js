@@ -2,7 +2,7 @@ const Router = require("@koa/router");
 const requestAction = require("@server/utils/requestAction.js");
 const Controller = require("@server/controllers/OpenController.js");
 //
-const GenServicesController = require("")
+const GenServicesController = require("@exts/yapi-plugin-gen-services/controller.js");
 //
 const router = new Router({ prefix: "/open" });
 // controller: openController
@@ -40,7 +40,7 @@ router.post("/import_data", async(ctx) => {
  *@name ""
  **/
 router.get("/plugin/export-full", async(ctx) => {
-  await requestAction(ctx, Controller, "exportFullData");
+  await requestAction(ctx, GenServicesController, "exportFullData");
 });
 //
 module.exports = router;

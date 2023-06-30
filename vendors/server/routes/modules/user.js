@@ -1,4 +1,6 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+const Controller = require("@server/controllers/UserController.js");
 const router = new Router({ prefix: "/user" });
 // controller: userController
 /**
@@ -8,7 +10,7 @@ const router = new Router({ prefix: "/user" });
  *@name ""
  **/
 router.post("/login", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "login");
 });
 /**
  *module user
@@ -17,7 +19,7 @@ router.post("/login", async(ctx) => {
  *@name ""
  **/
 router.post("/reg", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "reg");
 });
 /**
  *module user
@@ -26,7 +28,7 @@ router.post("/reg", async(ctx) => {
  *@name ""
  **/
 router.get("/list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "list");
 });
 /**
  *module user
@@ -35,7 +37,7 @@ router.get("/list", async(ctx) => {
  *@name ""
  **/
 router.get("/find", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "findById");
 });
 /**
  *module user
@@ -44,7 +46,7 @@ router.get("/find", async(ctx) => {
  *@name ""
  **/
 router.post("/update", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "update");
 });
 /**
  *module user
@@ -53,7 +55,7 @@ router.post("/update", async(ctx) => {
  *@name ""
  **/
 router.post("/del", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "del");
 });
 /**
  *module user
@@ -62,7 +64,7 @@ router.post("/del", async(ctx) => {
  *@name ""
  **/
 router.get("/status", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "getLoginStatus");
 });
 /**
  *module user
@@ -71,7 +73,7 @@ router.get("/status", async(ctx) => {
  *@name ""
  **/
 router.get("/logout", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "logout");
 });
 /**
  *module user
@@ -80,7 +82,7 @@ router.get("/logout", async(ctx) => {
  *@name ""
  **/
 router.all("/login_by_token", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "loginByToken");
 });
 /**
  *module user
@@ -89,7 +91,7 @@ router.all("/login_by_token", async(ctx) => {
  *@name ""
  **/
 router.all("/login_by_ldap", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "getLdapAuth");
 });
 /**
  *module user
@@ -98,7 +100,7 @@ router.all("/login_by_ldap", async(ctx) => {
  *@name ""
  **/
 router.get("/up_study", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "upStudy");
 });
 /**
  *module user
@@ -107,7 +109,7 @@ router.get("/up_study", async(ctx) => {
  *@name ""
  **/
 router.post("/change_password", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "changePassword");
 });
 /**
  *module user
@@ -116,7 +118,7 @@ router.post("/change_password", async(ctx) => {
  *@name ""
  **/
 router.get("/search", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "search");
 });
 /**
  *module user
@@ -125,7 +127,7 @@ router.get("/search", async(ctx) => {
  *@name ""
  **/
 router.get("/project", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "project");
 });
 /**
  *module user
@@ -134,7 +136,7 @@ router.get("/project", async(ctx) => {
  *@name ""
  **/
 router.get("/avatar", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "avatar");
 });
 /**
  *module user
@@ -143,7 +145,7 @@ router.get("/avatar", async(ctx) => {
  *@name ""
  **/
 router.post("/upload_avatar", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "uploadAvatar");
 });
 
 //

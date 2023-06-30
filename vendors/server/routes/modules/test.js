@@ -1,4 +1,6 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+const Controller = require("@server/controllers/TestController.js");
 const router = new Router({ prefix: "/test" });
 // controller: testController
 /**
@@ -8,7 +10,7 @@ const router = new Router({ prefix: "/test" });
  *@name ""
  **/
 router.post("/post", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testPost");
 });
 /**
  *module test
@@ -17,7 +19,7 @@ router.post("/post", async(ctx) => {
  *@name ""
  **/
 router.get("/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testGet");
 });
 /**
  *module test
@@ -26,7 +28,7 @@ router.get("/get", async(ctx) => {
  *@name ""
  **/
 router.put("/put", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testPut");
 });
 /**
  *module test
@@ -35,7 +37,7 @@ router.put("/put", async(ctx) => {
  *@name ""
  **/
 router.del("/delete", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testDelete");
 });
 /**
  *module test
@@ -44,7 +46,7 @@ router.del("/delete", async(ctx) => {
  *@name ""
  **/
 router.head("/head", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testHead");
 });
 /**
  *module test
@@ -53,7 +55,7 @@ router.head("/head", async(ctx) => {
  *@name ""
  **/
 router.options("/options", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testOptions");
 });
 /**
  *module test
@@ -62,7 +64,7 @@ router.options("/options", async(ctx) => {
  *@name ""
  **/
 router.patch("/patch", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testPatch");
 });
 /**
  *module test
@@ -71,7 +73,7 @@ router.patch("/patch", async(ctx) => {
  *@name ""
  **/
 router.post("/files/upload", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testFilesUpload");
 });
 /**
  *module test
@@ -80,7 +82,7 @@ router.post("/files/upload", async(ctx) => {
  *@name ""
  **/
 router.post("/single/upload", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testSingleUpload");
 });
 /**
  *module test
@@ -89,7 +91,7 @@ router.post("/single/upload", async(ctx) => {
  *@name ""
  **/
 router.post("/http/code", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testHttpCode");
 });
 /**
  *module test
@@ -98,7 +100,7 @@ router.post("/http/code", async(ctx) => {
  *@name ""
  **/
 router.post("/raw", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testRaw");
 });
 /**
  *module test
@@ -107,7 +109,7 @@ router.post("/raw", async(ctx) => {
  *@name ""
  **/
 router.get("/response", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, Controller, "testResponse");
 });
 //
 module.exports = router;
