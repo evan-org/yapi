@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
-const baseController = require("@server/controllers/BaseController.js");
+const BaseController = require("@server/controllers/BaseController.js");
 //
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
@@ -10,11 +10,11 @@ const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const markdownItTableOfContents = require("markdown-it-table-of-contents");
-const defaultTheme = require("./views/defaultTheme.js");
+const defaultTheme = require("@common/defaultTheme/defaultTheme.js");
 const md = require("@common/markdown.js");
 
 // const htmlToPdf = require("html-pdf");
-class ExportDataController extends baseController {
+class ExportDataController extends BaseController {
   constructor(ctx) {
     super(ctx);
     this.catModel = yapi.getInst(InterfaceCatModel);
@@ -83,7 +83,7 @@ class ExportDataController extends baseController {
     try {
       curProject = await this.ProjectModel.get(pid);
       if (isWiki === "true") {
-        const wikiModel = require("../yapi-plugin-wiki/lib/wikiModel.js");
+        const wikiModel = require("@exts/yapi-plugin-wiki/lib/wikiModel.js");
         wikiData = await yapi.getInst(wikiModel).get(pid);
       }
       ctx.set("Content-Type", "application/octet-stream");
