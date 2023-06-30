@@ -10,6 +10,7 @@ import Activity from "./Activity/Activity.jsx";
 import Setting from "./Setting/Setting.jsx";
 import Members from "@/pages/Project/Members/Members.jsx";
 import Data from "@/pages/Project/Data/Data.jsx";
+import Wiki from "@/pages/Project/Wiki/Wiki.jsx";
 //
 import { fetchGroupMsg } from "@/reducer/modules/group";
 import { setBreadcrumb } from "@/reducer/modules/user";
@@ -66,9 +67,9 @@ class Project extends Component {
       activity: { name: "动态", path: "/project/:id/activity", component: Activity },
       data: { name: "数据管理", path: "/project/:id/data", component: Data },
       members: { name: "成员管理", path: "/project/:id/members", component: Members },
-      setting: { name: "设置", path: "/project/:id/setting", component: Setting }
+      setting: { name: "设置", path: "/project/:id/setting", component: Setting },
+      wiki: { name: "Wiki", path: "/project/:id/wiki", component: Wiki }
     };
-    plugin.emitHook("sub_nav", routers);
     //
     let key, defaultName;
     for (key in routers) {

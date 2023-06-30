@@ -1,6 +1,6 @@
 module.exports = {
   server: true,
-  client: true,
+  client: false,
   httpCodes: [
     100,
     101,

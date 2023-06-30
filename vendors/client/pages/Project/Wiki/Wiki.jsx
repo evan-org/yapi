@@ -3,14 +3,14 @@ import { message } from "antd";
 import { connect } from "react-redux";
 import axios from "axios";
 import PropTypes from "prop-types";
-import "./WikiPage.scss";
+import "@/pages/Project/Wiki/Wiki.module.scss";
 //
 import { timeago } from "@common/utils.js";
 import { Link } from "react-router-dom";
-import WikiView from "@exts/yapi-plugin-wiki/views/WikiPage/WikiView/WikiView.js";
-import WikiEditor from "@exts/yapi-plugin-wiki/views/WikiPage/WikiEditor/WikiEditor.js";
+import WikiView from "@/pages/Project/Wiki/WikiView/WikiView.jsx";
+import WikiEditor from "@/pages/Project/Wiki/WikiEditor/WikiEditor.jsx";
 //
-class WikiPage extends Component {
+class Wiki extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -247,4 +247,4 @@ export default connect(
     projectMsg: state.project.currProject
   }),
   {}
-)(WikiPage);
+)(Wiki);
