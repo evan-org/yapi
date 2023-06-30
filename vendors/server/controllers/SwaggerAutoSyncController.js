@@ -2,16 +2,16 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/BaseController.js");
 //
-const syncModel = require("./lib/syncModel.js");
+const syncModel = require("@server/models/SwaggerAutoSyncModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
-const interfaceSyncUtils = require("./lib/interfaceSyncUtils.js");
+const SwaggerAutoSyncUtils = require("@common/SwaggerAutoSyncUtils.js");
 
 class SwaggerAutoSyncController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.syncModel = yapi.getInst(syncModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
-    this.interfaceSyncUtils = yapi.getInst(interfaceSyncUtils);
+    this.SwaggerAutoSyncUtils = yapi.getInst(SwaggerAutoSyncUtils);
   }
 
   /**
@@ -38,9 +38,9 @@ class SwaggerAutoSyncController extends baseController {
 
     // 操作定时任务
     if (requestBody.is_sync_open) {
-      this.interfaceSyncUtils.addSyncJob(projectId, requestBody.sync_cron, requestBody.sync_json_url, requestBody.sync_mode, requestBody.uid);
+      this.SwaggerAutoSyncUtils.addSyncJob(projectId, requestBody.sync_cron, requestBody.sync_json_url, requestBody.sync_mode, requestBody.uid);
     } else {
-      this.interfaceSyncUtils.deleteSyncJob(projectId);
+      this.SwaggerAutoSyncUtils.deleteSyncJob(projectId);
     }
     return (ctx.body = yapi.commons.resReturn(result));
   }

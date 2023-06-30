@@ -1,4 +1,4 @@
-import SwaggerAutoSyncPage from "@exts/yapi-plugin-swagger-auto-sync/views/SwaggerAutoSyncPage/SwaggerAutoSyncPage.js";
+import SwaggerAutoSyncPage from "@client/components/SwaggerAutoSync/SwaggerAutoSync.jsx";
 //
 
 module.exports = function() {

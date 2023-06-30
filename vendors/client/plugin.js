@@ -48,7 +48,7 @@ hooks = {
    * @param InterfaceTabs
    *
    * @info
-   * 可参考 vendors/exts/yapi-plugin-advanced-mock
+   * 可参考 vendors/exts/yapi-plugin-adv-mock
    * let InterfaceTabs = {
       view: {
         component: View,

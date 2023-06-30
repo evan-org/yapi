@@ -1,11 +1,11 @@
 const yapi = require("@server/yapi.js");
 //
-const controller = require("./controller.js");
-const interfaceSyncUtils = require("./lib/interfaceSyncUtils.js");
+const controller = require("@server/controllers/SwaggerAutoSyncController.js");
+const SwaggerAutoSyncUtils = require("@common/SwaggerAutoSyncUtils.js");
 //
 module.exports = function() {
+  yapi.getInst(SwaggerAutoSyncUtils);
   //
-  yapi.getInst(interfaceSyncUtils);
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: controller,

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { formatTime } from "@/utils/common.js";
 import { Form, Switch, Button, Tooltip, message, Input, Select } from "antd";
 import Icon from "@ant-design/icons";
-import { handleSwaggerUrlData } from "@/reducer/modules/project";
+import { handleSwaggerUrlData } from "@/reducer/modules/project.js";
 //
 import axios from "axios";
 // layout
@@ -30,7 +30,7 @@ const tailFormItemLayout = {
     }
   }
 };
-class SwaggerAutoSyncPage extends Component {
+class SwaggerAutoSync extends Component {
   static propTypes = {
     form: PropTypes.object,
     match: PropTypes.object,
@@ -224,4 +224,4 @@ export default connect(
   {
     handleSwaggerUrlData
   }
-)(SwaggerAutoSyncPage);
+)(SwaggerAutoSync);

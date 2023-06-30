@@ -4,7 +4,7 @@ const schedule = require("node-schedule");
 const openController = require("@server/controllers/OpenController.js");
 //
 const ProjectModel = require("@server/models/ProjectModel.js");
-const syncModel = require("./syncModel.js");
+const syncModel = require("@server/models/SwaggerAutoSyncModel.js");
 const TokenModel = require("@server/models/TokenModel.js");
 
 const sha = require("sha.js");

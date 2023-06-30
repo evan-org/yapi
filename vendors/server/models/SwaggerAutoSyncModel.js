@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const BaseModel = require("@server/models/BaseModel.js");
 //
-class syncModel extends BaseModel {
+class swaggerAutoSyncModel extends BaseModel {
   constructor() {
     super();
   }
@@ -39,9 +39,9 @@ class syncModel extends BaseModel {
   }
   listAll() {
     return this.model.find({})
-    .select("_id uid project_id add_time up_time is_sync_open sync_cron sync_json_url sync_mode old_swagger_content last_sync_time")
-    .sort({ _id: -1 })
-    .exec();
+      .select("_id uid project_id add_time up_time is_sync_open sync_cron sync_json_url sync_mode old_swagger_content last_sync_time")
+      .sort({ _id: -1 })
+      .exec();
   }
   up(data) {
     let id = data.id;
@@ -61,4 +61,4 @@ class syncModel extends BaseModel {
     return this.model.remove({ project_id: projectId })
   }
 }
-module.exports = syncModel;
+module.exports = swaggerAutoSyncModel;
