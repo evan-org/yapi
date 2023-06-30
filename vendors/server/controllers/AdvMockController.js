@@ -2,8 +2,8 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/BaseController.js");
 //
-const AdvModel = require("@exts/yapi-plugin-adv-mock/lib/AdvMockModel.js");
-const caseModel = require("@exts/yapi-plugin-adv-mock/lib/AdvMockCaseModel.js");
+const AdvModel = require("@server/models/AdvMockModel.js");
+const caseModel = require("@server/models/AdvMockCaseModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
 const config = require("@exts/yapi-plugin-adv-mock/index.js");

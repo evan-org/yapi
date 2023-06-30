@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 // InterfaceList
 import InterfaceMenu from "./InterfaceMenu/InterfaceMenu.js";
 import InterfaceList from "./InterfaceList/InterfaceList.js";
-import InterfaceContent from "./InterfaceContent/InterfaceContent.js";
+import InterfaceContent from "@/pages/Project/Interface/InterfaceContent/InterfaceContent.jsx";
 // InterfaceCol
 import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.jsx";
 import InterfaceColContent from "./InterfaceCol/InterfaceColContent.jsx";

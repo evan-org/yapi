@@ -157,32 +157,6 @@ hooks = {
     listener: []
   },
   /**
-   * 接口页面 tab 钩子
-   * @param InterfaceTabs
-   *
-   * @info
-   * 可参考 vendors/exts/yapi-plugin-advanced-mock
-   * let InterfaceTabs = {
-      view: {
-        component: View,
-        name: '预览'
-      },
-      edit: {
-        component: Edit,
-        name: '编辑'
-      },
-      run: {
-        component: Run,
-        name: '运行'
-      }
-    }
-   */
-  interface_tab: {
-    type: 'listener',
-    mulit: true,
-    listener: []
-  },
-  /**
    * header下拉菜单 menu 钩子
    * @param HeaderMenu
    *

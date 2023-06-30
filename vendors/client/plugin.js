@@ -44,32 +44,6 @@ hooks = {
     listener: []
   },
   /**
-   * 接口页面 tab 钩子
-   * @param InterfaceTabs
-   *
-   * @info
-   * 可参考 vendors/exts/yapi-plugin-adv-mock
-   * let InterfaceTabs = {
-      view: {
-        component: View,
-        name: '预览'
-      },
-      edit: {
-        component: Edit,
-        name: '编辑'
-      },
-      run: {
-        component: Run,
-        name: '运行'
-      }
-    }
-   */
-  interface_tab: {
-    type: "listener",
-    mulit: true,
-    listener: []
-  },
-  /**
    * 在运行页面或单个测试也里每次发送请求前调用
    * 可以用插件针对某个接口的请求头或者数据进行修改或者记录
    */

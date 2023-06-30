@@ -1,3 +1,4 @@
+
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -8,20 +9,9 @@ import { fetchInterfaceData } from "@/reducer/modules/interface";
 import Edit from "./Edit/Edit.js";
 import View from "./View/View.js";
 import Run from "./Run/Run.js";
-
-const plugin = require("@/plugin.js");
+import AdvMock from "client/pages/Project/Interface/InterfaceContent/AdvMock/AdvMock.jsx";
 //
-@connect(
-  (state) => ({
-    curdata: state.inter.curdata,
-    list: state.inter.list,
-    editStatus: state.inter.editStatus
-  }),
-  {
-    fetchInterfaceData
-  }
-)
-class Content extends Component {
+class InterfaceContent extends Component {
   static propTypes = {
     match: PropTypes.object,
     list: PropTypes.array,
@@ -114,9 +104,12 @@ class Content extends Component {
       run: {
         component: Run,
         name: "运行"
+      },
+      advMock: {
+        component: AdvMock,
+        name: "高级Mock"
       }
     };
-    plugin.emitHook("interface_tab", InterfaceTabs);
     const tabs = (
       <Tabs
         className="tabs-large"
@@ -163,4 +156,13 @@ class Content extends Component {
     );
   }
 }
-export default Content;
+export default connect(
+  (state) => ({
+    curdata: state.inter.curdata,
+    list: state.inter.list,
+    editStatus: state.inter.editStatus
+  }),
+  {
+    fetchInterfaceData
+  }
+)(InterfaceContent);

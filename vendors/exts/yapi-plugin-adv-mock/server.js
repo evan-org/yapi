@@ -1,8 +1,8 @@
 const yapi = require("@server/yapi.js");
 //
 const AdvMockController = require("@server/controllers/AdvMockController.js");
-const advModel = require("@exts/yapi-plugin-adv-mock/lib/AdvMockModel.js");
-const caseModel = require("@exts/yapi-plugin-adv-mock/lib/AdvMockCaseModel.js");
+const AdvMockModel = require("@server/models/AdvMockModel.js");
+const AdvMockCaseModel = require("@server/models/AdvMockCaseModel.js");
 //
 const mongoose = require("mongoose");
 const _ = require("underscore");
@@ -41,7 +41,7 @@ module.exports = function() {
   });
   async function checkCase(ctx, interfaceId) {
     let reqParams = Object.assign({}, ctx.query, ctx.request.body);
-    let caseInst = yapi.getInst(caseModel);
+    let caseInst = yapi.getInst(AdvMockCaseModel);
     // let ip = ctx.ip.match(/\d+.\d+.\d+.\d+/)[0];
     // request.ip
     let ip = yapi.commons.getIp(ctx);
@@ -77,13 +77,12 @@ module.exports = function() {
       });
     }
     if (matchList.length > 0) {
-      let maxItem = _.max(matchList, (item) => (item.params && Object.keys(item.params).length) || 0);
-      return maxItem;
+      return _.max(matchList, (item) => (item.params && Object.keys(item.params).length) || 0);
     }
     return null;
   }
   async function handleByCase(caseData) {
-    let caseInst = yapi.getInst(caseModel);
+    let caseInst = yapi.getInst(AdvMockCaseModel);
     return await caseInst.get({
       _id: caseData._id
     });
@@ -147,12 +146,12 @@ module.exports = function() {
   });
   //
   this.bindHook("interface_del", async function(id) {
-    let inst = yapi.getInst(advModel);
+    let inst = yapi.getInst(AdvMockModel);
     await inst.delByInterfaceId(id);
   });
   //
   this.bindHook("project_del", async function(id) {
-    let inst = yapi.getInst(advModel);
+    let inst = yapi.getInst(AdvMockModel);
     await inst.delByProjectId(id);
   });
   /**
@@ -187,7 +186,7 @@ module.exports = function() {
       context.delay = data.delay;
       return true;
     }
-    let inst = yapi.getInst(advModel);
+    let inst = yapi.getInst(AdvMockModel);
     let data = await inst.get(interfaceId);
     if (!data || !data.enable || !data.mock_script) {
       return context;
