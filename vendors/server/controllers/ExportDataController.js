@@ -5,7 +5,7 @@ const BaseController = require("@server/controllers/BaseController.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
-// const wikiModel = require('../yapi-plugin-wiki/wikiModel.js');
+// const wikiModel = require('../yapi-plugin-wiki/WikiModel.js');
 
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
@@ -83,7 +83,7 @@ class ExportDataController extends BaseController {
     try {
       curProject = await this.ProjectModel.get(pid);
       if (isWiki === "true") {
-        const wikiModel = require("@exts/yapi-plugin-wiki/lib/wikiModel.js");
+        const wikiModel = require("@server/models/WikiModel.js");
         wikiData = await yapi.getInst(wikiModel).get(pid);
       }
       ctx.set("Content-Type", "application/octet-stream");

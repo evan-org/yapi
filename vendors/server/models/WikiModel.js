@@ -1,6 +1,6 @@
 const BaseModel = require("@server/models/BaseModel.js");
 //
-class wikiModel extends BaseModel {
+class WikiModel extends BaseModel {
   constructor() {
     super();
   }
@@ -33,4 +33,4 @@ class wikiModel extends BaseModel {
     return this.model.update({ _id: id }, { edit_uid: uid }, { runValidators: true });
   }
 }
-module.exports = wikiModel;
+module.exports = WikiModel;

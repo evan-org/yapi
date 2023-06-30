@@ -81,7 +81,7 @@ class GenServicesController extends baseController {
       curProject = await this.ProjectModel.get(pid);
       const basepath = curProject.basepath;
       if (isWiki === "true") {
-        const wikiModel = require("@exts/yapi-plugin-wiki/lib/wikiModel.js");
+        const wikiModel = require("@server/models/WikiModel.js");
         wikiData = await yapi.getInst(wikiModel).get(pid);
       }
       ctx.set("Content-Type", "application/octet-stream");

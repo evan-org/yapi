@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/BaseController.js");
 //
-const wikiModel = require("./lib/wikiModel.js");
+const wikiModel = require("@server/models/WikiModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
@@ -11,7 +11,7 @@ const formattersHtml = jsondiffpatch.formatters.html;
 
 const fs = require("fs-extra");
 const path = require("path");
-const showDiffMsg = require("../../common/diff-view.js");
+const showDiffMsg = require("@common/diff-view.js");
 class WikiController extends baseController {
   constructor(ctx) {
     super(ctx);

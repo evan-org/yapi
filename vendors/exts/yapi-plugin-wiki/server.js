@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
 //
 const mongoose = require("mongoose");
-const controller = require("./controller");
+const controller = require("@server/controllers/WikiController.js");
 //
 module.exports = function() {
   yapi.connect.then(() => {
