@@ -944,14 +944,14 @@ class InterfaceController extends baseController {
         typeid: catData.project_id
       });
       let interfaceData = await this.Model.listByCatid(id);
-      interfaceData.forEach(async(item) => {
+      for (const item of interfaceData) {
         try {
           yapi.emitHook("interface_del", item._id).then();
           await this.caseModel.delByInterfaceId(item._id);
         } catch (e) {
           yapi.commons.log(e.message, "error");
         }
-      });
+      }
       await this.catModel.del(id);
       let r = await this.Model.delByCatid(id);
       return (ctx.body = yapi.commons.resReturn(r));
