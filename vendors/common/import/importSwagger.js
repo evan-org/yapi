@@ -2,6 +2,7 @@ const _ = require("underscore")
 import swagger from "swagger-client";
 import compareVersions from "compare-versions";
 import { message } from "antd";
+
 let SwaggerData, isOAS3;
 function handlePath(path) {
   if (path === "/") {
@@ -297,6 +298,7 @@ export default {
     } catch (err) {
       console.error(err);
       message.error("解析失败");
+      return Promise.reject(err);
     }
   },
   desc: `<p>Swagger数据导入（ 支持 v2.0+ ）</p>

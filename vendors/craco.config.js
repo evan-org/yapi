@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const { whenProd, getLoader, loaderByName, removeLoaders, BABEL_MODES, POSTCSS_MODES, ESLINT_MODES } = require("@craco/craco");
+const { whenProd, getLoader, loaderByName, removeLoaders, POSTCSS_MODES, ESLINT_MODES } = require("@craco/craco");
 // const CracoEnvPlugin = require("craco-plugin-env");
 // const CracoLessPlugin = require("craco-less");
 // sass plugin 全局注入

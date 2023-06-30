@@ -25,8 +25,18 @@ import { saveImportData } from "@/reducer/modules/interface.js";
 import { fetchUpdateLogData } from "@/reducer/modules/news.js";
 import { handleSwaggerUrlData } from "@/reducer/modules/project.js";
 //
+import importHAR from "@common/import/importHAR.js";
+import importPostman from "@common/import/importPostman.js";
+import importSwagger from "@common/import/importSwagger.js";
+import importYapiJson from "@common/import/importYapiJson.js";
+//
 const plugin = require("@/plugin.js");
-const importDataModule = {};
+const importDataModule = {
+  har: importHAR,
+  postman: importPostman,
+  swagger: importSwagger,
+  json: importYapiJson
+};
 const exportDataModule = {};
 const HandleImportData = require("@common/HandleImportData.js");
 function handleExportRouteParams(url, status, isWiki) {
@@ -97,7 +107,6 @@ class Data extends Component {
         });
       }
     });
-    plugin.emitHook("import_data", importDataModule);
     //
     this.pluginExportData(this.props.match.params.id);
   }
