@@ -1,12 +1,12 @@
 const yapi = require("@server/yapi.js");
 //
-const baseController = require("@server/controllers/BaseController.js");
+const BaseController = require("@server/controllers/BaseController.js");
 // model
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 //
-class ExportSwaggerController extends baseController {
+class ExportSwaggerController extends BaseController {
   constructor(ctx) {
     super(ctx);
     this.catModel = yapi.getInst(InterfaceCatModel);
