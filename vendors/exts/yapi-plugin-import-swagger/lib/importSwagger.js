@@ -75,7 +75,7 @@ async function handleSwaggerData(res) {
     });
   });
 }
-async function run(res) {
+async function importSwagger(res) {
   let interfaceData = { apis: [], cats: [] };
   if (typeof res === "string" && res) {
     try {
@@ -293,7 +293,7 @@ export default {
   name: "Swagger",
   run: async function(res) {
     try {
-      return await run(res);
+      return await importSwagger(res);
     } catch (err) {
       console.error(err);
       message.error("解析失败");

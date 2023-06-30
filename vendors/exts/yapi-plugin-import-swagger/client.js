@@ -1,5 +1,5 @@
 import { message } from "antd";
-import run from "./lib/run.js";
+import run from "@exts/yapi-plugin-import-swagger/lib/importSwagger.js";
 
 module.exports = function() {
   //
