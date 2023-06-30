@@ -27,23 +27,6 @@ hooks = {
     listener: []
   },
   /**
-   * 导出数据
-   * @param Object exportDataModule
-   * @param projectId
-   * @info
-   * exportDataModule = {};
-   * exportDataModule.pdf = {
-   *   name: 'Pdf',
-   *   route: '/api/plugin/export/pdf',
-   *   desc: '导出项目接口文档为 pdf 文件'
-   * }
-   */
-  export_data: {
-    type: "listener",
-    mulit: true,
-    listener: []
-  },
-  /**
    * 在运行页面或单个测试也里每次发送请求前调用
    * 可以用插件针对某个接口的请求头或者数据进行修改或者记录
    */

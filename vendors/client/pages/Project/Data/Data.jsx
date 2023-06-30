@@ -98,8 +98,33 @@ class Data extends Component {
       }
     });
     plugin.emitHook("import_data", importDataModule);
-    plugin.emitHook("export_data", exportDataModule, this.props.match.params.id);
+    //
+    this.pluginExportData(this.props.match.params.id);
   }
+  //
+  pluginExportData(id = this.props.match.params.id) {
+    exportDataModule.html = {
+      name: "html",
+      route: `/api/plugin/export?type=html&pid=${pid}`,
+      desc: "导出项目接口文档为 html 文件"
+    };
+    exportDataModule.markdown = {
+      name: "markdown",
+      route: `/api/plugin/export?type=markdown&pid=${pid}`,
+      desc: "导出项目接口文档为 markdown 文件"
+    };
+    exportDataModule.json = {
+      name: "json",
+      route: `/api/plugin/export?type=json&pid=${pid}`,
+      desc: "导出项目接口文档为 json 文件,可使用该文件导入接口数据"
+    };
+    exportDataModule.swaggerjson = {
+      name: "swaggerjson",
+      route: `/api/plugin/exportSwagger?type=OpenAPIV2&pid=${pid}`,
+      desc: "导出项目接口文档为(Swagger 2.0)Json文件"
+    };
+  }
+  //
 
   selectChange(value) {
     this.setState({
