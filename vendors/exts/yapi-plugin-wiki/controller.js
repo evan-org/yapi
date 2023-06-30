@@ -9,7 +9,6 @@ const UserModel = require("@server/models/UserModel.js");
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
 
-// const util = require('./util.js');
 const fs = require("fs-extra");
 const path = require("path");
 const showDiffMsg = require("../../common/diff-view.js");

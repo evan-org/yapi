@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const controller = require("@server/controllers/StatisticsMockController.js");
 const StatisticsMockModel = require("@server/models/StatisticsMockModel.js");
 //
-const commons = require("./lib/util.js");
+const commons = require("@common/statisticsUtils.js");
 //
 module.exports = function() {
   yapi.connect.then(() => {
