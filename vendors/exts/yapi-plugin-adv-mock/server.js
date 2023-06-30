@@ -1,8 +1,8 @@
 const yapi = require("@server/yapi.js");
 //
-const controller = require("./controller.js");
-const advModel = require("./lib/advMockModel.js");
-const caseModel = require("./lib/caseModel.js");
+const AdvMockController = require("@server/controllers/AdvMockController.js");
+const advModel = require("@exts/yapi-plugin-adv-mock/lib/AdvMockModel.js");
+const caseModel = require("@exts/yapi-plugin-adv-mock/lib/AdvMockCaseModel.js");
 //
 const mongoose = require("mongoose");
 const _ = require("underscore");
@@ -84,21 +84,20 @@ module.exports = function() {
   }
   async function handleByCase(caseData) {
     let caseInst = yapi.getInst(caseModel);
-    let result = await caseInst.get({
+    return await caseInst.get({
       _id: caseData._id
     });
-    return result;
   }
   //
   this.bindHook("add_router", function(addRouter) {
     addRouter({
-      controller: controller,
+      controller: AdvMockController,
       method: "get",
       path: "advmock/get",
       action: "getMock"
     });
     addRouter({
-      controller: controller,
+      controller: AdvMockController,
       method: "post",
       path: "advmock/save",
       action: "upMock"
@@ -107,13 +106,13 @@ module.exports = function() {
       /**
        * 保存期望
        */
-      controller: controller,
+      controller: AdvMockController,
       method: "post",
       path: "advmock/case/save",
       action: "saveCase"
     });
     addRouter({
-      controller: controller,
+      controller: AdvMockController,
       method: "get",
       path: "advmock/case/get",
       action: "getCase"
@@ -122,7 +121,7 @@ module.exports = function() {
       /**
        * 获取期望列表
        */
-      controller: controller,
+      controller: AdvMockController,
       method: "get",
       path: "advmock/case/list",
       action: "list"
@@ -131,7 +130,7 @@ module.exports = function() {
       /**
        * 删除期望列表
        */
-      controller: controller,
+      controller: AdvMockController,
       method: "post",
       path: "advmock/case/del",
       action: "delCase"
@@ -140,7 +139,7 @@ module.exports = function() {
       /**
        * 隐藏期望列表
        */
-      controller: controller,
+      controller: AdvMockController,
       method: "post",
       path: "advmock/case/hide",
       action: "hideCase"

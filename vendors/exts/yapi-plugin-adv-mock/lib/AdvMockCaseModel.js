@@ -4,7 +4,7 @@ const BaseModel = require("@server/models/BaseModel.js");
 //
 const mongoose = require("mongoose");
 
-class caseModel extends BaseModel {
+class AdvMockCaseModel extends BaseModel {
   constructor() {
     super();
   }
@@ -67,4 +67,4 @@ class caseModel extends BaseModel {
   }
 }
 
-module.exports = caseModel;
+module.exports = AdvMockCaseModel;

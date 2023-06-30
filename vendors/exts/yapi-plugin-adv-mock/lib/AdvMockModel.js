@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const BaseModel = require("@server/models/BaseModel.js");
 
-class advMockModel extends BaseModel {
+class AdvMockModel extends BaseModel {
   constructor() {
     super();
   }
@@ -59,4 +59,4 @@ class advMockModel extends BaseModel {
 
 }
 
-module.exports = advMockModel;
+module.exports = AdvMockModel;
