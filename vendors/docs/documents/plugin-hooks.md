@@ -126,20 +126,6 @@ hooks = {
     listener: null
   },
   /**
-   * 导入数据
-   * @param Object importDataModule
-   *
-   * @info
-   * 可参考 vendors/exts/yapi-plugin-import-swagger插件
-   * importDataModule = {};
-   *
-   */
-  import_data: {
-    type: 'listener',
-    mulit: true,
-    listener: []
-  },
-  /**
    * header下拉菜单 menu 钩子
    * @param HeaderMenu
    *
