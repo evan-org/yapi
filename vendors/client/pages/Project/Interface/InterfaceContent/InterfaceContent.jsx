@@ -9,7 +9,7 @@ import { fetchInterfaceData } from "@/reducer/modules/interface";
 import Edit from "./Edit/Edit.js";
 import View from "./View/View.js";
 import Run from "./Run/Run.js";
-import AdvMock from "client/pages/Project/Interface/InterfaceContent/AdvMock/AdvMock.jsx";
+import AdvMock from "./AdvMock/AdvMock.jsx";
 //
 class InterfaceContent extends Component {
   static propTypes = {
