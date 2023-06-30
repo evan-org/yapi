@@ -4,12 +4,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-// import PropTypes from "prop-types";
 import { Row, Col, Tooltip, Icon } from "antd";
 import { setBreadcrumb } from "@/reducer/modules/user.js";
-import StatisChart from "./StatisticsChart/StatisticsChart.js";
-import StatisTable from "./StatisticsTable/StatisticsTable.js";
-import "./StatisticsClientPage.scss";
+import StatisticsChart from "@client/pages/Statistic/StatisticsChart/StatisticsChart.js";
+import StatisticsTable from "@client/pages/Statistic/StatisticsTable/StatisticsTable.js";
+import "@/pages/Statistic/Statistic.module.scss";
 
 function CountOverview(props) {
   return (
@@ -107,7 +106,7 @@ function StatusOverview(props) {
 // StatusOverview.propTypes = {
 //   data: PropTypes.object
 // };
-class StatisticsClientPage extends Component {
+class Statistic extends Component {
   // static propTypes = {
   //   setBreadcrumb: PropTypes.func
   // };
@@ -179,8 +178,8 @@ class StatisticsClientPage extends Component {
           <h2 className="title">数据统计</h2>
           <div>
             <CountOverview date={count}/>
-            <StatisTable dataSource={dataTotal}/>
-            <StatisChart/>
+            <StatisticsTable dataSource={dataTotal}/>
+            <StatisticsChart/>
           </div>
         </div>
       </div>
@@ -192,4 +191,4 @@ export default connect(
   {
     setBreadcrumb
   }
-)(StatisticsClientPage);
+)(Statistic);

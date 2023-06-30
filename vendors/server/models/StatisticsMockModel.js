@@ -4,10 +4,27 @@
 const yapi = require("@server/yapi.js");
 //
 const BaseModel = require("@server/models/BaseModel.js");
+const mongoose = require("mongoose");
 //
 class StatisticsMockModel extends BaseModel {
   constructor() {
     super();
+    let Col = mongoose.connection.db.collection("statis_mock");
+    Col.createIndex({
+      interface_id: 1
+    });
+    Col.createIndex({
+      project_id: 1
+    });
+    Col.createIndex({
+      group_id: 1
+    });
+    Col.createIndex({
+      time: 1
+    });
+    Col.createIndex({
+      date: 1
+    });
   }
   getName() {
     return "statis_mock";
@@ -36,7 +53,7 @@ class StatisticsMockModel extends BaseModel {
     let end = timeInterval[1];
     let start = timeInterval[0];
     let data = [];
-    console.log('getDayCount', timeInterval, this.model);
+    console.log("getDayCount", timeInterval, this.model);
     const cursor = this.model.aggregate([
       {
         $match: {

@@ -1,7 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
 const BaseModel = require("@server/models/BaseModel.js");
-
 class GroupModel extends BaseModel {
   constructor() {
     super();
@@ -9,7 +8,6 @@ class GroupModel extends BaseModel {
   getName() {
     return "group";
   }
-
   getSchema() {
     return {
       uid: Number,
@@ -26,7 +24,6 @@ class GroupModel extends BaseModel {
           email: String
         }
       ],
-
       custom_field1: {
         name: String,
         enable: { type: Boolean, default: false }
@@ -41,16 +38,13 @@ class GroupModel extends BaseModel {
       // }
     };
   }
-
   save(data) {
     const m = new this.model(data);
     return m.save();
   }
-
   get(id) {
     return this.model.findOne({ _id: id }).exec();
   }
-
   updateMember(data) {
     return this.model.update(
       {
@@ -65,19 +59,14 @@ class GroupModel extends BaseModel {
       { multi: true }
     );
   }
-
   getByPrivateUid(uid) {
     return this.model.findOne({ uid: uid, type: "private" })
       .select("group_name _id group_desc add_time up_time type custom_field1")
       .exec();
   }
-
   getGroupById(id) {
-    return this.model.findOne({ _id: id })
-      .select("uid group_name group_desc add_time up_time type custom_field1")
-      .exec();
+    return this.model.findOne({ _id: id }).select("uid group_name group_desc add_time up_time type custom_field1").exec();
   }
-
   checkRepeat(name) {
     return this.model.countDocuments({ group_name: name });
   }
@@ -85,90 +74,44 @@ class GroupModel extends BaseModel {
   getGroupListCount() {
     return this.model.countDocuments({ type: "public" });
   }
-
   addMember(id, data) {
-    return this.model.update(
-      { _id: id },
-      {
-        // $push: { members: data },
-        $push: { members: { $each: data } }
-      }
-    );
-  }
-
-  delMember(id, uid) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      {
-        $pull: { members: { uid: uid } }
-      }
-    );
-  }
-
-  changeMemberRole(id, uid, role) {
-    return this.model.update(
-      {
-        _id: id,
-        "members.uid": uid
-      },
-      {
-        $set: { "members.$.role": role }
-      }
-    );
-  }
-
-  checkMemberRepeat(id, uid) {
-    return this.model.countDocuments({
-      _id: id,
-      "members.uid": uid
+    return this.model.update({ _id: id }, {
+      // $push: { members: data },
+      $push: { members: { $each: data } }
     });
   }
-
+  delMember(id, uid) {
+    return this.model.update({ _id: id }, { $pull: { members: { uid: uid } } });
+  }
+  changeMemberRole(id, uid, role) {
+    return this.model.update({ _id: id, "members.uid": uid }, { $set: { "members.$.role": role } });
+  }
+  checkMemberRepeat(id, uid) {
+    return this.model.countDocuments({ _id: id, "members.uid": uid });
+  }
   list() {
-    return this.model
-      .find({
-        type: "public"
-      })
+    return this.model.find({ type: "public" })
       .select("group_name _id group_desc add_time up_time type uid custom_field1")
       .exec();
   }
-
   getAuthList(uid) {
     return this.model.find({
-      $or: [{
-        "members.uid": uid,
-        "type": "public"
-      }, {
-        "type": "public",
-        uid
-      }]
+      $or: [
+        { "members.uid": uid, "type": "public" },
+        { "type": "public", uid }
+      ]
     }).select(" _id group_name group_desc add_time up_time type uid custom_field1")
       .exec();
-
   }
-
   findByGroups(ids = []) {
-    return this.model.find({
-      _id: {
-        $in: ids
-      },
-      type: "public"
-    })
+    return this.model.find({ _id: { $in: ids }, type: "public" })
   }
-
   del(id) {
-    return this.model.remove({
-      _id: id
-    });
+    return this.model.remove({ _id: id });
   }
-
   up(id, data) {
     return this.model.update(
-      {
-        _id: id
-      },
+      { _id: id },
       {
         custom_field1: data.custom_field1,
         group_name: data.group_name,
@@ -177,24 +120,16 @@ class GroupModel extends BaseModel {
       }
     );
   }
-
   getcustomFieldName(name) {
     return this.model
-      .find({
-        "custom_field1.name": name,
-        "custom_field1.enable": true
-      })
+      .find({ "custom_field1.name": name, "custom_field1.enable": true })
       .select("_id")
       .exec();
   }
-
   search(keyword) {
     return this.model
-      .find({
-        group_name: new RegExp(keyword, "i")
-      })
+      .find({ group_name: new RegExp(keyword, "i") })
       .limit(10);
   }
 }
-
 module.exports = GroupModel;

@@ -124,6 +124,13 @@ const router = [
         name: "Follow",
         element: lazy(() => import("../pages/Follow/Follow.jsx")),
         meta: { title: "查看报告", auth: true }
+      },
+      //
+      {
+        path: "/statistic",
+        name: "Statistic",
+        element: lazy(() => import("../pages/Statistic/Statistic.js")),
+        meta: { title: "系统信息", auth: true }
       }
     ]
   },

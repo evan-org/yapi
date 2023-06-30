@@ -129,7 +129,7 @@ class BaseController {
       } catch (err) {
         return false;
       }
-      if (decoded.uid == uid) {
+      if (decoded.uid === uid) {
         this.$uid = uid;
         this.$auth = true;
         this.$user = result;
@@ -154,10 +154,8 @@ class BaseController {
     }
   }
   /**
-   *
    * @param {*} ctx
    */
-
   async getLoginStatus(ctx) {
     let body;
     if ((await this.checkLogin(ctx)) === true) {
