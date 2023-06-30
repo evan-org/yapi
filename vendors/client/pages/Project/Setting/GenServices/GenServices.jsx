@@ -1,34 +1,20 @@
-import React, { PureComponent as Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
-import { getToken } from '@/reducer/modules/project.js'
+import React, { PureComponent as Component } from "react"
+import PropTypes from "prop-types"
+import { connect } from "react-redux";
+import { getToken } from "@/reducer/modules/project.js"
+import "@/pages/Project/Setting/GenServices/GenServices.scss";
 
-
-import './GenServicesPage.scss';
-
-@connect(
-  state => {
-    return {
-      token: state.project.token
-    }
-  },
-  {
-    getToken
-  }
-)
-export default class GenServicesPage extends Component {
+class GenServices extends Component {
   static propTypes = {
     projectId: PropTypes.string,
     token: PropTypes.string,
     getToken: PropTypes.func
   }
-
   async componentDidMount() {
     const id = this.props.projectId;
     await this.props.getToken(id);
-
   }
-  render () {
+  render() {
     const id = this.props.projectId;
     return (
       <div className="project-services">
@@ -45,7 +31,7 @@ npm i sm2tsservice -D
             <pre>{`
   {
     "url": "yapi-swagger.json",
-    "remoteUrl": "${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ''}/api/open/plugin/export-full?type=json&pid=${id}&status=all&token=${this.props.token}",
+    "remoteUrl": "${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ""}/api/open/plugin/export-full?type=json&pid=${id}&status=all&token=${this.props.token}",
     "type": "yapi",
     "swaggerParser": {}
   }
@@ -57,7 +43,7 @@ npm i sm2tsservice -D
   `}</pre>
             <pre>{`
   {
-    "url": "${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ''}/api/open/plugin/export-full?type=json&pid=${id}&status=all&token=${this.props.token}",
+    "url": "${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ""}/api/open/plugin/export-full?type=json&pid=${id}&status=all&token=${this.props.token}",
     "type": "yapi",
     "swaggerParser": {}
   }
@@ -74,3 +60,11 @@ npm i sm2tsservice -D
     );
   }
 }
+export default connect(
+  (state) => ({
+    token: state.project.token
+  }),
+  {
+    getToken
+  }
+)(GenServices)

@@ -1,3 +1,4 @@
+
 import React, { PureComponent as Component } from "react";
 import { Tabs } from "antd";
 import PropTypes from "prop-types";
@@ -7,23 +8,32 @@ import ProjectRequest from "./ProjectRequest/ProjectRequest";
 import ProjectToken from "./ProjectToken/ProjectToken";
 import ProjectMock from "./ProjectMock/index.js";
 import { connect } from "react-redux";
-
 //
-const plugin = require("@/plugin.js");
-const routers = {}
+import GenServices from "@/pages/Project/Setting/GenServices/GenServices.jsx";
+import SwaggerAutoSyncPage from "@/pages/Project/Setting/SwaggerAutoSync/SwaggerAutoSync.jsx";
+const routers = {
+  services: {
+    name: "生成 ts services",
+    component: GenServices
+  },
+  test: {
+    name: "Swagger自动同步",
+    component: SwaggerAutoSyncPage
+  }
+};
+//
 import "./Setting.scss";
-
-@connect((state) => ({
-  curProjectRole: state.project.currProject.role
-}))
 class Setting extends Component {
+  constructor(props) {
+    super(props);
+  }
   static propTypes = {
     match: PropTypes.object,
     curProjectRole: PropTypes.string
   };
+
   render() {
     const id = this.props.match.params.id;
-    plugin.emitHook("sub_setting_nav", routers);
     return (
       <div className="g-row">
         <Tabs type="card" className="has-affix-footer tabs-large">
@@ -55,4 +65,6 @@ class Setting extends Component {
     );
   }
 }
-export default Setting;
+export default connect((state) => ({
+  curProjectRole: state.project.currProject.role
+}))(Setting);
