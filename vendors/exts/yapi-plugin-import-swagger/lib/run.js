@@ -1,7 +1,7 @@
 const _ = require("underscore")
-const swagger = require("swagger-client");
-const compareVersions = require("compare-versions");
-
+import swagger from "swagger-client";
+import compareVersions from "compare-versions";
+import { message } from "antd";
 let SwaggerData, isOAS3;
 function handlePath(path) {
   if (path === "/") {
@@ -15,7 +15,6 @@ function handlePath(path) {
   }
   return path;
 }
-
 function openapi2swagger(data) {
   data.swagger = "2.0";
   _.each(data.paths, (apis) => {
@@ -60,28 +59,22 @@ function openapi2swagger(data) {
         } catch (e) {
           body.schema = {};
         }
-
         api.parameters.push(body);
       }
     });
   });
-
   return data;
 }
-
 async function handleSwaggerData(res) {
-
   return await new Promise((resolve) => {
     let data = swagger({
       spec: res
     });
-
     data.then((res) => {
       resolve(res.spec);
     });
   });
 }
-
 async function run(res) {
   let interfaceData = { apis: [], cats: [] };
   if (typeof res === "string" && res) {
@@ -91,16 +84,13 @@ async function run(res) {
       console.error("json 解析出错", e.message)
     }
   }
-
   isOAS3 = res.openapi && compareVersions(res.openapi, "3.0.0") >= 0;
   if (isOAS3) {
     res = openapi2swagger(res);
   }
   res = await handleSwaggerData(res);
   SwaggerData = res;
-
   interfaceData.basePath = res.basePath || "";
-
   if (res.tags && Array.isArray(res.tags)) {
     res.tags.forEach((tag) => {
       interfaceData.cats.push({
@@ -111,7 +101,6 @@ async function run(res) {
   } else {
     res.tags = []
   }
-
   _.each(res.paths, (apis, path) => {
     // parameters is common parameters, not a method
     delete apis.parameters;
@@ -139,17 +128,13 @@ async function run(res) {
       }
     });
   });
-
   interfaceData.cats = interfaceData.cats.filter((catData) => {
     let catName = catData.name;
     return _.find(interfaceData.apis, (apiData) => apiData.catname === catName)
   })
-
   return interfaceData;
 }
-
 function handleSwagger(data, originTags = []) {
-
   let api = {};
   // 处理基本信息
   api.method = data.method.toUpperCase();
@@ -162,22 +147,17 @@ function handleSwagger(data, originTags = []) {
       if (/v[0-9\.]+/.test(data.tags[i])) {
         continue;
       }
-
       // 如果根路径有 tags，使用根路径 tags,不使用每个接口定义的 tag 做完分类
       if (originTags.length > 0 && _.find(originTags, (item) => item.name === data.tags[i])) {
         api.catname = data.tags[i];
         break;
       }
-
       if (originTags.length === 0) {
         api.catname = data.tags[i];
         break;
       }
-
     }
-
   }
-
   api.path = handlePath(data.path);
   api.req_params = [];
   api.req_body_form = [];
@@ -185,12 +165,10 @@ function handleSwagger(data, originTags = []) {
   api.req_query = [];
   api.req_body_type = "raw";
   api.res_body_type = "raw";
-
   if (data.produces && data.produces.indexOf("application/json") > -1) {
     api.res_body_type = "json";
     api.res_body_is_json_schema = true;
   }
-
   if (data.consumes && Array.isArray(data.consumes)) {
     if (
       data.consumes.indexOf("application/x-www-form-urlencoded") > -1 ||
@@ -202,7 +180,6 @@ function handleSwagger(data, originTags = []) {
       api.req_body_is_json_schema = true;
     }
   }
-
   // 处理response
   api.res_body = handleResponse(data.responses);
   try {
@@ -229,7 +206,6 @@ function handleSwagger(data, originTags = []) {
     }
     return json;
   }
-
   if (data.parameters && Array.isArray(data.parameters)) {
     data.parameters.forEach((param) => {
       if (param && typeof param === "object" && param.$ref) {
@@ -240,7 +216,6 @@ function handleSwagger(data, originTags = []) {
         desc: param.description,
         required: param.required ? "1" : "0"
       };
-
       if (param.in) {
         switch (param.in) {
           case "path":
@@ -268,10 +243,8 @@ function handleSwagger(data, originTags = []) {
       }
     });
   }
-
   return api;
 }
-
 function isJson(json) {
   try {
     return JSON.parse(json);
@@ -279,7 +252,6 @@ function isJson(json) {
     return false;
   }
 }
-
 function handleBodyPamras(data, api) {
   api.req_body_other = JSON.stringify(data, null, 2);
   if (isJson(api.req_body_other)) {
@@ -287,7 +259,6 @@ function handleBodyPamras(data, api) {
     api.req_body_is_json_schema = true;
   }
 }
-
 function handleResponse(api) {
   let res_body = "";
   if (!api || typeof api !== "object") {
@@ -301,7 +272,6 @@ function handleResponse(api) {
     } else {
       curCode = codes[0];
     }
-
     let res = api[curCode];
     if (res && typeof res === "object") {
       if (res.schema) {
@@ -319,6 +289,19 @@ function handleResponse(api) {
   }
   return res_body;
 }
-
-
-module.exports = run;
+export default {
+  name: "Swagger",
+  run: async function(res) {
+    try {
+      return await run(res);
+    } catch (err) {
+      console.error(err);
+      message.error("解析失败");
+    }
+  },
+  desc: `<p>Swagger数据导入（ 支持 v2.0+ ）</p>
+      <p>
+        <a target="_blank" href="https://hellosean1025.github.io/yapi/documents/data.html#通过命令行导入接口数据">通过命令行导入接口数据</a>
+      </p>
+      `
+};

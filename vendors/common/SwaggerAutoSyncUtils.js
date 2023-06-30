@@ -11,7 +11,7 @@ const sha = require("sha.js");
 const md5 = require("md5");
 const { getToken } = require("@server/utils/token.js");
 const jobMap = new Map();
-class syncUtils {
+class SwaggerAutoSyncUtils {
   constructor(ctx) {
     yapi.commons.log("-------------------------------------swaggerSyncUtils constructor-----------------------------------------------");
     this.ctx = ctx;
@@ -201,4 +201,4 @@ class syncUtils {
     }
   }
 }
-module.exports = syncUtils;
+module.exports = SwaggerAutoSyncUtils;

@@ -16,12 +16,15 @@ const renderToHtml = require("../views/reportHtml/index.js");
 const HanldeImportData = require("@common/HandleImportData.js");
 const _ = require("underscore");
 const createContex = require("@common/createContext.js")
+const importHAR = require("@common/import/importHAR.js");
 /**
  * {
  *    postman: require('./m')
  * }
  */
-const importDataModule = {};
+const importDataModule = {
+  har: importHAR,
+};
 yapi.emitHook("import_data", importDataModule);
 class OpenController extends baseController {
   constructor(ctx) {
