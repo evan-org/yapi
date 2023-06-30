@@ -263,7 +263,6 @@ class InterfaceColController extends baseController {
    * @example
    * @param ctx
    */
-
   async addCase(ctx) {
     try {
       let params = ctx.request.body;
@@ -472,7 +471,6 @@ class InterfaceColController extends baseController {
    * @example
    * @param ctx
    */
-
   async upCase(ctx) {
     try {
       let params = ctx.request.body;

@@ -111,15 +111,6 @@ router.get("/statismock/group_data_stats", async(ctx) => {
 router.get("/export", async(ctx) => {
   ctx.body = "";
 });
-/**
- *@controller GenServicesController
- *@action exportFullData
- *@method get
- *@name ""
- **/
-router.get("/export-full", async(ctx) => {
-  ctx.body = "";
-});
 /* ******************************************************************************** */
 /**
  *@controller ExportSwaggerController

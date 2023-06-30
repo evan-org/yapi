@@ -593,6 +593,7 @@ function addPluginRouter(config) {
     throw new Error("Plugin Route path conflict, please try rename the path");
   }
   pluginsRouterPath.push(routerPath);
+  console.log("1111111111111111", routerPath, config);
   // let a = `/**
   // *@controller ${config.controller.name}
   // *@action ${config.action}

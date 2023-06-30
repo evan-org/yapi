@@ -28,5 +28,14 @@ router.get("/run_auto_test", async(ctx) => {
 router.post("/import_data", async(ctx) => {
   ctx.body = "";
 });
+/**
+ *@controller GenServicesController
+ *@action exportFullData
+ *@method get
+ *@name ""
+ **/
+router.get("/plugin/export-full", async(ctx) => {
+  ctx.body = "";
+});
 //
 module.exports = router;
