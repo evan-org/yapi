@@ -18,6 +18,8 @@ const koaStatic = require("koa-static");
 // Koa 应用程序的跨域资源共享 (Cross-Origin Resource Sharing, CORS) 中间件。它添加了必要的 HTTP 响应头，以便在浏览器中处理跨域请求。
 const cors = require("@koa/cors");
 // 处理请求体的中间件，它可以解析和处理来自客户端的请求数据（如表单数据、JSON 数据、文件上传等）。它使得在 Koa 应用程序中处理请求数据变得更加简单和方便。
+const koaBodyparser = require("koa-bodyparser");
+// 处理请求体的中间件，它可以解析和处理来自客户端的请求数据（如表单数据、JSON 数据、文件上传等）。它使得在 Koa 应用程序中处理请求数据变得更加简单和方便。
 const koaBody = require("koa-body");
 // Koa 应用程序中添加 WebSocket 支持的中间件。它基于 Node.js 的内置 WebSocket 模块，并提供了简单易用的接口，使得在 Koa 应用程序中处理 WebSocket 的通信变得更加方便。
 const koaWebsocket = require("koa-websocket");
@@ -40,37 +42,48 @@ NoticePlugin();
 /* ******************************************************************************** */
 const app = koaWebsocket(new Koa());
 const { websocketMiddleware, mockServerMiddleware, routeMiddleware } = require("@server/middleware/index.js");
-app.use(mockServerMiddleware);
-app.use(routeMiddleware);
-//
-const routeri = require("./routes/index.js");
-app.use(routeri())
-//
-const router = require("./routes/router.js");
-app.proxy = true;
-app.use(router.routes(), router.allowedMethods());
-console.log("router.routes()", router.routes());
-websocketMiddleware(app);
-//
-const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
-app.use(koaStatic(yapi.path.join(yapi.WEBROOT, "static"), { index: indexFile, gzip: true }));
-// app.use(koaBodyparser())
-app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
-// 使用 koa-helmet 中间件
-app.use(helmet());
-// 处理跨域请求
-app.use(cors());
-// 处理crx
-app.use(koaJson());
-//
-app.use(koaLogger());
 // 错误处理中间件
 onerror(app);
-// run
+
+// 使用 koa-helmet 中间件
+app.use(helmet());
+
+// 处理跨域请求
+app.use(cors());
+
+// 日志中间件
+app.use(koaLogger());
+
+// 处理静态文件
+const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
+app.use(koaStatic(yapi.path.join(yapi.WEBROOT, "static"), { index: indexFile, gzip: true }));
+
+// 解析请求的 body 数据
+// app.use(koaBodyparser());
+app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
+
+// 处理 crx
+app.use(koaJson());
+
+// 路由中间件
+app.use(routeMiddleware);
+
+// Mock 服务器中间件
+app.use(mockServerMiddleware);
+
+// WebSocket 中间件
+websocketMiddleware(app);
+
+// 路由处理
+const router = require("./routes/router.js");
+app.proxy = true;
+app.use(router.routes()).use(router.allowedMethods());
+console.log("router.routes()", router.routes());
+
+// 启动服务器
 const server = app.listen(yapi.WEBROOT_CONFIG.port);
-//
 server.setTimeout(yapi.WEBROOT_CONFIG.timeout);
-// log
+
+// 日志输出
 const port = yapi.WEBROOT_CONFIG.port?.toString() === "80" ? "" : ":" + yapi.WEBROOT_CONFIG.port;
-//
 yapi.commons.log(`服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${port}/`);

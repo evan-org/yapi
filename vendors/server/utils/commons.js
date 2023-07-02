@@ -436,6 +436,7 @@ exports.createAction = (router, baseurl, RouterController, action, path, method,
         }
       }
     } catch (err) {
+      console.log("", err);
       ctx.body = yapi.commons.resReturn(null, 40011, "服务器出错...");
       yapi.commons.log(err, "error");
     }

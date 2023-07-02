@@ -11,6 +11,7 @@ const followController = require("@server/controllers/FollowController.js");
 const openController = require("@server/controllers/OpenController.js");
 //
 const { createAction } = require("@server/utils/commons.js");
+//
 const Router = require("@koa/router");
 const router = new Router();
 //
@@ -594,17 +595,6 @@ function addPluginRouter(config) {
   }
   pluginsRouterPath.push(routerPath);
   console.log("1111111111111111", routerPath, config);
-  // let a = `/**
-  // *@controller ${config.controller.name}
-  // *@action ${config.action}
-  // *@method ${method}
-  // *@name ""
-  // **/
-  // router.${method}("/${config.path}", async(ctx) => {
-  //   ctx.body = "";
-  // });
-  // `
-  // console.log(a, config);
   createAction(router, "/api", config.controller, config.action, routerPath, method, false);
 }
 //
@@ -612,11 +602,11 @@ yapi.emitHookSync("add_router", addPluginRouter);
 //
 for (const ctrl in routerConfig) {
   let actions = routerConfig[ctrl];
-  actions.forEach((item) => {
+  for (const item of actions) {
     const RouterController = INTERFACE_CONFIG[ctrl].controller;
     const path = INTERFACE_CONFIG[ctrl].prefix + item.path;
     createAction(router, "/api", RouterController, item.action, path, item.method, false);
-  });
+  }
 }
 //
 module.exports = router;

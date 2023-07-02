@@ -80,7 +80,11 @@ function handleCorsRequest(ctx) {
 }
 // 必填字段是否填写好
 function mockValidator(interfaceData, ctx) {
-  let i, j, l, len, noRequiredArr = [];
+  let i;
+  let j;
+  let l;
+  let len;
+  let noRequiredArr = [];
   let method = interfaceData.method.toUpperCase() || "GET";
   // query 判断
   for (i = 0, l = interfaceData.req_query.length; i < l; i++) {
@@ -130,6 +134,7 @@ module.exports = async(ctx, next) => {
   // no used variable 'hostname' & 'config'
   // let hostname = ctx.hostname;
   // let config = yapi.WEBROOT_CONFIG;
+  console.log("mockServer.js => ", ctx);
   let path = ctx.path;
   let header = ctx.request.header;
   if (path.indexOf("/mock/") !== 0) {

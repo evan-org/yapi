@@ -26,6 +26,7 @@ class UserController extends baseController {
   async login(ctx) {
     // 登录
     let userInst = yapi.getInst(UserModel); // 创建user实体
+    console.log(ctx, ctx.request.body);
     let email = ctx.request.body.email;
     email = (email || "").trim();
     let password = ctx.request.body.password;
