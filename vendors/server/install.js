@@ -5,6 +5,7 @@ const commons = require("@server/utils/commons.js");
 const useMongodb = require("@server/helper/mongodb.js");
 const UserModel = require("@server/models/UserModel.js");
 const mongoose = require("mongoose");
+const { generatePassword, generatePasssalt } = require("@server/utils/sso.js");
 yapi.commons = commons;
 yapi.connect = useMongodb.connect();
 //
@@ -19,11 +20,11 @@ function install() {
 }
 function setupSql() {
   let userInst = yapi.getInst(UserModel);
-  let passsalt = yapi.commons.randStr();
+  let passsalt = generatePasssalt();
   let result = userInst.save({
     username: yapi.WEBROOT_CONFIG.adminAccount.substring(0, yapi.WEBROOT_CONFIG.adminAccount.indexOf("@")),
     email: yapi.WEBROOT_CONFIG.adminAccount,
-    password: yapi.commons.generatePassword("ymfe.org", passsalt),
+    password: generatePassword("ymfe.org", passsalt),
     passsalt: passsalt,
     role: "admin",
     add_time: yapi.commons.time(),

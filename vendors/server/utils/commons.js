@@ -151,10 +151,6 @@ exports.json_parse = (json) => {
 /**
  *
  * */
-exports.randStr = () => Math.random().toString(36).substr(2);
-/**
- *
- * */
 exports.getIp = (ctx) => {
   let ip;
   try {
@@ -164,10 +160,6 @@ exports.getIp = (ctx) => {
   }
   return ip;
 };
-/**
- *
- * */
-exports.generatePassword = (password, passsalt) => sha1(password + sha1(passsalt));
 /**
  *
  * */

@@ -18,6 +18,7 @@ const commons = require("@server/utils/commons.js");
 //
 const { getToken } = require("../utils/token")
 const sha = require("sha.js");
+const { generatePasssalt } = require("@server/utils/sso.js");
 const axios = require("axios").default;
 class ProjectController extends baseController {
   constructor(ctx) {
@@ -916,7 +917,7 @@ class ProjectController extends baseController {
       let data = await this.TokenModel.get(project_id);
       let token;
       if (!data) {
-        let passsalt = yapi.commons.randStr();
+        let passsalt = generatePasssalt();
         token = sha("sha1")
           .update(passsalt)
           .digest("hex")
@@ -947,7 +948,7 @@ class ProjectController extends baseController {
       let data = await this.TokenModel.get(project_id);
       let token, result;
       if (data && data.token) {
-        let passsalt = yapi.commons.randStr();
+        let passsalt = generatePasssalt();
         token = sha("sha1")
           .update(passsalt)
           .digest("hex")

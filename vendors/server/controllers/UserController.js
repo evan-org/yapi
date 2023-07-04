@@ -8,6 +8,8 @@ const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = req
 const jwt = require("jsonwebtoken");
 //
 const responseAction = require("@server/utils/responseAction.js");
+//
+const { generatePassword, generatePasssalt } = require("@server/utils/sso.js");
 class UserController extends baseController {
   constructor(ctx) {
     super(ctx);
@@ -25,24 +27,29 @@ class UserController extends baseController {
    * @example ./api/user/login.json
    */
   async login(ctx) {
-    // 登录
-    let userInst = yapi.getInst(UserModel); // 创建user实体
-    console.log(ctx, ctx.request.body);
-    let email = ctx.request.body.email;
-    email = (email || "").trim();
-    let password = ctx.request.body.password;
-    if (!email) {
-      return (ctx.body = responseAction(null, 400, "email不能为空"));
-    }
-    if (!password) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "密码不能为空"));
-    }
-    let result = await userInst.findByEmail(email);
-    if (!result) {
-      return (ctx.body = yapi.commons.resReturn(null, 404, "该用户不存在"));
-    } else if (yapi.commons.generatePassword(password, result.passsalt) === result.password) {
+    try {
+      // 登录
+      console.log(ctx, ctx.request.body);
+      let email = ctx.request.body.email;
+      email = (email || "").trim();
+      let password = ctx.request.body.password;
+      if (!email) {
+        return (ctx.body = responseAction(null, 400, "email不能为空"));
+      }
+      if (!password) {
+        return (ctx.body = responseAction(null, 400, "密码不能为空"));
+      }
+      //
+      let userInst = yapi.getInst(UserModel); // 创建user实体
+      let result = await userInst.findByEmail(email);
+      if (!result) {
+        return (ctx.body = responseAction(null, 403, "该用户不存在"));
+      }
+      if (generatePassword(password, result.passsalt) !== result.password) {
+        return (ctx.body = responseAction(null, 405, "密码错误"));
+      }
       this.setLoginCookie(result._id, result.passsalt);
-      return (ctx.body = yapi.commons.resReturn(
+      return (ctx.body = responseAction(
         {
           username: result.username,
           role: result.role,
@@ -56,9 +63,16 @@ class UserController extends baseController {
         0,
         "login success..."
       ));
-    } else {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "密码错误"));
+    } catch (e) {
+      return (ctx.body = responseAction(null, 500, "未知错误"));
     }
+  }
+  /**
+   * 查询登录用户详情
+   * @interface /user/profile
+   * @method POST
+   * */
+  async profile(ctx) {
   }
   /**
    * 退出登录接口
@@ -165,10 +179,10 @@ class UserController extends baseController {
       user = await userInst.findByEmail(email);
       // 新建用户信息
       if (!user || !user._id) {
-        passsalt = yapi.commons.randStr();
+        passsalt = generatePasssalt();
         data = {
           username: username,
-          password: yapi.commons.generatePassword(passsalt, passsalt),
+          password: generatePassword(passsalt, passsalt),
           email: email,
           passsalt: passsalt,
           role: "member",
@@ -218,14 +232,14 @@ class UserController extends baseController {
       if (!params.old_password) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "旧密码不能为空"));
       }
-      if (yapi.commons.generatePassword(params.old_password, user.passsalt) !== user.password) {
+      if (generatePassword(params.old_password, user.passsalt) !== user.password) {
         return (ctx.body = yapi.commons.resReturn(null, 402, "旧密码错误"));
       }
     }
-    let passsalt = yapi.commons.randStr();
+    let passsalt = generatePasssalt();
     let data = {
       up_time: yapi.commons.time(),
-      password: yapi.commons.generatePassword(params.password, passsalt),
+      password: generatePassword(params.password, passsalt),
       passsalt: passsalt
     };
     try {
@@ -290,10 +304,10 @@ class UserController extends baseController {
     if (checkRepeat > 0) {
       return (ctx.body = yapi.commons.resReturn(null, 401, "该email已经注册"));
     }
-    let passsalt = yapi.commons.randStr();
+    let passsalt = generatePasssalt();
     let data = {
       username: params.username,
-      password: yapi.commons.generatePassword(params.password, passsalt), // 加密
+      password: generatePassword(params.password, passsalt), // 加密
       email: params.email,
       passsalt: passsalt,
       role: "member",

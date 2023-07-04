@@ -10,6 +10,7 @@ const TokenModel = require("@server/models/TokenModel.js");
 const sha = require("sha.js");
 const md5 = require("md5");
 const { getToken } = require("@server/utils/token.js");
+const { generatePasssalt } = require("@server/utils/sso.js");
 const jobMap = new Map();
 class SwaggerAutoSyncUtils {
   constructor(ctx) {
@@ -155,7 +156,7 @@ class SwaggerAutoSyncUtils {
       let data = await this.TokenModel.get(project_id);
       let token;
       if (!data) {
-        let passsalt = yapi.commons.randStr();
+        let passsalt = generatePasssalt();
         token = sha("sha1")
         .update(passsalt)
         .digest("hex")
