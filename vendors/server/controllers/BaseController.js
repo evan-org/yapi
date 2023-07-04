@@ -8,6 +8,7 @@ const TokenModel = require("@server/models/TokenModel.js");
 //
 const _ = require("underscore");
 const jwt = require("jsonwebtoken");
+const responseAction = require("@server/utils/responseAction.js");
 const { parseToken } = require("../utils/token.js");
 // 不需要登录校验的API
 const ignoreRouter = [
@@ -154,12 +155,13 @@ class BaseController {
     }
   }
   /**
+   * 通用方法返回登录信息
    * @param {*} ctx
    */
   async getLoginStatus(ctx) {
-    let body;
+    let body = {};
     if ((await this.checkLogin(ctx)) === true) {
-      let result = yapi.commons.fieldSelect(this.$user, [
+      const result = yapi.commons.fieldSelect(this.$user, [
         "_id",
         "username",
         "email",
@@ -169,9 +171,9 @@ class BaseController {
         "type",
         "study"
       ]);
-      body = yapi.commons.resReturn(result);
+      body.info = responseAction(result);
     } else {
-      body = yapi.commons.resReturn(null, 40011, "请登录...");
+      body.info = responseAction(null, 40011, "未登录...");
     }
     body.ladp = await this.checkLDAP();
     body.canRegister = await this.checkRegister();
