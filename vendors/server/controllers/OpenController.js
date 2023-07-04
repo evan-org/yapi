@@ -15,14 +15,22 @@ const { handleParamsValue, ArrayToObject } = require("@common/utils.js");
 const renderToHtml = require("../views/reportHtml/index.js");
 const HanldeImportData = require("@common/HandleImportData.js");
 const _ = require("underscore");
-const createContex = require("@common/createContext.js")
+const createContex = require("@common/createContext.js");
+const swaggerRun = require("@common/import/swaggerRun.js");
 /**
  * {
  *    postman: require('./m')
  * }
  */
 const importDataModule = {
-
+  swagger: async(res) => {
+    try {
+      return await swaggerRun(res);
+    } catch (err) {
+      yapi.commons.log(err, "error");
+      return false;
+    }
+  }
 };
 // yapi.emitHook("import_data", importDataModule);
 class OpenController extends baseController {

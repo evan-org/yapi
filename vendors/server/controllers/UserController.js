@@ -1,12 +1,13 @@
 const yapi = require("@server/yapi.js");
 //
-const common = require("@server/utils/commons.js");
 const ldap = require("@server/utils/ldap.js");
 const baseController = require("@server/controllers/BaseController.js");
 //
 const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = require("@server/models/index.js");
 //
 const jwt = require("jsonwebtoken");
+//
+const responseAction = require("@server/utils/responseAction.js");
 class UserController extends baseController {
   constructor(ctx) {
     super(ctx);
@@ -31,7 +32,7 @@ class UserController extends baseController {
     email = (email || "").trim();
     let password = ctx.request.body.password;
     if (!email) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "email不能为空"));
+      return (ctx.body = responseAction(null, 400, "email不能为空"));
     }
     if (!password) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "密码不能为空"));
@@ -53,7 +54,7 @@ class UserController extends baseController {
           study: result.study
         },
         0,
-        "logout success..."
+        "login success..."
       ));
     } else {
       return (ctx.body = yapi.commons.resReturn(null, 405, "密码错误"));
@@ -585,7 +586,7 @@ class UserController extends baseController {
         alias: "upTime"
       }
     ];
-    let filteredRes = common.filterRes(queryList, rules);
+    let filteredRes = yapi.commons.filterRes(queryList, rules);
     return (ctx.body = yapi.commons.resReturn(filteredRes, 0, "ok"));
   }
   /**

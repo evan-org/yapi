@@ -30,7 +30,6 @@ import importPostman from "@common/import/importPostman.js";
 import importSwagger from "@common/import/importSwagger.js";
 import importYapiJson from "@common/import/importYapiJson.js";
 //
-const plugin = require("@/plugin.js");
 const importDataModule = {
   har: importHAR,
   postman: importPostman,
@@ -111,7 +110,7 @@ class Data extends Component {
     this.pluginExportData(this.props.match.params.id);
   }
   //
-  pluginExportData(id = this.props.match.params.id) {
+  pluginExportData(pid = this.props.match.params.id) {
     exportDataModule.html = {
       name: "html",
       route: `/api/plugin/export?type=html&pid=${pid}`,
