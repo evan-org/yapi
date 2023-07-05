@@ -1,10 +1,10 @@
-import { pickRandomProperty } from "@/utils/common.js";
-import constants from "@/utils/variable.js";
+// import { pickRandomProperty } from "@/utils/common.js";
+// import constants from "@/utils/variable.js";
 import React, { PureComponent as Component } from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // import { Form, Button, Input, message, Radio } from "antd";
-import Icon from "@ant-design/icons";
+// import Icon from "@ant-design/icons";
 import { loginActions, loginLdapActions } from "@/reducer/modules/user.js";
 import { useNavigate } from "react-router-dom";
 //

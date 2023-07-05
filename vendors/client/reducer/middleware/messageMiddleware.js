@@ -1,7 +1,9 @@
 import { message } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default () => (next) => (action) => {
-  console.log("messageMiddleware =====>", action);
+  const location = useLocation();
+  console.log("messageMiddleware =====>", location, action);
   if (!action) {
     return;
   }

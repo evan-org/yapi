@@ -34,14 +34,20 @@ function Layout(props) {
   const location = useLocation();
   //
   useEffect(() => {
-    (async() => {
+    checkLoginStatus();
+  }, []);
+  //
+  const checkLoginStatus = async() => {
+    try {
       const loginData = await checkLoginState();
       console.log("layout挂载中", loginData, props);
       setTimeout(() => {
         setVisible(false);
       }, 1000)
-    })()
-  }, []);
+    } catch (e) {
+      console.log("checkLoginStatus >>>>>>>>>>>>>", e);
+    }
+  }
   //
   useEffect(() => {
     console.log("location update", location);

@@ -171,9 +171,9 @@ class BaseController {
         "type",
         "study"
       ]);
-      body.info = responseAction(result);
+      body = responseAction(result);
     } else {
-      body.info = responseAction(null, 40011, "未登录...");
+      body = responseAction(null, 40011, "未登录...");
     }
     body.ladp = await this.checkLDAP();
     body.canRegister = await this.checkRegister();
