@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import Loading from "../components/Loading/Loading.jsx";
-import AppFooter from "@/pages/Home/components/Footer/Footer.jsx";
+// import AppFooter from "@/pages/Home/components/Footer/Footer.jsx";
 import AppHeader from "./components/Header/Header.jsx";
 //
 import styles from "./Layout.module.scss";
@@ -35,8 +35,8 @@ function Layout(props) {
   //
   useEffect(() => {
     (async() => {
-      const a = await checkLoginState();
-      console.log("layout挂载中", loginState, props);
+      const loginData = await checkLoginState();
+      console.log("layout挂载中", loginData, props);
       setTimeout(() => {
         setVisible(false);
       }, 1000)

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Row, Col, Input } from "antd";
 import Icon from "@ant-design/icons";
-import "client/pages/Project/Setting/ProjectMessage/ProjectTag/ProjectTag.scss";
+import "@/pages/Project/Setting/ProjectMessage/ProjectTag/ProjectTag.scss";
 
 
 class ProjectTag extends Component {
