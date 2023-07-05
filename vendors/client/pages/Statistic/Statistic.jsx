@@ -6,8 +6,8 @@ import { connect } from "react-redux";
 import request from "@/service/request.js";
 import { Row, Col, Tooltip, Icon } from "antd";
 import { setBreadcrumb } from "@/reducer/modules/user.js";
-import StatisticsChart from "@/pages/Statistic/StatisticsChart/StatisticsChart.js";
-import StatisticsTable from "@/pages/Statistic/StatisticsTable/StatisticsTable.js";
+import StatisticsChart from "@/pages/Statistic/StatisticsChart/StatisticsChart.jsx";
+import StatisticsTable from "@/pages/Statistic/StatisticsTable/StatisticsTable.jsx";
 //
 import "@/pages/Statistic/Statistic.module.scss";
 
