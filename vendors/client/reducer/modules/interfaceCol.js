@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import request from "@/service/request.js";
 // Reducer
 const initialState = {
   interfaceColList: [
@@ -71,25 +71,25 @@ export default appSlice.reducer
 export async function fetchInterfaceColList(projectId) {
   return {
     type: FETCH_INTERFACE_COL_LIST,
-    payload: await axios.get("/api/col/list?project_id=" + projectId)
+    payload: await request.get("/col/list?project_id=" + projectId)
   };
 }
 export async function fetchCaseData(caseId) {
   return {
     type: FETCH_CASE_DATA,
-    payload: await axios.get("/api/col/case?caseid=" + caseId)
+    payload: await request.get("/col/case?caseid=" + caseId)
   };
 }
 export async function fetchCaseList(colId) {
   return {
     type: FETCH_CASE_LIST,
-    payload: await axios.get("/api/col/case_list/?col_id=" + colId)
+    payload: await request.get("/col/case_list/?col_id=" + colId)
   };
 }
 export async function fetchCaseEnvList(col_id) {
   return {
     type: FETCH_CASE_ENV_LIST,
-    payload: await axios.get("/api/col/case_env_list", {
+    payload: await request.get("/col/case_env_list", {
       params: { col_id }
     })
   };
@@ -97,7 +97,7 @@ export async function fetchCaseEnvList(col_id) {
 export async function fetchVariableParamsList(colId) {
   return {
     type: FETCH_VARIABLE_PARAMS_LIST,
-    payload: await axios.get("/api/col/case_list_by_var_params?col_id=" + colId)
+    payload: await request.get("/col/case_list_by_var_params?col_id=" + colId)
   };
 }
 export function setColData(data) {

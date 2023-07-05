@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import request from "@/service/request.js";
 import PropTypes from "prop-types";
 import { Form, Switch, Button, message, Tooltip, Radio } from "antd";
 import Icon from "@ant-design/icons";
@@ -32,7 +32,7 @@ class AdvMock extends Component {
       mock_script: this.state.mock_script,
       enable: this.state.enable
     };
-    axios.post("/api/plugin/advmock/save", params).then((res) => {
+    request.post("/plugin/advmock/save", params).then((res) => {
       if (res.data.errcode === 0) {
         message.success("保存成功");
       } else {
@@ -45,7 +45,7 @@ class AdvMock extends Component {
   }
   async getAdvMockData() {
     let interfaceId = this.props.match.params.actionId;
-    let result = await axios.get("/api/plugin/advmock/get?interface_id=" + interfaceId);
+    let result = await request.get("/plugin/advmock/get?interface_id=" + interfaceId);
     if (result.data.errcode === 0) {
       let mockData = result.data.data;
       this.setState({

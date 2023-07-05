@@ -7,8 +7,8 @@ import { usePrompt } from "@/components/Prompt/Prompt";
 import { fetchInterfaceData } from "@/reducer/modules/interface";
 //
 import Edit from "./Edit/Edit.js";
-import View from "./View/View.js";
-import Run from "./Run/Run.js";
+import View from "./View/View.jsx";
+import Run from "./Run/Run.jsx";
 import AdvMock from "./AdvMock/AdvMock.jsx";
 //
 class InterfaceContent extends Component {

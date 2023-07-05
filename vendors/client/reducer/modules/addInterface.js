@@ -1,6 +1,6 @@
 // Action Creators
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import request from "@/service/request.js";
 // Actions
 export const appSlice = createSlice({
   name: "addInterface",
@@ -128,7 +128,7 @@ export function pushInterfaceMethod(value) {
 export async function fetchInterfaceProject(id) {
   return {
     type: FETCH_INTERFACE_PROJECT,
-    payload: await axios.get("/api/project/get", { params: { id } })
+    payload: await request.get("/project/get", { params: { id } })
   };
 }
 export function addInterfaceClipboard(func) {

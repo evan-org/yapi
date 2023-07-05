@@ -11,7 +11,7 @@ import Icon from "@ant-design/icons";
 import EasyDragSort from "@/components/EasyDragSort/EasyDragSort.jsx";
 import mockEditor from "@/components/AceEditor/utils/mockEditor.js";
 import AceEditor from "@/components/AceEditor/AceEditor.jsx";
-import axios from "axios";
+import request from "@/service/request.js";
 import { MOCK_SOURCE, HTTP_METHOD, HTTP_REQUEST_HEADER } from "@/utils/variable.js";
 //
 import Editor from "@common/tui-editor/dist/tui-editor-Editor-all.min.js";
@@ -359,7 +359,7 @@ class InterfaceEditForm extends Component {
     try {
       if (this.props.form.getFieldValue("res_body_is_json_schema")) {
         let schema = json5.parse(this.props.form.getFieldValue("res_body"));
-        let result = await axios.post("/api/interface/schema2json", {
+        let result = await request.post("/interface/schema2json", {
           schema: schema
         });
         return this.mockPreview.setValue(JSON.stringify(result.data));

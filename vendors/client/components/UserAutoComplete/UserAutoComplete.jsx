@@ -3,7 +3,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 //
 import { Select } from "antd";
-import axios from "axios";
+import request from "@/service/request.js";
 import PropTypes from "prop-types";
 import React, { PureComponent as Component, useEffect, useState } from "react";
 /**
@@ -55,7 +55,7 @@ class UserAutoComplete extends Component {
     // this.lastFetchId += 1;
     // const fetchId = this.lastFetchId;
     this.setState({ fetching: true });
-    axios.get("/api/user/search", { params }).then((data) => {
+    request.get("/user/search", { params }).then((data) => {
       // if (fetchId !== this.lastFetchId) { // for fetch callback order
       //   return;
       // }
@@ -120,7 +120,7 @@ function UserAutoCompleteMain(props) {
   const loading = open && options.length === 0;
   // 搜索回调
   const handleSearch = async(value) => {
-    const response = await axios.get("/api/user/search", { params: { q: value } });
+    const response = await request.get("/user/search", { params: { q: value } });
     const data = response.data.data;
     if (data) {
       return data.map((v) => ({ ...v, title: v.username, username: v.username, id: v.uid, value: v.uid }));

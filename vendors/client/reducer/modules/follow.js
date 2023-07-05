@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import request from "@/service/request.js";
 // Actions
 export const appSlice = createSlice({
   name: "follow",
@@ -29,7 +29,7 @@ export default appSlice.reducer
 export async function getFollowList(uid) {
   return {
     type: GET_FOLLOW_LIST,
-    payload: await axios.get("/api/follow/list", {
+    payload: await request.get("/follow/list", {
       params: { uid }
     })
   };
@@ -38,13 +38,13 @@ export async function getFollowList(uid) {
 export async function addFollow(param) {
   return {
     type: ADD_FOLLOW,
-    payload: await axios.post("/api/follow/add", param)
+    payload: await request.post("/follow/add", param)
   };
 }
 // 删除关注
 export async function delFollow(id) {
   return {
     type: DEL_FOLLOW,
-    payload: await axios.post("/api/follow/del", { projectid: id })
+    payload: await request.post("/follow/del", { projectid: id })
   };
 }

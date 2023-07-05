@@ -1,16 +1,15 @@
+import request from "@/service/request.js";
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Input, AutoComplete } from "antd";
 import Icon from "@ant-design/icons";
 import styles from "./Search.module.scss";
-import axios from "axios";
 //
 import { setCurrGroup, fetchGroupMsg } from "@/reducer/modules/group.js";
 import { changeMenuItem } from "@/reducer/modules/menu.js";
 import { fetchInterfaceListMenu } from "@/reducer/modules/interface.js";
 //
-const Option = AutoComplete.Option;
 @connect(
   (state) => ({
     groupList: state.group.groupList,
@@ -57,65 +56,62 @@ class Search extends Component {
     }
   };
   handleSearch = (value) => {
-    axios
-      .get("/api/project/search?q=" + value)
-      .then((res) => {
-        if (res.data && res.data.errcode === 0) {
-          const dataSource = [];
-          for (let title in res.data.data) {
-            res.data.data[title].map((item) => {
-              switch (title) {
-                case "group":
-                  dataSource.push(
-                    <AutoComplete.Option
-                      key={`分组${item._id}`}
-                      type="分组"
-                      value={`${item.groupName}`}
-                      id={`${item._id}`}
-                    >
-                      {`分组: ${item.groupName}`}
-                    </AutoComplete.Option>
-                  );
-                  break;
-                case "project":
-                  dataSource.push(
-                    <AutoComplete.Option
-                      key={`项目${item._id}`}
-                      type="项目"
-                      id={`${item._id}`}
-                      groupId={`${item.groupId}`}
-                    >
-                      {`项目: ${item.name}`}
-                    </AutoComplete.Option>
-                  );
-                  break;
-                case "interface":
-                  dataSource.push(
-                    <AutoComplete.Option
-                      key={`接口${item._id}`}
-                      type="接口"
-                      id={`${item._id}`}
-                      projectId={`${item.projectId}`}
-                    >
-                      {`接口: ${item.title}`}
-                    </AutoComplete.Option>
-                  );
-                  break;
-                default:
-                  break;
-              }
-            });
-          }
-          this.setState({
-            dataSource: dataSource
+    request.get("/project/search?q=" + value).then((res) => {
+      if (res.data && res.data.errcode === 0) {
+        const dataSource = [];
+        for (let title in res.data.data) {
+          res.data.data[title].map((item) => {
+            switch (title) {
+              case "group":
+                dataSource.push(
+                  <AutoComplete.Option
+                    key={`分组${item._id}`}
+                    type="分组"
+                    value={`${item.groupName}`}
+                    id={`${item._id}`}
+                  >
+                    {`分组: ${item.groupName}`}
+                  </AutoComplete.Option>
+                );
+                break;
+              case "project":
+                dataSource.push(
+                  <AutoComplete.Option
+                    key={`项目${item._id}`}
+                    type="项目"
+                    id={`${item._id}`}
+                    groupId={`${item.groupId}`}
+                  >
+                    {`项目: ${item.name}`}
+                  </AutoComplete.Option>
+                );
+                break;
+              case "interface":
+                dataSource.push(
+                  <AutoComplete.Option
+                    key={`接口${item._id}`}
+                    type="接口"
+                    id={`${item._id}`}
+                    projectId={`${item.projectId}`}
+                  >
+                    {`接口: ${item.title}`}
+                  </AutoComplete.Option>
+                );
+                break;
+              default:
+                break;
+            }
           });
-        } else {
-          console.log("查询项目或分组失败");
         }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        this.setState({
+          dataSource: dataSource
+        });
+      } else {
+        console.log("查询项目或分组失败");
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
   };
   // getDataSource(groupList){
   //   const groupArr =[];

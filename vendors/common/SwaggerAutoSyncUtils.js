@@ -1,4 +1,5 @@
-const yapi = require("@server/yapi.js")
+const yapi = require("@server/yapi.js");
+const axios = require("axios")
 //
 const schedule = require("node-schedule");
 const openController = require("@server/controllers/OpenController.js");
@@ -189,7 +190,6 @@ class SwaggerAutoSyncUtils {
     return "";
   }
   async getSwaggerContent(swaggerUrl) {
-    const axios = require("axios")
     try {
       let response = await axios.get(swaggerUrl);
       if (response.status > 400) {

@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
+import request from "@/service/request.js";
 import { Row, Col, Tooltip, Icon } from "antd";
 import { setBreadcrumb } from "@/reducer/modules/user.js";
 import StatisticsChart from "@client/pages/Statistic/StatisticsChart/StatisticsChart.js";
@@ -137,7 +137,7 @@ class Statistic extends Component {
   }
   // 获取统计数据
   async getStatisData() {
-    let result = await axios.get("/api/plugin/statismock/count");
+    let result = await request.get("/plugin/statismock/count");
     if (result.data.errcode === 0) {
       let statisData = result.data.data;
       this.setState({
@@ -147,7 +147,7 @@ class Statistic extends Component {
   }
   // 获取系统信息
   async getSystemStatusData() {
-    let result = await axios.get("/api/plugin/statismock/get_system_status");
+    let result = await request.get("/plugin/statismock/get_system_status");
     if (result.data.errcode === 0) {
       let statusData = result.data.data;
       this.setState({
@@ -157,7 +157,7 @@ class Statistic extends Component {
   }
   // 获取分组详细信息
   async getGroupData() {
-    let result = await axios.get("/api/plugin/statismock/group_data_stats");
+    let result = await request.get("/plugin/statismock/group_data_stats");
     if (result.data.errcode === 0) {
       let statusData = result.data.data;
       statusData.map((item) => (item["key"] = item.name));

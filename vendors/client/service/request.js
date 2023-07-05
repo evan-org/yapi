@@ -1,4 +1,4 @@
-import service from "./service";
+import service from "./service.js";
 /**
  * 请求
  * @author winixi@qq.com
@@ -12,7 +12,7 @@ const request = {
    * @returns {Promise<any>}
    */
   get(apiUri, params) {
-    return service({
+    return service.request({
       method: "GET",
       url: apiUri,
       params: params
@@ -24,7 +24,7 @@ const request = {
    * @param data
    */
   post(apiUri, data) {
-    return service({
+    return service.request({
       url: apiUri,
       method: "POST",
       data: data
@@ -41,7 +41,7 @@ const request = {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const result = await service({
+      const result = await service.request({
         url: "/fileupftp/fileteuploadfor",
         method: "POST",
         headers: { "Content-Type": "multipart/form-data" },

@@ -1,4 +1,4 @@
-import "./View.scss";
+
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -14,6 +14,7 @@ import { formatTime, safeArray } from "@/utils/common";
 import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
 import variable from "@/utils/variable";
 import copy from "copy-to-clipboard";
+import "./View.scss";
 
 const HTTP_METHOD = variable.HTTP_METHOD;
 

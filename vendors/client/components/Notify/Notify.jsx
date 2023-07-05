@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import request from "@/service/request.js";
 import { Alert, message } from "antd";
 function isUpgrade(current_version, compare_version = "6.0.0") {
   let compare_version_array = compare_version.split(".");
@@ -33,7 +33,7 @@ export default class Notify extends Component {
   }
   componentDidMount() {
     const versions = "https://www.fastmock.site/mock/1529fa78fa4c4880ad153d115084a940/yapi/versions";
-    axios.get(versions).then((req) => {
+    request.get(versions).then((req) => {
       if (req.status === 200) {
         this.setState({ newVersion: req.data.data[0] });
       } else {

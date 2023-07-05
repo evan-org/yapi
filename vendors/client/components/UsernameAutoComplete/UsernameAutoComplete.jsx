@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { Select } from "antd";
-import axios from "axios";
+import request from "@/service/request.js";
 
 /**
  * 用户名输入框自动完成组件
@@ -56,7 +56,7 @@ class UsernameAutoComplete extends Component {
     // this.lastFetchId += 1;
     // const fetchId = this.lastFetchId;
     this.setState({ fetching: true });
-    axios.get("/api/user/search", { params }).then((data) => {
+    request.get("/user/search", { params }).then((data) => {
       // if (fetchId !== this.lastFetchId) { // for fetch callback order
       //   return;
       // }

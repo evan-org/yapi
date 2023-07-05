@@ -1,6 +1,6 @@
 import React, { createContext, PureComponent as Component, useContext, useState, useEffect } from "react";
 import { Row, Col, Input, Button, Select, message, Upload, Tooltip } from "antd";
-import axios from "axios";
+import request from "@/service/request.js";
 import { formatTime } from "@/utils/common";
 import PropTypes from "prop-types";
 import { setBreadcrumb, setImageUrl } from "@/reducer/modules/user";
@@ -51,14 +51,11 @@ class AvatarUpload extends Component {
     url: PropTypes.any
   };
   uploadAvatar(basecode) {
-    axios
-      .post("/api/user/upload_avatar", { basecode: basecode })
-      .then(() => {
-        this.props.setImageUrl(basecode);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    request.post("/user/upload_avatar", { basecode: basecode }).then(() => {
+      this.props.setImageUrl(basecode);
+    }).catch((e) => {
+      console.log(e);
+    });
   }
   handleChange(info) {
     if (info.file.status === "done") {
@@ -228,7 +225,7 @@ function SecureEdit() {
       old_password: old_password
     };
     try {
-      const res = await axios.post("/api/user/change_password", params);
+      const res = await request.post("/user/change_password", params);
       const data = res.data;
       if (data.errcode === 0) {
         setSecureEdit(false);
@@ -276,7 +273,7 @@ function Profile(props) {
   }, []);
   const getUserInfo = async(id) => {
     try {
-      const res = await axios.get("/api/user/find?id=" + id);
+      const res = await request.get("/user/find?id=" + id);
       setUserinfo(res.data.data);
       setDefineUserInfo(res.data.data);
       if (curUid === +id) {
@@ -293,7 +290,7 @@ function Profile(props) {
       let value = defineUserInfo[name];
       let params = { uid: userinfo.uid };
       params[name] = value;
-      const res = await axios.post("/api/user/update", params);
+      const res = await request.post("/user/update", params);
       let data = res.data;
       if (data.errcode === 0) {
         const defineUserInfo = userinfo;

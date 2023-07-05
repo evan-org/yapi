@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import request from "@/service/request.js";
 // Reducer
 const LOADING_STATUS = 0;
 const GUEST_STATUS = 1;
@@ -105,21 +105,21 @@ const {
 export default appSlice.reducer
 // Action Creators
 export async function checkLoginState() {
-  const result = await axios.get("/api/user/status")
+  const result = await request.get("/user/status")
   return {
     type: GET_LOGIN_STATE,
     payload: result
   };
 }
 export async function loginActions(data) {
-  const result = await axios.post("/api/user/login", data)
+  const result = await request.post("/user/login", data)
   return {
     type: LOGIN,
     payload: result
   };
 }
 export async function loginLdapActions(data) {
-  const result = await axios.post("/api/user/login_by_ldap", data)
+  const result = await request.post("/user/login_by_ldap", data)
   return {
     type: LOGIN,
     payload: result
@@ -132,14 +132,14 @@ export async function regActions(data) {
     password,
     username: userName
   };
-  const result = await axios.post("/api/user/reg", param)
+  const result = await request.post("/user/reg", param)
   return {
     type: REGISTER,
     payload: result
   };
 }
 export async function logoutActions() {
-  const result = await axios.get("/api/user/logout")
+  const result = await request.get("/user/logout")
   return {
     type: LOGIN_OUT,
     payload: result
@@ -171,6 +171,6 @@ export function changeStudyTip() {
 export async function finishStudy() {
   return {
     type: FINISH_STUDY,
-    payload: await axios.get("/api/user/up_study")
+    payload: await request.get("/user/up_study")
   };
 }

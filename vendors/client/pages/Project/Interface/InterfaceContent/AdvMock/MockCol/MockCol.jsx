@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
+import request from "@/service/request.js";
 import PropTypes from "prop-types";
 import { Table, Button, message, Popconfirm, Tooltip, Icon } from "antd";
 import { fetchMockCol } from "@/reducer/modules/mockCol.js";
@@ -32,7 +32,7 @@ class MockCol extends Component {
   }
   openModal = (record, isAdd) => async() => {
     if (this.props.currInterface.res_body_is_json_schema && isAdd) {
-      let result = await axios.post("/api/interface/schema2json", {
+      let result = await request.post("/interface/schema2json", {
         schema: json5_parse(this.props.currInterface.res_body),
         required: true
       });
@@ -40,7 +40,7 @@ class MockCol extends Component {
     }
     // 参数过滤schema形式
     if (this.props.currInterface.req_body_is_json_schema) {
-      let result = await axios.post("/api/interface/schema2json", {
+      let result = await request.post("/interface/schema2json", {
         schema: json5_parse(this.props.currInterface.req_body_other),
         required: true
       });
@@ -67,7 +67,7 @@ class MockCol extends Component {
     if (!this.state.isAdd) {
       caseData.id = currcase._id;
     }
-    await axios.post("/api/plugin/advmock/case/save", caseData).then(async(res) => {
+    await request.post("/plugin/advmock/case/save", caseData).then(async(res) => {
       if (res.data.errcode === 0) {
         message.success(this.state.isAdd ? "添加成功" : "保存成功");
         await this.props.fetchMockCol(interface_id);
@@ -79,7 +79,7 @@ class MockCol extends Component {
   };
   deleteCase = async(id) => {
     const interface_id = this.props.match.params.actionId;
-    await axios.post("/api/plugin/advmock/case/del", { id }).then(async(res) => {
+    await request.post("/plugin/advmock/case/del", { id }).then(async(res) => {
       if (res.data.errcode === 0) {
         message.success("删除成功");
         await this.props.fetchMockCol(interface_id);
@@ -91,7 +91,7 @@ class MockCol extends Component {
   // mock case 可以设置开启的关闭
   openMockCase = async(id, enable = true) => {
     const interface_id = this.props.match.params.actionId;
-    await axios.post("/api/plugin/advmock/case/hide", {
+    await request.post("/plugin/advmock/case/hide", {
       id,
       enable: !enable
     }).then(async(res) => {

@@ -6,7 +6,7 @@ import { Form, Switch, Button, Tooltip, message, Input, Select } from "antd";
 import Icon from "@ant-design/icons";
 import { handleSwaggerUrlData } from "@/reducer/modules/project.js";
 //
-import axios from "axios";
+import request from "@/service/request.js";
 // layout
 const formItemLayout = {
   labelCol: {
@@ -57,7 +57,7 @@ class SwaggerAutoSync extends Component {
     form.validateFields(async(err, values) => {
       if (!err) {
         let assignValue = Object.assign(params, values);
-        await axios.post("/api/plugin/autoSync/save", assignValue).then((res) => {
+        await request.post("/plugin/autoSync/save", assignValue).then((res) => {
           if (res.data.errcode === 0) {
             message.success("保存成功");
           } else {
@@ -91,7 +91,7 @@ class SwaggerAutoSync extends Component {
   }
   async getSyncData() {
     let projectId = this.props.projectMsg._id;
-    let result = await axios.get("/api/plugin/autoSync/get?project_id=" + projectId);
+    let result = await request.get("/plugin/autoSync/get?project_id=" + projectId);
     if (result.data.errcode === 0) {
       if (result.data.data) {
         this.setState({

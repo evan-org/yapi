@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 //
 import { Box, Snackbar, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, TextField, Zoom } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import axios from "axios";
+import request from "@/service/request.js";
 //
 import UserAutoComplete from "@/components/UserAutoComplete/UserAutoComplete.jsx";
 import { fetchGroupList, fetchGroupMsg } from "@/reducer/modules/group.js";
@@ -60,7 +60,7 @@ function AddGroupModal(props) {
   //
   const addGroup = async(values) => {
     try {
-      const res = await axios.post("/api/group/add", { ...values });
+      const res = await request.post("/group/add", { ...values });
       if (!res.data.errcode) {
         const action = await fetchGroupList()
         dispatch(action);

@@ -1,20 +1,11 @@
-import React, { PureComponent as Component } from 'react';
-import { connect } from 'react-redux';
-import { Modal, Collapse, Row, Col, Input, message, Button, Icon } from 'antd';
-import PropTypes from 'prop-types';
-import axios from 'axios';
-import { fetchInterfaceColList } from '@/reducer/modules/interfaceCol.js';
-
-@connect(
-  state => ({
-    interfaceColList: state.interfaceCol.interfaceColList
-  }),
-  {
-    fetchInterfaceColList
-  }
-)
+import React, { PureComponent as Component } from "react";
+import { connect } from "react-redux";
+import { Modal, Collapse, Row, Col, Input, message, Button, Icon } from "antd";
+import PropTypes from "prop-types";
+import request from "@/service/request.js";
+import { fetchInterfaceColList } from "@/reducer/modules/interfaceCol.js";
 //
-export default class AddColModal extends Component {
+class AddColModal extends Component {
   static propTypes = {
     visible: PropTypes.bool,
     interfaceColList: PropTypes.array,
@@ -24,47 +15,39 @@ export default class AddColModal extends Component {
     onCancel: PropTypes.func,
     caseName: PropTypes.string
   };
-
   state = {
     visible: false,
-    addColName: '',
-    addColDesc: '',
+    addColName: "",
+    addColDesc: "",
     id: 0,
-    caseName: ''
+    caseName: ""
   };
-
   constructor(props) {
     super(props);
   }
-
   UNSAFE_componentWillMount() {
     this.props.fetchInterfaceColList(this.props.match.params.id);
     this.setState({ caseName: this.props.caseName });
   }
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({ id: nextProps.interfaceColList[0]._id });
     this.setState({ caseName: nextProps.caseName });
   }
-
-  addCol = async () => {
+  addCol = async() => {
     const { addColName: name, addColDesc: desc } = this.state;
     const project_id = this.props.match.params.id;
-    const res = await axios.post('/api/col/add_col', { name, desc, project_id });
+    const res = await request.post("/col/add_col", { name, desc, project_id });
     if (!res.data.errcode) {
-      message.success('添加集合成功');
+      message.success("添加集合成功");
       await this.props.fetchInterfaceColList(project_id);
-
       this.setState({ id: res.data.data._id });
     } else {
       message.error(res.data.errmsg);
     }
   };
-
-  select = id => {
+  select = (id) => {
     this.setState({ id });
   };
-
   render() {
     const { interfaceColList = [] } = this.props;
     const { id } = this.state;
@@ -84,20 +67,20 @@ export default class AddColModal extends Component {
             <Input
               placeholder="请输入接口用例名称"
               value={this.state.caseName}
-              onChange={e => this.setState({ caseName: e.target.value })}
+              onChange={(e) => this.setState({ caseName: e.target.value })}
             />
           </Col>
         </Row>
         <p>请选择添加到的集合：</p>
         <ul className="col-list">
           {interfaceColList.length ? (
-            interfaceColList.map(col => (
+            interfaceColList.map((col) => (
               <li
                 key={col._id}
-                className={`col-item ${col._id === id ? 'selected' : ''}`}
+                className={`col-item ${col._id === id ? "selected" : ""}`}
                 onClick={() => this.select(col._id)}
               >
-                <Icon type="folder-open" style={{ marginRight: 6 }} />
+                <Icon type="folder-open" style={{ marginRight: 6 }}/>
                 {col.name}
               </li>
             ))
@@ -115,7 +98,7 @@ export default class AddColModal extends Component {
                 <Input
                   placeholder="请输入集合名称"
                   value={this.state.addColName}
-                  onChange={e => this.setState({ addColName: e.target.value })}
+                  onChange={(e) => this.setState({ addColName: e.target.value })}
                 />
               </Col>
             </Row>
@@ -128,12 +111,12 @@ export default class AddColModal extends Component {
                   rows={3}
                   placeholder="请输入集合描述"
                   value={this.state.addColDesc}
-                  onChange={e => this.setState({ addColDesc: e.target.value })}
+                  onChange={(e) => this.setState({ addColDesc: e.target.value })}
                 />
               </Col>
             </Row>
             <Row type="flex" justify="end">
-              <Button style={{ float: 'right' }} type="primary" onClick={this.addCol}>
+              <Button style={{ float: "right" }} type="primary" onClick={this.addCol}>
                 添 加
               </Button>
             </Row>
@@ -143,3 +126,11 @@ export default class AddColModal extends Component {
     );
   }
 }
+export default connect(
+  (state) => ({
+    interfaceColList: state.interfaceCol.interfaceColList
+  }),
+  {
+    fetchInterfaceColList
+  }
+)(AddColModal)

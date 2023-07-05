@@ -11,7 +11,7 @@ import { DragDropContext } from "react-dnd";
 import * as Table from "reactabular-table";
 import * as dnd from "reactabular-dnd";
 import * as resolve from "table-resolver";
-import axios from "axios";
+import request from "@/service/request.js";
 import CaseReport from "./CaseReport.jsx";
 //
 import _ from "underscore";
@@ -172,7 +172,7 @@ class InterfaceColContent extends Component {
       name: name,
       desc: desc
     };
-    axios.post("/api/col/up_col", params).then(async(res) => {
+    request.post("/col/up_col", params).then(async(res) => {
       if (res.data.errcode) {
         return message.error(res.data.errmsg);
       }
@@ -258,7 +258,7 @@ class InterfaceColContent extends Component {
       newRows[i] = curitem;
       this.setState({ rows: newRows });
     }
-    await axios.post("/api/col/up_col", {
+    await request.post("/col/up_col", {
       col_id: this.props.currColId,
       test_report: JSON.stringify(this.reports)
     });
@@ -352,7 +352,7 @@ class InterfaceColContent extends Component {
   handleScriptTest = async(interfaceData, response, validRes, requestParams) => {
     // 是否启动断言
     try {
-      let test = await axios.post("/api/col/run_script", {
+      let test = await request.post("/col/run_script", {
         response: response,
         records: this.records,
         script: interfaceData.test_script,
@@ -397,7 +397,7 @@ class InterfaceColContent extends Component {
     this.state.rows.forEach((item, index) => {
       changes.push({ id: item._id, index: index });
     });
-    axios.post("/api/col/up_case_index", changes).then(() => {
+    request.post("/col/up_case_index", changes).then(() => {
       this.props.fetchInterfaceColList(this.props.match.params.id);
     });
   };
@@ -464,7 +464,7 @@ class InterfaceColContent extends Component {
   };
   handleAdvOk = async() => {
     const { curCaseid, enableScript, curScript } = this.state;
-    const res = await axios.post("/api/col/up_case", {
+    const res = await request.post("/col/up_case", {
       id: curCaseid,
       test_script: curScript,
       enable_script: enableScript
@@ -534,7 +534,7 @@ class InterfaceColContent extends Component {
       ...setting
     };
     console.log(params)
-    axios.post("/api/col/up_col", params).then(async(res) => {
+    request.post("/col/up_col", params).then(async(res) => {
       if (res.data.errcode) {
         return message.error(res.data.errmsg);
       }

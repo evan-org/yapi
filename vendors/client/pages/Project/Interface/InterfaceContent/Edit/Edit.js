@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import InterfaceEditForm from "./InterfaceEditForm/InterfaceEditForm.js";
 import { updateInterfaceData, fetchInterfaceListMenu, fetchInterfaceData } from "@/reducer/modules/interface";
 import { getProject } from "@/reducer/modules/project";
-import axios from "axios";
+import request from "@/service/request.js";
 import { message, Modal } from "antd";
 import styles from "./Edit.module.scss";
 import { Link } from "react-router-dom";
@@ -53,7 +53,7 @@ class InterfaceEdit extends Component {
 
   onSubmit = async(params) => {
     params.id = this.props.match.params.actionId;
-    let result = await axios.post("/api/interface/up", params);
+    let result = await request.post("/interface/up", params);
     this.props.fetchInterfaceListMenu(this.props.currProject._id).then();
     this.props.fetchInterfaceData(params.id).then();
     if (result.data.errcode === 0) {
@@ -150,7 +150,7 @@ class InterfaceEdit extends Component {
       id,
       tag
     };
-    let result = await axios.post("/api/project/up_tag", params);
+    let result = await request.post("/project/up_tag", params);
 
     if (result.data.errcode === 0) {
       await this.props.getProject(id);

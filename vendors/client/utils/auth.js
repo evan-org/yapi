@@ -1,22 +1,29 @@
-import { USER_INFO, USER_TOKEN } from "@/config/index.ts";
-import {
-  authAction_address,
-  authAction_hasLogin,
-  authAction_patient,
-  authAction_token,
-  authAction_userInfo
-} from "@/reducer/action/authAction"
+import { USER_INFO, USER_TOKEN, USER_ID } from "@/utils/config.js";
 // 退出登录
 export function authLogout() {
   removeToken();
   removeInfo();
   return false;
 }
-//
-//
+// 设置令牌
+export function setToken(payload) {
+  return localStorage.setItem(USER_TOKEN, payload);
+}
 // 获取令牌
 export function getToken() {
   return localStorage.getItem(USER_TOKEN);
+}
+// 设置UID
+export function setUserId(payload) {
+  return localStorage.setItem(USER_ID, payload);
+}
+// 获取UID
+export function getUserId(payload) {
+  return localStorage.getItem(USER_ID, payload);
+}
+// 保存用户信息
+export function saveUserInfo(info) {
+  localStorage.setItem(USER_INFO, JSON.stringify(info));
 }
 // 获取当前用户信息
 export function getUserInfo() {
@@ -26,28 +33,14 @@ export function getUserInfo() {
   }
   return {};
 }
-//
-//
-// 设置令牌
-export function setToken(payload) {
-  return localStorage.setItem(USER_TOKEN, payload);
-}
-// 保存用户信息
-export function saveUserInfo(info) {
-  localStorage.setItem(USER_INFO, JSON.stringify(info));
-}
-//
-//
 // 删除用户token
 export function removeToken() {
   localStorage.removeItem(USER_TOKEN);
+  localStorage.removeItem(USER_ID);
   localStorage.removeItem(USER_INFO);
-  authAction_hasLogin(false);
-  authAction_token(null);
 }
 // 删除用户信息
 export function removeInfo() {
   localStorage.removeItem(USER_INFO);
-  authAction_userInfo(null);
 }
 //

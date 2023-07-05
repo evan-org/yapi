@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import request from "@/service/request.js";
 import qs from "qs";
 //
 const initialState = {
@@ -79,21 +79,21 @@ export function updateInterfaceData(updata) {
   };
 }
 export async function deleteInterfaceData(id) {
-  let result = await axios.post("/api/interface/del", { id: id });
+  let result = await request.post("/interface/del", { id: id });
   return {
     type: DELETE_INTERFACE_DATA,
     payload: result
   };
 }
 export async function saveImportData(data) {
-  let result = await axios.post("/api/interface/save", data);
+  let result = await request.post("/interface/save", data);
   return {
     type: SAVE_IMPORT_DATA,
     payload: result
   };
 }
 export async function deleteInterfaceCatData(id) {
-  let result = await axios.post("/api/interface/del_cat", { catid: id });
+  let result = await request.post("/interface/del_cat", { catid: id });
   return {
     type: DELETE_INTERFACE_CAT_DATA,
     payload: result
@@ -101,21 +101,21 @@ export async function deleteInterfaceCatData(id) {
 }
 // Action Creators
 export async function fetchInterfaceData(interfaceId) {
-  let result = await axios.get("/api/interface/get?id=" + interfaceId);
+  let result = await request.get("/interface/get?id=" + interfaceId);
   return {
     type: FETCH_INTERFACE_DATA,
     payload: result
   };
 }
 export async function fetchInterfaceListMenu(projectId) {
-  let result = await axios.get("/api/interface/list_menu?project_id=" + projectId);
+  let result = await request.get("/interface/list_menu?project_id=" + projectId);
   return {
     type: FETCH_INTERFACE_LIST_MENU,
     payload: result
   };
 }
 export async function fetchInterfaceList(params) {
-  let result = await axios.get("/api/interface/list", {
+  let result = await request.get("/interface/list", {
     params,
     paramsSerializer: (params) => qs.stringify(params, { indices: false })
   })
@@ -125,7 +125,7 @@ export async function fetchInterfaceList(params) {
   };
 }
 export async function fetchInterfaceCatList(params) {
-  let result = await axios.get("/api/interface/list_cat", {
+  let result = await request.get("/interface/list_cat", {
     params,
     paramsSerializer: (params) => qs.stringify(params, { indices: false })
   })

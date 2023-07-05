@@ -20,7 +20,7 @@ import constants from "../../utils/variable.js";
 import AceEditor from "@/components/AceEditor/AceEditor";
 import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "@/utils/common.js";
-import axios from "axios";
+import request from "@/service/request.js";
 import ModalPostman from "../ModalPostman/ModalPostman.jsx";
 import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.jsx";
 import ProjectEnv from "../ProjectEnv/ProjectEnv.jsx";
@@ -184,7 +184,7 @@ class Postman extends Component {
         console.error("e", e);
         return;
       }
-      let result = await axios.post("/api/interface/schema2json", {
+      let result = await request.post("/interface/schema2json", {
         schema: schema,
         required: true
       });

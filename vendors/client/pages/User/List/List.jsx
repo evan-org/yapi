@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { formatTime } from "@/utils/common";
 import { setBreadcrumb } from "@/reducer/modules/user";
 import { Table, Popconfirm, message, Input } from "antd";
-import axios from "axios";
+import request from "@/service/request.js";
 //
 const limit = 20;
 class List extends Component {
@@ -33,7 +33,7 @@ class List extends Component {
     );
   };
   getUserList() {
-    axios.get("/api/user/list?page=" + this.state.current + "&limit=" + limit).then((res) => {
+    request.get("/user/list?page=" + this.state.current + "&limit=" + limit).then((res) => {
       let result = res.data;
       if (result.errcode === 0) {
         let list = result.data.list;
@@ -54,7 +54,7 @@ class List extends Component {
     this.getUserList();
   }
   confirm = (uid) => {
-    axios.post("/api/user/del", { id: uid }).then((res) => {
+    request.post("/user/del", { id: uid }).then((res) => {
       if (res.data.errcode === 0) {
         message.success("已删除此用户");
         let userlist = this.state.data;
@@ -75,7 +75,7 @@ class List extends Component {
   handleSearch = (value) => {
     let params = { q: value };
     if (params.q !== "") {
-      axios.get("/api/user/search", { params }).then((data) => {
+      request.get("/user/search", { params }).then((data) => {
         let userList = [];
         data = data.data.data;
         if (data) {

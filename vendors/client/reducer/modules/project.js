@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import request from "@/service/request.js";
 import variable from "@/utils/variable.js";
 import { htmlFilter } from "@/utils/common.js";
 // Reducer
@@ -90,7 +90,7 @@ export default appSlice.reducer
 export async function fetchProjectList(id, pageNum) {
   return {
     type: FETCH_PROJECT_LIST,
-    payload: await axios.get("/api/project/list", {
+    payload: await request.get("/project/list", {
       params: {
         group_id: id,
         page: pageNum || 1,
@@ -103,42 +103,42 @@ export async function fetchProjectList(id, pageNum) {
 export async function copyProjectMsg(params) {
   return {
     type: COPY_PROJECT_MSG,
-    payload: await axios.post("/api/project/copy", params)
+    payload: await request.post("/project/copy", params)
   };
 }
 // 添加项目成员
 export async function addMember(param) {
   return {
     type: ADD_PROJECT_MEMBER,
-    payload: await axios.post("/api/project/add_member", param)
+    payload: await request.post("/project/add_member", param)
   };
 }
 // 删除项目成员
 export async function delMember(param) {
   return {
     type: DEL_PROJECT_MEMBER,
-    payload: await axios.post("/api/project/del_member", param)
+    payload: await request.post("/project/del_member", param)
   };
 }
 // 修改项目成员权限
 export async function changeMemberRole(param) {
   return {
     type: CHANGE_PROJECT_MEMBER,
-    payload: await axios.post("/api/project/change_member_role", param)
+    payload: await request.post("/project/change_member_role", param)
   };
 }
 // 修改项目成员是否收到消息通知
 export async function changeMemberEmailNotice(param) {
   return {
     type: CHANGE_MEMBER_EMAIL_NOTICE,
-    payload: await axios.post("/api/project/change_member_email_notice", param)
+    payload: await request.post("/project/change_member_email_notice", param)
   };
 }
 // 获取项目成员列表
 export async function getProjectMemberList(id) {
   return {
     type: GET_PEOJECT_MEMBER,
-    payload: await axios.get("/api/project/get_member_list", {
+    payload: await request.get("/project/get_member_list", {
       params: { id }
     })
   };
@@ -178,7 +178,7 @@ export async function addProject(data) {
   };
   return {
     type: PROJECT_ADD,
-    payload: await axios.post("/api/project/add", param)
+    payload: await request.post("/project/add", param)
   };
 }
 // 修改项目
@@ -201,21 +201,21 @@ export async function updateProject(data) {
   };
   return {
     type: PROJECT_UPDATE,
-    payload: await axios.post("/api/project/up", param)
+    payload: await request.post("/project/up", param)
   };
 }
 // 修改项目脚本
 export async function updateProjectScript(data) {
   return {
     type: PROJECT_UPDATE,
-    payload: await axios.post("/api/project/up", data)
+    payload: await request.post("/project/up", data)
   };
 }
 // 修改全局mock
 export async function updateProjectMock(data) {
   return {
     type: PROJECT_UPDATE,
-    payload: await axios.post("/api/project/up", data)
+    payload: await request.post("/project/up", data)
   };
 }
 // 修改项目环境配置
@@ -227,21 +227,21 @@ export async function updateEnv(data) {
   };
   return {
     type: PROJECT_UPDATE_ENV,
-    payload: await axios.post("/api/project/up_env", param)
+    payload: await request.post("/project/up_env", param)
   };
 }
 // 获取项目环境配置
 export async function getEnv(project_id) {
   return {
     type: PROJECT_GET_ENV,
-    payload: await axios.get("/api/project/get_env", { params: { project_id } })
+    payload: await request.get("/project/get_env", { params: { project_id } })
   };
 }
 // 修改项目头像
 export async function upsetProject(param) {
   return {
     type: PROJECT_UPSET,
-    payload: await axios.post("/api/project/upset", param)
+    payload: await request.post("/project/upset", param)
   };
 }
 // 删除项目
@@ -249,19 +249,19 @@ export async function delProject(id) {
   const param = { id };
   return {
     type: PROJECT_DEL,
-    payload: await axios.post("/api/project/del", param)
+    payload: await request.post("/project/del", param)
   };
 }
 export async function getProject(id) {
   return {
     type: GET_CURR_PROJECT,
-    payload: await axios.get("/api/project/get?id=" + id)
+    payload: await request.get("/project/get?id=" + id)
   };
 }
 export async function getToken(project_id) {
   return {
     type: GET_TOKEN,
-    payload: await axios.get("/api/project/token", {
+    payload: await request.get("/project/token", {
       params: { project_id }
     })
   };
@@ -269,7 +269,7 @@ export async function getToken(project_id) {
 export async function updateToken(project_id) {
   return {
     type: UPDATE_TOKEN,
-    payload: await axios.get("/api/project/update_token", {
+    payload: await request.get("/project/update_token", {
       params: { project_id }
     })
   };
@@ -277,7 +277,7 @@ export async function updateToken(project_id) {
 export async function checkProjectName(name, group_id) {
   return {
     type: CHECK_PROJECT_NAME,
-    payload: await axios.get("/api/project/check_project_name", {
+    payload: await request.get("/project/check_project_name", {
       params: { name, group_id }
     })
   };
@@ -285,6 +285,6 @@ export async function checkProjectName(name, group_id) {
 export async function handleSwaggerUrlData(url) {
   return {
     type: GET_SWAGGER_URL_DATA,
-    payload: await axios.get("/api/project/swagger_url?url=" + encodeURI(encodeURI(url)))
+    payload: await request.get("/project/swagger_url?url=" + encodeURI(encodeURI(url)))
   };
 }

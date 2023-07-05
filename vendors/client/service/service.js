@@ -1,8 +1,8 @@
 import axios from "axios";
-import { getToken, removeInfo, removeToken } from "@/utils/auth.js";
+import { getToken, getUserId, removeToken } from "@/utils/auth.js";
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.NODE_ENV === "development" ? "/api" : process.env["VITE_REACT_APP_BASE_URL"], // url = base url + request url
+  baseURL: process.env.NODE_ENV === "development" ? "/api" : process.env["REACT_APP_BASE_URL"], // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 1000 * 60 // request timeout
 })
@@ -29,7 +29,8 @@ service.interceptors.request.use((config) => {
   httpList.push({ ...config }); // 每次的请求加入到数组
   //
   if (getToken()) {
-    config.headers["token"] = `${getToken()}`
+    config.headers["Authorization"] = `Bearer ${getToken()}`;
+    config.headers["uid"] = `${getUserId()}`;
   }
   return config
 }, (error) => {
@@ -38,14 +39,14 @@ service.interceptors.request.use((config) => {
 })
 // response interceptor response拦截器
 service.interceptors.response.use((response) => {
-  const { code, message } = response.data;
-  if ([0, "0"].includes(response.data.errcode)) {
-    return response.data
-  } else if ([40011, "40011"].includes(response.data.errcode)) {
+  const { errcode, message } = response.data;
+  if ([0, "0"].includes(errcode)) {
+    return response
+  } else if ([40011, "40011"].includes(errcode)) {
     // Toast.show({ content: message }) 未登录
-    return
+    return Promise.reject(response)
   } else {
-    return Promise.reject(new Error(message || "Error"))
+    return Promise.reject(message || "Error")
   }
 }, (error) => {
   if (error && error.response) {

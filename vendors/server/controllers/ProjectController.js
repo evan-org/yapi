@@ -19,7 +19,7 @@ const commons = require("@server/utils/commons.js");
 const { getToken } = require("../utils/token")
 const sha = require("sha.js");
 const { generatePasssalt } = require("@server/utils/sso.js");
-const axios = require("axios").default;
+const request = require("axios").default;
 class ProjectController extends baseController {
   constructor(ctx) {
     super(ctx);
@@ -1026,9 +1026,10 @@ class ProjectController extends baseController {
   async swaggerUrl(ctx) {
     try {
       const { url } = ctx.request.query;
-      const { data } = await axios.get(url);
+      const { data } = await request.get(url);
       if (data == null || typeof data !== "object") {
-        throw new Error("返回数据格式不是 JSON");
+        // throw new Error("返回数据格式不是 JSON");
+        ctx.throw(500, "返回数据格式不是 JSON");
       }
       ctx.body = yapi.commons.resReturn(data);
     } catch (err) {

@@ -1,6 +1,6 @@
 // Action Creators
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import request from "@/service/request.js";
 import variable from "../../utils/variable";
 // Reducer
 const initialState = {
@@ -55,7 +55,7 @@ export async function fetchNewsData(typeid, type, page, limit, selectValue) {
   }
   return {
     type: FETCH_NEWS_DATA,
-    payload: await axios.get("/api/log/list", {
+    payload: await request.get("/log/list", {
       params: param
     })
   };
@@ -70,7 +70,7 @@ export async function fetchMoreNews(typeid, type, page, limit, selectValue) {
   }
   return {
     type: FETCH_MORE_NEWS,
-    payload: await axios.get("/api/log/list", {
+    payload: await request.get("/log/list", {
       params: param
     })
   };
@@ -79,12 +79,12 @@ export async function getMockUrl(project_id) {
   const params = { id: project_id };
   return {
     type: "",
-    payload: await axios.get("/api/project/get", { params: params })
+    payload: await request.get("/project/get", { params: params })
   };
 }
 export async function fetchUpdateLogData(params) {
   return {
     type: "",
-    payload: await axios.post("/api/log/list_by_update", params)
+    payload: await request.post("/log/list_by_update", params)
   };
 }

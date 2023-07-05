@@ -16,7 +16,7 @@ import Icon from "@ant-design/icons";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "@/pages/Project/Data/Data.module.scss";
-import axios from "axios";
+import request from "@/service/request.js";
 
 import URL from "url";
 
@@ -97,7 +97,7 @@ class Data extends Component {
   };
 
   UNSAFE_componentWillMount() {
-    axios.get(`/api/interface/getCatMenu?project_id=${this.props.match.params.id}`).then((data) => {
+    request.get(`/interface/getCatMenu?project_id=${this.props.match.params.id}`).then((data) => {
       if (data.data.errcode === 0) {
         let menuList = data.data.data;
         this.setState({

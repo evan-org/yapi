@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import request from "@/service/request.js";
 // Reducer
 const initialState = {
   list: []
@@ -20,7 +20,7 @@ const {
 export default appSlice.reducer
 // Action Creators
 export async function fetchMockCol(interfaceId) {
-  let result = await axios.get("/api/plugin/advmock/case/list?interface_id=" + interfaceId);
+  let result = await request.get("/plugin/advmock/case/list?interface_id=" + interfaceId);
   return {
     type: FETCH_MOCK_COL,
     payload: result.data
