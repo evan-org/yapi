@@ -279,6 +279,7 @@ module.exports = async(ctx, next) => {
           yapi.commons.log(e, "error");
         }
       }
+      //
       let context = {
         projectData: project,
         interfaceData: interfaceData,
@@ -288,18 +289,22 @@ module.exports = async(ctx, next) => {
         httpCode: 200,
         delay: 0
       };
+      //
       if (project.is_mock_open && project.project_mock_script) {
         // 项目层面的mock脚本解析
         let script = project.project_mock_script;
         await yapi.commons.handleMockScript(script, context);
       }
+      //
       await yapi.emitHook("mock_after", context);
+      //
       let handleMock = new Promise((resolve) => {
         setTimeout(() => {
           resolve(true);
         }, context.delay);
       });
       await handleMock;
+      //
       if (context.resHeader && typeof context.resHeader === "object") {
         for (let i in context.resHeader) {
           let cookie;
@@ -330,6 +335,7 @@ module.exports = async(ctx, next) => {
       }
       ctx.status = context.httpCode;
       ctx.body = context.mockJson;
+      //
     } catch (e) {
       yapi.commons.log(e, "error");
       return (ctx.body = {

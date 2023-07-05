@@ -594,7 +594,7 @@ function addPluginRouter(config) {
     throw new Error("Plugin Route path conflict, please try rename the path");
   }
   pluginsRouterPath.push(routerPath);
-  console.log("1111111111111111", routerPath, config);
+  // console.log("1111111111111111", routerPath, config);
   createAction(router, "/api", config.controller, config.action, routerPath, method, false);
 }
 //
