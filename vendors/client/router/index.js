@@ -129,7 +129,7 @@ const router = [
       {
         path: "/statistic",
         name: "Statistic",
-        element: lazy(() => import("../pages/Statistic/Statistic.js")),
+        element: lazy(() => import("../pages/Statistic/Statistic.jsx")),
         meta: { title: "系统信息", auth: true }
       }
     ]

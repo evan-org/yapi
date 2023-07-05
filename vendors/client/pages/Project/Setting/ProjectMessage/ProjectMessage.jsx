@@ -30,7 +30,8 @@ import constants from "../../../../utils/variable.js";
 import { nameLengthLimit, entries, trim, htmlFilter } from "@/utils/common";
 import "../Setting.scss";
 import _ from "underscore";
-import ProjectTag from "./ProjectTag.js";
+//
+import ProjectTag from "@/pages/Project/Setting/ProjectMessage/ProjectTag/ProjectTag.jsx";
 // layout
 const formItemLayout = {
   labelCol: {

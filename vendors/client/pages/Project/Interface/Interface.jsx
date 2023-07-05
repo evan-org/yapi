@@ -4,8 +4,8 @@ import { Tabs, Layout } from "antd";
 import { matchPath } from "react-router-dom";
 import { connect } from "react-redux";
 // InterfaceList
-import InterfaceMenu from "./InterfaceMenu/InterfaceMenu.js";
-import InterfaceList from "./InterfaceList/InterfaceList.js";
+import InterfaceMenu from "@/pages/Project/Interface/InterfaceMenu/InterfaceMenu.jsx";
+import InterfaceList from "@/pages/Project/Interface/InterfaceList/InterfaceList.jsx";
 import InterfaceContent from "@/pages/Project/Interface/InterfaceContent/InterfaceContent.jsx";
 // InterfaceCol
 import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.jsx";

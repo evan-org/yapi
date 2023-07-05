@@ -14,8 +14,8 @@ import {
 import { getProject } from "@/reducer/modules/project";
 import { Input, Button, Modal, message, Tree, Tooltip } from "antd";
 //
-import AddInterfaceForm from "./AddInterfaceForm";
-import AddInterfaceCatForm from "./AddInterfaceCatForm";
+import AddInterfaceForm from "@/pages/Project/Interface/InterfaceMenu/AddInterfaceForm.jsx";
+import AddInterfaceCatForm from "@/pages/Project/Interface/InterfaceMenu/AddInterfaceCatForm.jsx";
 //
 import request from "@/service/request.js";
 import { Link } from "react-router-dom";

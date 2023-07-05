@@ -6,10 +6,10 @@ import { Tabs, Modal, Button } from "antd";
 import { usePrompt } from "@/components/Prompt/Prompt";
 import { fetchInterfaceData } from "@/reducer/modules/interface";
 //
-import Edit from "./Edit/Edit.js";
-import View from "./View/View.jsx";
-import Run from "./Run/Run.jsx";
-import AdvMock from "./AdvMock/AdvMock.jsx";
+import Edit from "@/pages/Project/Interface/InterfaceContent/Edit/Edit.jsx";
+import View from "@/pages/Project/Interface/InterfaceContent/View/View.jsx";
+import Run from "@/pages/Project/Interface/InterfaceContent/Run/Run.jsx";
+import AdvMock from "@/pages/Project/Interface/InterfaceContent/AdvMock/AdvMock.jsx";
 //
 class InterfaceContent extends Component {
   static propTypes = {

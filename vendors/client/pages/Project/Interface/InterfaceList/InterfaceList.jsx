@@ -3,34 +3,16 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import request from "@/service/request.js";
 import { Table, Button, Modal, message, Tooltip, Select, Icon } from "antd";
-import AddInterfaceForm from "../InterfaceMenu/AddInterfaceForm";
 import { fetchInterfaceListMenu, fetchInterfaceList, fetchInterfaceCatList } from "@/reducer/modules/interface";
 import { getProject } from "@/reducer/modules/project";
 import { Link } from "react-router-dom";
 import variable from "@/utils/variable";
 import Label from "@/components/Label/Label.jsx";
 //
+import AddInterfaceForm from "@/pages/Project/Interface/InterfaceMenu/AddInterfaceForm.jsx";
 import styles from "./InterfaceList.module.scss";
 //
 const limit = 20;
-
-@connect(
-  (state) => ({
-    curData: state.inter.curdata,
-    curProject: state.project.currProject,
-    catList: state.inter.list,
-    totalTableList: state.inter.totalTableList,
-    catTableList: state.inter.catTableList,
-    totalCount: state.inter.totalCount,
-    count: state.inter.count
-  }),
-  {
-    fetchInterfaceListMenu,
-    fetchInterfaceList,
-    fetchInterfaceCatList,
-    getProject
-  }
-)
 class InterfaceList extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +25,6 @@ class InterfaceList extends Component {
       current: 1
     };
   }
-
   static propTypes = {
     curData: PropTypes.object,
     catList: PropTypes.array,
@@ -59,7 +40,6 @@ class InterfaceList extends Component {
     count: PropTypes.number,
     getProject: PropTypes.func
   };
-
   handleRequest = async(props) => {
     const { params } = props.match;
     if (!params.actionId) {
@@ -77,7 +57,7 @@ class InterfaceList extends Component {
       await this.props.fetchInterfaceList(option);
     } else if (isNaN(params.actionId)) {
       let catid = params.actionId.substr(4);
-      this.setState({catid: +catid});
+      this.setState({ catid: +catid });
       let option = {
         page: this.state.current,
         limit,
@@ -88,7 +68,6 @@ class InterfaceList extends Component {
       await this.props.fetchInterfaceCatList(option);
     }
   };
-
   // 更新分类简介
   handleChangeInterfaceCat = (desc, name) => {
     let params = {
@@ -96,7 +75,6 @@ class InterfaceList extends Component {
       name: name,
       desc: desc
     };
-
     request.post("/interface/up_cat", params).then(async(res) => {
       if (res.data.errcode !== 0) {
         return message.error(res.data.errmsg);
@@ -107,7 +85,6 @@ class InterfaceList extends Component {
       message.success("接口集合简介更新成功");
     });
   };
-
   handleChange = (pagination, filters, sorter) => {
     this.setState({
       current: pagination.current || 1,
@@ -115,15 +92,12 @@ class InterfaceList extends Component {
       filteredInfo: filters
     }, () => this.handleRequest(this.props));
   };
-
   UNSAFE_componentWillMount() {
     this.actionId = this.props.match.params.actionId;
     this.handleRequest(this.props);
   }
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     let _actionId = nextProps.match.params.actionId;
-
     if (this.actionId !== _actionId) {
       this.actionId = _actionId;
       this.setState(
@@ -134,7 +108,6 @@ class InterfaceList extends Component {
       );
     }
   }
-
   handleAddInterface = (data) => {
     data.project_id = this.props.curProject._id;
     request.post("/interface/add", data).then((res) => {
@@ -147,7 +120,6 @@ class InterfaceList extends Component {
       this.props.fetchInterfaceListMenu(data.project_id);
     });
   };
-
   changeInterfaceCat = async(id, catid) => {
     const params = {
       id: id,
@@ -162,7 +134,6 @@ class InterfaceList extends Component {
       message.error(result.data.errmsg);
     }
   };
-
   changeInterfaceStatus = async(value) => {
     const params = {
       id: value.split("-")[0],
@@ -176,7 +147,6 @@ class InterfaceList extends Component {
       message.error(result.data.errmsg);
     }
   };
-
   // page change will be processed in handleChange by pagination
   // changePage = current => {
   //   if (this.state.current !== current) {
@@ -188,11 +158,9 @@ class InterfaceList extends Component {
   //     );
   //   }
   // };
-
   render() {
     let tag = this.props.curProject.tag;
-    let tagFilter = tag.map((item) => ({text: item.name, value: item.name}));
-
+    let tagFilter = tag.map((item) => ({ text: item.name, value: item.name }));
     const columns = [
       {
         title: "接口名称",
@@ -224,7 +192,7 @@ class InterfaceList extends Component {
                 {record.method}
               </span>
               <Tooltip title="开放接口" placement="topLeft">
-                <span>{record.api_opened && <Icon className="opened" type="eye-o" />}</span>
+                <span>{record.api_opened && <Icon className="opened" type="eye-o"/>}</span>
               </Tooltip>
               <Tooltip title={path} placement="topLeft" overlayClassName="toolTip">
                 <span className="path">{path}</span>
@@ -302,7 +270,6 @@ class InterfaceList extends Component {
     let intername = "",
       desc = "";
     let cat = this.props.curProject ? this.props.curProject.cat : [];
-
     if (cat) {
       for (let i = 0; i < cat.length; i++) {
         if (cat[i]._id === this.state.catid) {
@@ -326,29 +293,23 @@ class InterfaceList extends Component {
       data = this.props.catTableList;
       total = this.props.count;
     }
-
     data = data.map((item) => {
       item.key = item._id;
       return item;
     });
-
     const pageConfig = {
       total: total,
       pageSize: limit,
       current: this.state.current
       // onChange: this.changePage
     };
-
     const isDisabled = this.props.catList.length === 0;
-
     // console.log(this.props.curProject.tag)
-
     return (
       <div className={styles.InterfaceList}>
         <h2 className="interface-title" style={{ display: "inline-block", margin: 0 }}>
           {intername ? intername : "全部接口"}共 ({total}) 个
         </h2>
-
         <Button
           style={{ float: "right" }}
           disabled={isDisabled}
@@ -358,7 +319,7 @@ class InterfaceList extends Component {
           添加接口
         </Button>
         <div style={{ marginTop: "10px" }}>
-          <Label onChange={(value) => this.handleChangeInterfaceCat(value, intername)} desc={desc} />
+          <Label onChange={(value) => this.handleChangeInterfaceCat(value, intername)} desc={desc}/>
         </div>
         <Table
           className="table-interfacelist"
@@ -387,5 +348,20 @@ class InterfaceList extends Component {
     );
   }
 }
-
-export default InterfaceList;
+export default connect(
+  (state) => ({
+    curData: state.inter.curdata,
+    curProject: state.project.currProject,
+    catList: state.inter.list,
+    totalTableList: state.inter.totalTableList,
+    catTableList: state.inter.catTableList,
+    totalCount: state.inter.totalCount,
+    count: state.inter.count
+  }),
+  {
+    fetchInterfaceListMenu,
+    fetchInterfaceList,
+    fetchInterfaceCatList,
+    getProject
+  }
+)(InterfaceList);
