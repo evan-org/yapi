@@ -32,6 +32,9 @@ export const appSlice = createSlice({
   name: "user",
   initialState: initialState,
   reducers: {
+    DEFINE_ERROR: (state, action) => {
+      console.debug("DEFINE_ERROR", action);
+    },
     GET_LOGIN_STATE: (state, action) => {
       state.isLogin = action.payload.data.errcode === 0;
       //
@@ -100,23 +103,41 @@ const {
   REGISTER,
   SET_BREADCRUMB,
   CHANGE_STUDY_TIP,
-  FINISH_STUDY
+  FINISH_STUDY,
+  DEFINE_ERROR
 } = appSlice.actions;
 export default appSlice.reducer
 // Action Creators
 export async function checkLoginState() {
-  const result = await request.get("/user/status")
-  return {
-    type: GET_LOGIN_STATE,
-    payload: result
-  };
+  try {
+    const result = await request.get("/user/status")
+    return {
+      type: GET_LOGIN_STATE,
+      payload: result
+    };
+  } catch (e) {
+    console.error("checkLoginState", e);
+    return {
+      type: DEFINE_ERROR,
+      payload: null
+    };
+  }
 }
 export async function loginActions(data) {
-  const result = await request.post("/user/login", data)
-  return {
-    type: LOGIN,
-    payload: result
-  };
+  try {
+    const result = await request.post("/user/login", data)
+    return {
+      type: LOGIN,
+      payload: result
+    };
+  } catch (e) {
+    console.error("loginActions", e);
+    console.error("checkLoginState", e);
+    return {
+      type: DEFINE_ERROR,
+      payload: null
+    };
+  }
 }
 export async function loginLdapActions(data) {
   const result = await request.post("/user/login_by_ldap", data)

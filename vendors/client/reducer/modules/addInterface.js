@@ -68,7 +68,8 @@ const {
   PUSH_INTERFACE_NAME,
   PUSH_INTERFACE_METHOD,
   FETCH_INTERFACE_PROJECT,
-  ADD_INTERFACE_CLIPBOARD
+  ADD_INTERFACE_CLIPBOARD,
+  GET_INTERFACE_RES_PARAMS
 } = appSlice.actions;
 export default appSlice.reducer
 export function pushInputValue(value) {

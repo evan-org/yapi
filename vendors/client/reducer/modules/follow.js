@@ -29,9 +29,7 @@ export default appSlice.reducer
 export async function getFollowList(uid) {
   return {
     type: GET_FOLLOW_LIST,
-    payload: await request.get("/follow/list", {
-      params: { uid }
-    })
+    payload: await request.get("/follow/list", { params: { uid } })
   };
 }
 // 添加关注
