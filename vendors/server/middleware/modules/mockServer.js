@@ -3,7 +3,7 @@ const yapi = require("@server/yapi.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 //
-const mockExtra = require("@common/mock-extra.js");
+const mockExtra = require("@common/mock-extra.cjs");
 const { schemaValidator } = require("@common/utils.js");
 //
 const _ = require("underscore");

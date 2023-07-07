@@ -2,7 +2,7 @@ const moment = require("moment");
 const constants = require("./variable.js");
 const Mock = require("mockjs");
 import json5 from "json5";
-const MockExtra = require("@common/mock-extra.js");
+const MockExtra = require("@common/mock-extra.cjs");
 const Roles = {
   0: "admin",
   10: "owner",

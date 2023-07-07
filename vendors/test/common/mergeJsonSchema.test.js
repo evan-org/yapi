@@ -1,5 +1,5 @@
 import test from "ava";
-import mergeJsonSchema from "../../common/mergeJsonSchema";
+import mergeJsonSchema from "../../common/mergeJsonSchema.cjs";
 
 test("base", (t) => {
   let schema1 = {

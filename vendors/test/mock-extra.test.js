@@ -1,5 +1,5 @@
 import test from "ava";
-const mockExtra = require("../common/mock-extra.js");
+const mockExtra = require("../common/mock-extra.cjs");
 
 
 test("mock-extra", (t) => {

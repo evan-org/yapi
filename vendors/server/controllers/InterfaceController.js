@@ -18,7 +18,7 @@ const url = require("url");
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
 const showDiffMsg = require("@common/diff-view.cjs");
-const mergeJsonSchema = require("@common/mergeJsonSchema.js");
+const mergeJsonSchema = require("@common/mergeJsonSchema.cjs");
 // const annotatedCss = require("jsondiffpatch/public/formatters-styles/annotated.css");
 // const htmlCss = require("jsondiffpatch/public/formatters-styles/html.css");
 function handleHeaders(values) {

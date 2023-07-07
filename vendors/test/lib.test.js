@@ -3,7 +3,7 @@ import test from "ava";
 const rewire = require("rewire");
 const lib = rewire("@common/lib.cjs");
 
-const plugin = rewire("../common/plugin.js")
+const plugin = rewire("../common/plugin.cjs")
 const initPlugins = plugin.initPlugins;
 
 

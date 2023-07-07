@@ -21,7 +21,7 @@ function createScript(plugin, pathAlias) {
   return `"${plugin.name}": { module: require("${pathAlias}/yapi-plugin-${plugin.name}/client.js"), options: ${options} }`;
 }
 const { exts: extsConfig } = require("./common/config.cjs");
-const commonLib = require("./common/plugin.js");
+const commonLib = require("./common/plugin.cjs");
 function initPlugins(configPlugin) {
   configPlugin = require("../config.json").plugins;
   let scripts = [];
