@@ -34,7 +34,7 @@ const {
   handleContentType,
   crossRequest,
   checkNameIsExistInArray
-} = require("@common/postmanLib.js");
+} = require("@common/postmanLib.cjs");
 const plugin = require("@/plugin.js");
 const createContext = require("@common/createContext.cjs");
 const HTTP_METHOD = constants.HTTP_METHOD;

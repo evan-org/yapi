@@ -22,7 +22,7 @@ import { initCrossRequest } from "@/components/Postman/CheckCrossInstall.jsx";
 import { InsertCodeMap } from "@/components/Postman/Postman.jsx"
 
 const plugin = require("@/plugin.js");
-const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.js");
+const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.cjs");
 const { handleParamsValue, json_parse, ArrayToObject } = require("@common/utils.js");
 //
 import CaseEnv from "@/components/CaseEnv/CaseEnv.jsx";

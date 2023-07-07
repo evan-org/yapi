@@ -10,7 +10,7 @@ const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const FollowModel = require("@server/models/FollowModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
-const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.js");
+const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.cjs");
 const { handleParamsValue, ArrayToObject } = require("@common/utils.js");
 const renderToHtml = require("../views/reportHtml/index.js");
 const HanldeImportData = require("@common/HandleImportData.cjs");
