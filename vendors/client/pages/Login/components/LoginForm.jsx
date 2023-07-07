@@ -29,12 +29,12 @@ function LoginFormMain(props) {
       try {
         if (isLDAP && loginType === "ldap") {
           const res = await dispatch(loginLdapActions(values));
-          navigate({ pathname: `/group/${res.payload.data.uid}` }, { replace: true });
+          navigate({ pathname: `/group/${res.payload.uid}` }, { replace: true });
           // message.success("登录成功! ");
         } else {
           const res = await dispatch(loginActions(values));
           console.debug("loginActions: ", res);
-          navigate({ pathname: `/group/${res.payload.data.uid}` }, { replace: true });
+          navigate({ pathname: `/group/${res.payload.uid}` }, { replace: true });
           // message.success("登录成功! ");
         }
       } catch (e) {

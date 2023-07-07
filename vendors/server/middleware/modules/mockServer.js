@@ -153,8 +153,7 @@ module.exports = async(ctx, next) => {
   if (!projectId) {
     return (ctx.body = yapi.commons.resReturn(null, 400, "projectId不能为空"));
   }
-  let projectInst = yapi.getInst(ProjectModel),
-    project;
+  let projectInst = yapi.getInst(ProjectModel), project;
   try {
     project = await projectInst.get(projectId);
   } catch (e) {

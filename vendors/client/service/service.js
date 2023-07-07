@@ -30,7 +30,7 @@ service.interceptors.request.use((config) => {
   //
   if (getToken()) {
     config.headers["Authorization"] = `Bearer ${getToken()}`;
-    config.headers["uid"] = `${getUserId()}`;
+    config.headers["User-Id"] = `${getUserId()}`;
   }
   return config
 }, (error) => {

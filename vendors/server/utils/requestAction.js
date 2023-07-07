@@ -117,11 +117,11 @@ const requestAction = async(ctx, Controller, action = "") => {
     if (inst.$auth === true) {
       await inst[action].call(inst, ctx);
     } else {
-      ctx.body = responseAction(null, 40011, "请登录...");
+      return (ctx.body = responseAction(null, 40011, "请登录..."));
     }
   } catch (err) {
-    ctx.body = responseAction(null, 40011, "服务器出错...");
     logger(err, "error");
+    return (ctx.body = responseAction(null, 40011, "服务器出错..."));
   }
   return ctx;
 };

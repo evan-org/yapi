@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
 //
 const ldap = require("@server/utils/ldap.js");
-const baseController = require("@server/controllers/BaseController.js");
+const BaseController = require("@server/controllers/BaseController.js");
 //
 const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = require("@server/models/index.js");
 //
@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 const responseAction = require("@server/utils/responseAction.js");
 //
 const { generatePassword, generatePasssalt } = require("@server/utils/sso.js");
-class UserController extends baseController {
+class UserController extends BaseController {
   constructor(ctx) {
     super(ctx);
     this.Model = yapi.getInst(UserModel);
@@ -30,7 +30,7 @@ class UserController extends baseController {
   async login(ctx) {
     try {
       // 登录
-      console.log(ctx, ctx.request.body);
+      console.log(ctx);
       let email = ctx.request.body.email;
       email = (email || "").trim();
       let password = ctx.request.body.password;
@@ -49,17 +49,21 @@ class UserController extends baseController {
       if (generatePassword(password, result.passsalt) !== result.password) {
         return (ctx.body = responseAction(null, 405, "密码错误"));
       }
-      this.setLoginCookie(result._id, result.passsalt);
+      const { token, uid } = this.setLoginCookie(result._id, result.passsalt);
       return (ctx.body = responseAction(
         {
-          username: result.username,
-          role: result.role,
-          uid: result._id,
-          email: result.email,
-          add_time: result.add_time,
-          up_time: result.up_time,
-          type: "site",
-          study: result.study
+          token: token,
+          uid: uid,
+          info: {
+            username: result.username,
+            role: result.role,
+            uid: result._id,
+            email: result.email,
+            add_time: result.add_time,
+            up_time: result.up_time,
+            type: "site",
+            study: result.study
+          }
         },
         0,
         "login success..."
@@ -88,7 +92,7 @@ class UserController extends baseController {
   async logout(ctx) {
     ctx.cookies.set("_yapi_token", null);
     ctx.cookies.set("_yapi_uid", null);
-    ctx.body = responseAction("ok");
+    ctx.body = responseAction("ok", 0, "success");
   }
   /**
    * 更新
@@ -108,7 +112,7 @@ class UserController extends baseController {
     };
     try {
       let result = await userInst.update(this.getUid(), data);
-      ctx.body = responseAction(result);
+      ctx.body = responseAction(result, 0, "success");
     } catch (e) {
       ctx.body = responseAction(null, 401, e.message);
     }
@@ -198,7 +202,7 @@ class UserController extends baseController {
           contents: `<h3>亲爱的用户：</h3><p>您好，感谢使用YApi平台，你的邮箱账号是：${email}</p>`
         });
       }
-      this.setLoginCookie(user._id, user.passsalt);
+      const { token, uid } = this.setLoginCookie(user._id, user.passsalt);
       return true;
     } catch (e) {
       console.error('third_login:', e.message); // eslint-disable-line
@@ -245,9 +249,9 @@ class UserController extends baseController {
     };
     try {
       let result = await userInst.update(params.uid, data);
-      ctx.body = responseAction(result);
+      return (ctx.body = responseAction(result, 0, "success"));
     } catch (e) {
-      ctx.body = responseAction(null, 401, e.message);
+      return (ctx.body = responseAction(null, 401, e.message));
     }
   }
   async handlePrivateGroup(uid) {
@@ -270,6 +274,7 @@ class UserController extends baseController {
       expires: yapi.commons.expireDate(7),
       httpOnly: true
     });
+    return { token, uid }
   }
   /**
    * 用户注册接口
@@ -340,7 +345,7 @@ class UserController extends baseController {
         } 已经注册成功</p>`
       });
     } catch (e) {
-      ctx.body = responseAction(null, 401, e.message);
+      return (ctx.body = responseAction(null, 401, e.message));
     }
   }
   /**
@@ -365,7 +370,7 @@ class UserController extends baseController {
         count: count,
         total: Math.ceil(count / limit),
         list: user
-      }));
+      }, 0, "success"));
     } catch (e) {
       return (ctx.body = responseAction(null, 402, e.message));
     }
@@ -403,7 +408,7 @@ class UserController extends baseController {
         type: result.type,
         add_time: result.add_time,
         up_time: result.up_time
-      }));
+      }, 0, "success"));
     } catch (e) {
       return (ctx.body = responseAction(null, 402, e.message));
     }
@@ -433,9 +438,9 @@ class UserController extends baseController {
         return (ctx.body = responseAction(null, 400, "uid不能为空"));
       }
       let result = await userInst.del(id);
-      ctx.body = responseAction(result);
+      return (ctx.body = responseAction(result, 0, "success"));
     } catch (e) {
-      ctx.body = responseAction(null, 402, e.message);
+      return (ctx.body = responseAction(null, 402, e.message));
     }
   }
   /**
@@ -492,9 +497,9 @@ class UserController extends baseController {
       let projectInst = yapi.getInst(ProjectModel);
       await projectInst.updateMember(member);
       let result = await userInst.update(id, data);
-      ctx.body = responseAction(result);
+      return (ctx.body = responseAction(result, 0, "success"));
     } catch (e) {
-      ctx.body = responseAction(null, 402, e.message);
+      return (ctx.body = responseAction(null, 402, e.message));
     }
   }
   /**
@@ -531,9 +536,9 @@ class UserController extends baseController {
       }
       let avatarInst = yapi.getInst(AvatarModel);
       let result = await avatarInst.up(this.getUid(), basecode, type);
-      ctx.body = responseAction(result);
+      return (ctx.body = responseAction(result, 0, "success"));
     } catch (e) {
-      ctx.body = responseAction(null, 401, e.message);
+      return (ctx.body = responseAction(null, 401, e.message));
     }
   }
   /**
@@ -602,7 +607,7 @@ class UserController extends baseController {
       }
     ];
     let filteredRes = yapi.commons.filterRes(queryList, rules);
-    return (ctx.body = responseAction(filteredRes, 0, "ok"));
+    return (ctx.body = responseAction(filteredRes, 0, "success"));
   }
   /**
    * 根据路由id初始化项目数据
@@ -662,7 +667,7 @@ class UserController extends baseController {
           }
         }
       }
-      return (ctx.body = responseAction(result));
+      return (ctx.body = responseAction(result, 0, "success"));
     } catch (e) {
       return (ctx.body = responseAction(result, 422, e.message));
     }

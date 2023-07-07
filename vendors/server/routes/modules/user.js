@@ -58,6 +58,7 @@ router.post("/del", async(ctx) => {
   await requestAction(ctx, Controller, "del");
 });
 /**
+ * func user/status
  *module user
  *action getLoginStatus
  *method get
