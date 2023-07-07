@@ -8,7 +8,7 @@ import MethodsList from "./lib/MethodsList.jsx";
 import VariablesSelect from "./lib/VariablesSelect.jsx";
 import { trim } from "@/utils/common.js";
 
-const { handleParamsValue } = require("@common/utils.js");
+const { handleParamsValue } = require("@common/utils.cjs");
 // 深拷贝
 function deepEqual(state) {
   return JSON.parse(JSON.stringify(state));

@@ -4,7 +4,7 @@ const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 //
 const mockExtra = require("@common/mock-extra.cjs");
-const { schemaValidator } = require("@common/utils.js");
+const { schemaValidator } = require("@common/utils.cjs");
 //
 const _ = require("underscore");
 const Mock = require("mockjs");

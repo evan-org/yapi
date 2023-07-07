@@ -27,7 +27,7 @@ import ProjectEnv from "../ProjectEnv/ProjectEnv.jsx";
 import json5 from "json5";
 import styles from "./Postman.module.scss";
 
-const { handleParamsValue, ArrayToObject, schemaValidator } = require("@common/utils.js");
+const { handleParamsValue, ArrayToObject, schemaValidator } = require("@common/utils.cjs");
 const {
   handleParams,
   checkRequestBodyIsRaw,

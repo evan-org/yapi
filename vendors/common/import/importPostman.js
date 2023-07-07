@@ -2,7 +2,7 @@ import { message } from "antd";
 import _ from "underscore";
 
 const GenerateSchema = require("generate-schema/src/schemas/json.js");
-import { json_parse } from "@common/utils.js";
+const { json_parse } = require("@common/utils.cjs");
 //
 let folders = [];
 function parseUrl(url) {

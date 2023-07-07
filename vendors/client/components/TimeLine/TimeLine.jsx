@@ -11,7 +11,7 @@ import { fetchNewsData, fetchMoreNews } from "@/reducer/modules/news";
 import { fetchInterfaceList } from "@/reducer/modules/interface";
 import ErrMsg from "../ErrMsg/ErrMsg.jsx";
 //
-import { timeago } from "@common/utils.js";
+import { timeago } from "@common/utils.cjs";
 //
 const jsondiffpatch = require("jsondiffpatch/dist/jsondiffpatch.umd.js");
 const formattersHtml = jsondiffpatch.formatters.html;

@@ -5,7 +5,7 @@ import request from "@/service/request.js";
 import PropTypes from "prop-types";
 import "@/pages/Project/Wiki/Wiki.module.scss";
 //
-import { timeago } from "@common/utils.js";
+import { timeago } from "@common/utils.cjs";
 import { Link } from "react-router-dom";
 import WikiView from "@/pages/Project/Wiki/WikiView/WikiView.jsx";
 import WikiEditor from "@/pages/Project/Wiki/WikiEditor/WikiEditor.jsx";

@@ -23,7 +23,7 @@ import { InsertCodeMap } from "@/components/Postman/Postman.jsx"
 
 const plugin = require("@/plugin.js");
 const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.cjs");
-const { handleParamsValue, json_parse, ArrayToObject } = require("@common/utils.js");
+const { handleParamsValue, json_parse, ArrayToObject } = require("@common/utils.cjs");
 //
 import CaseEnv from "@/components/CaseEnv/CaseEnv.jsx";
 import Label from "@/components/Label/Label.jsx";

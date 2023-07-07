@@ -1,10 +1,10 @@
 const yapi = require("@server/yapi.js");
 //
-const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("./utils.js");
+const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("common/utils.cjs");
 const constants = require("../client/utils/variable.js");
 const _ = require("underscore");
 const URL = require("url");
-const utils = require("./power-string.js").utils;
+const { utils } = require("@common/power-string.cjs");
 const HTTP_METHOD = constants.HTTP_METHOD;
 const axios = require("axios");
 const qs = require("qs");
