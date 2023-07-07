@@ -24,7 +24,7 @@ export default configureStore({
   reducer: rootReducers,
   middleware: (getDefaultMiddleware) => {
     console.log(getDefaultMiddleware());
-    return getDefaultMiddleware().concat([logger, promise])
+    return getDefaultMiddleware().concat([logger])
   },
   devTools: composeWithDevTools(),
 })

@@ -22,12 +22,14 @@ const request = {
    * post
    * @param apiUri
    * @param data
+   * @param params
    */
-  post(apiUri, data) {
+  post(apiUri, data, params) {
     return service.request({
       url: apiUri,
       method: "POST",
-      data: data
+      data: data,
+      params: params
     })
   },
   /**

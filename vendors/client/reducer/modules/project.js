@@ -87,204 +87,110 @@ const {
 } = appSlice.actions;
 export default appSlice.reducer
 // 获取某分组下的项目列表
-export async function fetchProjectList(id, pageNum) {
-  return {
-    type: FETCH_PROJECT_LIST,
-    payload: await request.get("/project/list", {
-      params: {
-        group_id: id,
-        page: pageNum || 1,
-        limit: variable.PAGE_LIMIT
-      }
-    })
-  };
+export const fetchProjectList = (id, pageNum) => async(dispatch, getState) => {
+  const result = await request.get("/project/list", {
+    group_id: id,
+    page: pageNum || 1,
+    limit: variable.PAGE_LIMIT
+  })
+  return dispatch(FETCH_PROJECT_LIST({ data: result.data }));
 }
 // 复制项目
-export async function copyProjectMsg(params) {
-  return {
-    type: COPY_PROJECT_MSG,
-    payload: await request.post("/project/copy", params)
-  };
+export const copyProjectMsg = (data) => async(dispatch, getState) => {
+  const result = await request.post("/project/copy", data, data);
+  return dispatch(COPY_PROJECT_MSG({ data: result.data }));
 }
 // 添加项目成员
-export async function addMember(param) {
-  return {
-    type: ADD_PROJECT_MEMBER,
-    payload: await request.post("/project/add_member", param)
-  };
+export const addMember = (param) => async(dispatch, getState) => {
+  const result = await request.post("/project/add_member", param);
+  return dispatch(ADD_PROJECT_MEMBER({ data: result.data }));
 }
 // 删除项目成员
-export async function delMember(param) {
-  return {
-    type: DEL_PROJECT_MEMBER,
-    payload: await request.post("/project/del_member", param)
-  };
+export const delMember = (param) => async(dispatch, getState) => {
+  const result = await request.post("/project/del_member", param);
+  return dispatch(DEL_PROJECT_MEMBER({ data: result.data }));
 }
 // 修改项目成员权限
-export async function changeMemberRole(param) {
-  return {
-    type: CHANGE_PROJECT_MEMBER,
-    payload: await request.post("/project/change_member_role", param)
-  };
+export const changeMemberRole = (param) => async(dispatch, getState) => {
+  const result = await request.post("/project/change_member_role", param);
+  return dispatch(CHANGE_PROJECT_MEMBER({ data: result.data }));
 }
 // 修改项目成员是否收到消息通知
-export async function changeMemberEmailNotice(param) {
-  return {
-    type: CHANGE_MEMBER_EMAIL_NOTICE,
-    payload: await request.post("/project/change_member_email_notice", param)
-  };
+export const changeMemberEmailNotice = (param) => async(dispatch, getState) => {
+  const result = await request.post("/project/change_member_email_notice", param);
+  return dispatch(CHANGE_MEMBER_EMAIL_NOTICE({ data: result.data }));
 }
 // 获取项目成员列表
-export async function getProjectMemberList(id) {
-  return {
-    type: GET_PEOJECT_MEMBER,
-    payload: await request.get("/project/get_member_list", {
-      params: { id }
-    })
-  };
+export const getProjectMemberList = (id) => async(dispatch, getState) => {
+  const result = await request.get("/project/get_member_list", { id });
+  return dispatch(GET_PEOJECT_MEMBER({ data: result.data }));
 }
-// export function changeTableLoading(data) {
-//   return {
-//     type: CHANGE_TABLE_LOADING,
-//     payload: data
-//   };
+//
+// export const changeTableLoading = (data) => async(dispatch) => {
+//   dispatch(CHANGE_TABLE_LOADING(data));
 // }
-export async function addProject(data) {
-  let {
-    name,
-    prd_host,
-    basepath,
-    desc,
-    group_id,
-    group_name,
-    protocol,
-    icon,
-    color,
-    project_type
-  } = data;
-  // 过滤项目名称中有html标签存在的情况
-  name = htmlFilter(name);
-  const param = {
-    name,
-    prd_host,
-    protocol,
-    basepath,
-    desc,
-    group_id,
-    group_name,
-    icon,
-    color,
-    project_type
-  };
-  return {
-    type: PROJECT_ADD,
-    payload: await request.post("/project/add", param)
-  };
+export const addProject = (data) => async(dispatch, getState) => {
+  // name 过滤项目名称中有html标签存在的情况
+  const result = await request.post("/project/add", { ...data, name: htmlFilter(data.name) })
+  return dispatch(PROJECT_ADD({ data: result.data }))
 }
 // 修改项目
-export async function updateProject(data) {
-  let { name, project_type, basepath, desc, _id, env, group_id, switch_notice, strice, is_json5, tag } = data;
+export const updateProject = (data) => async(dispatch, getState) => {
   // 过滤项目名称中有html标签存在的情况
-  name = htmlFilter(name);
-  const param = {
-    name,
-    project_type,
-    basepath,
-    switch_notice,
-    desc,
-    id: _id,
-    env,
-    group_id,
-    strice,
-    is_json5,
-    tag
-  };
-  return {
-    type: PROJECT_UPDATE,
-    payload: await request.post("/project/up", param)
-  };
+  const result = await request.post("/project/up", { ...data, id: data._id, name: htmlFilter(data.name) });
+  return dispatch(PROJECT_UPDATE({ data: result.data }));
 }
 // 修改项目脚本
-export async function updateProjectScript(data) {
-  return {
-    type: PROJECT_UPDATE,
-    payload: await request.post("/project/up", data)
-  };
+export const updateProjectScript = (data) => async(dispatch, getState) => {
+  const result = await request.post("/project/up", data);
+  return dispatch(PROJECT_UPDATE({ data: result.data }));
 }
 // 修改全局mock
-export async function updateProjectMock(data) {
-  return {
-    type: PROJECT_UPDATE,
-    payload: await request.post("/project/up", data)
-  };
+export const updateProjectMock = (data) => async(dispatch, getState) => {
+  const result = await request.post("/project/up", data);
+  return dispatch(PROJECT_UPDATE({ data: result.data }));
 }
 // 修改项目环境配置
-export async function updateEnv(data) {
+export const updateEnv = (data) => async(dispatch, getState) => {
   const { env, _id } = data;
-  const param = {
-    id: _id,
-    env
-  };
-  return {
-    type: PROJECT_UPDATE_ENV,
-    payload: await request.post("/project/up_env", param)
-  };
+  const result = await request.post("/project/up_env", { id: _id, env });
+  return dispatch(PROJECT_UPDATE_ENV({ data: result.data }));
 }
 // 获取项目环境配置
-export async function getEnv(project_id) {
-  return {
-    type: PROJECT_GET_ENV,
-    payload: await request.get("/project/get_env", { params: { project_id } })
-  };
+export const getEnv = (project_id) => async(dispatch, getState) => {
+  const result = await request.get("/project/get_env", { project_id });
+  return dispatch(PROJECT_GET_ENV({ data: result.data }));
 }
 // 修改项目头像
-export async function upsetProject(param) {
-  return {
-    type: PROJECT_UPSET,
-    payload: await request.post("/project/upset", param)
-  };
+export const upsetProject = (param) => async(dispatch, getState) => {
+  const result = await request.post("/project/upset", param);
+  return dispatch(PROJECT_UPSET({ data: result.data }));
 }
 // 删除项目
-export async function delProject(id) {
-  const param = { id };
-  return {
-    type: PROJECT_DEL,
-    payload: await request.post("/project/del", param)
-  };
+export const delProject = (id) => async(dispatch, getState) => {
+  const result = await request.post("/project/del", { id });
+  return dispatch(PROJECT_DEL({ data: result.data }));
 }
-export async function getProject(id) {
-  return {
-    type: GET_CURR_PROJECT,
-    payload: await request.get("/project/get?id=" + id)
-  };
+// 根据ID查看项目
+export const getProject = (id) => async(dispatch, getState) => {
+  const result = await request.get("/project/get", { id: id })
+  dispatch(GET_CURR_PROJECT({ data: result.data }));
 }
-export async function getToken(project_id) {
-  return {
-    type: GET_TOKEN,
-    payload: await request.get("/project/token", {
-      params: { project_id }
-    })
-  };
+//
+export const getToken = (project_id) => async(dispatch, getState) => {
+  const result = await request.get("/project/token", { project_id });
+  return dispatch(GET_TOKEN({ data: result.data }));
 }
-export async function updateToken(project_id) {
-  return {
-    type: UPDATE_TOKEN,
-    payload: await request.get("/project/update_token", {
-      params: { project_id }
-    })
-  };
+// 更新token
+export const updateToken = (project_id) => async(dispatch, getState) => {
+  const result = await request.get("/project/update_token", { params: { project_id } });
+  return dispatch(UPDATE_TOKEN({ data: result.data }));
 }
-export async function checkProjectName(name, group_id) {
-  return {
-    type: CHECK_PROJECT_NAME,
-    payload: await request.get("/project/check_project_name", {
-      params: { name, group_id }
-    })
-  };
+export const checkProjectName = (name, group_id) => async(dispatch, getState) => {
+  const result = await request.get("/project/check_project_name", { params: { name, group_id } })
+  return dispatch(CHECK_PROJECT_NAME({ data: result.data }));
 }
-export async function handleSwaggerUrlData(url) {
-  return {
-    type: GET_SWAGGER_URL_DATA,
-    payload: await request.get("/project/swagger_url?url=" + encodeURI(encodeURI(url)))
-  };
+export const handleSwaggerUrlData = (url) => async(dispatch, getState) => {
+  const result = await request.get("/project/swagger_url?url=" + encodeURI(encodeURI(url)));
+  return dispatch(GET_SWAGGER_URL_DATA({ data: result.data }));
 }

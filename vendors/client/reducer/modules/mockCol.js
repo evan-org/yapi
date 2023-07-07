@@ -19,10 +19,7 @@ const {
 } = appSlice.actions;
 export default appSlice.reducer
 // Action Creators
-export async function fetchMockCol(interfaceId) {
+export const fetchMockCol = (interfaceId) => async(dispatch, getState) => {
   let result = await request.get("/plugin/advmock/case/list?interface_id=" + interfaceId);
-  return {
-    type: FETCH_MOCK_COL,
-    payload: result.data
-  };
+  return dispatch(FETCH_MOCK_COL({ data: result.data }));
 }

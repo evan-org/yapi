@@ -6,26 +6,13 @@ const GUEST_STATUS = 1;
 const MEMBER_STATUS = 2;
 // Reducer user
 const initialState = {
-  isLogin: false,
-  canRegister: true,
-  isLDAP: false,
-  userName: null,
-  uid: null,
-  email: "",
-  loginState: LOADING_STATUS,
-  loginWrapActiveKey: "1",
-  role: "",
-  type: "",
-  // breadcrumb: [{
+  isLogin: false, canRegister: true, isLDAP: false, userName: null, uid: null, email: "", loginState: LOADING_STATUS, loginWrapActiveKey: "1", role: "", type: "", // breadcrumb: [{
   //   name: 'name',
   //   href: 'group'
   // }, {
   //   name: '当前页面'
   // }]
-  breadcrumb: [],
-  studyTip: 0,
-  study: false,
-  imageUrl: ""
+  breadcrumb: [], studyTip: 0, study: false, imageUrl: ""
 };
 //
 export const appSlice = createSlice({
@@ -48,15 +35,17 @@ export const appSlice = createSlice({
       state.type = action.payload.data.data ? action.payload.data.data.type : null;
       state.study = action.payload.data.data ? action.payload.data.data.study : false;
     },
+    //
     LOGIN: (state, action) => {
-      if (action.payload.data.errcode === 0) {
+      console.log("reducers:LOGIN", action);
+      if (action.payload.errcode === 0) {
         state.isLogin = true;
         state.loginState = MEMBER_STATUS;
-        state.uid = action.payload.data.data.uid;
-        state.userName = action.payload.data.data.username;
-        state.role = action.payload.data.data.role;
-        state.type = action.payload.data.data.type;
-        state.study = action.payload.data.data.study;
+        state.uid = action.payload.data.uid;
+        state.userName = action.payload.data.username;
+        state.role = action.payload.data.role;
+        state.type = action.payload.data.type;
+        state.study = action.payload.data.study;
       }
     },
     LOGIN_OUT: (state, action) => {
@@ -68,7 +57,7 @@ export const appSlice = createSlice({
       state.type = "";
     },
     LOGIN_TYPE: (state, action) => {
-      state.loginWrapActiveKey = action.index;
+      state.loginWrapActiveKey = action.payload;
     },
     REGISTER: (state, action) => {
       state.isLogin = true;
@@ -79,7 +68,7 @@ export const appSlice = createSlice({
       state.study = action.payload.data.data ? action.payload.data.data.study : false;
     },
     SET_BREADCRUMB: (state, action) => {
-      state.breadcrumb = action.data;
+      state.breadcrumb = action.payload;
     },
     CHANGE_STUDY_TIP: (state, action) => {
       state.studyTip = state.studyTip + 1
@@ -89,7 +78,7 @@ export const appSlice = createSlice({
       state.studyTip = 0;
     },
     SET_IMAGE_URL: (state, action) => {
-      state.imageUrl = action.data;
+      state.imageUrl = action.payload;
     }
   },
   // extraReducers: createAsyncReducers([groupList]),
@@ -103,95 +92,46 @@ const {
   REGISTER,
   SET_BREADCRUMB,
   CHANGE_STUDY_TIP,
-  FINISH_STUDY,
-  DEFINE_ERROR
+  FINISH_STUDY
 } = appSlice.actions;
 export default appSlice.reducer
 // Action Creators
-export async function checkLoginState() {
-  try {
-    const result = await request.get("/user/status")
-    return {
-      type: GET_LOGIN_STATE,
-      payload: result
-    };
-  } catch (e) {
-    console.error("checkLoginState", e);
-    return {
-      type: DEFINE_ERROR,
-      payload: null
-    };
-  }
+export const checkLoginState = (payload) => async(dispatch, getState) => {
+  const result = await request.get("/user/status");
+  return dispatch(GET_LOGIN_STATE({ data: result.data }))
 }
-export async function loginActions(data) {
-  try {
-    const result = await request.post("/user/login", data)
-    return {
-      type: LOGIN,
-      payload: result
-    };
-  } catch (e) {
-    console.error("loginActions", e);
-    console.error("checkLoginState", e);
-    return {
-      type: DEFINE_ERROR,
-      payload: null
-    };
-  }
+export const loginActions = (payload) => async(dispatch, getState) => {
+  console.log("action:payload:loginActions", payload);
+  const result = await request.post("/user/login", payload);
+  return dispatch(LOGIN(result.data));
 }
-export async function loginLdapActions(data) {
-  const result = await request.post("/user/login_by_ldap", data)
-  return {
-    type: LOGIN,
-    payload: result
-  };
+export const loginLdapActions = (payload) => async(dispatch, getState) => {
+  const result = await request.post("/user/login_by_ldap", payload);
+  dispatch(LOGIN({ data: result.data }));
 }
-export async function regActions(data) {
-  const { email, password, userName } = data;
-  const param = {
-    email,
-    password,
-    username: userName
-  };
-  const result = await request.post("/user/reg", param)
-  return {
-    type: REGISTER,
-    payload: result
-  };
+export const regActions = (payload) => async(dispatch, getState) => {
+  const { email, password, userName } = payload;
+  const params = { email, password, username: userName };
+  const result = await request.post("/user/reg", params);
+  dispatch(REGISTER({ data: result.data }));
 }
-export async function logoutActions() {
-  const result = await request.get("/user/logout")
-  return {
-    type: LOGIN_OUT,
-    payload: result
-  };
+export const logoutActions = (payload) => async(dispatch, getState) => {
+  const result = await request.get("/user/logout");
+  dispatch(LOGIN_OUT({ data: result.data }));
 }
-export async function loginTypeAction(index) {
-  return {
-    type: LOGIN_TYPE,
-    index: index
-  };
+export const loginTypeAction = (payload) => async(dispatch, getState) => {
+  dispatch(LOGIN_TYPE(payload))
 }
-export function setBreadcrumb(data) {
-  return {
-    type: SET_BREADCRUMB,
-    data: data
-  };
+export const setBreadcrumb = (payload) => async(dispatch, getState) => {
+  dispatch(SET_BREADCRUMB(payload));
 }
-export function setImageUrl(data) {
-  return {
-    type: SET_IMAGE_URL,
-    data: data
-  };
+export const setImageUrl = (payload) => async(dispatch, getState) => {
+  dispatch(SET_IMAGE_URL(payload));
 }
-export function changeStudyTip() {
-  return {
-    type: CHANGE_STUDY_TIP
-  };
+export const changeStudyTip = (payload) => async(dispatch, getState) => {
+  dispatch(CHANGE_STUDY_TIP(payload))
 }
-export async function finishStudy() {
-  return {
-    type: FINISH_STUDY,
-    payload: await request.get("/user/up_study")
-  };
+export const finishStudy = (payload) => async(dispatch, getState) => {
+  const result = await request.get("/user/up_study");
+  dispatch(FINISH_STUDY({ data: result.data }));
 }

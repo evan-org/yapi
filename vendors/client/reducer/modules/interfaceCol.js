@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import request from "@/service/request.js";
+import result from "autoprefixer/data/prefixes.js";
 // Reducer
 const initialState = {
   interfaceColList: [
@@ -68,41 +69,32 @@ const {
 } = appSlice.actions;
 export default appSlice.reducer
 // Action Creators
-export async function fetchInterfaceColList(projectId) {
-  return {
-    type: FETCH_INTERFACE_COL_LIST,
-    payload: await request.get("/col/list?project_id=" + projectId)
-  };
+export const fetchInterfaceColList = (projectId) => async(dispatch, getState) => {
+  const result = await request.get("/col/list", { project_id: projectId });
+  return dispatch(FETCH_INTERFACE_COL_LIST({ data: result.data }));
 }
-export async function fetchCaseData(caseId) {
-  return {
-    type: FETCH_CASE_DATA,
-    payload: await request.get("/col/case?caseid=" + caseId)
-  };
+//
+export const fetchCaseData = (caseId) => async(dispatch, getState) => {
+  const result = await request.get("/col/case?caseid=" + caseId);
+  return dispatch(FETCH_CASE_DATA({ data: result.data }));
 }
-export async function fetchCaseList(colId) {
-  return {
-    type: FETCH_CASE_LIST,
-    payload: await request.get("/col/case_list/?col_id=" + colId)
-  };
+//
+export const fetchCaseList = (colId) => async(dispatch, getState) => {
+  const result = await request.get("/col/case_list/?col_id=" + colId);
+  return dispatch(FETCH_CASE_LIST({ data: result.data }));
 }
-export async function fetchCaseEnvList(col_id) {
-  return {
-    type: FETCH_CASE_ENV_LIST,
-    payload: await request.get("/col/case_env_list", {
-      params: { col_id }
-    })
-  };
+//
+export const fetchCaseEnvList = (col_id) => async(dispatch, getState) => {
+  const result = await request.get("/col/case_env_list", { col_id });
+  return dispatch(FETCH_CASE_ENV_LIST({ data: result.data }));
 }
-export async function fetchVariableParamsList(colId) {
-  return {
-    type: FETCH_VARIABLE_PARAMS_LIST,
-    payload: await request.get("/col/case_list_by_var_params?col_id=" + colId)
-  };
+//
+export const fetchVariableParamsList = (colId) => async(dispatch, getState) => {
+  const result = await request.get("/col/case_list_by_var_params?col_id=" + colId);
+  dispatch(FETCH_VARIABLE_PARAMS_LIST({ data: result.data }));
 }
-export function setColData(data) {
-  return {
-    type: SET_COL_DATA,
-    payload: data
-  };
+//
+export const setColData = (data) => async(dispatch, getState) => {
+  console.log("setColData", data);
+  return dispatch(SET_COL_DATA(data));
 }

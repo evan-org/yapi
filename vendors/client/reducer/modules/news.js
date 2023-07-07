@@ -44,23 +44,9 @@ export const appSlice = createSlice({
 })
 // actions
 const { FETCH_NEWS_DATA, FETCH_MORE_NEWS } = appSlice.actions;
-export default appSlice.reducer
-export async function fetchNewsData(typeid, type, page, limit, selectValue) {
-  let param = {
-    typeid: typeid,
-    type: type,
-    page: page,
-    limit: limit ? limit : variable.PAGE_LIMIT,
-    selectValue
-  }
-  return {
-    type: FETCH_NEWS_DATA,
-    payload: await request.get("/log/list", {
-      params: param
-    })
-  };
-}
-export async function fetchMoreNews(typeid, type, page, limit, selectValue) {
+export default appSlice.reducer;
+//
+export const fetchNewsData = (typeid, type, page, limit, selectValue) => async(dispatch, getState) => {
   const param = {
     typeid: typeid,
     type: type,
@@ -68,23 +54,28 @@ export async function fetchMoreNews(typeid, type, page, limit, selectValue) {
     limit: limit ? limit : variable.PAGE_LIMIT,
     selectValue
   }
-  return {
-    type: FETCH_MORE_NEWS,
-    payload: await request.get("/log/list", {
-      params: param
-    })
-  };
+  const result = await request.get("/log/list", param);
+  return dispatch(FETCH_NEWS_DATA({ data: result.data }));
 }
-export async function getMockUrl(project_id) {
-  const params = { id: project_id };
-  return {
-    type: "",
-    payload: await request.get("/project/get", { params: params })
-  };
+//
+export const fetchMoreNews = (typeid, type, page, limit, selectValue) => async(dispatch, getState) => {
+  const param = {
+    typeid: typeid,
+    type: type,
+    page: page,
+    limit: limit ? limit : variable.PAGE_LIMIT,
+    selectValue
+  }
+  const result = await request.get("/log/list", param);
+  return dispatch(FETCH_MORE_NEWS({ data: result.data }));
 }
-export async function fetchUpdateLogData(params) {
-  return {
-    type: "",
-    payload: await request.post("/log/list_by_update", params)
-  };
+//
+export const getMockUrl = (project_id) => async(dispatch, getState) => {
+  const result = await request.get("/project/get", { id: project_id });
+  return { type: null, payload: result };
+}
+//
+export const fetchUpdateLogData = (params) => async(dispatch, getState) => {
+  const result = await request.post("/log/list_by_update", params);
+  return { type: null, payload: result };
 }
