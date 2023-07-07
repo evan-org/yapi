@@ -1,3 +1,6 @@
+// 注入tui-editor css
+@import "@common/tui-editor/dist/tui-editor.min.css";
+@import "@common/tui-editor/dist/tui-editor-contents.min.css";
 .InterfaceEditForm {
   :global {
     @import "~json-schema-editor-visual/dist/main.css";

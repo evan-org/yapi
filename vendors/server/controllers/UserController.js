@@ -17,12 +17,13 @@ class UserController extends baseController {
   }
   /**
    * 用户登录接口
+   * @param {*} ctx
    * @interface /user/login
    * @method POST
    * @category user
    * @foldnumber 10
-   * @param {String} email email名称，不能为空
-   * @param  {String} password 密码，不能为空
+   * @param {String} ctx.body.email email，不能为空
+   * @param  {String} ctx.body.password 密码，不能为空
    * @returns {Object}
    * @example ./api/user/login.json
    */

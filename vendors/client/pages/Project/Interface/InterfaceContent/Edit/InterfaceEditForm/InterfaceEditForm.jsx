@@ -15,9 +15,6 @@ import request from "@/service/request.js";
 import { MOCK_SOURCE, HTTP_METHOD, HTTP_REQUEST_HEADER } from "@/utils/variable.js";
 //
 import Editor from "@common/tui-editor/dist/tui-editor-Editor-all.min.js";
-// 注入tui-editor css
-import "../../../../../../../common/tui-editor/dist/tui-editor.min.css";
-import "../../../../../../../common/tui-editor/dist/tui-editor-contents.min.css";
 //
 import schemaEditor from "json-schema-editor-visual/dist/main";
 

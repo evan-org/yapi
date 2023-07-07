@@ -22,7 +22,7 @@ export function getUserId(payload) {
   return localStorage.getItem(USER_ID, payload);
 }
 // 保存用户信息
-export function saveUserInfo(info) {
+export function setUserInfo(info) {
   localStorage.setItem(USER_INFO, JSON.stringify(info));
 }
 // 获取当前用户信息

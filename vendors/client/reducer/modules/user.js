@@ -1,3 +1,4 @@
+import { setToken, setUserId, setUserInfo } from "@/utils/auth.js";
 import { createSlice } from "@reduxjs/toolkit";
 import request from "@/service/request.js";
 // Reducer
@@ -116,6 +117,9 @@ export const checkLoginState = (payload) => async(dispatch, getState) => {
 // 登录API
 export const loginActions = (payload) => async(dispatch, getState) => {
   const result = await request.post("/user/login", payload);
+  setToken();
+  setUserId();
+  setUserInfo(result.data);
   return dispatch(LOGIN(result.data));
 }
 // 登录API

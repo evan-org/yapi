@@ -1,6 +1,5 @@
 const Mock = require("mockjs");
-const filter = require("common/power-string.cjs").filter;
-const stringUtils = require("common/power-string.cjs").utils;
+const { filter, utils: stringUtils } = require("@common/power-string.cjs");
 const json5 = require("json5");
 const Ajv = require("ajv");
 /**
