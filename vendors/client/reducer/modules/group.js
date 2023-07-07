@@ -110,6 +110,7 @@ export const {
   FETCH_GROUP_MEMBER,
   FETCH_GROUP_MSG,
   FETCH_MY_GROUP_LIST,
+  //
   ADD_GROUP_MEMBER,
   DEL_GROUP_MEMBER,
   CHANGE_GROUP_MEMBER,
@@ -119,92 +120,60 @@ export const {
 //
 export default appSlice.reducer
 // 获取 group 信息 (权限信息)
-export async function fetchGroupMsg(id) {
-  const result = await request.get("/group/get", { params: { id } })
-  return {
-    type: FETCH_GROUP_MSG,
-    payload: result
-  };
+export const fetchGroupMsg = (id) => async(dispatch, getState) => {
+  const result = await request.get("/group/get", { id });
+  return dispatch(FETCH_GROUP_MSG({ data: result.data }));
 }
 // 添加分组成员
-export async function addMember(param) {
-  const result = await request.post("/group/add_member", param)
-  return {
-    type: ADD_GROUP_MEMBER,
-    payload: result
-  };
+export const addMember = (param) => async(dispatch, getState) => {
+  const result = await request.post("/group/add_member", param);
+  return dispatch(ADD_GROUP_MEMBER({ data: result.data }));
 }
 // 删除分组成员
-export async function delMember(param) {
-  const result = await request.post("/group/del_member", param)
-  return {
-    type: DEL_GROUP_MEMBER,
-    payload: result
-  };
+export const delMember = (param) => async(dispatch, getState) => {
+  const result = await request.post("/group/del_member", param);
+  return dispatch(DEL_GROUP_MEMBER({ data: result.data }));
 }
 // 修改分组成员权限
-export async function changeMemberRole(param) {
-  const result = await request.post("/group/change_member_role", param)
-  return {
-    type: CHANGE_GROUP_MEMBER,
-    payload: result
-  };
+export const changeMemberRole = (param) => async(dispatch, getState) => {
+  const result = await request.post("/group/change_member_role", param);
+  return dispatch(CHANGE_GROUP_MEMBER({ data: result.data }));
 }
 // 修改分组信息
-export async function changeGroupMsg(param) {
-  const result = await request.post("/group/up", param)
-  return {
-    type: CHANGE_GROUP_MESSAGE,
-    payload: result
-  };
+export const changeGroupMsg = (param) => async(dispatch, getState) => {
+  const result = await request.post("/group/up", param);
+  return dispatch(CHANGE_GROUP_MESSAGE({ data: result.data }));
 }
 // 更新左侧的分组列表
-export function updateGroupList(param) {
-  return {
-    type: UPDATE_GROUP_LIST,
-    payload: param
-  };
+export const updateGroupList = (param) => async(dispatch, getState) => {
+  console.debug("up");
+  return dispatch(UPDATE_GROUP_LIST(param));
 }
 // 删除分组
-export async function deleteGroup(param) {
-  const result = await request.post("/group/del", param)
-  return {
-    type: DEL_GROUP,
-    payload: result
-  };
+export const deleteGroup = (param) => async(dispatch, getState) => {
+  const result = await request.post("/group/del", param);
+  return dispatch(DEL_GROUP({ data: result.data }));
 }
 // 获取分组成员列表
-export async function fetchGroupMemberList(id) {
-  const result = await request.get("/group/get_member_list", { params: { id } })
-  return {
-    type: FETCH_GROUP_MEMBER,
-    payload: result
-  };
+export const fetchGroupMemberList = (id) => async(dispatch, getState) => {
+  const result = await request.get("/group/get_member_list", { id });
+  return dispatch(FETCH_GROUP_MEMBER({ data: result.data }));
 }
 // Action Creators
-export async function fetchGroupList() {
-  const result = await request.get("/group/list")
-  return {
-    type: FETCH_GROUP_LIST,
-    payload: result
-  };
+export const fetchGroupList = () => async(dispatch, getState) => {
+  const result = await request.get("/group/list");
+  return dispatch(FETCH_GROUP_LIST({ data: result.data }));
 }
 // Action Creators
-export async function fetchMyGroup() {
+export const fetchMyGroup = () => async(dispatch, getState) => {
   const result = await request.get("/group/get_mygroup");
-  return {
-    type: FETCH_MY_GROUP_LIST,
-    payload: result
-  };
+  return dispatch(FETCH_MY_GROUP_LIST({ data: result.data }));
 }
 //
-export async function setCurrGroup(group, time) {
+export const setCurrGroup = (group, time) => async(dispatch, getState) => {
   if (group && group._id) {
-    const result = await request.get("/group/get", { id: group._id })
-    return {
-      type: SET_CURR_GROUP,
-      payload: result
-    };
+    const result = await request.get("/group/get", { id: group._id });
+    return dispatch(SET_CURR_GROUP({ data: result.data }));
   }
   // console.log("setCurrGroup ==========>", time);
 }
