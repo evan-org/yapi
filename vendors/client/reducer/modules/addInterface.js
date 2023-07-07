@@ -72,18 +72,13 @@ const {
   GET_INTERFACE_RES_PARAMS
 } = appSlice.actions;
 export default appSlice.reducer;
-
-export function pushInputValue(value) {
-  return {
-    type: FETCH_ADD_INTERFACE_INPUT,
-    payload: value
-  };
+export const pushInputValue = (value) => async(dispatch, getState) => {
+  console.log("push input value");
+  return dispatch(FETCH_ADD_INTERFACE_INPUT(value))
 }
-export function reqTagValue(value) {
-  return {
-    type: FETCH_ADD_INTERFACE_TAG_VALUE,
-    payload: value
-  };
+export const reqTagValue = (value) => async(dispatch, getState) => {
+  console.log("push input value");
+  return dispatch(FETCH_ADD_INTERFACE_TAG_VALUE(value));
 }
 export function reqHeaderValue(value) {
   return {
@@ -130,7 +125,7 @@ export function pushInterfaceMethod(value) {
 export async function fetchInterfaceProject(id) {
   return {
     type: FETCH_INTERFACE_PROJECT,
-    payload: await request.get("/project/get", { params: { id } })
+    payload: await request.get("/project/get", { id })
   };
 }
 export function addInterfaceClipboard(func) {

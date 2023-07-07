@@ -183,11 +183,11 @@ export const getToken = (project_id) => async(dispatch, getState) => {
 }
 // 更新token
 export const updateToken = (project_id) => async(dispatch, getState) => {
-  const result = await request.get("/project/update_token", { params: { project_id } });
+  const result = await request.get("/project/update_token",  { project_id });
   return dispatch(UPDATE_TOKEN({ data: result.data }));
 }
 export const checkProjectName = (name, group_id) => async(dispatch, getState) => {
-  const result = await request.get("/project/check_project_name", { params: { name, group_id } })
+  const result = await request.get("/project/check_project_name", { name, group_id })
   return dispatch(CHECK_PROJECT_NAME({ data: result.data }));
 }
 export const handleSwaggerUrlData = (url) => async(dispatch, getState) => {

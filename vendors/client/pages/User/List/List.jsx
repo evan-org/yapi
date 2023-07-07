@@ -33,7 +33,7 @@ class List extends Component {
     );
   };
   getUserList() {
-    request.get("/user/list?page=" + this.state.current + "&limit=" + limit).then((res) => {
+    request.get("/user/list", { page: this.state.current, limit: limit }).then((res) => {
       let result = res.data;
       if (result.errcode === 0) {
         let list = result.data.list;
@@ -75,7 +75,7 @@ class List extends Component {
   handleSearch = (value) => {
     let params = { q: value };
     if (params.q !== "") {
-      request.get("/user/search", { params }).then((data) => {
+      request.get("/user/search", params).then((data) => {
         let userList = [];
         data = data.data.data;
         if (data) {

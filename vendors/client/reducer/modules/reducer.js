@@ -1,5 +1,4 @@
 import { combineReducers } from "@reduxjs/toolkit";
-
 import customizationReducer from "./customizationReducer.js";
 import user from "./user.js";
 import group from "./group.js";
@@ -11,8 +10,9 @@ import addInterface from "./addInterface.js";
 import menu from "./menu.js";
 import follow from "./follow.js";
 import mockCol from "./mockCol.js";
-
 import { emitHook } from "@/plugin.js";
+//
+import { connectRouter } from "connected-react-router";
 
 const reducerModules = {
   customization: customizationReducer,
@@ -28,5 +28,7 @@ const reducerModules = {
   mockCol
 };
 emitHook("add_reducer", reducerModules);
-
-export default combineReducers(reducerModules);
+const createRootReducer = combineReducers({
+  ...reducerModules
+});
+export default createRootReducer
