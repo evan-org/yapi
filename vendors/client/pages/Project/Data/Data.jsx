@@ -37,7 +37,7 @@ const importDataModule = {
   json: importYapiJson
 };
 const exportDataModule = {};
-const HandleImportData = require("@common/HandleImportData.js");
+const HandleImportData = require("@common/HandleImportData.cjs");
 function handleExportRouteParams(url, status, isWiki) {
   if (!url) {
     return;
