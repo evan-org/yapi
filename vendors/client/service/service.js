@@ -44,6 +44,7 @@ service.interceptors.response.use((response) => {
     return response
   } else if ([40011, "40011"].includes(errcode)) {
     // Toast.show({ content: message }) 未登录
+    // window.location.href = "/login";
     return Promise.reject(response)
   } else {
     return Promise.reject(message || "Error")

@@ -62,7 +62,7 @@ export default appSlice.reducer
 // 记录编辑页面是否有编辑
 export const changeEditStatus = (status) => async(dispatch, getState) => {
   console.log(status);
-  dispatch(CHANGE_EDIT_STATUS(status))
+  return dispatch(CHANGE_EDIT_STATUS(status))
 }
 //
 export const initInterface = () => async(dispatch, getState) => {

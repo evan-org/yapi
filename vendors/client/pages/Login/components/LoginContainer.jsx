@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-// import { Tabs } from "antd";
 //
 import PropTypes from "prop-types";
 import LoginForm from "./LoginForm.jsx";
@@ -22,7 +21,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ pt: 2 }}>
-          <Typography>{children}</Typography>
+          <Typography component={"div"}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -54,7 +53,7 @@ function LoginContainer(props) {
     setValue(index);
   };
   return (
-    <Box sx={{ bgcolor: "background.paper", width: 400 }}>
+    <Box container={"div"} sx={{ bgcolor: "background.paper", width: 400 }}>
       <Tabs
         value={value}
         onChange={handleChange}

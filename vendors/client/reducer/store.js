@@ -1,9 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { composeWithDevTools } from "redux-devtools-extension";
-// import { createBrowserHistory } from "history";
-// import { routerMiddleware } from "connected-react-router";
-//
-// import promise from "redux-promise";
 import logger from "redux-logger";
 // import storage from "redux-persist/lib/storage";
 // import { persistStore, persistReducer } from "redux-persist";
@@ -17,8 +13,6 @@ import logger from "redux-logger";
 // }
 // logger 日志
 // const loggerMiddleware = createLogger();
-//
-// import messageMiddleware from "./middleware/messageMiddleware.js";
 //
 import rootReducers from "./modules/reducer.js";
 

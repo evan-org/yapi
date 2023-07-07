@@ -6,13 +6,26 @@ const GUEST_STATUS = 1;
 const MEMBER_STATUS = 2;
 // Reducer user
 const initialState = {
-  isLogin: false, canRegister: true, isLDAP: false, userName: null, uid: null, email: "", loginState: LOADING_STATUS, loginWrapActiveKey: "1", role: "", type: "", // breadcrumb: [{
+  isLogin: false,
+  canRegister: true,
+  isLDAP: false,
+  userName: null,
+  uid: null,
+  email: "",
+  loginState: LOADING_STATUS,
+  loginWrapActiveKey: "1",
+  role: "",
+  type: "",
+  // breadcrumb: [{
   //   name: 'name',
   //   href: 'group'
   // }, {
   //   name: '当前页面'
   // }]
-  breadcrumb: [], studyTip: 0, study: false, imageUrl: ""
+  breadcrumb: [],
+  studyTip: 0,
+  study: false,
+  imageUrl: ""
 };
 //
 export const appSlice = createSlice({
@@ -94,44 +107,49 @@ const {
   CHANGE_STUDY_TIP,
   FINISH_STUDY
 } = appSlice.actions;
-export default appSlice.reducer
+export default appSlice.reducer;
 // Action Creators
 export const checkLoginState = (payload) => async(dispatch, getState) => {
   const result = await request.get("/user/status");
   return dispatch(GET_LOGIN_STATE({ data: result.data }))
 }
+// 登录API
 export const loginActions = (payload) => async(dispatch, getState) => {
-  console.log("action:payload:loginActions", payload);
   const result = await request.post("/user/login", payload);
   return dispatch(LOGIN(result.data));
 }
+// 登录API
 export const loginLdapActions = (payload) => async(dispatch, getState) => {
   const result = await request.post("/user/login_by_ldap", payload);
-  dispatch(LOGIN({ data: result.data }));
+  return dispatch(LOGIN(result.data));
 }
 export const regActions = (payload) => async(dispatch, getState) => {
   const { email, password, userName } = payload;
   const params = { email, password, username: userName };
   const result = await request.post("/user/reg", params);
-  dispatch(REGISTER({ data: result.data }));
+  return dispatch(REGISTER({ data: result.data }));
 }
 export const logoutActions = (payload) => async(dispatch, getState) => {
   const result = await request.get("/user/logout");
-  dispatch(LOGIN_OUT({ data: result.data }));
+  return dispatch(LOGIN_OUT({ data: result.data }));
 }
 export const loginTypeAction = (payload) => async(dispatch, getState) => {
-  dispatch(LOGIN_TYPE(payload))
+  console.debug("action:loginTypeAction", payload)
+  return dispatch(LOGIN_TYPE(payload))
 }
 export const setBreadcrumb = (payload) => async(dispatch, getState) => {
-  dispatch(SET_BREADCRUMB(payload));
+  console.debug("action:setBreadcrumb", payload)
+  return dispatch(SET_BREADCRUMB(payload));
 }
 export const setImageUrl = (payload) => async(dispatch, getState) => {
-  dispatch(SET_IMAGE_URL(payload));
+  console.debug("action:setImageUrl", payload)
+  return dispatch(SET_IMAGE_URL(payload));
 }
 export const changeStudyTip = (payload) => async(dispatch, getState) => {
-  dispatch(CHANGE_STUDY_TIP(payload))
+  console.debug("action:changeStudyTip", payload)
+  return dispatch(CHANGE_STUDY_TIP(payload))
 }
 export const finishStudy = (payload) => async(dispatch, getState) => {
   const result = await request.get("/user/up_study");
-  dispatch(FINISH_STUDY({ data: result.data }));
+  return dispatch(FINISH_STUDY({ data: result.data }));
 }

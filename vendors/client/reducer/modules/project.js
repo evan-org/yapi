@@ -61,6 +61,10 @@ export const appSlice = createSlice({
     //
     GET_SWAGGER_URL_DATA: (state, action) => {
       state.swaggerUrlData = action.payload.data.data;
+    },
+    //
+    CHANGE_TABLE_LOADING: (state, action) => {
+      // state.swaggerUrlData = action.payload.data.data;
     }
   },
   // extraReducers: createAsyncReducers([groupList]),
@@ -70,20 +74,23 @@ const {
   GET_CURR_PROJECT,
   FETCH_PROJECT_LIST,
   PROJECT_ADD,
-  PROJECT_UPDATE,
-  PROJECT_UPDATE_ENV,
-  PROJECT_UPSET,
   GET_TOKEN,
   PROJECT_DEL,
   PROJECT_GET_ENV,
   CHECK_PROJECT_NAME,
   COPY_PROJECT_MSG,
   UPDATE_TOKEN,
+  CHANGE_TABLE_LOADING,
+  //
   ADD_PROJECT_MEMBER,
   DEL_PROJECT_MEMBER,
   CHANGE_PROJECT_MEMBER,
   CHANGE_MEMBER_EMAIL_NOTICE,
-  GET_PEOJECT_MEMBER
+  GET_PROJECT_MEMBER,
+  PROJECT_UPDATE,
+  PROJECT_UPDATE_ENV,
+  PROJECT_UPSET
+  //
 } = appSlice.actions;
 export default appSlice.reducer
 // 获取某分组下的项目列表
@@ -123,12 +130,13 @@ export const changeMemberEmailNotice = (param) => async(dispatch, getState) => {
 // 获取项目成员列表
 export const getProjectMemberList = (id) => async(dispatch, getState) => {
   const result = await request.get("/project/get_member_list", { id });
-  return dispatch(GET_PEOJECT_MEMBER({ data: result.data }));
+  return dispatch(GET_PROJECT_MEMBER({ data: result.data }));
 }
 //
-// export const changeTableLoading = (data) => async(dispatch) => {
-//   dispatch(CHANGE_TABLE_LOADING(data));
-// }
+export const changeTableLoading = (data) => async(dispatch) => {
+  console.debug("action:changeTableLoading", data);
+  dispatch(CHANGE_TABLE_LOADING(data));
+}
 export const addProject = (data) => async(dispatch, getState) => {
   // name 过滤项目名称中有html标签存在的情况
   const result = await request.post("/project/add", { ...data, name: htmlFilter(data.name) })
@@ -174,7 +182,7 @@ export const delProject = (id) => async(dispatch, getState) => {
 // 根据ID查看项目
 export const getProject = (id) => async(dispatch, getState) => {
   const result = await request.get("/project/get", { id: id })
-  dispatch(GET_CURR_PROJECT({ data: result.data }));
+  return dispatch(GET_CURR_PROJECT({ data: result.data }));
 }
 //
 export const getToken = (project_id) => async(dispatch, getState) => {

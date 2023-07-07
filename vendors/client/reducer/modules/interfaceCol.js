@@ -91,7 +91,7 @@ export const fetchCaseEnvList = (col_id) => async(dispatch, getState) => {
 //
 export const fetchVariableParamsList = (colId) => async(dispatch, getState) => {
   const result = await request.get("/col/case_list_by_var_params?col_id=" + colId);
-  dispatch(FETCH_VARIABLE_PARAMS_LIST({ data: result.data }));
+  return dispatch(FETCH_VARIABLE_PARAMS_LIST({ data: result.data }));
 }
 //
 export const setColData = (data) => async(dispatch, getState) => {
