@@ -3,7 +3,7 @@ const yapi = require("@server/yapi.js");
 const plugin_path = yapi.path.join(yapi.WEBROOT, "node_modules");
 const plugin_system_path = yapi.path.join(yapi.WEBROOT, "exts");
 const initPlugins = require("@common/plugin.js").initPlugins;
-let extsConfig = require("@common/config.js").exts;
+let extsConfig = require("@common/config.cjs").exts;
 
 /**
  * 钩子配置
