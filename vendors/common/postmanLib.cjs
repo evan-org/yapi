@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
-const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("common/utils.cjs");
+const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("@common/utils.cjs");
 const constants = require("../client/utils/variable.js");
 const _ = require("underscore");
 const URL = require("url");
