@@ -15,7 +15,7 @@ const { handleParamsValue, ArrayToObject } = require("@common/utils.js");
 const renderToHtml = require("../views/reportHtml/index.js");
 const HanldeImportData = require("@common/HandleImportData.js");
 const _ = require("underscore");
-const createContex = require("@common/createContext.js");
+const createContex = require("@common/createContext.cjs");
 const swaggerRun = require("@common/import/swaggerRun.js");
 /**
  * {

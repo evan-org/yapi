@@ -28,7 +28,7 @@ const { handleParamsValue, json_parse, ArrayToObject } = require("@common/utils.
 import CaseEnv from "@/components/CaseEnv/CaseEnv.jsx";
 import Label from "@/components/Label/Label.jsx";
 //
-const createContext = require("@common/createContext.js")
+const createContext = require("@common/createContext.cjs")
 import copy from "copy-to-clipboard";
 
 const defaultModalStyle = {
