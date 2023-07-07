@@ -26,23 +26,17 @@ const {
 } = appSlice.actions;
 export default appSlice.reducer
 // 获取关注列表
-export async function getFollowList(uid) {
-  return {
-    type: GET_FOLLOW_LIST,
-    payload: await request.get("/follow/list", { params: { uid } })
-  };
+export const getFollowList = (uid) => async(dispatch, getState) => {
+  const result = await request.get("/follow/list", { uid });
+  return dispatch(GET_FOLLOW_LIST({ data: result.data }));
 }
 // 添加关注
-export async function addFollow(param) {
-  return {
-    type: ADD_FOLLOW,
-    payload: await request.post("/follow/add", param)
-  };
+export const addFollow = (param) => async(dispatch, getState) => {
+  const result = await request.post("/follow/add", param);
+  return dispatch(ADD_FOLLOW({ data: result.data }));
 }
 // 删除关注
-export async function delFollow(id) {
-  return {
-    type: DEL_FOLLOW,
-    payload: await request.post("/follow/del", { projectid: id })
-  };
+export const delFollow = (id) => async(dispatch, getState) => {
+  const result = await request.post("/follow/del", { projectid: id });
+  return dispatch(DEL_FOLLOW({ data: result.data }));
 }
