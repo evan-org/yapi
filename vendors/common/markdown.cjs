@@ -66,10 +66,9 @@ function escapeStr(str, isToc) {
 
 function createBaseMessage(basepath, inter) {
   // 基本信息
-  let baseMessage = `### 基本信息\n\n**Path：** ${basepath + inter.path}\n\n**Method：** ${
+  return `### 基本信息\n\n**Path：** ${basepath + inter.path}\n\n**Method：** ${
     inter.method
   }\n\n**接口描述：**\n${_.isUndefined(inter.desc) ? "" : inter.desc}\n`;
-  return baseMessage;
 }
 
 function createReqHeaders(req_headers) {
@@ -79,7 +78,7 @@ function createReqHeaders(req_headers) {
     headersTable += "| 参数名称  | 参数值  |  是否必须 | 示例  | 备注  |\n| ------------ | ------------ | ------------ | ------------ | ------------ |\n";
     for (let j = 0; j < req_headers.length; j++) {
       headersTable += `| ${req_headers[j].name || ""}  |  ${req_headers[j].value || ""} | ${
-        req_headers[j].required == 1 ? "是" : "否"
+        req_headers[j].required === 1 ? "是" : "否"
       }  |  ${handleWrap(req_headers[j].example) || ""} |  ${handleWrap(req_headers[j].desc) ||
         ""} |\n`;
     }
@@ -314,10 +313,8 @@ function createClassMarkdown(curProject, list, isToc) {
   return mdTemplate;
 }
 
-let r = {
+module.exports = {
   createInterMarkdown,
   createProjectMarkdown,
   createClassMarkdown
 };
-
-module.exports = r;

@@ -10,7 +10,7 @@ const markdownItAnchor = require("markdown-it-anchor");
 const markdownItTableOfContents = require("markdown-it-table-of-contents");
 //
 const defaultTheme = require("@common/defaultTheme/defaultTheme.js");
-const md = require("@common/markdown.js");
+const md = require("@common/markdown.cjs");
 // const htmlToPdf = require("html-pdf");
 class GenServicesController extends baseController {
   constructor(ctx) {
