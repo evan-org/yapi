@@ -3,8 +3,7 @@ const yapi = require("@server/yapi.js");
 const plugin_path = yapi.path.join(yapi.WEBROOT, "node_modules");
 const plugin_system_path = yapi.path.join(yapi.WEBROOT, "exts");
 const initPlugins = require("@common/plugin.js").initPlugins;
-let extsConfig = require("@common/config.cjs").exts;
-
+const { exts: extsConfig } = require("@common/config.cjs");
 /**
  * 钩子配置
  */
@@ -172,12 +171,10 @@ let hooks = {
     type: "multi",
     listener: []
   },
-
   import_data: {
     type: "multi",
     listener: []
   },
-
   /**
    * addNoticePlugin(config)
    *
@@ -191,7 +188,6 @@ let hooks = {
     listener: []
   }
 };
-
 function bindHook(name, listener) {
   if (!name) {
     throw new Error("缺少hookname");
@@ -208,7 +204,6 @@ function bindHook(name, listener) {
     hooks[name].listener = listener;
   }
 }
-
 /**
  *
  * @param {*} name
@@ -230,19 +225,16 @@ function emitHook(name) {
     return Promise.all(promiseAll);
   }
 }
-
 function ExtsPlugin() {
   //
   yapi.bindHook = bindHook;
   yapi.emitHook = emitHook;
   yapi.emitHookSync = emitHook;
-
   let pluginsConfig = initPlugins(yapi.WEBROOT_CONFIG.plugins, "plugin");
   pluginsConfig.forEach((plugin) => {
     if (!plugin || plugin.enable === false || plugin.server === false) {
       return null;
     }
-
     if (
       !yapi.commons.fileExist(
         yapi.path.join(plugin_path, "yapi-plugin-" + plugin.name + "/server.js")
@@ -256,14 +248,11 @@ function ExtsPlugin() {
     ));
     pluginModule.call(yapi, plugin.options);
   });
-
   const extConfig = initPlugins(extsConfig, "ext");
-
   extConfig.forEach((plugin) => {
     if (!plugin || plugin.enable === false || plugin.server === false) {
       return null;
     }
-
     if (!yapi.commons.fileExist(yapi.path.join(plugin_system_path, "yapi-plugin-" + plugin.name + "/server.js"))) {
       throw new Error(`config.json配置了插件${plugin},但plugins目录没有找到此插件，请安装此插件`);
     }
@@ -273,11 +262,9 @@ function ExtsPlugin() {
     ));
     pluginModule.call(yapi, plugin.options);
   });
-
   // delete bindHook方法，避免误操作
   delete yapi.bindHook;
   //
   console.info("------------------------------------------ExtsPlugin successfully!------------------------------------------");
 }
-
 module.exports = ExtsPlugin;

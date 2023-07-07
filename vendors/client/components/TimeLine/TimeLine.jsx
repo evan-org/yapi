@@ -3,7 +3,7 @@ import { Timeline, Spin, Row, Col, Tag, Avatar, Button, Modal, AutoComplete } fr
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { formatTime } from "@/utils/common";
-import showDiffMsg from "@common/diff-view.js";
+import showDiffMsg from "@common/diff-view.cjs";
 import variable from "@/utils/variable.js";
 import { Link } from "react-router-dom";
 //
