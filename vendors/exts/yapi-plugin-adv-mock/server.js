@@ -6,7 +6,7 @@ const AdvMockCaseModel = require("@server/models/AdvMockCaseModel.js");
 //
 const mongoose = require("mongoose");
 const _ = require("underscore");
-const lib = require("@common/lib.js");
+const lib = require("@common/lib.cjs");
 const Mock = require("mockjs");
 const mockExtra = require("@common/mock-extra.js");
 //
