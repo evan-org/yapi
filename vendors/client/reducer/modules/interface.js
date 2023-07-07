@@ -23,17 +23,17 @@ export const appSlice = createSlice({
     },
     //
     UPDATE_INTERFACE_DATA: (state, action) => {
-      state.curdata = Object.assign({}, state.curdata, action.updata);
+      state.curdata = Object.assign({}, state.curdata, action.payload);
     },
     //
     FETCH_INTERFACE_DATA: (state, action) => {
       state.curdata = action.payload.data.data
     },
     FETCH_INTERFACE_LIST_MENU: (state, action) => {
-      state.list = action.payload.data.data
+      state.list = action.payload.data.data;
     },
     CHANGE_EDIT_STATUS: (state, action) => {
-      state.editStatus = action.status
+      state.editStatus = action.payload;
     },
     FETCH_INTERFACE_LIST: (state, action) => {
       state.totalTableList = action.payload.data.data.list;
@@ -60,77 +60,58 @@ const {
 } = appSlice.actions;
 export default appSlice.reducer
 // 记录编辑页面是否有编辑
-export function changeEditStatus(status) {
-  return {
-    type: CHANGE_EDIT_STATUS,
-    status
-  };
+export const changeEditStatus = (status) => async(dispatch, getState) => {
+  console.log(status);
+  dispatch(CHANGE_EDIT_STATUS(status))
 }
-export function initInterface() {
-  return {
-    type: INIT_INTERFACE_DATA
-  };
+//
+export const initInterface = () => async(dispatch, getState) => {
+  console.debug("initInterface:INIT_INTERFACE_DATA");
+  return dispatch(INIT_INTERFACE_DATA());
 }
-export function updateInterfaceData(updata) {
-  return {
-    type: UPDATE_INTERFACE_DATA,
-    updata: updata,
-    payload: true
-  };
+//
+export const updateInterfaceData = (update_data) => async(dispatch, getState) => {
+  console.debug("updateInterfaceData", update_data);
+  return dispatch(UPDATE_INTERFACE_DATA(update_data));
 }
-export async function deleteInterfaceData(id) {
-  let result = await request.post("/interface/del", { id: id });
-  return {
-    type: DELETE_INTERFACE_DATA,
-    payload: result
-  };
+//
+export const deleteInterfaceData = (id) => async(dispatch, getState) => {
+  const result = await request.post("/interface/del", { id: id });
+  return dispatch(DELETE_INTERFACE_DATA({ data: result.data }));
 }
-export async function saveImportData(data) {
-  let result = await request.post("/interface/save", data);
-  return {
-    type: SAVE_IMPORT_DATA,
-    payload: result
-  };
+//
+export const saveImportData = (data) => async(dispatch, getState) => {
+  const result = await request.post("/interface/save", data);
+  return dispatch(SAVE_IMPORT_DATA({ data: result.data }));
 }
-export async function deleteInterfaceCatData(id) {
+//
+export const deleteInterfaceCatData = (id) => async(dispatch, getState) => {
   let result = await request.post("/interface/del_cat", { catid: id });
-  return {
-    type: DELETE_INTERFACE_CAT_DATA,
-    payload: result
-  };
+  return dispatch(DELETE_INTERFACE_CAT_DATA({ data: result.data }));
 }
 // Action Creators
-export async function fetchInterfaceData(interfaceId) {
-  let result = await request.get("/interface/get?id=" + interfaceId);
-  return {
-    type: FETCH_INTERFACE_DATA,
-    payload: result
-  };
+export const fetchInterfaceData = (interfaceId) => async(dispatch, getState) => {
+  const result = await request.get("/interface/get?id=" + interfaceId);
+  return dispatch(FETCH_INTERFACE_DATA({ data: result.data }));
 }
-export async function fetchInterfaceListMenu(projectId) {
-  let result = await request.get("/interface/list_menu?project_id=" + projectId);
-  return {
-    type: FETCH_INTERFACE_LIST_MENU,
-    payload: result
-  };
+//
+export const fetchInterfaceListMenu = (projectId) => async(dispatch, getState) => {
+  const result = await request.get("/interface/list_menu?project_id=" + projectId);
+  return dispatch(FETCH_INTERFACE_LIST_MENU({ data: result.data }));
 }
-export async function fetchInterfaceList(params) {
-  let result = await request.get("/interface/list", {
+//
+export const fetchInterfaceList = (params) => async(dispatch, getState) => {
+  const result = await request.get("/interface/list", {
     params,
     paramsSerializer: (params) => qs.stringify(params, { indices: false })
   })
-  return {
-    type: FETCH_INTERFACE_LIST,
-    payload: result
-  };
+  return dispatch(FETCH_INTERFACE_LIST({ data: result.data }));
 }
-export async function fetchInterfaceCatList(params) {
-  let result = await request.get("/interface/list_cat", {
+//
+export const fetchInterfaceCatList = (params) => async(dispatch, getState) => {
+  const result = await request.get("/interface/list_cat", {
     params,
     paramsSerializer: (params) => qs.stringify(params, { indices: false })
   })
-  return {
-    type: FETCH_INTERFACE_CAT_LIST,
-    payload: result
-  };
+  return dispatch(FETCH_INTERFACE_CAT_LIST({ data: result.data }));
 }
