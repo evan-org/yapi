@@ -71,7 +71,8 @@ const {
   ADD_INTERFACE_CLIPBOARD,
   GET_INTERFACE_RES_PARAMS
 } = appSlice.actions;
-export default appSlice.reducer
+export default appSlice.reducer;
+
 export function pushInputValue(value) {
   return {
     type: FETCH_ADD_INTERFACE_INPUT,
