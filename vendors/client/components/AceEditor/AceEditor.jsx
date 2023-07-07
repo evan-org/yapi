@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import mockEditor from "./utils/mockEditor";
+import mockEditor from "@/utils/mockEditor.js";
 import PropTypes from "prop-types";
 //
 import styles from "./AceEditor.scss";

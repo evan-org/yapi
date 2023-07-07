@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Row, Input } from "antd";
-import constants from "../../../utils/variable.js";
+import constants from "@/utils/variable.js";
 const wordList = constants.MOCK_SOURCE;
 
 class MockList extends Component {

@@ -1,11 +1,12 @@
-import { useContext, useEffect, useCallback } from "react";
+import React, { useContext, useEffect, useCallback } from "react";
 import { UNSAFE_NavigationContext as NavigationContext } from "react-router-dom";
 
 export function useBlocker(blocker, when = true) {
   const { navigator } = useContext(NavigationContext);
-
   useEffect(() => {
-    if (!when) {return;}
+    if (!when) {
+      return;
+    }
     const unblock = navigator.block((tx) => {
       const autoUnblockingTx = {
         ...tx,
@@ -16,14 +17,11 @@ export function useBlocker(blocker, when = true) {
       };
       blocker(autoUnblockingTx);
     });
-
     return unblock;
   }, [navigator, blocker, when]);
 }
-
 export function usePrompt(message, when = true) {
   const { basename } = useContext(NavigationContext);
-
   const blocker = useCallback((tx) => {
     if (typeof message === "function") {
       let targetLocation = tx?.location?.pathname;
@@ -40,6 +38,5 @@ export function usePrompt(message, when = true) {
       }
     }
   }, [message, basename]);
-
   return useBlocker(blocker, when);
 }

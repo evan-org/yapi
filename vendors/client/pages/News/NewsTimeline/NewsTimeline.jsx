@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { formatTime } from "@/utils/common.js";
 import { fetchNewsData } from "@/reducer/modules/news.js";
-import { timeago } from "@common/utils.cjs";
+
+const { timeago } = require("@common/utils.cjs");
 // timeago(new Date().getTime() - 40);
 
 @connect(

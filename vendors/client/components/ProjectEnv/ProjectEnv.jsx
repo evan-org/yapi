@@ -4,21 +4,11 @@ import styles from "./ProjectEnv.module.scss";
 import { Layout, Tooltip, message, Row, Popconfirm } from "antd";
 import Icon from "@ant-design/icons";
 //
-import ProjectEnvContent from "./ProjectEnvContent.jsx";
+import ProjectEnvContent from "@/components/ProjectEnv/ProjectEnvContent/ProjectEnvContent.jsx";
 import { connect } from "react-redux";
 import { updateEnv, getProject, getEnv } from "@/reducer/modules/project.js";
 import EasyDragSort from "../EasyDragSort/EasyDragSort.jsx";
 
-@connect(
-  (state) => ({
-    projectMsg: state.project.currProject
-  }),
-  {
-    updateEnv,
-    getProject,
-    getEnv
-  }
-)
 class ProjectEnv extends Component {
   static propTypes = {
     projectId: PropTypes.number,
@@ -201,4 +191,13 @@ class ProjectEnv extends Component {
     );
   }
 }
-export default ProjectEnv;
+export default connect(
+  (state) => ({
+    projectMsg: state.project.currProject
+  }),
+  {
+    updateEnv,
+    getProject,
+    getEnv
+  }
+)(ProjectEnv);

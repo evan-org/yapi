@@ -12,11 +12,11 @@ import Members from "@/pages/Project/Members/Members.jsx";
 import Data from "@/pages/Project/Data/Data.jsx";
 import Wiki from "@/pages/Project/Wiki/Wiki.jsx";
 //
-import { fetchGroupMsg } from "@/reducer/modules/group";
-import { setBreadcrumb } from "@/reducer/modules/user";
-import { getProject } from "@/reducer/modules/project";
+import { fetchGroupMsg } from "@/reducer/modules/group.js";
+import { setBreadcrumb } from "@/reducer/modules/user.js";
+import { getProject } from "@/reducer/modules/project.js";
 //
-const plugin = require("@/plugin.js");
+// const plugin = require("@/plugin.js");
 class Project extends Component {
   static propTypes = {
     match: PropTypes.object,

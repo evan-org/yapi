@@ -5,7 +5,8 @@ import request from "@/service/request.js";
 import PropTypes from "prop-types";
 import "@/pages/Project/Wiki/Wiki.module.scss";
 //
-import { timeago } from "@common/utils.cjs";
+const { timeago } = require("@common/utils.cjs");
+//
 import { Link } from "react-router-dom";
 import WikiView from "@/pages/Project/Wiki/WikiView/WikiView.jsx";
 import WikiEditor from "@/pages/Project/Wiki/WikiEditor/WikiEditor.jsx";
@@ -25,18 +26,15 @@ class Wiki extends Component {
       curdata: null
     };
   }
-
   static propTypes = {
     match: PropTypes.object,
     projectMsg: PropTypes.object
   };
-
   async componentDidMount() {
     const currProjectId = this.props.match.params.id;
     await this.handleData({ project_id: currProjectId });
     this.handleConflict();
   }
-
   componentWillUnmount() {
     // willUnmount
     try {
@@ -61,7 +59,6 @@ class Wiki extends Component {
       return null;
     }
   };
-
   // 处理多人编辑冲突问题
   handleConflict = () => {
     // console.log(location)
@@ -80,7 +77,6 @@ class Wiki extends Component {
       this.WebSocket = s;
       s.send("start");
     };
-
     s.onmessage = (e) => {
       let result = JSON.parse(e.data);
       if (result.errno === 0) {
@@ -107,7 +103,6 @@ class Wiki extends Component {
         });
       }
     };
-
     s.onerror = () => {
       this.setState({
         status: "CLOSE"
@@ -115,7 +110,6 @@ class Wiki extends Component {
       console.warn("websocket 连接失败，将导致多人编辑同一个接口冲突。");
     };
   };
-
   // 点击编辑按钮 发送 websocket 获取数据
   onEditor = () => {
     // this.WebSocket.send('editor');
@@ -131,7 +125,6 @@ class Wiki extends Component {
       }
     });
   };
-
   // 处理websocket  意外断开问题
   handleWebsocketAccidentClose = (fn, callback) => {
     // websocket 是否启动
@@ -147,7 +140,6 @@ class Wiki extends Component {
       callback(false);
     }
   };
-
   //  获取数据
   handleData = async(params) => {
     let result = await request.get("/plugin/wiki_desc/get", { params });
@@ -166,7 +158,6 @@ class Wiki extends Component {
       message.error(`请求数据失败： ${result.data.errmsg}`);
     }
   };
-
   // 数据上传
   onUpload = async(desc, markdown) => {
     const currProjectId = this.props.match.params.id;
@@ -191,19 +182,16 @@ class Wiki extends Component {
     this.setState({ isEditor: false });
     this.endWebSocket();
   };
-
   // 邮件通知
   onEmailNotice = (e) => {
     this.setState({
       notice: e.target.checked
     });
   };
-
   render() {
     const { isEditor, username, editorTime, notice, uid, status, editUid, editName } = this.state;
     const editorEnable = ["editor", "owner", "dev"].includes(this.props.projectMsg.role);
     const isConflict = status === "EDITOR";
-
     return (
       <div className="g-row">
         <div className="m-panel wiki-content">
@@ -241,7 +229,6 @@ class Wiki extends Component {
     );
   }
 }
-
 export default connect(
   (state) => ({
     projectMsg: state.project.currProject

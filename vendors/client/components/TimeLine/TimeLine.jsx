@@ -7,18 +7,21 @@ import showDiffMsg from "@common/diff-view.cjs";
 import variable from "@/utils/variable.js";
 import { Link } from "react-router-dom";
 //
-import { fetchNewsData, fetchMoreNews } from "@/reducer/modules/news";
-import { fetchInterfaceList } from "@/reducer/modules/interface";
+import { fetchNewsData, fetchMoreNews } from "@/reducer/modules/news.js";
+import { fetchInterfaceList } from "@/reducer/modules/interface.js";
 import ErrMsg from "../ErrMsg/ErrMsg.jsx";
 //
-import { timeago } from "@common/utils.cjs";
+const { timeago } = require("@common/utils.cjs");
 //
-const jsondiffpatch = require("jsondiffpatch/dist/jsondiffpatch.umd.js");
+import jsondiffpatch from "jsondiffpatch";
+
 const formattersHtml = jsondiffpatch.formatters.html;
+//
 import "jsondiffpatch/dist/formatters-styles/annotated.css";
 import "jsondiffpatch/dist/formatters-styles/html.css";
 //
 import styles from "./TimeLine.module.scss";
+
 const AddDiffView = (props) => {
   const { title, content, className } = props;
   if (!content) {

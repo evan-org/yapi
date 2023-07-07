@@ -18,7 +18,7 @@ import _ from "underscore";
 import produce from "immer";
 //
 import AceEditor from "@/components/AceEditor/AceEditor";
-import { initCrossRequest } from "@/components/Postman/CheckCrossInstall.jsx";
+import { initCrossRequest } from "@/components/Postman/CheckCrossInstall/CheckCrossInstall.jsx";
 import { InsertCodeMap } from "@/components/Postman/Postman.jsx"
 
 const plugin = require("@/plugin.js");
@@ -29,6 +29,7 @@ import CaseEnv from "@/components/CaseEnv/CaseEnv.jsx";
 import Label from "@/components/Label/Label.jsx";
 //
 const createContext = require("@common/createContext.cjs")
+//
 import copy from "copy-to-clipboard";
 
 const defaultModalStyle = {
@@ -607,20 +608,20 @@ class InterfaceColContent extends Component {
                 title={
                   <span>
                     {" "}
-                      每个用例都有唯一的key，用于获取所匹配接口的响应数据，例如使用{" "}
+                    每个用例都有唯一的key，用于获取所匹配接口的响应数据，例如使用{" "}
                     <a
                       href="https://hellosean1025.github.io/yapi/documents/case.html#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%8C%E7%BC%96%E8%BE%91%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"
                       className="link-tooltip"
                       target="blank"
                     >
                       {" "}
-                        变量参数{" "}
+                      变量参数{" "}
                     </a>{" "}
-                      功能{" "}
+                    功能{" "}
                   </span>
                 }
               >
-                  Key
+                Key
               </Tooltip>
             )
           ]
