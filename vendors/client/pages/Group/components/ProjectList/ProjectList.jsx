@@ -1,9 +1,7 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { autobind } from "core-decorators";
 import { Row, Col, Button, Tooltip } from "antd";
-import { Link } from "react-router-dom";
 import AddProject from "@/components/AddProject/AddProject.jsx";
 //
 import ProjectCard from "@/components/ProjectCard/ProjectCard.jsx";
@@ -22,6 +20,8 @@ class ProjectList extends Component {
       protocol: "http://",
       projectData: []
     };
+    this.handleCancel = this.handleCancel.bind(this);
+    this.protocolChange = this.protocolChange.bind(this);
   }
   static propTypes = {
     form: PropTypes.object,
@@ -39,7 +39,6 @@ class ProjectList extends Component {
     study: PropTypes.bool
   };
   // 取消修改
-  @autobind
   handleCancel() {
     this.props.form.resetFields();
     this.setState({
@@ -47,7 +46,6 @@ class ProjectList extends Component {
     });
   }
   // 修改线上域名的协议类型 (http/https)
-  @autobind
   protocolChange(value) {
     this.setState({
       protocol: value
