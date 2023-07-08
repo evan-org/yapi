@@ -1,4 +1,13 @@
 const Router = require("@koa/router");
+const requestAction = require("@server/utils/requestAction.js");
+//
+const AdvMockController = require("@server/controllers/AdvMockController.js");
+const StatisticsMockController = require("@server/controllers/StatisticsMockController.js");
+const ExportDataController = require("@server/controllers/ExportDataController.js");
+const ExportSwaggerController = require("@server/controllers/ExportSwaggerController.js");
+const WikiController = require("@server/controllers/WikiController.js");
+const SwaggerAutoSyncController = require("@server/controllers/SwaggerAutoSyncController.js");
+//
 const router = new Router({ prefix: "/plugin" });
 //
 /**
@@ -8,7 +17,7 @@ const router = new Router({ prefix: "/plugin" });
  *@name ""
  **/
 router.get("/advmock/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, AdvMockController, "getMock");
 });
 /**
  *@controller AdvMockController
@@ -17,7 +26,7 @@ router.get("/advmock/get", async(ctx) => {
  *@name ""
  **/
 router.post("/advmock/save", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, AdvMockController, "upMock");
 });
 /**
  *@controller AdvMockController
@@ -26,7 +35,7 @@ router.post("/advmock/save", async(ctx) => {
  *@name ""
  **/
 router.post("/advmock/case/save", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, AdvMockController, "saveCase");
 });
 /**
  *@controller AdvMockController
@@ -35,7 +44,7 @@ router.post("/advmock/case/save", async(ctx) => {
  *@name ""
  **/
 router.get("/advmock/case/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, AdvMockController, "getCase");
 });
 /**
  *@controller AdvMockController
@@ -44,7 +53,7 @@ router.get("/advmock/case/get", async(ctx) => {
  *@name ""
  **/
 router.get("/advmock/case/list", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, AdvMockController, "list");
 });
 /**
  *@controller AdvMockController
@@ -53,7 +62,7 @@ router.get("/advmock/case/list", async(ctx) => {
  *@name ""
  **/
 router.post("/advmock/case/del", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, AdvMockController, "delCase");
 });
 /**
  *@controller AdvMockController
@@ -62,7 +71,7 @@ router.post("/advmock/case/del", async(ctx) => {
  *@name ""
  **/
 router.post("/advmock/case/hide", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, AdvMockController, "hideCase");
 });
 /* ******************************************************************************** */
 /**
@@ -72,7 +81,7 @@ router.post("/advmock/case/hide", async(ctx) => {
  *@name ""
  **/
 router.get("/statismock/count", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, StatisticsMockController, "getStatisCount");
 });
 /**
  *@controller StatisticsMockController
@@ -81,7 +90,7 @@ router.get("/statismock/count", async(ctx) => {
  *@name ""
  **/
 router.get("/statismock/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, StatisticsMockController, "getMockDateList");
 });
 /**
  *@controller StatisticsMockController
@@ -90,7 +99,7 @@ router.get("/statismock/get", async(ctx) => {
  *@name ""
  **/
 router.get("/statismock/get_system_status", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, StatisticsMockController, "getSystemStatus");
 });
 /**
  *@controller StatisticsMockController
@@ -99,7 +108,7 @@ router.get("/statismock/get_system_status", async(ctx) => {
  *@name ""
  **/
 router.get("/statismock/group_data_stats", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, StatisticsMockController, "groupDataStats");
 });
 /* ******************************************************************************** */
 /**
@@ -109,7 +118,7 @@ router.get("/statismock/group_data_stats", async(ctx) => {
  *@name ""
  **/
 router.get("/export", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, ExportDataController, "exportData");
 });
 /* ******************************************************************************** */
 /**
@@ -119,7 +128,7 @@ router.get("/export", async(ctx) => {
  *@name ""
  **/
 router.get("/exportSwagger", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, ExportSwaggerController, "exportData");
 });
 /* ******************************************************************************** */
 /**
@@ -129,7 +138,7 @@ router.get("/exportSwagger", async(ctx) => {
  *@name ""
  **/
 router.get("/wiki_desc/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, WikiController, "getWikiDesc");
 });
 /**
  *@controller WikiController
@@ -138,7 +147,7 @@ router.get("/wiki_desc/get", async(ctx) => {
  *@name ""
  **/
 router.post("/wiki_desc/up", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, WikiController, "uplodaWikiDesc");
 });
 /* ******************************************************************************** */
 /**
@@ -148,7 +157,7 @@ router.post("/wiki_desc/up", async(ctx) => {
  *@name ""
  **/
 router.get("/autoSync/get", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, SwaggerAutoSyncController, "getSync");
 });
 /**
  *@controller SwaggerAutoSyncController
@@ -157,7 +166,7 @@ router.get("/autoSync/get", async(ctx) => {
  *@name ""
  **/
 router.post("/autoSync/save", async(ctx) => {
-  ctx.body = "";
+  await requestAction(ctx, SwaggerAutoSyncController, "upSync");
 });
 //
 module.exports = router;

@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
-const baseController = require("@server/controllers/BaseController.js");
+const BaseController = require("@server/controllers/BaseController.js");
 //
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceColModel = require("@server/models/InterfaceColModel.js");
@@ -33,7 +33,7 @@ const importDataModule = {
   }
 };
 // yapi.emitHook("import_data", importDataModule);
-class OpenController extends baseController {
+class OpenController extends BaseController {
   constructor(ctx) {
     super(ctx);
     this.ProjectModel = yapi.getInst(ProjectModel);

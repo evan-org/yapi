@@ -17,7 +17,7 @@ class UserController extends BaseController {
   }
   /**
    * 用户登录接口
-   * @param {*} ctx
+   * @param {{errcode, data: Object|number|string, errmsg}} ctx
    * @interface /user/login
    * @method POST
    * @category user
@@ -254,6 +254,8 @@ class UserController extends BaseController {
       return (ctx.body = responseAction(null, 401, e.message));
     }
   }
+  /**
+   * */
   async handlePrivateGroup(uid) {
     let groupInst = yapi.getInst(GroupModel);
     await groupInst.save({
@@ -264,6 +266,10 @@ class UserController extends BaseController {
       type: "private"
     });
   }
+  /**
+   * 同源设置cookie
+   * setLoginCookie
+   * */
   setLoginCookie(uid, passsalt) {
     let token = jwt.sign({ uid: uid }, passsalt, { expiresIn: "7 days" });
     this.ctx.cookies.set("_yapi_token", token, {
@@ -328,7 +334,7 @@ class UserController extends BaseController {
       let user = await userInst.save(data);
       this.setLoginCookie(user._id, user.passsalt);
       await this.handlePrivateGroup(user._id, user.username, user.email);
-      ctx.body = responseAction({
+      const result = {
         uid: user._id,
         email: user.email,
         username: user.username,
@@ -337,7 +343,9 @@ class UserController extends BaseController {
         role: "member",
         type: user.type,
         study: false
-      });
+      };
+      ctx.body = responseAction(result, 0, "success");
+      //
       yapi.commons.sendMail({
         to: user.email,
         contents: `<h3>亲爱的用户：</h3><p>您好，感谢使用YApi可视化接口平台,您的账号 ${
@@ -366,11 +374,7 @@ class UserController extends BaseController {
     try {
       let user = await userInst.listWithPaging(page, limit);
       let count = await userInst.listCount();
-      return (ctx.body = responseAction({
-        count: count,
-        total: Math.ceil(count / limit),
-        list: user
-      }, 0, "success"));
+      return (ctx.body = responseAction({ count: count, total: Math.ceil(count / limit), list: user }, 0, "success"));
     } catch (e) {
       return (ctx.body = responseAction(null, 402, e.message));
     }
@@ -511,7 +515,6 @@ class UserController extends BaseController {
    * @returns {Object}
    * @example
    */
-
   async uploadAvatar(ctx) {
     try {
       let basecode = ctx.request.body.basecode;
@@ -550,7 +553,6 @@ class UserController extends BaseController {
    * @returns {Object}
    * @example
    */
-
   async avatar(ctx) {
     try {
       let uid = ctx.query.uid ? ctx.query.uid : this.getUid();

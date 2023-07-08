@@ -41,7 +41,7 @@ const NoticePlugin = require("./plugins/NoticePlugin.js");
 NoticePlugin();
 /* ******************************************************************************** */
 const app = koaWebsocket(new Koa());
-const { websocketMiddleware, mockServerMiddleware, routeMiddleware } = require("@server/middleware/index.js");
+const { websocketMiddleware } = require("@server/middleware/index.js");
 // 错误处理中间件
 onerror(app);
 
@@ -65,21 +65,16 @@ app.use(koaBody({ strict: false, multipart: true, jsonLimit: "2mb", formLimit: "
 // 处理 crx
 app.use(koaJson());
 
-// 路由中间件
-app.use(routeMiddleware);
-
-// Mock 服务器中间件
-app.use(mockServerMiddleware);
-
 // WebSocket 中间件
 websocketMiddleware(app);
 
 // 路由处理
-const router = require("./routes/router.js");
-app.proxy = true;
-app.use(router.routes()).use(router.allowedMethods());
-console.log("router.routes()", router.routes());
-
+// const router = require("./routes/router.js");
+// app.proxy = true;
+// app.use(router.routes()).use(router.allowedMethods());
+// console.log("router.routes()", router.routes());
+const router = require("@server/routes/index.js");
+app.use(router());
 // 启动服务器
 const server = app.listen(yapi.WEBROOT_CONFIG.port);
 server.setTimeout(yapi.WEBROOT_CONFIG.timeout);
