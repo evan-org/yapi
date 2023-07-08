@@ -4,13 +4,13 @@ import { Card, Tooltip, Modal, Alert, Input, message } from "antd";
 import Icon from "@ant-design/icons";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import constants from "../../utils/variable.js";
+import constants from "@/utils/variable.js";
 import produce from "immer";
 //
-import { debounce } from "../../utils/common";
-import { getProject, checkProjectName, copyProjectMsg } from "../../reducer/modules/project";
-import { delFollow, addFollow } from "../../reducer/modules/follow";
-import { trim } from "../../utils/common.js";
+import { debounce } from "@/utils/common.js";
+import { getProject, checkProjectName, copyProjectMsg } from "@/reducer/modules/project.js";
+import { delFollow, addFollow } from "@/reducer/modules/follow.js";
+import { trim } from "@/utils/common.js";
 
 class ProjectCard extends Component {
   constructor(props) {

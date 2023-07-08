@@ -26,7 +26,7 @@ import {
 import { fetchGroupMsg, fetchGroupList } from "@/reducer/modules/group";
 import { setBreadcrumb } from "@/reducer/modules/user";
 import { connect } from "react-redux";
-import constants from "../../../../utils/variable.js";
+import constants from "@/utils/variable.js";
 import { nameLengthLimit, entries, trim, htmlFilter } from "@/utils/common";
 import "../Setting.scss";
 import _ from "underscore";

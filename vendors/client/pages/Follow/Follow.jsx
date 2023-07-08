@@ -2,11 +2,11 @@ import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Row, Col } from "antd";
-import ProjectCard from "../../components/ProjectCard/ProjectCard.jsx";
-import ErrMsg from "../../components/ErrMsg/ErrMsg.jsx";
+import ProjectCard from "@/components/ProjectCard/ProjectCard.jsx";
+import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
 //
-import { getFollowList } from "../../reducer/modules/follow";
-import { setBreadcrumb } from "../../reducer/modules/user";
+import { getFollowList } from "@/reducer/modules/follow.js";
+import { setBreadcrumb } from "@/reducer/modules/user.js";
 //
 import styles from "./Follows.module.scss";
 

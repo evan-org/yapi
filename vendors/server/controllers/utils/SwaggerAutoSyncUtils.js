@@ -10,8 +10,7 @@ const TokenModel = require("@server/models/TokenModel.js");
 
 const sha = require("sha.js");
 const md5 = require("md5");
-const { getToken } = require("@server/utils/token.js");
-const { generatePasssalt } = require("@server/utils/sso.js");
+const { generatePasssalt, getToken } = require("@server/utils/sso.js");
 const jobMap = new Map();
 class SwaggerAutoSyncUtils {
   constructor(ctx) {

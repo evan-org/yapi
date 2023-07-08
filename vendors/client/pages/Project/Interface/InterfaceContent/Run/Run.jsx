@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import request from "@/service/request.js";
 import { message } from "antd";
-import { Postman } from "../../../../../components";
+import { Postman } from "@/components/index.js";
 import AddColModal from "./AddColModal/AddColModal.jsx";
 import "./Run.scss";
 

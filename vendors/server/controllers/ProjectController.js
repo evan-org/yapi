@@ -16,9 +16,8 @@ const TokenModel = require("@server/models/TokenModel.js");
 //
 const commons = require("@server/utils/commons.js");
 //
-const { getToken } = require("../utils/token")
 const sha = require("sha.js");
-const { generatePasssalt } = require("@server/utils/sso.js");
+const { generatePasssalt, getToken } = require("@server/utils/sso.js");
 const request = require("axios").default;
 class ProjectController extends baseController {
   constructor(ctx) {
@@ -428,19 +427,19 @@ class ProjectController extends baseController {
       let result = await this.ProjectModel.delMember(params.id, params.member_uid);
       let username = this.getUsername();
       yapi
-        .getInst(UserModel)
-        .findById(params.member_uid)
-        .then((member) => {
-          yapi.commons.saveLog({
-            content: `<a href="/user/profile/${this.getUid()}">${username}</a> 删除了项目中的成员 <a href="/user/profile/${
-              params.member_uid
-            }">${member ? member.username : ""}</a>`,
-            type: "project",
-            uid: this.getUid(),
-            username: username,
-            typeid: params.id
-          });
+      .getInst(UserModel)
+      .findById(params.member_uid)
+      .then((member) => {
+        yapi.commons.saveLog({
+          content: `<a href="/user/profile/${this.getUid()}">${username}</a> 删除了项目中的成员 <a href="/user/profile/${
+            params.member_uid
+          }">${member ? member.username : ""}</a>`,
+          type: "project",
+          uid: this.getUid(),
+          username: username,
+          typeid: params.id
         });
+      });
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
@@ -611,19 +610,19 @@ class ProjectController extends baseController {
     let result = await projectInst.changeMemberRole(params.id, params.member_uid, params.role);
     let username = this.getUsername();
     yapi
-      .getInst(UserModel)
-      .findById(params.member_uid)
-      .then((member) => {
-        yapi.commons.saveLog({
-          content: `<a href="/user/profile/${this.getUid()}">${username}</a> 修改了项目中的成员 <a href="/user/profile/${
-            params.member_uid
-          }">${member.username}</a> 的角色为 "${rolename[params.role]}"`,
-          type: "project",
-          uid: this.getUid(),
-          username: username,
-          typeid: params.id
-        });
+    .getInst(UserModel)
+    .findById(params.member_uid)
+    .then((member) => {
+      yapi.commons.saveLog({
+        content: `<a href="/user/profile/${this.getUid()}">${username}</a> 修改了项目中的成员 <a href="/user/profile/${
+          params.member_uid
+        }">${member.username}</a> 的角色为 "${rolename[params.role]}"`,
+        type: "project",
+        uid: this.getUid(),
+        username: username,
+        typeid: params.id
       });
+    });
     ctx.body = yapi.commons.resReturn(result);
   }
   /**
@@ -919,9 +918,9 @@ class ProjectController extends baseController {
       if (!data) {
         let passsalt = generatePasssalt();
         token = sha("sha1")
-          .update(passsalt)
-          .digest("hex")
-          .substr(0, 20);
+        .update(passsalt)
+        .digest("hex")
+        .substr(0, 20);
         await this.TokenModel.save({ project_id, token });
       } else {
         token = data.token;
@@ -950,9 +949,9 @@ class ProjectController extends baseController {
       if (data && data.token) {
         let passsalt = generatePasssalt();
         token = sha("sha1")
-          .update(passsalt)
-          .digest("hex")
-          .substr(0, 20);
+        .update(passsalt)
+        .digest("hex")
+        .substr(0, 20);
         result = await this.TokenModel.up(project_id, token);
         token = getToken(token);
         result.token = token;

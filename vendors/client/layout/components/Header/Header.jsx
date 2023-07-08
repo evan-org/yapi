@@ -19,9 +19,9 @@ import Search from "./Search/Search";
 //
 import styles from "./Header.module.scss";
 //
-import LogoSVG from "../../../components/LogoSVG/LogoSVG.jsx";
-import Breadcrumb from "../../../components/Breadcrumb/Breadcrumb.jsx";
-import GuideBtns from "../../../components/GuideBtns/GuideBtns.jsx";
+import LogoSVG from "@/components/LogoSVG/LogoSVG.jsx";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb.jsx";
+import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
 //
 let HeaderMenu = {
   user: {

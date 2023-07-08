@@ -4,7 +4,7 @@ import { Tabs } from "antd";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 //
-import ProjectEnv from "../../../components/ProjectEnv/ProjectEnv.jsx";
+import ProjectEnv from "@/components/ProjectEnv/ProjectEnv.jsx";
 //
 import ProjectMessage from "@/pages/Project/Setting/ProjectMessage/ProjectMessage.jsx";
 import ProjectRequest from "@/pages/Project/Setting/ProjectRequest/ProjectRequest.jsx";

@@ -1,9 +1,9 @@
 import React, { PureComponent as Component } from "react";
-import NewsTimeline from "./NewsTimeline/NewsTimeline";
+import NewsTimeline from "./NewsTimeline/NewsTimeline.jsx";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
-import SubNav from "../../components/SubNav/SubNav.jsx";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb.jsx";
+import SubNav from "@/components/SubNav/SubNav.jsx";
 //
 import { Button } from "antd";
 import { getMockUrl } from "@/reducer/modules/news";

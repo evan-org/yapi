@@ -16,7 +16,7 @@ import {
   Alert
 } from "antd";
 import Icon from "@ant-design/icons";
-import constants from "../../utils/variable.js";
+import constants from "@/utils/variable.js";
 import AceEditor from "@/components/AceEditor/AceEditor";
 import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "@/utils/common.js";

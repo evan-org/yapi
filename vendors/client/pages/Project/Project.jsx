@@ -2,8 +2,8 @@ import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { matchPath, Outlet } from "react-router-dom";
-import { SubNav } from "../../components/index";
-import Loading from "../../components/Loading/Loading";
+import { SubNav } from "@/components/index.js";
+import Loading from "@/components/Loading/Loading.jsx";
 //
 import Interface from "./Interface/Interface.jsx";
 import Activity from "./Activity/Activity.jsx";

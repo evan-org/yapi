@@ -9,7 +9,7 @@ const TokenModel = require("@server/models/TokenModel.js");
 const _ = require("underscore");
 const jwt = require("jsonwebtoken");
 const responseAction = require("@server/utils/responseAction.js");
-const { parseToken } = require("../utils/token.js");
+const { parseToken } = require("../utils/sso.js");
 // 不需要登录校验的API
 const ignoreRouter = [
   "/api/user/login_by_token",

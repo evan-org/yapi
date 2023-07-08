@@ -7,7 +7,7 @@ import AppFooter from "./components/Footer/Footer.jsx";
 import { Row, Col, Button, Card } from "antd";
 import Icon from "@ant-design/icons";
 import PropTypes from "prop-types";
-import LogoSVG from "../../components/LogoSVG/LogoSVG.jsx";
+import LogoSVG from "@/components/LogoSVG/LogoSVG.jsx";
 import { changeMenuItem } from "@/reducer/modules/menu.js";
 
 const plugin = require("@/plugin.js");

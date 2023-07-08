@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Form, Switch, Button, Tooltip, message } from "antd";
 import Icon from "@ant-design/icons";
-import AceEditor from "../../../../components/AceEditor/AceEditor.jsx";
+import AceEditor from "@/components/AceEditor/AceEditor.jsx";
 //
 import { updateProjectMock, getProject } from "@/reducer/modules/project.js";
 
