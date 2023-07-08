@@ -122,7 +122,7 @@ class BaseController {
       }
       let userInst = yapi.getInst(UserModel); // 创建user实体
       let result = await userInst.findById(uid);
-      console.log('11111111111111111', result);
+      console.log("11111111111111111", result);
       if (!result) {
         return false;
       }

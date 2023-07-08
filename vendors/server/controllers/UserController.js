@@ -13,7 +13,7 @@ const { generatePassword, generatePasssalt } = require("@server/utils/sso.js");
 class UserController extends BaseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(UserModel);
+    this.UserModel = yapi.getInst(UserModel);
   }
   /**
    * 用户登录接口
@@ -22,8 +22,8 @@ class UserController extends BaseController {
    * @method POST
    * @category user
    * @foldnumber 10
-   * @param {String} ctx.body.email email，不能为空
-   * @param  {String} ctx.body.password 密码，不能为空
+   * @param {String} ctx.request.body.email email，不能为空
+   * @param  {String} ctx.request.body.password 密码，不能为空
    * @returns {Object}
    * @example ./api/user/login.json
    */
@@ -41,8 +41,8 @@ class UserController extends BaseController {
         return (ctx.body = responseAction(null, 400, "密码不能为空"));
       }
       //
-      let userInst = yapi.getInst(UserModel); // 创建user实体
-      let result = await userInst.findByEmail(email);
+      const result = await this.UserModel.findByEmail(email);
+      //
       if (!result) {
         return (ctx.body = responseAction(null, 403, "该用户不存在"));
       }
@@ -76,8 +76,31 @@ class UserController extends BaseController {
    * 查询登录用户详情
    * @interface /user/profile
    * @method POST
+   * @return {*}
    * */
   async profile(ctx) {
+    const { authorization, "user-id": userId } = ctx.headers;
+    const token = authorization.split(" ")[1];
+    const result = await this.UserModel.findById(userId);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, result.passsalt);
+    } catch (err) {
+      return (ctx.body = responseAction(null, 400, err));
+    }
+    if (decoded.uid.toString() === userId) {
+      return (ctx.body = responseAction({
+        "_id": result._id,
+        "userId": result._id,
+        "study": true,
+        "type": result.type,
+        "username": result.username,
+        "email": result.email,
+        "role": result.role,
+        "avatar": ""
+      }, 0, "success"));
+    }
+    return (ctx.body = responseAction(null, 500, "服务异常"));
   }
   /**
    * 退出登录接口
@@ -88,11 +111,10 @@ class UserController extends BaseController {
    * @returns {Object}
    * @example ./api/user/logout.json
    */
-
   async logout(ctx) {
     ctx.cookies.set("_yapi_token", null);
     ctx.cookies.set("_yapi_uid", null);
-    ctx.body = responseAction("ok", 0, "success");
+    return (ctx.body = responseAction("ok", 0, "success"));
   }
   /**
    * 更新
@@ -103,20 +125,23 @@ class UserController extends BaseController {
    * @returns {Object}
    * @example
    */
-
   async upStudy(ctx) {
-    let userInst = yapi.getInst(UserModel); // 创建user实体
     let data = {
       up_time: yapi.commons.time(),
       study: true
     };
     try {
-      let result = await userInst.update(this.getUid(), data);
+      let result = await this.UserModel.update(this.getUid(), data);
       ctx.body = responseAction(result, 0, "success");
     } catch (e) {
       ctx.body = responseAction(null, 401, e.message);
     }
   }
+  /**
+   * loginByToken
+   * @param ctx
+   * @returns {Promise<void>}
+   */
   async loginByToken(ctx) {
     try {
       let ret = await yapi.emitHook("third_login", ctx);
@@ -136,10 +161,9 @@ class UserController extends BaseController {
    * @method
    * @category user
    * @foldnumber 10
-   * @param {String} email email名称，不能为空
-   * @param  {String} password 密码，不能为空
+   * @param {String} ctx.request.body.email email名称，不能为空
+   * @param  {String} ctx.request.body.password 密码，不能为空
    * @returns {Object}
-   *
    */
   async getLdapAuth(ctx) {
     try {
@@ -154,22 +178,17 @@ class UserController extends BaseController {
       const username = ldapInfo[yapi.WEBROOT_CONFIG.ldapLogin.usernameKey] || emailPrefix;
       let login = await this.handleThirdLogin(emailParams, username);
       if (login === true) {
-        let userInst = yapi.getInst(UserModel); // 创建user实体
-        let result = await userInst.findByEmail(emailParams);
-        return (ctx.body = responseAction(
-          {
-            username: result.username,
-            role: result.role,
-            uid: result._id,
-            email: result.email,
-            add_time: result.add_time,
-            up_time: result.up_time,
-            type: result.type || "third",
-            study: result.study
-          },
-          0,
-          "logout success..."
-        ));
+        let result = await this.UserModel.findByEmail(emailParams);
+        return (ctx.body = responseAction({
+          username: result.username,
+          role: result.role,
+          uid: result._id,
+          email: result.email,
+          add_time: result.add_time,
+          up_time: result.up_time,
+          type: result.type || "third",
+          study: result.study
+        }, 0, "logout success..."));
       }
     } catch (e) {
       yapi.commons.log(e.message, "error");
@@ -179,9 +198,8 @@ class UserController extends BaseController {
   // 处理第三方登录
   async handleThirdLogin(email, username) {
     let user, data, passsalt;
-    let userInst = yapi.getInst(UserModel);
     try {
-      user = await userInst.findByEmail(email);
+      user = await this.UserModel.findByEmail(email);
       // 新建用户信息
       if (!user || !user._id) {
         passsalt = generatePasssalt();
@@ -195,12 +213,9 @@ class UserController extends BaseController {
           up_time: yapi.commons.time(),
           type: "third"
         };
-        user = await userInst.save(data);
+        user = await this.UserModel.save(data);
         await this.handlePrivateGroup(user._id, username, email);
-        yapi.commons.sendMail({
-          to: email,
-          contents: `<h3>亲爱的用户：</h3><p>您好，感谢使用YApi平台，你的邮箱账号是：${email}</p>`
-        });
+        yapi.commons.sendMail({ to: email, contents: `<h3>亲爱的用户：</h3><p>您好，感谢使用YApi平台，你的邮箱账号是：${email}</p>` });
       }
       const { token, uid } = this.setLoginCookie(user._id, user.passsalt);
       return true;
@@ -214,22 +229,21 @@ class UserController extends BaseController {
    * @interface /user/change_password
    * @method POST
    * @category user
-   * @param {Number} uid 用户ID
-   * @param {Number} [old_password] 旧密码, 非admin用户必须传
-   * @param {Number} password 新密码
+   * @param {Number} ctx.request.body.uid 用户ID
+   * @param {Number} ctx.request.body.[old_password] 旧密码, 非admin用户必须传
+   * @param {Number} ctx.request.body.password 新密码
    * @return {Object}
    * @example ./api/user/change_password.json
    */
   async changePassword(ctx) {
     let params = ctx.request.body;
-    let userInst = yapi.getInst(UserModel);
     if (!params.uid) {
       return (ctx.body = responseAction(null, 400, "uid不能为空"));
     }
     if (!params.password) {
       return (ctx.body = responseAction(null, 400, "密码不能为空"));
     }
-    let user = await userInst.findById(params.uid);
+    const user = await this.UserModel.findById(params.uid);
     if (this.getRole() !== "admin" && params.uid != this.getUid()) {
       return (ctx.body = responseAction(null, 402, "没有权限"));
     }
@@ -241,14 +255,14 @@ class UserController extends BaseController {
         return (ctx.body = responseAction(null, 402, "旧密码错误"));
       }
     }
-    let passsalt = generatePasssalt();
-    let data = {
+    const passsalt = generatePasssalt();
+    const data = {
       up_time: yapi.commons.time(),
       password: generatePassword(params.password, passsalt),
       passsalt: passsalt
     };
     try {
-      let result = await userInst.update(params.uid, data);
+      let result = await this.UserModel.update(params.uid, data);
       return (ctx.body = responseAction(result, 0, "success"));
     } catch (e) {
       return (ctx.body = responseAction(null, 401, e.message));
@@ -288,9 +302,9 @@ class UserController extends BaseController {
    * @method POST
    * @category user
    * @foldnumber 10
-   * @param {String} email email名称，不能为空
-   * @param  {String} password 密码，不能为空
-   * @param {String} [username] 用户名
+   * @param {String} ctx.request.body.email email名称，不能为空
+   * @param  {String} ctx.request.body.password 密码，不能为空
+   * @param {String} ctx.request.body.[username] 用户名
    * @returns {Object}
    * @example ./api/user/login.json
    */
@@ -299,7 +313,6 @@ class UserController extends BaseController {
     if (yapi.WEBROOT_CONFIG.closeRegister) {
       return (ctx.body = responseAction(null, 400, "禁止注册，请联系管理员"));
     }
-    let userInst = yapi.getInst(UserModel);
     let params = ctx.request.body; // 获取请求的参数,检查是否存在用户名和密码
     params = yapi.commons.handleParams(params, {
       username: "string",
@@ -312,7 +325,7 @@ class UserController extends BaseController {
     if (!params.password) {
       return (ctx.body = responseAction(null, 400, "密码不能为空"));
     }
-    let checkRepeat = await userInst.checkRepeat(params.email); // 然后检查是否已经存在该用户
+    let checkRepeat = await this.UserModel.checkRepeat(params.email); // 然后检查是否已经存在该用户
     if (checkRepeat > 0) {
       return (ctx.body = responseAction(null, 401, "该email已经注册"));
     }
@@ -331,7 +344,7 @@ class UserController extends BaseController {
       data.username = data.email.substr(0, data.email.indexOf("@"));
     }
     try {
-      let user = await userInst.save(data);
+      let user = await this.UserModel.save(data);
       this.setLoginCookie(user._id, user.passsalt);
       await this.handlePrivateGroup(user._id, user.username, user.email);
       const result = {
@@ -362,18 +375,17 @@ class UserController extends BaseController {
    * @method GET
    * @category user
    * @foldnumber 10
-   * @param {Number} [page] 分页页码
-   * @param {Number} [limit] 分页大小,默认为10条
+   * @param {Number} ctx.request.body.[page] 分页页码
+   * @param {Number} ctx.request.body.[limit] 分页大小,默认为10条
    * @returns {Object}
    * @example
    */
   async list(ctx) {
-    let page = ctx.request.query.page || 1,
-      limit = ctx.request.query.limit || 10;
-    const userInst = yapi.getInst(UserModel);
+    const page = ctx.request.query.page || 1;
+    const limit = ctx.request.query.limit || 10;
     try {
-      let user = await userInst.listWithPaging(page, limit);
-      let count = await userInst.listCount();
+      let user = await this.UserModel.listWithPaging(page, limit);
+      let count = await this.UserModel.listCount();
       return (ctx.body = responseAction({ count: count, total: Math.ceil(count / limit), list: user }, 0, "success"));
     } catch (e) {
       return (ctx.body = responseAction(null, 402, e.message));
@@ -383,7 +395,7 @@ class UserController extends BaseController {
    * 获取用户个人信息
    * @interface /user/find
    * @method GET
-   * @param id 用户uid
+   * @param ctx.request.query.id 用户uid
    * @category user
    * @foldnumber 10
    * @returns {Object}
@@ -392,15 +404,14 @@ class UserController extends BaseController {
   async findById(ctx) {
     // 根据id获取用户信息
     try {
-      let userInst = yapi.getInst(UserModel);
       let id = ctx.request.query.id;
-      if (this.getRole() !== "admin" && id != this.getUid()) {
+      if (this.getRole() !== "admin" && id !== this.getUid()) {
         return (ctx.body = responseAction(null, 401, "没有权限"));
       }
       if (!id) {
         return (ctx.body = responseAction(null, 400, "uid不能为空"));
       }
-      let result = await userInst.findById(id);
+      let result = await this.UserModel.findById(id);
       if (!result) {
         return (ctx.body = responseAction(null, 402, "不存在的用户"));
       }
@@ -421,7 +432,7 @@ class UserController extends BaseController {
    * 删除用户,只有admin用户才有此权限
    * @interface /user/del
    * @method POST
-   * @param id 用户uid
+   * @param ctx.request.query.id 用户uid
    * @category user
    * @foldnumber 10
    * @returns {Object}
@@ -433,15 +444,14 @@ class UserController extends BaseController {
       if (this.getRole() !== "admin") {
         return (ctx.body = responseAction(null, 402, "Without permission."));
       }
-      let userInst = yapi.getInst(UserModel);
       let id = ctx.request.body.id;
-      if (id == this.getUid()) {
+      if (id === this.getUid()) {
         return (ctx.body = responseAction(null, 403, "禁止删除管理员"));
       }
       if (!id) {
         return (ctx.body = responseAction(null, 400, "uid不能为空"));
       }
-      let result = await userInst.del(id);
+      let result = await this.UserModel.del(id);
       return (ctx.body = responseAction(result, 0, "success"));
     } catch (e) {
       return (ctx.body = responseAction(null, 402, e.message));
@@ -451,10 +461,10 @@ class UserController extends BaseController {
    * 更新用户个人信息
    * @interface /user/update
    * @method POST
-   * @param uid  用户uid
-   * @param [role] 用户角色,只有管理员有权限修改
-   * @param [username] String
-   * @param [email] String
+   * @param ctx.request.body.uid  用户uid
+   * @param ctx.request.body.[role] 用户角色,只有管理员有权限修改
+   * @param ctx.request.body.[username] String
+   * @param ctx.request.body.[email] String
    * @category user
    * @foldnumber 10
    * @returns {Object}
@@ -471,12 +481,11 @@ class UserController extends BaseController {
       if (this.getRole() !== "admin" && params.uid != this.getUid()) {
         return (ctx.body = responseAction(null, 401, "没有权限"));
       }
-      let userInst = yapi.getInst(UserModel);
       let id = params.uid;
       if (!id) {
         return (ctx.body = responseAction(null, 400, "uid不能为空"));
       }
-      let userData = await userInst.findById(id);
+      let userData = await this.UserModel.findById(id);
       if (!userData) {
         return (ctx.body = responseAction(null, 400, "uid不存在"));
       }
@@ -486,7 +495,7 @@ class UserController extends BaseController {
       params.username && (data.username = params.username);
       params.email && (data.email = params.email);
       if (data.email) {
-        let checkRepeat = await userInst.checkRepeat(data.email); // 然后检查是否已经存在该用户
+        let checkRepeat = await this.UserModel.checkRepeat(data.email); // 然后检查是否已经存在该用户
         if (checkRepeat > 0) {
           return (ctx.body = responseAction(null, 401, "该email已经注册"));
         }
@@ -500,7 +509,7 @@ class UserController extends BaseController {
       await groupInst.updateMember(member);
       let projectInst = yapi.getInst(ProjectModel);
       await projectInst.updateMember(member);
-      let result = await userInst.update(id, data);
+      let result = await this.UserModel.update(id, data);
       return (ctx.body = responseAction(result, 0, "success"));
     } catch (e) {
       return (ctx.body = responseAction(null, 402, e.message));
@@ -510,7 +519,7 @@ class UserController extends BaseController {
    * 上传用户头像
    * @interface /user/upload_avatar
    * @method POST
-   * @param {*} basecode  base64编码，通过h5 api传给后端
+   * @param {*} ctx.request.body.basecode  base64编码，通过h5 api传给后端
    * @category user
    * @returns {Object}
    * @example
@@ -548,7 +557,7 @@ class UserController extends BaseController {
    * 根据用户uid头像
    * @interface /user/avatar
    * @method GET
-   * @param {*} uid
+   * @param {*} ctx.request.query.uid
    * @category user
    * @returns {Object}
    * @example
@@ -578,7 +587,7 @@ class UserController extends BaseController {
    * @method GET
    * @category user
    * @foldnumber 10
-   * @param {String} q
+   * @param {String} ctx.request.query.q
    * @return {Object}
    * @example ./api/user/search.json
    */
@@ -590,7 +599,7 @@ class UserController extends BaseController {
     if (!yapi.commons.validateSearchKeyword(q)) {
       return (ctx.body = responseAction(void 0, 400, "Bad query."));
     }
-    let queryList = await this.Model.search(q);
+    let queryList = await this.UserModel.search(q);
     let rules = [
       {
         key: "_id",
@@ -617,8 +626,8 @@ class UserController extends BaseController {
    * @method GET
    * @category user
    * @foldnumber 10
-   * @param {String} type 可选group|interface|project
-   * @param {Number} id
+   * @param {String} ctx.request.query.type 可选group|interface|project
+   * @param {Number} ctx.request.query.id
    * @return {Object}
    * @example
    */

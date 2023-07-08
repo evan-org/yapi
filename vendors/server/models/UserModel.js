@@ -80,24 +80,15 @@ class UserModel extends BaseModel {
   }
 
   findById(id) {
-    return this.model.findOne({
-      _id: id
-    });
+    return this.model.findOne({ _id: id });
   }
 
   del(id) {
-    return this.model.remove({
-      _id: id
-    });
+    return this.model.remove({ _id: id });
   }
 
   update(id, data) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      data
-    );
+    return this.model.update({ _id: id }, data);
   }
 
   search(keyword) {
