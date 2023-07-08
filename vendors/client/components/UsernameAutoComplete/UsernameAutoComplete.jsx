@@ -56,7 +56,7 @@ class UsernameAutoComplete extends Component {
     // this.lastFetchId += 1;
     // const fetchId = this.lastFetchId;
     this.setState({ fetching: true });
-    request.get("/user/search", { params }).then((data) => {
+    request.get("/user/search", params).then((data) => {
       // if (fetchId !== this.lastFetchId) { // for fetch callback order
       //   return;
       // }

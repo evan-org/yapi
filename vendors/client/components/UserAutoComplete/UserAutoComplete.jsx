@@ -55,7 +55,7 @@ class UserAutoComplete extends Component {
     // this.lastFetchId += 1;
     // const fetchId = this.lastFetchId;
     this.setState({ fetching: true });
-    request.get("/user/search", { params }).then((data) => {
+    request.get("/user/search", params).then((data) => {
       // if (fetchId !== this.lastFetchId) { // for fetch callback order
       //   return;
       // }
@@ -120,7 +120,7 @@ function UserAutoCompleteMain(props) {
   const loading = open && options.length === 0;
   // 搜索回调
   const handleSearch = async(value) => {
-    const response = await request.get("/user/search", { params: { q: value } });
+    const response = await request.get("/user/search", { q: value });
     const data = response.data.data;
     if (data) {
       return data.map((v) => ({ ...v, title: v.username, username: v.username, id: v.uid, value: v.uid }));

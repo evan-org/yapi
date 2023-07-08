@@ -227,8 +227,7 @@ const transformJsonToSchema = (json) => {
   json = json || {};
   let jsonData = json_parse(json);
   jsonData = GenerateSchema(jsonData);
-  let schemaData = JSON.stringify(jsonData);
-  return schemaData;
+  return JSON.stringify(jsonData);
 };
 //
 export default {

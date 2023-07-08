@@ -142,7 +142,7 @@ class Wiki extends Component {
   };
   //  获取数据
   handleData = async(params) => {
-    let result = await request.get("/plugin/wiki_desc/get", { params });
+    let result = await request.get("/plugin/wiki_desc/get", params);
     if (result.data.errcode === 0) {
       const data = result.data.data;
       if (data) {
