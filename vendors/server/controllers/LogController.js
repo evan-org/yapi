@@ -9,7 +9,7 @@ const LogModel = require("@server/models/LogModel.js");
 class LogController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(LogModel);
+    this.LogModel = yapi.getInst(LogModel);
     this.GroupModel = yapi.getInst(GroupModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
@@ -61,7 +61,7 @@ class LogController extends baseController {
           projectDatas[projectList[i]._id] = projectList[i];
           projectIds[i] = projectList[i]._id;
         }
-        let projectLogList = await this.Model.listWithPagingByGroup(
+        let projectLogList = await this.LogModel.listWithPagingByGroup(
           typeid,
           projectIds,
           page,
@@ -76,14 +76,14 @@ class LogController extends baseController {
           }
           projectLogList[index] = item;
         });
-        let total = await this.Model.listCountByGroup(typeid, projectIds);
+        let total = await this.LogModel.listCountByGroup(typeid, projectIds);
         ctx.body = yapi.commons.resReturn({
           list: projectLogList,
           total: Math.ceil(total / limit)
         });
       } else if (type === "project") {
-        let result = await this.Model.listWithPaging(typeid, type, page, limit, selectValue);
-        let count = await this.Model.listCount(typeid, type, selectValue);
+        let result = await this.LogModel.listWithPaging(typeid, type, page, limit, selectValue);
+        let count = await this.LogModel.listCount(typeid, type, selectValue);
 
         ctx.body = yapi.commons.resReturn({
           total: Math.ceil(count / limit),
@@ -129,13 +129,13 @@ class LogController extends baseController {
         for (let j = 0; j < interfaceIdList.length; j++) {
           let interfaceId = interfaceIdList[j];
           let id = interfaceId.id;
-          let result = await this.Model.listWithCatid(typeid, type, id);
+          let result = await this.LogModel.listWithCatid(typeid, type, id);
 
           list = list.concat(result);
         }
       }
 
-      // let result = await this.Model.listWithCatid(typeid, type, catId);
+      // let result = await this.LogModel.listWithCatid(typeid, type, catId);
       ctx.body = yapi.commons.resReturn(list);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);

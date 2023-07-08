@@ -13,11 +13,11 @@ class AvatarModel extends BaseModel {
   }
 
   get(uid) {
-    return this.model.findOne({ uid: uid });
+    return this.UseModel.findOne({ uid: uid });
   }
 
   up(uid, basecode, type) {
-    return this.model.update({ uid: uid }, { type: type, basecode: basecode }, { upsert: true });
+    return this.UseModel.update({ uid: uid }, { type: type, basecode: basecode }, { upsert: true });
   }
 }
 

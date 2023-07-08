@@ -34,24 +34,24 @@ class AdvMockCaseModel extends BaseModel {
   }
 
   get(data) {
-    return this.model.findOne(data);
+    return this.UseModel.findOne(data);
   }
 
   list(id) {
-    return this.model.find({ interface_id: id })
+    return this.UseModel.find({ interface_id: id })
   }
 
   delByInterfaceId(interface_id) {
-    return this.model.remove({ interface_id: interface_id });
+    return this.UseModel.remove({ interface_id: interface_id });
   }
 
   delByProjectId(project_id) {
-    return this.model.remove({ project_id: project_id })
+    return this.UseModel.remove({ project_id: project_id })
   }
 
   save(data) {
     data.up_time = yapi.commons.time();
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
 
@@ -59,11 +59,11 @@ class AdvMockCaseModel extends BaseModel {
     let id = data.id;
     delete data.id;
     data.up_time = yapi.commons.time();
-    return this.model.update({ _id: id }, data)
+    return this.UseModel.update({ _id: id }, data)
   }
 
   del(id) {
-    return this.model.remove({ _id: id })
+    return this.UseModel.remove({ _id: id })
   }
 }
 

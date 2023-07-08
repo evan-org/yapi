@@ -40,21 +40,21 @@ class StatisticsMockModel extends BaseModel {
     };
   }
   countByGroupId(id) {
-    return this.model.countDocuments({ group_id: id })
+    return this.UseModel.countDocuments({ group_id: id })
   }
   save(data) {
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
   getTotalCount() {
-    return this.model.countDocuments({});
+    return this.UseModel.countDocuments({});
   }
   async getDayCount(timeInterval) {
     let end = timeInterval[1];
     let start = timeInterval[0];
     let data = [];
-    console.log("getDayCount", timeInterval, this.model);
-    const cursor = this.model.aggregate([
+    console.log("getDayCount", timeInterval, this.UseModel);
+    const cursor = this.UseModel.aggregate([
       {
         $match: {
           date: { $gt: start, $lte: end }
@@ -75,11 +75,11 @@ class StatisticsMockModel extends BaseModel {
     return data;
   }
   list() {
-    return this.model.find({}).select("date").exec();
+    return this.UseModel.find({}).select("date").exec();
   }
   up(id, data) {
     data.up_time = yapi.commons.time();
-    return this.model.updateOne({ _id: id }, data, { runValidators: true });
+    return this.UseModel.updateOne({ _id: id }, data, { runValidators: true });
   }
 }
 module.exports = StatisticsMockModel;

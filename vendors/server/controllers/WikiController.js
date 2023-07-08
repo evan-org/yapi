@@ -2,7 +2,7 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/BaseController.js");
 //
-const wikiModel = require("@server/models/WikiModel.js");
+const WikiModel = require("@server/models/WikiModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
@@ -15,7 +15,7 @@ const showDiffMsg = require("@common/diffView.cjs");
 class WikiController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(wikiModel);
+    this.WikiModel = yapi.getInst(WikiModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
 
@@ -33,7 +33,7 @@ class WikiController extends baseController {
       if (!project_id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
       }
-      let result = await this.Model.get(project_id);
+      let result = await this.WikiModel.get(project_id);
       return (ctx.body = yapi.commons.resReturn(result));
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 400, err.message);
@@ -74,7 +74,7 @@ class WikiController extends baseController {
       const uid = this.getUid();
 
       // 如果当前数据库里面没有数据
-      let result = await this.Model.get(params.project_id);
+      let result = await this.WikiModel.get(params.project_id);
       if (!result) {
         let data = Object.assign(params, {
           username,
@@ -83,7 +83,7 @@ class WikiController extends baseController {
           up_time: yapi.commons.time()
         });
 
-        let res = await this.Model.save(data);
+        let res = await this.WikiModel.save(data);
         ctx.body = yapi.commons.resReturn(res);
       } else {
         let data = Object.assign(params, {
@@ -91,7 +91,7 @@ class WikiController extends baseController {
           uid,
           up_time: yapi.commons.time()
         });
-        let upRes = await this.Model.up(result._id, data);
+        let upRes = await this.WikiModel.up(result._id, data);
         ctx.body = yapi.commons.resReturn(upRes);
       }
 
@@ -173,7 +173,7 @@ class WikiController extends baseController {
         if (!id) {
           return ctx.websocket.send("id 参数有误");
         }
-        result = await this.Model.get(id);
+        result = await this.WikiModel.get(id);
         let data = await this.websocketMsgMap(message, result);
         if (data) {
           ctx.websocket.send(JSON.stringify(data));
@@ -198,14 +198,14 @@ class WikiController extends baseController {
   // socket 开始链接
   async startFunc(result) {
     if (result && result.edit_uid === this.getUid()) {
-      await this.Model.upEditUid(result._id, 0);
+      await this.WikiModel.upEditUid(result._id, 0);
     }
   }
 
   // socket 结束链接
   async endFunc(result) {
     if (result) {
-      await this.Model.upEditUid(result._id, 0);
+      await this.WikiModel.upEditUid(result._id, 0);
     }
   }
 
@@ -221,7 +221,7 @@ class WikiController extends baseController {
       };
     } else {
       if (result) {
-        await this.Model.upEditUid(result._id, this.getUid());
+        await this.WikiModel.upEditUid(result._id, this.getUid());
       }
       data = {
         errno: 0,

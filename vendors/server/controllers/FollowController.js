@@ -8,7 +8,7 @@ const ProjectModel = require("@server/models/ProjectModel.js");
 class FollowController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(FollowModel);
+    this.FollowModel = yapi.getInst(FollowModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
   /**
@@ -31,7 +31,7 @@ class FollowController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 400, "用户id不能为空"));
     }
     try {
-      let result = await this.Model.list(uid);
+      let result = await this.FollowModel.list(uid);
       ctx.body = yapi.commons.resReturn({
         list: result
       });
@@ -56,12 +56,12 @@ class FollowController extends baseController {
     if (!params.projectid) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
     }
-    let checkRepeat = await this.Model.checkProjectRepeat(uid, params.projectid);
+    let checkRepeat = await this.FollowModel.checkProjectRepeat(uid, params.projectid);
     if (checkRepeat == 0) {
       return (ctx.body = yapi.commons.resReturn(null, 401, "项目未关注"));
     }
     try {
-      let result = await this.Model.del(params.projectid, this.getUid());
+      let result = await this.FollowModel.del(params.projectid, this.getUid());
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
@@ -87,7 +87,7 @@ class FollowController extends baseController {
     if (!params.projectid) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
     }
-    let checkRepeat = await this.Model.checkProjectRepeat(uid, params.projectid);
+    let checkRepeat = await this.FollowModel.checkProjectRepeat(uid, params.projectid);
     if (checkRepeat) {
       return (ctx.body = yapi.commons.resReturn(null, 401, "项目已关注"));
     }
@@ -100,7 +100,7 @@ class FollowController extends baseController {
         icon: project.icon,
         color: project.color
       };
-      let result = await this.Model.save(data);
+      let result = await this.FollowModel.save(data);
       result = yapi.commons.fieldSelect(result, [
         "_id",
         "uid",

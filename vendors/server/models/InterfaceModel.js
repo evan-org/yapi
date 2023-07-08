@@ -1,7 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
 const BaseModel = require("@server/models/BaseModel.js");
-
 class InterfaceModel extends BaseModel {
   constructor() {
     super();
@@ -9,7 +8,6 @@ class InterfaceModel extends BaseModel {
   getName() {
     return "interface";
   }
-
   getSchema() {
     return {
       title: { type: String, required: true },
@@ -101,42 +99,23 @@ class InterfaceModel extends BaseModel {
       tag: Array
     };
   }
-
   save(data) {
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
-
   get(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .exec();
+    return this.UseModel.findOne({ _id: id }).exec();
   }
-
   getBaseinfo(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .select("path method uid title project_id cat_id status ")
-      .exec();
+    return this.UseModel.findOne({ _id: id }).select("path method uid title project_id cat_id status ").exec();
   }
-
   getVar(project_id, method) {
-    return this.model
-      .find({
-        project_id: project_id,
-        type: "var",
-        method: method
-      })
+    return this.UseModel.find({ project_id: project_id, type: "var", method: method })
       .select("_id path")
       .exec();
   }
-
   getByQueryPath(project_id, path, method) {
-    return this.model
+    return this.UseModel
       .find({
         project_id: project_id,
         "query_path.path": path,
@@ -144,12 +123,11 @@ class InterfaceModel extends BaseModel {
       })
       .exec();
   }
-
   getByPath(project_id, path, method, select) {
     select =
       select ||
       "_id title uid path method project_id catid edit_uid status add_time up_time type query_path req_query req_headers req_params req_body_type req_body_form req_body_other res_body_type custom_field_value res_body res_body_is_json_schema req_body_is_json_schema";
-    return this.model
+    return this.UseModel
       .find({
         project_id: project_id,
         path: path,
@@ -158,25 +136,22 @@ class InterfaceModel extends BaseModel {
       .select(select)
       .exec();
   }
-
   checkRepeat(id, path, method) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       project_id: id,
       path: path,
       method: method
     });
   }
-
   countByProjectId(id) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       project_id: id
     });
   }
-
   list(project_id, select) {
     select =
       select || "_id title uid path method project_id catid edit_uid status add_time up_time";
-    return this.model
+    return this.UseModel
       .find({
         project_id: project_id
       })
@@ -184,11 +159,10 @@ class InterfaceModel extends BaseModel {
       .sort({ title: 1 })
       .exec();
   }
-
   listWithPage(project_id, page, limit) {
     page = parseInt(page);
     limit = parseInt(limit);
-    return this.model
+    return this.UseModel
       .find({
         project_id: project_id
       })
@@ -200,25 +174,22 @@ class InterfaceModel extends BaseModel {
       )
       .exec();
   }
-
   listByPid(project_id) {
-    return this.model
+    return this.UseModel
       .find({
         project_id: project_id
       })
       .sort({ title: 1 })
       .exec();
   }
-
   // 获取全部接口信息
   getInterfaceListCount() {
-    return this.model.countDocuments({});
+    return this.UseModel.countDocuments({});
   }
-
   listByCatid(catid, select) {
     select =
       select || "_id title uid path method project_id catid edit_uid status add_time up_time index tag";
-    return this.model
+    return this.UseModel
       .find({
         catid: catid
       })
@@ -226,11 +197,10 @@ class InterfaceModel extends BaseModel {
       .sort({ index: 1 })
       .exec();
   }
-
   listByCatidWithPage(catid, page, limit) {
     page = parseInt(page);
     limit = parseInt(limit);
-    return this.model
+    return this.UseModel
       .find({
         catid: catid
       })
@@ -242,13 +212,12 @@ class InterfaceModel extends BaseModel {
       )
       .exec();
   }
-
   listByOptionWithPage(option, page, limit) {
     page = parseInt(page);
     limit = parseInt(limit);
-    return this.model
+    return this.UseModel
       .find(option)
-      .sort({index: 1})
+      .sort({ index: 1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .select(
@@ -256,7 +225,6 @@ class InterfaceModel extends BaseModel {
       )
       .exec();
   }
-
   listByInterStatus(catid, status) {
     let option = {};
     if (status === "open") {
@@ -269,34 +237,30 @@ class InterfaceModel extends BaseModel {
         catid: catid
       };
     }
-    return this.model
+    return this.UseModel
       .find(option)
       .select()
       .sort({ title: 1 })
       .exec();
   }
-
   del(id) {
-    return this.model.remove({
+    return this.UseModel.remove({
       _id: id
     });
   }
-
   delByCatid(id) {
-    return this.model.remove({
+    return this.UseModel.remove({
       catid: id
     });
   }
-
   delByProjectId(id) {
-    return this.model.remove({
+    return this.UseModel.remove({
       project_id: id
     });
   }
-
   up(id, data) {
     data.up_time = yapi.commons.time();
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id
       },
@@ -304,9 +268,8 @@ class InterfaceModel extends BaseModel {
       { runValidators: true }
     );
   }
-
   upEditUid(id, uid) {
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id
       },
@@ -315,7 +278,7 @@ class InterfaceModel extends BaseModel {
     );
   }
   getcustomFieldValue(id, value) {
-    return this.model
+    return this.UseModel
       .find({
         project_id: id,
         custom_field_value: value
@@ -325,13 +288,11 @@ class InterfaceModel extends BaseModel {
       )
       .exec();
   }
-
   listCount(option) {
-    return this.model.countDocuments(option);
+    return this.UseModel.countDocuments(option);
   }
-
   upIndex(id, index) {
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id
       },
@@ -340,9 +301,8 @@ class InterfaceModel extends BaseModel {
       }
     );
   }
-
   search(keyword) {
-    return this.model
+    return this.UseModel
       .find({
         $or: [
           { "title": new RegExp(keyword, "ig") },
@@ -352,5 +312,4 @@ class InterfaceModel extends BaseModel {
       .limit(10);
   }
 }
-
 module.exports = InterfaceModel;

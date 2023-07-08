@@ -57,64 +57,37 @@ class InterfaceColModel extends BaseModel {
   }
 
   save(data) {
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
 
   get(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .exec();
+    return this.UseModel.findOne({ _id: id }).exec();
   }
 
   checkRepeat(name) {
-    return this.model.countDocuments({
-      name: name
-    });
+    return this.UseModel.countDocuments({ name: name });
   }
 
   list(project_id) {
-    return this.model
-      .find({
-        project_id: project_id
-      })
-      .select("name uid project_id desc add_time up_time, index")
-      .exec();
+    return this.UseModel.find({ project_id: project_id }).select("name uid project_id desc add_time up_time, index").exec();
   }
 
   del(id) {
-    return this.model.remove({
-      _id: id
-    });
+    return this.UseModel.remove({ _id: id });
   }
 
   delByProjectId(id) {
-    return this.model.remove({
-      project_id: id
-    });
+    return this.UseModel.remove({ project_id: id });
   }
 
   up(id, data) {
     data.up_time = yapi.commons.time();
-    return this.model.update(
-      {
-        _id: id
-      },
-      data
-    );
+    return this.UseModel.update({ _id: id }, data);
   }
 
   upColIndex(id, index) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      {
-        index: index
-      }
-    );
+    return this.UseModel.update({ _id: id }, { index: index });
   }
 }
 

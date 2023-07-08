@@ -43,14 +43,14 @@ class LogModel extends BaseModel {
       add_time: yapi.commons.time(),
       data: data.data
     };
-    const m = new this.model(saveData);
+    const m = new this.UseModel(saveData);
     return m.save();
   }
   del(id) {
-    return this.model.remove({ _id: id });
+    return this.UseModel.remove({ _id: id });
   }
   list(typeid, type) {
-    return this.model.find({ typeid: typeid, type: type }).exec();
+    return this.UseModel.find({ typeid: typeid, type: type }).exec();
   }
   listWithPaging(typeid, type, page, limit, selectValue) {
     page = parseInt(page);
@@ -62,12 +62,12 @@ class LogModel extends BaseModel {
     if (selectValue && !isNaN(selectValue)) {
       params["data.interface_id"] = +selectValue;
     }
-    return this.model.find(params).sort({ add_time: -1 }).skip((page - 1) * limit).limit(limit).exec();
+    return this.UseModel.find(params).sort({ add_time: -1 }).skip((page - 1) * limit).limit(limit).exec();
   }
   listWithPagingByGroup(typeid, pidList, page, limit) {
     page = parseInt(page);
     limit = parseInt(limit);
-    return this.model.find({
+    return this.UseModel.find({
       $or: [
         {
           type: "project",
@@ -82,7 +82,7 @@ class LogModel extends BaseModel {
     .exec();
   }
   listCountByGroup(typeid, pidList) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       $or: [
         {
           type: "project",
@@ -106,7 +106,7 @@ class LogModel extends BaseModel {
     if (selectValue && !isNaN(selectValue)) {
       params["data.interface_id"] = +selectValue;
     }
-    return this.model.countDocuments(params);
+    return this.UseModel.countDocuments(params);
   }
   listWithCatid(typeid, type, interfaceId) {
     const params = {
@@ -116,7 +116,7 @@ class LogModel extends BaseModel {
     if (interfaceId && !isNaN(interfaceId)) {
       params["data.interface_id"] = +interfaceId;
     }
-    return this.model
+    return this.UseModel
     .find(params)
     .sort({ add_time: -1 })
     .limit(1)

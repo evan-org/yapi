@@ -10,7 +10,7 @@ const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 //
-const statisMockModel = require("@server/models/StatisticsMockModel.js");
+const StatisticsMockModel = require("@server/models/StatisticsMockModel.js");
 //
 const commons = require("@common/statisticsUtils.js");
 //
@@ -19,7 +19,7 @@ let cpu = require("cpu-load");
 class StatisticsMockController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(statisMockModel);
+    this.StatisticsMockModel = yapi.getInst(StatisticsMockModel);
     this.GroupModel = yapi.getInst(GroupModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
@@ -59,14 +59,14 @@ class StatisticsMockController extends baseController {
    */
   async getMockDateList(ctx) {
     try {
-      let mockCount = await this.Model.getTotalCount();
+      let mockCount = await this.StatisticsMockModel.getTotalCount();
       let mockDateList = [];
       if (!(this.getRole() === "admin")) {
         return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
       }
       //  默认时间是30 天为一周期
       let dateInterval = commons.getDateRange();
-      mockDateList = await this.Model.getDayCount(dateInterval);
+      mockDateList = await this.StatisticsMockModel.getDayCount(dateInterval);
       return (ctx.body = yapi.commons.resReturn({ mockCount, mockDateList }));
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 400, err.message);
@@ -144,7 +144,7 @@ class StatisticsMockController extends baseController {
             project_id: project._id
           });
         }
-        let mockCount = await this.Model.countByGroupId(groupId);
+        let mockCount = await this.StatisticsMockModel.countByGroupId(groupId);
         data.interface = interfaceCount;
         data.project = projectCount;
         data.mock = mockCount;

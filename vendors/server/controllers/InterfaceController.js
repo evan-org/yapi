@@ -63,7 +63,7 @@ function handleHeaders(values) {
 class InterfaceController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(InterfaceModel);
+    this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.catModel = yapi.getInst(InterfaceCatModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.caseModel = yapi.getInst(InterfaceCaseModel);
@@ -227,7 +227,7 @@ class InterfaceController extends baseController {
         value: http_path.query[item]
       });
     });
-    let checkRepeat = await this.Model.checkRepeat(params.project_id, params.path, params.method);
+    let checkRepeat = await this.InterfaceModel.checkRepeat(params.project_id, params.path, params.method);
     if (checkRepeat > 0) {
       return (ctx.body = yapi.commons.resReturn(
         null,
@@ -258,7 +258,7 @@ class InterfaceController extends baseController {
         await this.ProjectModel.addMember(params.project_id, [userdata]);
       }
     }
-    let result = await this.Model.save(data);
+    let result = await this.InterfaceModel.save(data);
     yapi.emitHook("interface_add", result).then();
     this.catModel.get(params.catid).then((cate) => {
       let username = this.getUsername();
@@ -324,7 +324,7 @@ class InterfaceController extends baseController {
         "path第一位必需为 /, 只允许由 字母数字-/_:.! 组成"
       ));
     }
-    let result = await this.Model.getByPath(params.project_id, params.path, params.method, "_id res_body");
+    let result = await this.InterfaceModel.getByPath(params.project_id, params.path, params.method, "_id res_body");
     if (result.length > 0) {
       for (const item of result) {
         params.id = item._id;
@@ -413,7 +413,7 @@ class InterfaceController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 400, "接口id不能为空"));
     }
     try {
-      let result = await this.Model.get(params.id);
+      let result = await this.InterfaceModel.get(params.id);
       if (this.$tokenAuth) {
         if (params.project_id !== result.project_id) {
           ctx.body = yapi.commons.resReturn(null, 400, "token有误")
@@ -474,8 +474,8 @@ class InterfaceController extends baseController {
     try {
       let result, count;
       if (limit === "all") {
-        result = await this.Model.list(project_id);
-        count = await this.Model.listCount({ project_id });
+        result = await this.InterfaceModel.list(project_id);
+        count = await this.InterfaceModel.listCount({ project_id });
       } else {
         let option = { project_id };
         if (status) {
@@ -492,8 +492,8 @@ class InterfaceController extends baseController {
             option.tag = tag;
           }
         }
-        result = await this.Model.listByOptionWithPage(option, page, limit);
-        count = await this.Model.listCount(option);
+        result = await this.InterfaceModel.listByOptionWithPage(option, page, limit);
+        count = await this.InterfaceModel.listCount(option);
       }
       ctx.body = yapi.commons.resReturn({
         count: count,
@@ -546,8 +546,8 @@ class InterfaceController extends baseController {
           option.tag = tag;
         }
       }
-      let result = await this.Model.listByOptionWithPage(option, page, limit);
-      let count = await this.Model.listCount(option);
+      let result = await this.InterfaceModel.listByOptionWithPage(option, page, limit);
+      let count = await this.InterfaceModel.listCount(option);
       ctx.body = yapi.commons.resReturn({
         count: count,
         total: Math.ceil(count / limit),
@@ -576,7 +576,7 @@ class InterfaceController extends baseController {
         newResult = [];
       for (let i = 0, item, list; i < result.length; i++) {
         item = result[i].toObject();
-        list = await this.Model.listByCatid(item._id);
+        list = await this.InterfaceModel.listByCatid(item._id);
         for (let j = 0; j < list.length; j++) {
           list[j] = list[j].toObject();
         }
@@ -626,7 +626,7 @@ class InterfaceController extends baseController {
     // params.res_body_is_json_schema = _.isUndefined (params.res_body_is_json_schema) ? true : params.res_body_is_json_schema;
     // params.req_body_is_json_schema = _.isUndefined(params.req_body_is_json_schema) ?  true : params.req_body_is_json_schema;
     handleHeaders(params)
-    let interfaceData = await this.Model.get(id);
+    let interfaceData = await this.InterfaceModel.get(id);
     if (!interfaceData) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的接口"));
     }
@@ -667,7 +667,7 @@ class InterfaceController extends baseController {
       params.path &&
       (params.path !== interfaceData.path || params.method !== interfaceData.method)
     ) {
-      let checkRepeat = await this.Model.checkRepeat(
+      let checkRepeat = await this.InterfaceModel.checkRepeat(
         interfaceData.project_id,
         params.path,
         params.method
@@ -688,9 +688,9 @@ class InterfaceController extends baseController {
         data.req_params = [];
       }
     }
-    let result = await this.Model.up(id, data);
+    let result = await this.InterfaceModel.up(id, data);
     let username = this.getUsername();
-    let CurrentInterfaceData = await this.Model.get(id);
+    let CurrentInterfaceData = await this.InterfaceModel.get(id);
     let logData = {
       interface_id: id,
       cat_id: data.catid,
@@ -786,15 +786,15 @@ class InterfaceController extends baseController {
       if (!id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "接口id不能为空"));
       }
-      let data = await this.Model.get(id);
+      let data = await this.InterfaceModel.get(id);
       if (data.uid != this.getUid()) {
         let auth = await this.checkAuth(data.project_id, "project", "danger");
         if (!auth) {
           return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
         }
       }
-      // let inter = await this.Model.get(id);
-      let result = await this.Model.del(id);
+      // let inter = await this.InterfaceModel.get(id);
+      let result = await this.InterfaceModel.del(id);
       yapi.emitHook("interface_del", id).then();
       await this.caseModel.delByInterfaceId(id);
       let username = this.getUsername();
@@ -826,7 +826,7 @@ class InterfaceController extends baseController {
       if (!id) {
         return ctx.websocket.send("id 参数有误");
       }
-      result = await this.Model.get(id);
+      result = await this.InterfaceModel.get(id);
       if (result.edit_uid !== 0 && result.edit_uid !== this.getUid()) {
         userInst = yapi.getInst(UserModel);
         userinfo = await userInst.findById(result.edit_uid);
@@ -835,7 +835,7 @@ class InterfaceController extends baseController {
           data: { uid: result.edit_uid, username: userinfo.username }
         };
       } else {
-        this.Model.upEditUid(id, this.getUid()).then();
+        this.InterfaceModel.upEditUid(id, this.getUid()).then();
         data = {
           errno: 0,
           data: result
@@ -843,7 +843,7 @@ class InterfaceController extends baseController {
       }
       ctx.websocket.send(JSON.stringify(data));
       ctx.websocket.on("close", () => {
-        this.Model.upEditUid(id, 0).then();
+        this.InterfaceModel.upEditUid(id, 0).then();
       });
     } catch (err) {
       yapi.commons.log(err, "error");
@@ -943,7 +943,7 @@ class InterfaceController extends baseController {
         username: username,
         typeid: catData.project_id
       });
-      let interfaceData = await this.Model.listByCatid(id);
+      let interfaceData = await this.InterfaceModel.listByCatid(id);
       for (const item of interfaceData) {
         try {
           yapi.emitHook("interface_del", item._id).then();
@@ -953,7 +953,7 @@ class InterfaceController extends baseController {
         }
       }
       await this.catModel.del(id);
-      let r = await this.Model.delByCatid(id);
+      let r = await this.InterfaceModel.delByCatid(id);
       return (ctx.body = yapi.commons.resReturn(r));
     } catch (e) {
       yapi.commons.resReturn(null, 400, e.message);
@@ -1017,7 +1017,7 @@ class InterfaceController extends baseController {
         // 在每个项目（project）中查找interface下的custom_field_value
         for (let j = 0; j < projects.length; j++) {
           let data = {};
-          let inter = await this.Model.getcustomFieldValue(projects[j]._id, customFieldValue);
+          let inter = await this.InterfaceModel.getcustomFieldValue(projects[j]._id, customFieldValue);
           if (inter.length > 0) {
             data.project_name = projects[j].name;
             data.project_id = projects[j]._id;
@@ -1058,7 +1058,7 @@ class InterfaceController extends baseController {
       }
       params.forEach((item) => {
         if (item.id) {
-          this.Model.upIndex(item.id, item.index).then(
+          this.InterfaceModel.upIndex(item.id, item.index).then(
             (res) => {
             },
             (err) => {
@@ -1134,7 +1134,7 @@ class InterfaceController extends baseController {
         newResult = [];
       for (let i = 0, item, list; i < result.length; i++) {
         item = result[i].toObject();
-        list = await this.Model.listByInterStatus(item._id, "open");
+        list = await this.InterfaceModel.listByInterStatus(item._id, "open");
         for (let j = 0; j < list.length; j++) {
           list[j] = list[j].toObject();
           list[j].basepath = basepath;

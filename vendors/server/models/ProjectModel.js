@@ -50,7 +50,7 @@ class ProjectModel extends BaseModel {
   }
 
   getAuthList(uid) {
-    return this.model.find({
+    return this.UseModel.find({
       $or: [{
         "members.uid": uid,
         project_type: "private"
@@ -64,7 +64,7 @@ class ProjectModel extends BaseModel {
       .exec();
   }
   updateMember(data) {
-    return this.model.update(
+    return this.UseModel.update(
       {
         "members.uid": data.uid
       },
@@ -78,7 +78,7 @@ class ProjectModel extends BaseModel {
   }
 
   save(data) {
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
 
@@ -100,7 +100,7 @@ class ProjectModel extends BaseModel {
     }
 
     if (isFix) {
-      this.model.update(
+      this.UseModel.update(
         {
           _id: data._id
 
@@ -115,7 +115,7 @@ class ProjectModel extends BaseModel {
   }
 
   get(id) {
-    return this.model
+    return this.UseModel
       .findOne({
         _id: id
       })
@@ -123,7 +123,7 @@ class ProjectModel extends BaseModel {
   }
 
   getByEnv(id) {
-    return this.model
+    return this.UseModel
       .findOne({
         _id: id
       })
@@ -132,7 +132,7 @@ class ProjectModel extends BaseModel {
   }
 
   getProjectWithAuth(group_id, uid) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       group_id: group_id,
       "members.uid": uid
     });
@@ -142,7 +142,7 @@ class ProjectModel extends BaseModel {
     select =
       select ||
       "_id uid name basepath switch_notice desc group_id project_type env icon color add_time up_time pre_script after_script project_mock_script is_mock_open strice is_json5 tag";
-    return this.model
+    return this.UseModel
       .findOne({
         _id: id
       })
@@ -151,7 +151,7 @@ class ProjectModel extends BaseModel {
   }
 
   getByDomain(domain) {
-    return this.model
+    return this.UseModel
       .find({
         prd_host: domain
       })
@@ -159,14 +159,14 @@ class ProjectModel extends BaseModel {
   }
 
   checkNameRepeat(name, groupid) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       name: name,
       group_id: groupid
     });
   }
 
   checkDomainRepeat(domain, basepath) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       prd_host: domain,
       basepath: basepath
     });
@@ -174,7 +174,7 @@ class ProjectModel extends BaseModel {
 
   list(group_id) {
     let params = { group_id: group_id };
-    return this.model
+    return this.UseModel
       .find(params)
       .select(
         "_id uid name basepath switch_notice desc group_id project_type color icon env add_time up_time"
@@ -185,18 +185,18 @@ class ProjectModel extends BaseModel {
 
   // 获取项目数量统计
   getProjectListCount() {
-    return this.model.countDocuments();
+    return this.UseModel.countDocuments();
   }
 
   countWithPublic(group_id) {
     let params = { group_id: group_id, project_type: "public" };
-    return this.model.countDocuments(params);
+    return this.UseModel.countDocuments(params);
   }
 
   listWithPaging(group_id, page, limit) {
     page = parseInt(page);
     limit = parseInt(limit);
-    return this.model
+    return this.UseModel
       .find({
         group_id: group_id
       })
@@ -207,32 +207,32 @@ class ProjectModel extends BaseModel {
   }
 
   listCount(group_id) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       group_id: group_id
     });
   }
 
   countByGroupId(group_id) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       group_id: group_id
     });
   }
 
   del(id) {
-    return this.model.remove({
+    return this.UseModel.remove({
       _id: id
     });
   }
 
   delByGroupid(groupId) {
-    return this.model.remove({
+    return this.UseModel.remove({
       group_id: groupId
     });
   }
 
   up(id, data) {
     data.up_time = yapi.commons.time();
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id
       },
@@ -242,7 +242,7 @@ class ProjectModel extends BaseModel {
   }
 
   addMember(id, data) {
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id
       },
@@ -254,7 +254,7 @@ class ProjectModel extends BaseModel {
   }
 
   delMember(id, uid) {
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id
       },
@@ -265,14 +265,14 @@ class ProjectModel extends BaseModel {
   }
 
   checkMemberRepeat(id, uid) {
-    return this.model.countDocuments({
+    return this.UseModel.countDocuments({
       _id: id,
       "members.uid": uid
     });
   }
 
   changeMemberRole(id, uid, role) {
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id,
         "members.uid": uid
@@ -284,7 +284,7 @@ class ProjectModel extends BaseModel {
   }
 
   changeMemberEmailNotice(id, uid, notice) {
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id,
         "members.uid": uid
@@ -296,7 +296,7 @@ class ProjectModel extends BaseModel {
   }
 
   search(keyword) {
-    return this.model
+    return this.UseModel
       .find({
         name: new RegExp(keyword, "ig")
       })
