@@ -11,7 +11,7 @@ const formattersHtml = jsondiffpatch.formatters.html;
 
 const fs = require("fs-extra");
 const path = require("path");
-const showDiffMsg = require("@common/diff-view.cjs");
+const showDiffMsg = require("@common/diffView.cjs");
 class WikiController extends baseController {
   constructor(ctx) {
     super(ctx);

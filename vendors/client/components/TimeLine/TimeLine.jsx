@@ -12,7 +12,10 @@ import { fetchInterfaceList } from "@/reducer/modules/interface.js";
 import ErrMsg from "../ErrMsg/ErrMsg.jsx";
 //
 const { timeago } = require("@common/utils.cjs");
-const showDiffMsg = require("@common/diff-view.cjs");
+const showDiffMsg = require("@common/diffView.cjs");
+//
+console.warn(timeago, showDiffMsg);
+//
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
 //
