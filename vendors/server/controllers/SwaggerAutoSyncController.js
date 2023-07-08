@@ -4,7 +4,8 @@ const BaseController = require("@server/controllers/BaseController.js");
 //
 const syncModel = require("@server/models/SwaggerAutoSyncModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
-const SwaggerAutoSyncUtils = require("@common/SwaggerAutoSyncUtils.js");
+//
+const SwaggerAutoSyncUtils = require("@server/controllers/utils/SwaggerAutoSyncUtils.js");
 class SwaggerAutoSyncController extends BaseController {
   constructor(ctx) {
     super(ctx);

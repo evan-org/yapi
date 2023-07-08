@@ -1,7 +1,7 @@
 const yapi = require("@server/yapi.js");
 //
 const SwaggerAutoSyncController = require("@server/controllers/SwaggerAutoSyncController.js");
-const SwaggerAutoSyncUtils = require("@common/SwaggerAutoSyncUtils.js");
+const SwaggerAutoSyncUtils = require("@server/controllers/utils/SwaggerAutoSyncUtils.js");
 //
 module.exports = function() {
   yapi.getInst(SwaggerAutoSyncUtils);
