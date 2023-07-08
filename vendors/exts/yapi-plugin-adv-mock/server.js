@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const _ = require("underscore");
 const lib = require("@common/lib.cjs");
 const Mock = require("mockjs");
-const mockExtra = require("@common/mock-extra.cjs");
+const mockExtra = require("@common/mockExtra.cjs");
 //
 function arrToObj(arr) {
   let obj = { "Set-Cookie": [] };

@@ -1,4 +1,9 @@
 const _ = require("underscore");
+/**
+ * @param name
+ * @param type
+ * @returns {{server, client}}
+ */
 function getPluginConfig(name, type) {
   let pluginConfig;
   if (type === "ext") {
@@ -17,7 +22,7 @@ function getPluginConfig(name, type) {
 /**
  * type @string enum[plugin, ext] plugin是外部插件，ext是内部插件
  */
-exports.initPlugins = function(plugins, type) {
+function initPlugins(plugins, type) {
   if (!plugins) {
     return [];
   }
@@ -36,4 +41,11 @@ exports.initPlugins = function(plugins, type) {
   })
   plugins = plugins.filter((item) => item.enable === true && (item.server || item.client))
   return _.uniq(plugins, (item) => item.name)
+}
+/**
+ *
+ * @type {{initPlugins: ((function(*, *): ([]|*))|*)}}
+ */
+module.exports = {
+  initPlugins: initPlugins
 }

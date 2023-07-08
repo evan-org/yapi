@@ -13,7 +13,7 @@ const Mock = require("mockjs");
 //
 import json5 from "json5";
 //
-const MockExtra = require("@common/mock-extra.cjs");
+const MockExtra = require("@common/mockExtra.cjs");
 //
 let langTools = ace.acequire("ace/ext/language_tools"),
   wordList = [

@@ -1,7 +1,12 @@
 function isPlainObject(obj) {
   return obj ? typeof obj === "object" && Object.getPrototypeOf(obj) === Object.prototype : false;
 }
-
+/**
+ *
+ * @param sourceProperties
+ * @param mergeProperties
+ * @returns {*}
+ */
 function handleProperties(sourceProperties, mergeProperties) {
   if (!isPlainObject(mergeProperties)) {
     return mergeProperties
@@ -14,11 +19,19 @@ function handleProperties(sourceProperties, mergeProperties) {
   })
   return mergeProperties;
 }
-
-
+/**
+ *
+ * @param source
+ * @param merge
+ * @returns {{}|*}
+ */
 function handleSchema(source, merge) {
-  if (!isPlainObject(source)) {return merge;}
-  if (!isPlainObject(merge)) {return merge;}
+  if (!isPlainObject(source)) {
+    return merge;
+  }
+  if (!isPlainObject(merge)) {
+    return merge;
+  }
   let result = {}
   Object.assign(result, source, merge)
   if (merge.type === "object") {
@@ -28,7 +41,8 @@ function handleSchema(source, merge) {
   }
   return result;
 }
-
-module.exports = function(sourceJsonSchema, mergeJsonSchema) {
-  return handleSchema(sourceJsonSchema, mergeJsonSchema)
-}
+/**
+ *
+ * @type {(function(*, *): ({}|*))|*}
+ */
+module.exports = handleSchema
