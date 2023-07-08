@@ -13,11 +13,11 @@ const getDateRange = (time = 90, start = false, withToday = true) => {
     if (!withToday) {
       endTime -= 86400000;
     }
-    return [this.formatYMD(endTime - gapTime), this.formatYMD(endTime - 1000)];
+    return [formatYMD(endTime - gapTime), formatYMD(endTime - 1000)];
   }
   const startTime = dateSpacialWithSafari(start);
   const endTime = startTime + (gapTime - 1000);
-  return [start, this.formatYMD(endTime)];
+  return [start, formatYMD(endTime)];
 }
 /**
  * 时间
@@ -38,7 +38,7 @@ const getDateInterval = (time = 30) => {
   let timeList = []
   for (let i = 0; i < time; i++) {
     const gapTime = i * 24 * 3600 * 1000;
-    const time = this.formatYMD(endTime - gapTime);
+    const time = formatYMD(endTime - gapTime);
     timeList.push(time);
   }
   return timeList;
