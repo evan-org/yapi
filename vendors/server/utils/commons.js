@@ -18,7 +18,7 @@ const InterfaceModel = require("@server/models/InterfaceModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
 const sandboxFn = require("./sandbox.js");
-const { schemaValidator } = require("@common/utils.js");
+const { schemaValidator } = require("@common/utils.cjs");
 const http = require("http");
 jsonSchemaFaker.extend("mock", function() {
   return {

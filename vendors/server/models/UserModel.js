@@ -1,6 +1,5 @@
 const BaseModel = require("@server/models/BaseModel.js");
 // import BaseModel from "@server/models/base.mjs";
-
 class UserModel extends BaseModel {
   constructor() {
     super();
@@ -8,7 +7,6 @@ class UserModel extends BaseModel {
   getName() {
     return "user";
   }
-
   getSchema() {
     return {
       username: {
@@ -31,88 +29,52 @@ class UserModel extends BaseModel {
       type: { type: String, enum: ["site", "third"], default: "site" } // site用户是网站注册用户, third是第三方登录过来的用户
     };
   }
-
   save(data) {
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
-
   checkRepeat(email) {
-    return this.model.countDocuments({
-      email: email
-    });
+    return this.UseModel.countDocuments({ email: email });
   }
-
   list() {
-    return this.model
-      .find()
-      .select("_id username email role type  add_time up_time study")
-      .exec(); // 显示id name email role
+    return this.UseModel.find().select("_id username email role type  add_time up_time study").exec(); // 显示id name email role
   }
-
   findByUids(uids) {
-    return this.model
-      .find({
-        _id: { $in: uids }
-      })
-      .select("_id username email role type  add_time up_time study")
-      .exec();
+    return this.UseModel.find({ _id: { $in: uids } }).select("_id username email role type  add_time up_time study").exec();
   }
-
   listWithPaging(page, limit) {
     page = parseInt(page);
     limit = parseInt(limit);
-    return this.model
-      .find()
-      .sort({ _id: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
+    return this.UseModel.find().sort({ _id: -1 }).skip((page - 1) * limit).limit(limit)
       .select("_id username email role type  add_time up_time study")
       .exec();
   }
-
   listCount() {
-    return this.model.countDocuments();
+    return this.UseModel.countDocuments();
   }
-
   findByEmail(email) {
-    return this.model.findOne({ email: email });
+    return this.UseModel.findOne({ email: email });
   }
-
   findById(id) {
-    return this.model.findOne({
-      _id: id
-    });
+    return this.UseModel.findOne({ _id: id });
   }
-
   del(id) {
-    return this.model.remove({
-      _id: id
-    });
+    return this.UseModel.remove({ _id: id });
   }
-
   update(id, data) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      data
-    );
+    return this.UseModel.update({ _id: id }, data);
   }
-
   search(keyword) {
-    return this.model
-      .find(
-        {
-          $or: [{ email: new RegExp(keyword, "i") }, { username: new RegExp(keyword, "i") }]
-        },
-        {
-          passsalt: 0,
-          password: 0
-        }
-      )
+    return this.UseModel.find(
+      {
+        $or: [{ email: new RegExp(keyword, "i") }, { username: new RegExp(keyword, "i") }]
+      },
+      {
+        passsalt: 0,
+        password: 0
+      }
+    )
       .limit(10);
   }
 }
-
 module.exports = UserModel;

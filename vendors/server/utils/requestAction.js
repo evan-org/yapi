@@ -99,8 +99,7 @@ const requestAction = async(ctx, Controller, action = "") => {
   // console.log("exports.createAction ==> ", router, baseurl, RouterController, action, path, method, ws);
   // console.log("exports.createAction ==> 1", router[method]);
   if (!action) {
-    ctx.body = responseAction(null, 40011, "服务器出错...");
-    return ctx
+    return (ctx.body = responseAction(null, 500, "服务器出错..."));
   }
   try {
     const inst = new Controller(ctx);
@@ -117,11 +116,11 @@ const requestAction = async(ctx, Controller, action = "") => {
     if (inst.$auth === true) {
       await inst[action].call(inst, ctx);
     } else {
-      ctx.body = responseAction(null, 40011, "请登录...");
+      return (ctx.body = responseAction(null, 40011, "请登录..."));
     }
   } catch (err) {
-    ctx.body = responseAction(null, 40011, "服务器出错...");
     logger(err, "error");
+    return (ctx.body = responseAction(null, 40011, "服务器出错..."));
   }
   return ctx;
 };

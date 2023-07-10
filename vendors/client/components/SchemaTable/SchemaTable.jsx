@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { Table } from "antd";
 import json5 from "json5";
 import PropTypes from "prop-types";
-import { schemaTransformToTable } from "@common/schema-transformTo-table.js";
 import _ from "underscore";
+//
+const { schemaTransformToTable } = require("@common/schemaTransformToTable.cjs");
 //
 const messageMap = {
   desc: "备注",

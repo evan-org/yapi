@@ -12,7 +12,6 @@ import follow from "./follow.js";
 import mockCol from "./mockCol.js";
 import { emitHook } from "@/plugin.js";
 //
-import { connectRouter } from "connected-react-router";
 
 const reducerModules = {
   customization: customizationReducer,

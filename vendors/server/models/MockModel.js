@@ -4,7 +4,7 @@ const BaseModel = require("@server/models/BaseModel.js");
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
-class LogModel extends BaseModel {
+class MockModel extends BaseModel {
   constructor() {
     super();
     let Col = mongoose.connection.db.collection("statis_mock");
@@ -44,4 +44,4 @@ class LogModel extends BaseModel {
   }
 }
 
-module.exports = LogModel;
+module.exports = MockModel;

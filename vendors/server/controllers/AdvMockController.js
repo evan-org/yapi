@@ -11,14 +11,14 @@ const config = require("@exts/yapi-plugin-adv-mock/index.js");
 class AdvMockController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(AdvModel);
+    this.AdvModel = yapi.getInst(AdvModel);
     this.caseModel = yapi.getInst(caseModel);
     this.UserModel = yapi.getInst(UserModel);
   }
 
   async getMock(ctx) {
     let id = ctx.query.interface_id;
-    let mockData = await this.Model.get(id);
+    let mockData = await this.AdvModel.get(id);
     if (!mockData) {
       return (ctx.body = yapi.commons.resReturn(null, 408, "mock脚本不存在"));
     }
@@ -49,11 +49,11 @@ class AdvMockController extends baseController {
         enable: params.enable === true
       };
       let result;
-      let mockData = await this.Model.get(data.interface_id);
+      let mockData = await this.AdvModel.get(data.interface_id);
       if (mockData) {
-        result = await this.Model.up(data);
+        result = await this.AdvModel.up(data);
       } else {
-        result = await this.Model.save(data);
+        result = await this.AdvModel.save(data);
       }
       return (ctx.body = yapi.commons.resReturn(result));
     } catch (e) {

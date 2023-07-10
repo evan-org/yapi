@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import request from "@/service/request.js";
 import { message, Tooltip, Input } from "antd";
-import { getEnv } from "../../../../reducer/modules/project";
-import { fetchInterfaceColList, setColData, fetchCaseData, fetchCaseList } from "../../../../reducer/modules/interfaceCol";
+import { getEnv } from "@/reducer/modules/project.js";
+import { fetchInterfaceColList, setColData, fetchCaseData, fetchCaseList } from "@/reducer/modules/interfaceCol.js";
 //
-import { Postman } from "../../../../components";
+import { Postman } from "@/components/index.js";
 //
 import style from "./InterfaceCaseContent.module.scss";
 //

@@ -20,17 +20,17 @@ class WikiModel extends BaseModel {
     };
   }
   save(data) {
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
   get(project_id) {
-    return this.model.findOne({ project_id: project_id }).exec();
+    return this.UseModel.findOne({ project_id: project_id }).exec();
   }
   up(id, data) {
-    return this.model.update({ _id: id }, data, { runValidators: true });
+    return this.UseModel.update({ _id: id }, data, { runValidators: true });
   }
   upEditUid(id, uid) {
-    return this.model.update({ _id: id }, { edit_uid: uid }, { runValidators: true });
+    return this.UseModel.update({ _id: id }, { edit_uid: uid }, { runValidators: true });
   }
 }
 module.exports = WikiModel;

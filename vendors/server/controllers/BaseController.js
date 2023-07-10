@@ -9,7 +9,7 @@ const TokenModel = require("@server/models/TokenModel.js");
 const _ = require("underscore");
 const jwt = require("jsonwebtoken");
 const responseAction = require("@server/utils/responseAction.js");
-const { parseToken } = require("../utils/token.js");
+const { parseToken } = require("../utils/sso.js");
 // 不需要登录校验的API
 const ignoreRouter = [
   "/api/user/login_by_token",
@@ -34,6 +34,7 @@ class BaseController {
     this.TokenModel = yapi.getInst(TokenModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     //
+    console.debug(ctx);
     if (ignoreRouter.indexOf(ctx.path) > -1) {
       this.$auth = true;
     } else {
@@ -121,6 +122,7 @@ class BaseController {
       }
       let userInst = yapi.getInst(UserModel); // 创建user实体
       let result = await userInst.findById(uid);
+      console.log("11111111111111111", result);
       if (!result) {
         return false;
       }
@@ -130,7 +132,7 @@ class BaseController {
       } catch (err) {
         return false;
       }
-      if (decoded.uid === uid) {
+      if (decoded.uid.toString() === uid) {
         this.$uid = uid;
         this.$auth = true;
         this.$user = result;
@@ -155,12 +157,14 @@ class BaseController {
     }
   }
   /**
+   * func router user/status
    * 通用方法返回登录信息
    * @param {*} ctx
    */
   async getLoginStatus(ctx) {
     let body = {};
-    if ((await this.checkLogin(ctx)) === true) {
+    const bool = await this.checkLogin(ctx);
+    if (bool) {
       const result = yapi.commons.fieldSelect(this.$user, [
         "_id",
         "username",
@@ -171,13 +175,13 @@ class BaseController {
         "type",
         "study"
       ]);
-      body = responseAction(result);
+      body = responseAction(result, 0, "login success");
     } else {
       body = responseAction(null, 40011, "未登录...");
     }
     body.ladp = await this.checkLDAP();
     body.canRegister = await this.checkRegister();
-    ctx.body = body;
+    return (ctx.body = body);
   }
   getRole() {
     return this.$user.role;

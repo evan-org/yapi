@@ -13,6 +13,12 @@ router.post("/login", async(ctx) => {
   await requestAction(ctx, Controller, "login");
 });
 /**
+ *
+ */
+router.post("/profile", async(ctx) => {
+  await requestAction(ctx, Controller, "profile");
+});
+/**
  *module user
  *action reg
  *method post
@@ -58,6 +64,7 @@ router.post("/del", async(ctx) => {
   await requestAction(ctx, Controller, "del");
 });
 /**
+ * func user/status
  *module user
  *action getLoginStatus
  *method get
@@ -147,6 +154,5 @@ router.get("/avatar", async(ctx) => {
 router.post("/upload_avatar", async(ctx) => {
   await requestAction(ctx, Controller, "uploadAvatar");
 });
-
 //
 module.exports = router;

@@ -1,6 +1,6 @@
 const yapi = require("@server/yapi.js");
 //
-const baseController = require("@server/controllers/BaseController.js");
+const BaseController = require("@server/controllers/BaseController.js");
 //
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceColModel = require("@server/models/InterfaceColModel.js");
@@ -10,10 +10,10 @@ const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const FollowModel = require("@server/models/FollowModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
-const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.js");
-const { handleParamsValue, ArrayToObject } = require("@common/utils.js");
+const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.cjs");
+const { handleParamsValue, ArrayToObject } = require("@common/utils.cjs");
 const renderToHtml = require("../views/reportHtml/index.js");
-const HanldeImportData = require("@common/HandleImportData.js");
+const HanldeImportData = require("@common/HandleImportData.cjs");
 const _ = require("underscore");
 const createContex = require("@common/createContext.cjs");
 const swaggerRun = require("@common/import/swaggerRun.js");
@@ -33,7 +33,7 @@ const importDataModule = {
   }
 };
 // yapi.emitHook("import_data", importDataModule);
-class OpenController extends baseController {
+class OpenController extends BaseController {
   constructor(ctx) {
     super(ctx);
     this.ProjectModel = yapi.getInst(ProjectModel);

@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import "./ModalPostman.scss";
 import { Alert, Modal, Row, Col, Collapse, Input, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
-import MockList from "./lib/MockList.jsx";
-import MethodsList from "./lib/MethodsList.jsx";
-import VariablesSelect from "./lib/VariablesSelect.jsx";
+import MockList from "@/components/ModalPostman/MockList/MockList.jsx";
+import MethodsList from "@/components/ModalPostman/MethodsList/MethodsList.jsx";
+import VariablesSelect from "@/components/ModalPostman/VariablesSelect/VariablesSelect.jsx";
 import { trim } from "@/utils/common.js";
 
-const { handleParamsValue } = require("@common/utils.js");
+const { handleParamsValue } = require("@common/utils.cjs");
 // 深拷贝
 function deepEqual(state) {
   return JSON.parse(JSON.stringify(state));

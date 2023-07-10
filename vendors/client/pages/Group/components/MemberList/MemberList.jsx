@@ -4,35 +4,15 @@ import { connect } from "react-redux";
 import { Table, Select, Button, Modal, Row, Col, message, Popconfirm } from "antd";
 import { Link } from "react-router-dom";
 import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
+//
 import UsernameAutoComplete from "@/components/UsernameAutoComplete/UsernameAutoComplete.jsx";
 //
-
-import { autobind } from "core-decorators";
-import { fetchGroupMemberList, fetchGroupMsg, addMember, delMember, changeMemberRole } from "@/reducer/modules/group";
-
+import { fetchGroupMemberList, fetchGroupMsg, addMember, delMember, changeMemberRole } from "@/reducer/modules/group.js";
 import "./MemberList.scss";
 //
 function arrayAddKey(arr) {
-  return arr.map((item, index) => ({
-    ...item,
-    key: index
-  }));
+  return arr.map((item, index) => ({ ...item, key: index }));
 }
-
-@connect(
-  (state) => ({
-    currGroup: state.group.currGroup,
-    uid: state.user.uid,
-    role: state.group.role
-  }),
-  {
-    fetchGroupMemberList,
-    fetchGroupMsg,
-    addMember,
-    delMember,
-    changeMemberRole
-  }
-)
 class MemberList extends Component {
   constructor(props) {
     super(props);
@@ -44,6 +24,7 @@ class MemberList extends Component {
       inputUids: [],
       inputRole: "dev"
     };
+    this.onUserSelect = this.onUserSelect.bind(this);
   }
   static propTypes = {
     currGroup: PropTypes.object,
@@ -55,13 +36,11 @@ class MemberList extends Component {
     changeMemberRole: PropTypes.func,
     role: PropTypes.string
   };
-
   showAddMemberModal = () => {
     this.setState({
       visible: true
     });
   };
-
   // 重新获取列表
   reFetchList = () => {
     this.props.fetchGroupMemberList(this.props.currGroup._id).then((res) => {
@@ -71,9 +50,7 @@ class MemberList extends Component {
       });
     });
   };
-
   // 增 - 添加成员
-
   handleOk = () => {
     this.props
       .addMember({
@@ -96,15 +73,12 @@ class MemberList extends Component {
       });
   };
   // 添加成员时 选择新增成员权限
-
   changeNewMemberRole = (value) => {
     this.setState({
       inputRole: value
     });
   };
-
   // 删 - 删除分组成员
-
   deleteConfirm = (member_uid) => () => {
     const id = this.props.currGroup._id;
     this.props.delMember({ id, member_uid }).then((res) => {
@@ -114,7 +88,6 @@ class MemberList extends Component {
       }
     });
   };
-
   // 改 - 修改成员权限
   changeUserRole = (e) => {
     const id = this.props.currGroup._id;
@@ -127,15 +100,12 @@ class MemberList extends Component {
       }
     });
   };
-
   // 关闭模态框
-
   handleCancel = () => {
     this.setState({
       visible: false
     });
   };
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this._groupId !== this._groupId) {
       return null;
@@ -153,7 +123,6 @@ class MemberList extends Component {
       });
     }
   }
-
   componentDidMount() {
     const currGroupId = (this._groupId = this.props.currGroup._id);
     this.props.fetchGroupMsg(currGroupId).then((res) => {
@@ -167,30 +136,21 @@ class MemberList extends Component {
       });
     });
   }
-
-  @autobind
+  //
   onUserSelect(uids) {
-    this.setState({
-      inputUids: uids
-    });
+    this.setState({ inputUids: uids });
   }
-
   render() {
     const columns = [
       {
-        title:
-          this.props.currGroup.group_name + " 分组成员 (" + this.state.userInfo.length + ") 人",
+        title: this.props.currGroup.group_name + " 分组成员 (" + this.state.userInfo.length + ") 人",
         dataIndex: "username",
         key: "username",
         render: (text, record) => (
           <div className="m-user">
             <Link to={`/user/profile/${record.uid}`}>
-              <img
-                src={
-                  location.protocol + "//" + location.host + "/api/user/avatar?uid=" + record.uid
-                }
-                className="m-user-img"
-              />
+              <img src={location.protocol + "//" + location.host + "/api/user/avatar?uid=" + record.uid}
+                className="m-user-img" alt={""}/>
             </Link>
             <Link to={`/user/profile/${record.uid}`}>
               <p className="m-user-name">{text}</p>
@@ -310,5 +270,17 @@ class MemberList extends Component {
     );
   }
 }
-
-export default MemberList;
+export default connect(
+  (state) => ({
+    currGroup: state.group.currGroup,
+    uid: state.user.uid,
+    role: state.group.role
+  }),
+  {
+    fetchGroupMemberList,
+    fetchGroupMsg,
+    addMember,
+    delMember,
+    changeMemberRole
+  }
+)(MemberList);

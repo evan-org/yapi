@@ -22,26 +22,26 @@ class AdvMockModel extends BaseModel {
   }
 
   get(interface_id) {
-    return this.model.findOne({ interface_id: interface_id });
+    return this.UseModel.findOne({ interface_id: interface_id });
   }
 
   delByInterfaceId(interface_id) {
-    return this.model.remove({ interface_id: interface_id });
+    return this.UseModel.remove({ interface_id: interface_id });
   }
 
   delByProjectId(project_id) {
-    return this.model.remove({ project_id: project_id });
+    return this.UseModel.remove({ project_id: project_id });
   }
 
   save(data) {
     data.up_time = yapi.commons.time();
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
 
   up(data) {
     data.up_time = yapi.commons.time();
-    return this.model.update(
+    return this.UseModel.update(
       {
         interface_id: data.interface_id
       },

@@ -16,25 +16,25 @@ import {
   Alert
 } from "antd";
 import Icon from "@ant-design/icons";
-import constants from "../../utils/variable.js";
+import constants from "@/utils/variable.js";
 import AceEditor from "@/components/AceEditor/AceEditor";
 import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "@/utils/common.js";
 import request from "@/service/request.js";
 import ModalPostman from "../ModalPostman/ModalPostman.jsx";
-import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.jsx";
+import CheckCrossInstall, { initCrossRequest } from "@/components/Postman/CheckCrossInstall/CheckCrossInstall.jsx";
 import ProjectEnv from "../ProjectEnv/ProjectEnv.jsx";
 import json5 from "json5";
 import styles from "./Postman.module.scss";
 
-const { handleParamsValue, ArrayToObject, schemaValidator } = require("@common/utils.js");
+const { handleParamsValue, ArrayToObject, schemaValidator } = require("@common/utils.cjs");
 const {
   handleParams,
   checkRequestBodyIsRaw,
   handleContentType,
   crossRequest,
   checkNameIsExistInArray
-} = require("@common/postmanLib.js");
+} = require("@common/postmanLib.cjs");
 const plugin = require("@/plugin.js");
 const createContext = require("@common/createContext.cjs");
 const HTTP_METHOD = constants.HTTP_METHOD;

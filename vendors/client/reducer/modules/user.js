@@ -1,3 +1,4 @@
+import { setToken, setUserId, setUserInfo } from "@/utils/auth.js";
 import { createSlice } from "@reduxjs/toolkit";
 import request from "@/service/request.js";
 // Reducer
@@ -51,15 +52,13 @@ export const appSlice = createSlice({
     //
     LOGIN: (state, action) => {
       console.log("reducers:LOGIN", action);
-      if (action.payload.errcode === 0) {
-        state.isLogin = true;
-        state.loginState = MEMBER_STATUS;
-        state.uid = action.payload.data.uid;
-        state.userName = action.payload.data.username;
-        state.role = action.payload.data.role;
-        state.type = action.payload.data.type;
-        state.study = action.payload.data.study;
-      }
+      state.isLogin = true;
+      state.loginState = MEMBER_STATUS;
+      state.uid = action.payload.uid;
+      state.userName = action.payload.username;
+      state.role = action.payload.role;
+      state.type = action.payload.type;
+      state.study = action.payload.study;
     },
     LOGIN_OUT: (state, action) => {
       state.isLogin = false;
@@ -116,7 +115,11 @@ export const checkLoginState = (payload) => async(dispatch, getState) => {
 // 登录API
 export const loginActions = (payload) => async(dispatch, getState) => {
   const result = await request.post("/user/login", payload);
-  return dispatch(LOGIN(result.data));
+  console.log("11111111111111111", result);
+  setToken(result.data.data.token);
+  setUserId(result.data.data.uid);
+  setUserInfo(result.data.data.info);
+  return dispatch(LOGIN(result.data.data.info));
 }
 // 登录API
 export const loginLdapActions = (payload) => async(dispatch, getState) => {

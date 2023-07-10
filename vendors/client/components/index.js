@@ -3,6 +3,6 @@ import Intro from "./Intro/Intro.jsx";
 import Loading from "./Loading/Loading.jsx";
 import ProjectCard from "./ProjectCard/ProjectCard.jsx";
 import SubNav from "./SubNav/SubNav.jsx";
-import Postman from "./Postman/Postman";
+import Postman from "./Postman/Postman.jsx";
 
 export { Breadcrumb, Intro, Loading, ProjectCard, SubNav, Postman };

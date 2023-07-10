@@ -2,23 +2,28 @@ import React, { PureComponent as Component } from "react";
 import { Timeline, Spin, Row, Col, Tag, Avatar, Button, Modal, AutoComplete } from "antd";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { formatTime } from "@/utils/common";
-import showDiffMsg from "@common/diff-view.js";
-import variable from "@/utils/variable.js";
 import { Link } from "react-router-dom";
+import { formatTime } from "@/utils/common.js";
 //
-import { fetchNewsData, fetchMoreNews } from "@/reducer/modules/news";
-import { fetchInterfaceList } from "@/reducer/modules/interface";
+import variable from "@/utils/variable.js";
+//
+import { fetchNewsData, fetchMoreNews } from "@/reducer/modules/news.js";
+import { fetchInterfaceList } from "@/reducer/modules/interface.js";
 import ErrMsg from "../ErrMsg/ErrMsg.jsx";
 //
-import { timeago } from "@common/utils.js";
+const { timeago } = require("@common/utils.cjs");
+const showDiffMsg = require("@common/diffView.cjs");
 //
-const jsondiffpatch = require("jsondiffpatch/dist/jsondiffpatch.umd.js");
+console.warn(timeago, showDiffMsg);
+//
+const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
-import "jsondiffpatch/dist/formatters-styles/annotated.css";
-import "jsondiffpatch/dist/formatters-styles/html.css";
 //
 import styles from "./TimeLine.module.scss";
+//
+import "jsondiffpatch/dist/formatters-styles/annotated.css";
+import "jsondiffpatch/dist/formatters-styles/html.css";
+
 const AddDiffView = (props) => {
   const { title, content, className } = props;
   if (!content) {
@@ -37,18 +42,6 @@ AddDiffView.propTypes = {
   className: PropTypes.string
 };
 // timeago(new Date().getTime() - 40);
-@connect(
-  (state) => ({
-    newsData: state.news.newsData,
-    curpage: state.news.curpage,
-    curUid: state.user.uid
-  }),
-  {
-    fetchNewsData,
-    fetchMoreNews,
-    fetchInterfaceList
-  }
-)
 class TimeTree extends Component {
   static propTypes = {
     newsData: PropTypes.object,
@@ -249,4 +242,15 @@ class TimeTree extends Component {
     );
   }
 }
-export default TimeTree;
+export default connect(
+  (state) => ({
+    newsData: state.news.newsData,
+    curpage: state.news.curpage,
+    curUid: state.user.uid
+  }),
+  {
+    fetchNewsData,
+    fetchMoreNews,
+    fetchInterfaceList
+  }
+)(TimeTree);

@@ -4,7 +4,7 @@ const compareVersions = require('compare-versions');
 var SwaggerData, isOAS3;
 function handlePath(path) {
   if (path === '/') return path;
-  if (path.charAt(0) != '/') {
+  if (path.charAt(0) !== '/') {
     path = '/' + path;
   }
   if (path.charAt(path.length - 1) === '/') {
@@ -226,7 +226,7 @@ function handleSwagger(data, originTags = []) {
             api.req_query.push(defaultParam);
             break;
           case 'body':
-            handleBodyPamras(param.schema, api);
+            handleBodyParams(param.schema, api);
             break;
           case 'formData':
             defaultParam.type = param.type === 'file' ? 'file' : 'text';
@@ -253,7 +253,7 @@ function isJson(json) {
     return false;
   }
 }
-function handleBodyPamras(data, api) {
+function handleBodyParams(data, api) {
   api.req_body_other = JSON.stringify(data, null, 2);
   if (isJson(api.req_body_other)) {
     api.req_body_type = 'json';
@@ -288,4 +288,8 @@ function handleResponse(api) {
   }
   return res_body;
 }
+/**
+ *
+ * @type {function(*): Promise<{cats: *[], apis: *[]}>}
+ */
 module.exports = swaggerRun;

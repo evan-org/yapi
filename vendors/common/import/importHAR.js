@@ -1,6 +1,7 @@
-import { json_parse, unbase64 } from "../utils.js";
 import { message } from "antd";
 import URL from "url";
+//
+const { json_parse, unbase64 } = require("@common/utils.cjs");
 const GenerateSchema = require("generate-schema/src/schemas/json.js");
 //
 const transformJsonToSchema = (json) => {

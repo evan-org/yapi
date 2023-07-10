@@ -5,12 +5,11 @@ import PropTypes from "prop-types";
 import LoginForm from "./LoginForm.jsx";
 import RegForm from "./RegForm.jsx";
 import SwipeableViews from "react-swipeable-views";
-import { AppBar, Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 //
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
   return (
     <div
       role="tabpanel"
@@ -27,13 +26,11 @@ function TabPanel(props) {
     </div>
   );
 }
-
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
-
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
@@ -44,14 +41,13 @@ function LoginContainer(props) {
   const { loginWrapActiveKey, canRegister } = props;
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   const handleChangeIndex = (index) => {
     setValue(index);
   };
+  //
   return (
     <Box container={"div"} sx={{ bgcolor: "background.paper", width: 400 }}>
       <Tabs

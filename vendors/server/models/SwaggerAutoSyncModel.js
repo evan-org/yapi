@@ -30,15 +30,15 @@ class swaggerAutoSyncModel extends BaseModel {
     };
   }
   getByProjectId(id) {
-    return this.model.findOne({ project_id: id })
+    return this.UseModel.findOne({ project_id: id })
   }
   save(data) {
     data.up_time = yapi.commons.time();
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
   listAll() {
-    return this.model.find({})
+    return this.UseModel.find({})
       .select("_id uid project_id add_time up_time is_sync_open sync_cron sync_json_url sync_mode old_swagger_content last_sync_time")
       .sort({ _id: -1 })
       .exec();
@@ -47,18 +47,18 @@ class swaggerAutoSyncModel extends BaseModel {
     let id = data.id;
     delete data.id;
     data.up_time = yapi.commons.time();
-    return this.model.update({ _id: id }, data)
+    return this.UseModel.update({ _id: id }, data)
   }
   upById(id, data) {
     delete data.id;
     data.up_time = yapi.commons.time();
-    return this.model.update({ _id: id }, data)
+    return this.UseModel.update({ _id: id }, data)
   }
   del(id) {
-    return this.model.remove({ _id: id })
+    return this.UseModel.remove({ _id: id })
   }
   delByProjectId(projectId) {
-    return this.model.remove({ project_id: projectId })
+    return this.UseModel.remove({ project_id: projectId })
   }
 }
 module.exports = swaggerAutoSyncModel;

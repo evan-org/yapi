@@ -13,6 +13,8 @@ const projectRouter = require("./modules/project.js");
 const testRouter = require("./modules/test.js");
 const userRouter = require("./modules/user.js");
 //
+const mockRouter = require("./modules/mock.js");
+//
 // Combine the routers with the prefix
 const router = combineRouters(
   ...[
@@ -26,7 +28,7 @@ const router = combineRouters(
     projectRouter,
     testRouter,
     userRouter
-  ].map((e) => e.prefix("/api1"))
+  ].map((e) => e.prefix("/api")), mockRouter
 )
 //
 //

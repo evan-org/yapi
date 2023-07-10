@@ -9,15 +9,12 @@ import { message, Affix, Tabs, Modal, Form, Select, Input, Tooltip, Button, Row,
 import Icon from "@ant-design/icons";
 //
 import EasyDragSort from "@/components/EasyDragSort/EasyDragSort.jsx";
-import mockEditor from "@/components/AceEditor/utils/mockEditor.js";
+import mockEditor from "@/utils/mockEditor.js";
 import AceEditor from "@/components/AceEditor/AceEditor.jsx";
 import request from "@/service/request.js";
 import { MOCK_SOURCE, HTTP_METHOD, HTTP_REQUEST_HEADER } from "@/utils/variable.js";
 //
 import Editor from "@common/tui-editor/dist/tui-editor-Editor-all.min.js";
-// 注入tui-editor css
-import "../../../../../../../common/tui-editor/dist/tui-editor.min.css";
-import "../../../../../../../common/tui-editor/dist/tui-editor-contents.min.css";
 //
 import schemaEditor from "json-schema-editor-visual/dist/main";
 

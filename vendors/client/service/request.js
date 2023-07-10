@@ -11,7 +11,7 @@ const request = {
    * @param {object}params
    * @returns {Promise<any>}
    */
-  get(apiUri, params) {
+  get(apiUri = "", params = null) {
     return service.request({
       method: "GET",
       url: apiUri,

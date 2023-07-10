@@ -59,26 +59,26 @@ class InterfaceCaseModel extends BaseModel {
     };
   }
   save(data) {
-    const m = new this.model(data);
+    const m = new this.UseModel(data);
     return m.save();
   }
   // 获取全部测试接口信息
   getInterfaceCaseListCount() {
-    return this.model.countDocuments({});
+    return this.UseModel.countDocuments({});
   }
   get(id) {
-    return this.model.findOne({ _id: id }).exec();
+    return this.UseModel.findOne({ _id: id }).exec();
   }
   list(col_id, select) {
     select = select || "casename uid col_id _id index interface_id project_id";
     if (select === "all") {
-      return this.model
+      return this.UseModel
         .find({
           col_id: col_id
         })
         .exec();
     }
-    return this.model
+    return this.UseModel
       .find({
         col_id: col_id
       })
@@ -86,31 +86,31 @@ class InterfaceCaseModel extends BaseModel {
       .exec();
   }
   del(id) {
-    return this.model.remove({
+    return this.UseModel.remove({
       _id: id
     });
   }
   delByProjectId(id) {
-    return this.model.remove({
+    return this.UseModel.remove({
       project_id: id
     });
   }
   delByInterfaceId(id) {
-    return this.model.remove({
+    return this.UseModel.remove({
       interface_id: id
     });
   }
   delByCol(id) {
-    return this.model.remove({
+    return this.UseModel.remove({
       col_id: id
     });
   }
   up(id, data) {
     data.up_time = yapi.commons.time();
-    return this.model.update({ _id: id }, data);
+    return this.UseModel.update({ _id: id }, data);
   }
   upCaseIndex(id, index) {
-    return this.model.update(
+    return this.UseModel.update(
       {
         _id: id
       },

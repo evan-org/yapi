@@ -1,15 +1,15 @@
 /**
  * @author suxiaoxin
  */
-
+const md5 = require("md5");
+const sha = require("sha.js");
+const { Base64 } = require("js-base64");
+//
 const aUniqueVerticalStringNotFoundInData = "___UNIQUE_VERTICAL___";
 const aUniqueCommaStringNotFoundInData = "___UNIQUE_COMMA___";
 const segmentSeparateChar = "|";
 const methodAndArgsSeparateChar = ":";
 const argsSeparateChar = ",";
-const md5 = require("md5");
-const sha = require("sha.js");
-const Base64 = require("js-base64").Base64;
 const stringHandles = {
   md5: function(str) {
     return md5(str);
@@ -159,6 +159,10 @@ function handleSegment(str, index) {
     args
   };
 }
+/**
+ *
+ * @type {{PowerString: PowerString, filter: ((function(*, *): (*))|*), utils: {sha384: (function(*): *), lconcat: (function(*, ...[*]): *), sha256: (function(*): *), lower: (function(*): void | string), upper: (function(*): void | string), base64: (function(*): *), length: (function(*): *), sha512: (function(*): *), sha224: (function(*): *), concat: (function(*, ...[*]): *), sha: (function(*, *): *), substr: (function(*, ...[*]): *), sha1: (function(*): *), number: (function(*): number|*), unbase64: (function(*): *), md5: (function(*): *)}}}
+ */
 module.exports = {
   utils: stringHandles,
   PowerString,

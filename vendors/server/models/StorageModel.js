@@ -1,17 +1,14 @@
 const BaseModel = require("@server/models/BaseModel.js");
 const mongoose = require("mongoose");
-
 class StorageModel extends BaseModel {
   constructor() {
     super()
-    let storageCol = mongoose.connection.db.collection("storage");
+    const storageCol = mongoose.connection.db.collection("storage");
     storageCol.createIndex({ key: 1 }, { unique: true });
   }
-
   getName() {
     return "storage";
   }
-
   getSchema() {
     return {
       key: { type: Number, required: true },
@@ -22,42 +19,40 @@ class StorageModel extends BaseModel {
     };
   }
   save(key, data = {}, isInsert = false) {
-
     let saveData = {
       key,
       data: JSON.stringify(data, null, 2)
     };
     if (isInsert) {
-      const m = new this.model(saveData);
+      const m = new this.UseModel(saveData);
       return m.save();
     }
-    return this.model.updateOne({
+    return this.UseModel.updateOne({
       key
     }, saveData)
   }
-
   del(key) {
-    return this.model.remove({
+    return this.UseModel.remove({
       key
     });
   }
-
   get(key) {
-    return this.model
-      .findOne({
-        key
-      })
-      .exec().then((data) => {
-        this.save(key, {})
-        if (!data) {return null;}
-        data = data.toObject().data;
-        try {
-          return JSON.parse(data)
-        } catch (e) {
-          return {}
-        }
-      });
+    return this.UseModel
+    .findOne({
+      key
+    })
+    .exec().then((data) => {
+      this.save(key, {})
+      if (!data) {
+        return null;
+      }
+      data = data.toObject().data;
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return {}
+      }
+    });
   }
 }
-
 module.exports = StorageModel;

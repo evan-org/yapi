@@ -10,8 +10,7 @@ const TokenModel = require("@server/models/TokenModel.js");
 
 const sha = require("sha.js");
 const md5 = require("md5");
-const { getToken } = require("@server/utils/token.js");
-const { generatePasssalt } = require("@server/utils/sso.js");
+const { generatePasssalt, getToken } = require("@server/utils/sso.js");
 const jobMap = new Map();
 class SwaggerAutoSyncUtils {
   constructor(ctx) {
@@ -19,7 +18,7 @@ class SwaggerAutoSyncUtils {
     this.ctx = ctx;
     this.openController = yapi.getInst(openController);
     this.syncModel = yapi.getInst(syncModel);
-    this.TokenModel = yapi.getInst(TokenModel)
+    this.TokenModel = yapi.getInst(TokenModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.init()
   }
@@ -47,9 +46,9 @@ class SwaggerAutoSyncUtils {
     }
     let projectToken = await this.getProjectToken(projectId, uid);
     // 立即执行一次
-    this.syncInterface(projectId, swaggerUrl, syncMode, uid, projectToken);
+    await this.syncInterface(projectId, swaggerUrl, syncMode, uid, projectToken);
     let scheduleItem = schedule.scheduleJob(cronExpression, async() => {
-      this.syncInterface(projectId, swaggerUrl, syncMode, uid, projectToken);
+      await this.syncInterface(projectId, swaggerUrl, syncMode, uid, projectToken);
     });
     // 判断是否已经存在这个任务
     let jobItem = jobMap.get(projectId);

@@ -18,7 +18,7 @@ class BaseModel {
         incrementBy: yapi.commons.rand(1, 10)
       });
     }
-    this.model = UseModel(this.name, this.schema);
+    this.UseModel = UseModel(this.name, this.schema);
   }
   isNeedAutoIncrement() {
     return true;

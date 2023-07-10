@@ -1,10 +1,5 @@
-// import { pickRandomProperty } from "@/utils/common.js";
-// import constants from "@/utils/variable.js";
-import React, { PureComponent as Component } from "react";
-// import PropTypes from "prop-types";
-import { connect } from "react-redux";
-// import { Form, Button, Input, message, Radio } from "antd";
-// import Icon from "@ant-design/icons";
+import React from "react";
+import { connect, useDispatch } from "react-redux";
 import { loginActions, loginLdapActions } from "@/reducer/modules/user.js";
 import { useNavigate } from "react-router-dom";
 //
@@ -12,14 +7,18 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Box, Button, FormControl, TextField } from "@mui/material";
 //
+// import { pickRandomProperty } from "@/utils/common.js";
+// import constants from "@/utils/variable.js";
+//
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().min(6).required("Password is required"),
 });
 //
 function LoginFormMain(props) {
-  const { isLDAP, loginType, loginLdapActions, loginActions } = props;
+  const { isLDAP, loginType } = props;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       "email": "admin@admin.com", // 账号
@@ -29,13 +28,13 @@ function LoginFormMain(props) {
     onSubmit: async(values) => {
       try {
         if (isLDAP && loginType === "ldap") {
-          const res = await loginLdapActions(values);
-          navigate({ pathname: `/group/${res.payload.data.uid}` }, { replace: true });
+          const res = await dispatch(loginLdapActions(values));
+          navigate({ pathname: `/group/${res.payload.uid}` }, { replace: true });
           // message.success("登录成功! ");
         } else {
-          const res = await loginActions(values);
+          const res = await dispatch(loginActions(values));
           console.debug("loginActions: ", res);
-          navigate({ pathname: `/group/${res.payload.data.uid}` }, { replace: true });
+          navigate({ pathname: `/group/${res.payload.uid}` }, { replace: true });
           // message.success("登录成功! ");
         }
       } catch (e) {
@@ -64,9 +63,5 @@ export default connect(
   (state) => ({
     loginData: state.user,
     isLDAP: state.user.isLDAP
-  }),
-  {
-    loginActions,
-    loginLdapActions
-  }
+  })
 )(LoginFormMain);

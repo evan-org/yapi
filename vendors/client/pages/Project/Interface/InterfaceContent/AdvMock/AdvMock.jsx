@@ -5,8 +5,8 @@ import { Form, Switch, Button, message, Tooltip, Radio } from "antd";
 import Icon from "@ant-design/icons";
 //
 import MockCol from "@/pages/Project/Interface/InterfaceContent/AdvMock/MockCol/MockCol.jsx";
-import mockEditor from "@client/components/AceEditor/utils/mockEditor.js";
-import constants from "@client/utils/variable.js";
+import mockEditor from "@/utils/mockEditor.js";
+import constants from "@/utils/variable.js";
 //
 //
 class AdvMock extends Component {

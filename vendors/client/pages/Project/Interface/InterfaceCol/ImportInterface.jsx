@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { Table, Select, Tooltip, Icon } from "antd";
-import variable from "../../../../utils/variable";
+import variable from "@/utils/variable.js";
 import { connect } from "react-redux";
 //
 import { fetchInterfaceListMenu } from "@/reducer/modules/interface.js";

@@ -2,7 +2,7 @@ import test from "ava";
 import {
   handleParamsValue,
   schemaValidator
-} from "../../common/utils.js";
+} from "../../common/utils.cjs";
 
 
 test("handleParamsValue", (t) => {

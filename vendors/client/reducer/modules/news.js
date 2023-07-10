@@ -1,7 +1,7 @@
 // Action Creators
 import { createSlice } from "@reduxjs/toolkit";
 import request from "@/service/request.js";
-import variable from "../../utils/variable";
+import variable from "@/utils/variable.js";
 // Reducer
 const initialState = {
   newsData: {
