@@ -10,7 +10,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import GroupList from "./components/GroupList/GroupList.jsx";
 import GroupContent from "./components/GroupContent/GroupContent.jsx";
 //
-const drawerWidth = 320;
+const drawerWidth = 330;
 import { connect } from "react-redux";
 import { fetchMyGroup, setCurrGroup } from "@/reducer/modules/group.js";
 //

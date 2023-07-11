@@ -427,7 +427,7 @@ function PrimarySearchAppBar(props) {
   );
   /*  */
   return (
-    <Typography variant="header" sx={{ zIndex: 2000 }} component={"div"}>
+    <Typography variant="header" sx={{ zIndex: 1201 }} component={"div"}>
       <AppBar position="fixed">
         <Toolbar>
           <Link to={"/"}>
