@@ -109,7 +109,7 @@ function AddGroupModal(props) {
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose} message={message} action={action}/>
       {/*  */}
       <Dialog open={open} TransitionComponent={Transition} keepMounted onClose={handleClose}>
-        <DialogTitle>创建分组</DialogTitle>
+        <DialogTitle align={"center"}>创建分组</DialogTitle>
         {/*  */}
         <DialogContent>
           <Box sx={{ minWidth: 120, m: 1 }} component={"form"}>
@@ -133,14 +133,12 @@ function AddGroupModal(props) {
                 <Box sx={{ color: "red", fontSize: 12 }}>{formik.errors.owner_uids}</Box>
               )}
             </FormControl>
-            <FormControl sx={{ mb: 2 }} fullWidth>
-              <DialogActions>
-                <Button onClick={handleClose}>取消</Button>
-                <Button onClick={formik.handleSubmit} type={"submit"} color="primary">创建</Button>
-              </DialogActions>
-            </FormControl>
           </Box>
         </DialogContent>
+        <DialogActions>
+          <Button type="" onClick={handleClose}>取消</Button>
+          <Button onClick={formik.handleSubmit} type={"submit"} color="primary">创建</Button>
+        </DialogActions>
         {/*  */}
       </Dialog>
     </>)

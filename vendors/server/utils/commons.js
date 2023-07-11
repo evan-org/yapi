@@ -580,8 +580,8 @@ exports.runCaseScript = async function runCaseScript(params, colId, interfaceId)
  * */
 exports.getUserdata = async function getUserdata(uid, role) {
   role = role || "dev";
-  let userInst = yapi.getInst(UserModel);
-  let userData = await userInst.findById(uid);
+  let userInset = yapi.getInst(UserModel);
+  let userData = await userInset.findById(uid);
   if (!userData) {
     return null;
   }

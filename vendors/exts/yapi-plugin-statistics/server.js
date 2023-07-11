@@ -72,7 +72,7 @@ module.exports = function() {
       ip: ip,
       date: commons.formatYMD(new Date())
     };
-    let inst = yapi.getInst(StatisticsMockModel);
+    const inst = yapi.getInst(StatisticsMockModel);
     try {
       inst.save(data).then();
     } catch (e) {

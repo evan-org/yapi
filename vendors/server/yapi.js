@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs-extra");
 const nodemailer = require("nodemailer");
 const config = require("../../config.json");
-const insets = new Map();
+const insertMap = new Map();
 const WEBROOT = path.resolve(__dirname, ".."); // 路径
 const WEBROOT_SERVER = __dirname;
 const WEBROOT_RUNTIME = path.resolve(__dirname, "../..");
@@ -19,17 +19,17 @@ let mail = WEBROOT_CONFIG.mail && WEBROOT_CONFIG.mail.enable ? nodemailer.create
  * yapi.getInst(GroupModel, arg1, arg2)
  */
 function getInst(Class, ...args) {
-  if (!insets.get(Class)) {
-    insets.set(Class, new Class(args));
+  if (!insertMap.get(Class)) {
+    insertMap.set(Class, new Class(args));
   }
-  return insets.get(Class);
+  return insertMap.get(Class);
 }
 /**
  * @param {string} className
  * */
 function delInst(className) {
   try {
-    insets.delete(className);
+    insertMap.delete(className);
   } catch (err) {
     console.error(err); // eslint-disable-line
   }
@@ -45,7 +45,7 @@ const yapi = {
   WEBROOT_CONFIG: WEBROOT_CONFIG,
   getInst: getInst,
   delInst: delInst,
-  getInsets: insets
+  getInsets: insertMap
 };
 //
 if (mail) {

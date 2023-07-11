@@ -81,7 +81,7 @@ function GroupList(props) {
   }
   //
   return (
-    <Box sx={{ height: "calc(100vh - 64px)", overflowY: "auto" }} className={styles.GroupList}>
+    <Box className={styles.GroupList}>
       {!study ? <div className="study-mask"/> : null}
       <div className="group-bar">
         <div className="curr-group">

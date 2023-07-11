@@ -1,3 +1,4 @@
+import { inherit } from "anujs/packages/core/util.js";
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -426,8 +427,8 @@ function PrimarySearchAppBar(props) {
   );
   /*  */
   return (
-    <Typography variant="header" sx={{zIndex: 2000}} component={"div"}>
-      <AppBar position="static">
+    <Typography variant="header" sx={{ zIndex: 2000 }} component={"div"}>
+      <AppBar position="fixed">
         <Toolbar>
           <Link to={"/"}>
             <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
