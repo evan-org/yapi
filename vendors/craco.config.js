@@ -172,9 +172,11 @@ module.exports = {
       paths.swSrc = resolve("./client/service-worker.js");
       paths.testsSetup = resolve("./client/testsSetup.js");
       paths.proxySetup = resolve("./client/proxySetup.js");
+      paths.appTypeDeclarations = resolve("./client/react-app-env.d.ts");
       paths.publicUrlOrPath = "";
       webpackConfig.entry = resolve("./client/index.jsx");
-      // console.log(paths);
+      console.log(webpackConfig);
+      console.log(paths);
       //
       const resolveUrlLoader = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
       const babels = getLoader(webpackConfig, loaderByName("babel-loader"));
@@ -186,11 +188,11 @@ module.exports = {
         removeLoaders(webpackConfig, loaderByName("resolve-url-loader"));
         // resolveUrlLoader.match.loader.options.root = null;
       }
-      //
+      webpackConfig.resolve.alias.src = resolve("./client");
       webpackConfig.output = {
         ...webpackConfig.output,
         path: path.resolve(__dirname, "./example/client"), // 修改打包输出文件目录 两步都要写
-        publicPath: whenProd(() => "/", "/"), // 静态资源publicpath
+        publicPath: whenProd(() => "", "/"), // 静态资源publicpath
       }
       //
       // console.log("configure new\n\n", webpackConfig);
