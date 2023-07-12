@@ -5,6 +5,7 @@ const BaseController = require("@server/controllers/BaseController.js");
 const InterfaceModel = require("@server/models/InterfaceModel.js");
 const ProjectModel = require("@server/models/ProjectModel.js");
 const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
+const WikiModel = require("@server/models/WikiModel.js");
 // const wikiModel = require('../yapi-plugin-wiki/WikiModel.js');
 
 const markdownIt = require("markdown-it");
@@ -17,18 +18,18 @@ const md = require("@common/markdown.cjs");
 class ExportDataController extends BaseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = yapi.getInst(InterfaceCatModel);
-    this.interModel = yapi.getInst(InterfaceModel);
-    this.ProjectModel = yapi.getInst(ProjectModel);
+    this.InterfaceCatInsert = yapi.getInst(InterfaceCatModel);
+    this.InterfaceInsert = yapi.getInst(InterfaceModel);
+    this.ProjectInsert = yapi.getInst(ProjectModel);
 
   }
 
   async handleListClass(pid, status) {
-    let result = await this.catModel.list(pid),
+    let result = await this.InterfaceCatInsert.list(pid),
       newResult = [];
     for (let i = 0, item, list; i < result.length; i++) {
       item = result[i].toObject();
-      list = await this.interModel.listByInterStatus(item._id, status);
+      list = await this.InterfaceInsert.listByInterStatus(item._id, status);
       list = list.sort((a, b) => a.index - b.index);
       if (list.length > 0) {
         item.list = list;
@@ -81,10 +82,9 @@ class ExportDataController extends BaseController {
     let curProject, wikiData;
     let tp = "";
     try {
-      curProject = await this.ProjectModel.get(pid);
+      curProject = await this.ProjectInsert.get(pid);
       if (isWiki === "true") {
-        const wikiModel = require("@server/models/WikiModel.js");
-        wikiData = await yapi.getInst(wikiModel).get(pid);
+        wikiData = await yapi.getInst(WikiModel).get(pid);
       }
       ctx.set("Content-Type", "application/octet-stream");
       const list = await this.handleListClass(pid, status);

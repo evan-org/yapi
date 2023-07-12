@@ -15,15 +15,15 @@ function storageCreator(id) {
       return data;
     },
     setItem: async(name = "", value) => {
-      let inst = yapi.getInst(storageModel);
-      let curData = await inst.get(id);
+      let storageInset = yapi.getInst(storageModel);
+      let curData = await storageInset.get(id);
       let data = curData || defaultData;
       let result;
       data[name] = value;
       if (!curData) {
-        result = await inst.save(id, data, true)
+        result = await storageInset.save(id, data, true)
       } else {
-        result = await inst.save(id, data, false)
+        result = await storageInset.save(id, data, false)
       }
       return result;
     }

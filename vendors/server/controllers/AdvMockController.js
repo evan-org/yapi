@@ -2,8 +2,8 @@ const yapi = require("@server/yapi.js");
 //
 const baseController = require("@server/controllers/BaseController.js");
 //
-const AdvModel = require("@server/models/AdvMockModel.js");
-const caseModel = require("@server/models/AdvMockCaseModel.js");
+const AdvMockModel = require("@server/models/AdvMockModel.js");
+const AdvMockCaseModel = require("@server/models/AdvMockCaseModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
 const config = require("@exts/yapi-plugin-adv-mock/index.js");
@@ -11,14 +11,14 @@ const config = require("@exts/yapi-plugin-adv-mock/index.js");
 class AdvMockController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.AdvModel = yapi.getInst(AdvModel);
-    this.caseModel = yapi.getInst(caseModel);
-    this.UserModel = yapi.getInst(UserModel);
+    this.AdvMockInsert = yapi.getInst(AdvMockModel);
+    this.AdvMockCaseInsert = yapi.getInst(AdvMockCaseModel);
+    this.UserInsert = yapi.getInst(UserModel);
   }
 
   async getMock(ctx) {
     let id = ctx.query.interface_id;
-    let mockData = await this.AdvModel.get(id);
+    let mockData = await this.AdvMockInsert.get(id);
     if (!mockData) {
       return (ctx.body = yapi.commons.resReturn(null, 408, "mock脚本不存在"));
     }
@@ -49,11 +49,11 @@ class AdvMockController extends baseController {
         enable: params.enable === true
       };
       let result;
-      let mockData = await this.AdvModel.get(data.interface_id);
+      let mockData = await this.AdvMockInsert.get(data.interface_id);
       if (mockData) {
-        result = await this.AdvModel.up(data);
+        result = await this.AdvMockInsert.up(data);
       } else {
-        result = await this.AdvModel.save(data);
+        result = await this.AdvMockInsert.save(data);
       }
       return (ctx.body = yapi.commons.resReturn(result));
     } catch (e) {
@@ -67,9 +67,9 @@ class AdvMockController extends baseController {
       if (!id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "缺少 interface_id"));
       }
-      let result = await this.caseModel.list(id);
+      let result = await this.AdvMockCaseInsert.list(id);
       for (let i = 0, len = result.length; i < len; i++) {
-        let userinfo = await this.UserModel.findById(result[i].uid);
+        let userinfo = await this.UserInsert.findById(result[i].uid);
         result[i] = result[i].toObject();
         // if (userinfo) {
         result[i].username = userinfo.username;
@@ -87,7 +87,7 @@ class AdvMockController extends baseController {
     if (!id) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "缺少 id"));
     }
-    let result = await this.caseModel.get({
+    let result = await this.AdvMockCaseInsert.get({
       _id: id
     });
 
@@ -146,7 +146,7 @@ class AdvMockController extends baseController {
       findRepeatParams.ip = data.ip;
     }
 
-    findRepeat = await this.caseModel.get(findRepeatParams);
+    findRepeat = await this.AdvMockCaseInsert.get(findRepeatParams);
 
     if (findRepeat && findRepeat._id !== params.id) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "已存在的期望"));
@@ -155,9 +155,9 @@ class AdvMockController extends baseController {
     let result;
     if (params.id && !isNaN(params.id)) {
       data.id = +params.id;
-      result = await this.caseModel.up(data);
+      result = await this.AdvMockCaseInsert.up(data);
     } else {
-      result = await this.caseModel.save(data);
+      result = await this.AdvMockCaseInsert.save(data);
     }
     return (ctx.body = yapi.commons.resReturn(result));
   }
@@ -167,7 +167,7 @@ class AdvMockController extends baseController {
     if (!id) {
       return (ctx.body = yapi.commons.resReturn(null, 408, "缺少 id"));
     }
-    let result = await this.caseModel.del(id);
+    let result = await this.AdvMockCaseInsert.del(id);
     return (ctx.body = yapi.commons.resReturn(result));
   }
 
@@ -181,7 +181,7 @@ class AdvMockController extends baseController {
       id,
       case_enable: enable
     };
-    let result = await this.caseModel.up(data);
+    let result = await this.AdvMockCaseInsert.up(data);
     return (ctx.body = yapi.commons.resReturn(result));
   }
 }

@@ -11,7 +11,7 @@ const jwt = require("jsonwebtoken");
 const responseAction = require("@server/utils/responseAction.js");
 const { parseToken } = require("../utils/sso.js");
 // 不需要登录校验的API
-const ignoreRouter = [
+const whiteList = [
   "/api/user/login_by_token",
   "/api/user/login",
   "/api/user/reg",
@@ -31,17 +31,15 @@ class BaseController {
   }
   async init(ctx) {
     this.$user = null;
-    this.TokenModel = yapi.getInst(TokenModel);
-    this.ProjectModel = yapi.getInst(ProjectModel);
     //
     console.debug(ctx);
-    if (ignoreRouter.indexOf(ctx.path) > -1) {
+    if (whiteList.indexOf(ctx.path) > -1) {
       this.$auth = true;
     } else {
       await this.checkLogin(ctx);
     }
     // openAPI 不需要任何权限
-    const openApiRouter = [
+    const openApiRouteWhiteList = [
       "/api/open/run_auto_test",
       "/api/open/import_data",
       "/api/interface/add",
@@ -62,7 +60,7 @@ class BaseController {
     let params = Object.assign({}, ctx.query, ctx.request.body);
     let token = params.token;
     // 如果前缀是 /api/open，执行 parse token 逻辑
-    if (token && typeof token === "string" && (openApiRouter.indexOf(ctx.path) > -1 || ctx.path.indexOf("/api/open/") === 0)) {
+    if (token && typeof token === "string" && (openApiRouteWhiteList.indexOf(ctx.path) > -1 || ctx.path.indexOf("/api/open/") === 0)) {
       let tokens = parseToken(token)
       const oldTokenUid = "999999"
       let tokenUid = oldTokenUid;
@@ -75,18 +73,12 @@ class BaseController {
         token = tokens.projectToken;
         tokenUid = tokens.uid;
       }
-      // if (this.$auth) {
-      //   ctx.params.project_id = await this.getProjectIdByToken(token);
-      //   if (!ctx.params.project_id) {
-      //     return (this.$tokenAuth = false);
-      //   }
-      //   return (this.$tokenAuth = true);
-      // }
       let checkId = await this.getProjectIdByToken(token);
       if (!checkId) {
         ctx.body = yapi.commons.resReturn(null, 42014, "token 无效");
       }
-      let projectData = await this.ProjectModel.get(checkId);
+      const projectInsert = yapi.getInst(ProjectModel);
+      let projectData = await projectInsert.get(checkId);
       if (projectData) {
         ctx.query.pid = checkId; // 兼容：/api/plugin/export
         ctx.params.project_id = checkId;
@@ -96,8 +88,8 @@ class BaseController {
         if (tokenUid === oldTokenUid) {
           result = { _id: tokenUid, role: "member", username: "system" }
         } else {
-          let userInst = yapi.getInst(UserModel); // 创建user实体
-          result = await userInst.findById(tokenUid);
+          const userInsert = yapi.getInst(UserModel);
+          result = await userInsert.findById(tokenUid);
         }
         this.$user = result;
         this.$auth = true;
@@ -105,7 +97,8 @@ class BaseController {
     }
   }
   async getProjectIdByToken(token) {
-    let projectId = await this.TokenModel.findId(token);
+    const tokenInsert = yapi.getInst(TokenModel);
+    let projectId = await tokenInsert.findId(token);
     if (projectId) {
       return projectId.toObject().project_id;
     }
@@ -114,14 +107,18 @@ class BaseController {
     return parseInt(this.$uid, 10);
   }
   async checkLogin(ctx) {
-    let token = ctx.cookies.get("_yapi_token");
-    let uid = ctx.cookies.get("_yapi_uid");
+    const { authorization, "user-id": uid } = ctx.headers;
+    if (!(authorization && uid)) {
+      return false
+    }
+    const token = authorization.split(" ")[1];
+    //
     try {
       if (!token || !uid) {
         return false;
       }
-      let userInst = yapi.getInst(UserModel); // 创建user实体
-      let result = await userInst.findById(uid);
+      const userInsert = yapi.getInst(UserModel);
+      const result = await userInsert.findById(uid);
       console.log("11111111111111111", result);
       if (!result) {
         return false;
@@ -199,8 +196,8 @@ class BaseController {
         return "admin";
       }
       if (type === "interface") {
-        let interfaceInst = yapi.getInst(InterfaceModel);
-        let interfaceData = await interfaceInst.get(id);
+        let interfaceInsert = yapi.getInst(InterfaceModel);
+        let interfaceData = await interfaceInsert.get(id);
         result.interfaceData = interfaceData;
         // 项目创建者相当于 owner
         if (interfaceData.uid === this.getUid()) {
@@ -210,8 +207,8 @@ class BaseController {
         id = interfaceData.project_id;
       }
       if (type === "project") {
-        let projectInst = yapi.getInst(ProjectModel);
-        let projectData = await projectInst.get(id);
+        const projectInsert = yapi.getInst(ProjectModel);
+        let projectData = await projectInsert.get(id);
         if (projectData.uid === this.getUid()) {
           // 建立项目的人
           return "owner";
@@ -234,8 +231,8 @@ class BaseController {
         id = projectData.group_id;
       }
       if (type === "group") {
-        let groupInst = yapi.getInst(GroupModel);
-        let groupData = await groupInst.get(id);
+        let groupInsert = yapi.getInst(GroupModel);
+        let groupData = await groupInsert.get(id);
         // 建立分组的人
         if (groupData.uid === this.getUid()) {
           return "owner";

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 //
 import { Box, Snackbar, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, TextField, Zoom } from "@mui/material";
 import { Close } from "@mui/icons-material";
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import request from "@/service/request.js";
 //
 import UserAutoComplete from "@/components/UserAutoComplete/UserAutoComplete.jsx";
@@ -102,46 +103,54 @@ function AddGroupModal(props) {
   //
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        创建分组
-      </Button>
+      {
+        props.type === "icon"
+          ? <IconButton color="primary" sx={{ p: "10px" }} aria-label="directions" onClick={handleClickOpen}>
+            <AddToPhotosIcon aria-label={props.title} title={props.title}/>
+          </IconButton>
+          : <Button type={props.type} title={props.title} variant="contained" color="primary" onClick={handleClickOpen}>
+            创建分组
+          </Button>
+      }
       {/*  */}
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose} message={message} action={action}/>
       {/*  */}
       <Dialog open={open} TransitionComponent={Transition} keepMounted onClose={handleClose}>
-        <DialogTitle>创建分组</DialogTitle>
-        {/*  */}
-        <DialogContent>
-          <Box sx={{ minWidth: 120, m: 1 }} component={"form"}>
-            <TextField sx={{ mb: 2 }} fullWidth label="分组名称" placeholder={"请输入分组名称"} name={"group_name"} value={formik.values.group_name}
-              error={Boolean(formik.touched.group_name && formik.errors.group_name)}
-              helperText={formik.touched.group_name && formik.errors.group_name}
-              onChange={formik.handleChange}/>
-            {/*  */}
-            <TextField sx={{ mb: 2 }} fullWidth label="分组描述" placeholder={"分组描述不超过144字"} name={"group_desc"} multiline rows={3} value={formik.values.group_desc}
-              error={Boolean(formik.touched.group_desc && formik.errors.group_desc)}
-              helperText={formik.touched.group_desc && formik.errors.group_desc}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}/>
-            {/*  */}
-            <FormControl sx={{ mb: 2 }} fullWidth error={Boolean(formik.touched.owner_uids && formik.errors.owner_uids)}>
-              <UserAutoComplete label="分组所属人员" placeholder={"请选择项目分组所属人员"} name={"owner_uids"} value={formik.values.owner_uids}
-                onChange={(event, newValue) => {
-                  formik.setFieldValue("owner_uids", newValue);
-                }}/>
-              {formik.touched.owner_uids && formik.errors.owner_uids && (
-                <Box sx={{ color: "red", fontSize: 12 }}>{formik.errors.owner_uids}</Box>
-              )}
-            </FormControl>
-            <FormControl sx={{ mb: 2 }} fullWidth>
-              <DialogActions>
-                <Button onClick={handleClose}>取消</Button>
-                <Button onClick={formik.handleSubmit} type={"submit"} color="primary">创建</Button>
-              </DialogActions>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        {/*  */}
+        <Box sx={{ minWidth: 120 }} component={"form"}>
+          <DialogTitle align={"center"}>创建分组</DialogTitle>
+          {/*  */}
+          <DialogContent sx={{p: 0}}>
+            <Box sx={{ m: 3, mb: 0 }}>
+              <TextField sx={{ mb: 2 }} fullWidth label="分组名称" placeholder={"请输入分组名称"} name={"group_name"} value={formik.values.group_name}
+                error={Boolean(formik.touched.group_name && formik.errors.group_name)}
+                helperText={formik.touched.group_name && formik.errors.group_name}
+                onChange={formik.handleChange}/>
+              {/*  */}
+              <TextField sx={{ mb: 2 }} fullWidth label="分组描述" placeholder={"分组描述不超过144字"} name={"group_desc"} multiline rows={3} value={formik.values.group_desc}
+                error={Boolean(formik.touched.group_desc && formik.errors.group_desc)}
+                helperText={formik.touched.group_desc && formik.errors.group_desc}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}/>
+              {/*  */}
+              <FormControl sx={{ mb: 2 }} fullWidth error={Boolean(formik.touched.owner_uids && formik.errors.owner_uids)}>
+                <UserAutoComplete label="分组所属人员" placeholder={"请选择项目分组所属人员"} name={"owner_uids"} value={formik.values.owner_uids}
+                  onChange={(event, newValue) => {
+                    formik.setFieldValue("owner_uids", newValue);
+                  }}/>
+                {formik.touched.owner_uids && formik.errors.owner_uids && (
+                  <Box sx={{ color: "red", fontSize: 12 }}>{formik.errors.owner_uids}</Box>
+                )}
+              </FormControl>
+            </Box>
+          </DialogContent>
+          {/*  */}
+          <DialogActions>
+            <Box sx={{ margin: "0 15px" }}>
+              <Button type="button" onClick={handleClose}>取消</Button>
+              <Button onClick={formik.handleSubmit} type={"submit"} color="primary">创建</Button>
+            </Box>
+          </DialogActions>
+        </Box>
       </Dialog>
     </>)
 }

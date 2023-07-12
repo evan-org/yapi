@@ -41,13 +41,13 @@ module.exports = function() {
   });
   async function checkCase(ctx, interfaceId) {
     let reqParams = Object.assign({}, ctx.query, ctx.request.body);
-    let caseInst = yapi.getInst(AdvMockCaseModel);
+    let caseInsert = yapi.getInst(AdvMockCaseModel);
     // let ip = ctx.ip.match(/\d+.\d+.\d+.\d+/)[0];
     // request.ip
     let ip = yapi.commons.getIp(ctx);
     //   数据库信息查询
     // 过滤 开启IP
-    let listWithIp = await caseInst.model
+    let listWithIp = await caseInsert.model
     .find({
       interface_id: interfaceId,
       ip_enable: true,
@@ -63,7 +63,7 @@ module.exports = function() {
     });
     // 其他数据
     if (matchList.length === 0) {
-      let list = await caseInst.model
+      let list = await caseInsert.model
       .find({
         interface_id: interfaceId,
         ip_enable: false
@@ -82,8 +82,8 @@ module.exports = function() {
     return null;
   }
   async function handleByCase(caseData) {
-    let caseInst = yapi.getInst(AdvMockCaseModel);
-    return await caseInst.get({
+    let caseInsert = yapi.getInst(AdvMockCaseModel);
+    return await caseInsert.get({
       _id: caseData._id
     });
   }
@@ -146,13 +146,13 @@ module.exports = function() {
   });
   //
   this.bindHook("interface_del", async function(id) {
-    let inst = yapi.getInst(AdvMockModel);
-    await inst.delByInterfaceId(id);
+    const AdvMockInsert = yapi.getInst(AdvMockModel);
+    await AdvMockInsert.delByInterfaceId(id);
   });
   //
   this.bindHook("project_del", async function(id) {
-    let inst = yapi.getInst(AdvMockModel);
-    await inst.delByProjectId(id);
+    const AdvMockInsert = yapi.getInst(AdvMockModel);
+    await AdvMockInsert.delByProjectId(id);
   });
   /**
    * let context = {
@@ -186,7 +186,7 @@ module.exports = function() {
       context.delay = data.delay;
       return true;
     }
-    let inst = yapi.getInst(AdvMockModel);
+    const inst = yapi.getInst(AdvMockModel);
     let data = await inst.get(interfaceId);
     if (!data || !data.enable || !data.mock_script) {
       return context;

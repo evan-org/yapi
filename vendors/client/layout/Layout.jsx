@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import AppHeader from "./components/Header/Header.jsx";
 //
 import styles from "./Layout.module.scss";
-import { Container, Alert } from "@mui/material";
+import { Container, Alert, Toolbar } from "@mui/material";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkLoginState } from "@/reducer/modules/user.js";

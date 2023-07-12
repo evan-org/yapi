@@ -1,9 +1,16 @@
-import { Grid } from "@mui/material";
+import {
+  Box, Drawer,
+  CssBaseline,
+  AppBar, Toolbar, List, Typography, Divider, ListItem,
+  ListItemButton, ListItemIcon, ListItemText
+} from "@mui/material";
+import { MoveToInbox as InboxIcon, Mail as MailIcon } from "@mui/icons-material";
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import GroupList from "./components/GroupList/GroupList.jsx";
 import GroupContent from "./components/GroupContent/GroupContent.jsx";
 //
+const drawerWidth = 330;
 import { connect } from "react-redux";
 import { fetchMyGroup, setCurrGroup } from "@/reducer/modules/group.js";
 //
@@ -33,14 +40,24 @@ function Group(props) {
     onLoad();
   }, []);
   return (
-    <Grid container spacing={0} className={styles.Group}>
-      <Grid item xs={2}>
-        <GroupList/>
-      </Grid>
-      <Grid item xs={10}>
+    <Box sx={{ display: "flex", height: "inherit" }}>
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          ["& .MuiDrawer-paper"]: { width: drawerWidth, boxSizing: "border-box" },
+        }}
+        anchor="left">
+        <Toolbar/>
+        <Box sx={{ overflow: "auto" }}>
+          <GroupList/>
+        </Box>
+      </Drawer>
+      <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}>
         <GroupContent/>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   )
 }
 export default connect((state) => ({

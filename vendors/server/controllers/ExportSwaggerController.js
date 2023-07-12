@@ -9,20 +9,20 @@ const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 class ExportSwaggerController extends BaseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = yapi.getInst(InterfaceCatModel);
-    this.interModel = yapi.getInst(InterfaceModel);
-    this.ProjectModel = yapi.getInst(ProjectModel);
+    this.InterfaceCatInsert = yapi.getInst(InterfaceCatModel);
+    this.InterfaceInsert = yapi.getInst(InterfaceModel);
+    this.ProjectInsert = yapi.getInst(ProjectModel);
   }
   /*
        handleListClass,handleExistId is same as the ExportDataController(yapi-plugin-export-data).
        No DRY,but i have no idea to optimize it.
     */
   async handleListClass(pid, status) {
-    let result = await this.catModel.list(pid),
+    let result = await this.InterfaceCatInsert.list(pid),
       newResult = [];
     for (let i = 0, item, list; i < result.length; i++) {
       item = result[i].toObject();
-      list = await this.interModel.listByInterStatus(item._id, status);
+      list = await this.InterfaceInsert.listByInterStatus(item._id, status);
       list = list.sort((a, b) => a.index - b.index);
       if (list.length > 0) {
         item.list = list;
@@ -71,7 +71,7 @@ class ExportSwaggerController extends BaseController {
     let curProject;
     let tp = "";
     try {
-      curProject = await this.ProjectModel.get(pid);
+      curProject = await this.ProjectInsert.get(pid);
       ctx.set("Content-Type", "application/octet-stream");
       const list = await this.handleListClass(pid, status);
       switch (type) {
@@ -92,7 +92,7 @@ class ExportSwaggerController extends BaseController {
     }
     // Convert to SwaggerV2.0 (OpenAPI 2.0)
     async function convertToSwaggerV2Model(list) {
-      const swaggerObj = {
+      return {
         swagger: "2.0",
         info: {
           title: curProject.name,
@@ -121,8 +121,8 @@ class ExportSwaggerController extends BaseController {
         paths: (() => {
           let apisObj = {};
           for (let aptTag of list) { // list of category
-            for (let api of aptTag.list) // list of api
-            {
+            for (let api of aptTag.list) {
+              // list of api
               if (apisObj[api.path] == null) {
                 apisObj[api.path] = {};
               }
@@ -147,8 +147,8 @@ class ExportSwaggerController extends BaseController {
                 }
                 apiItem["parameters"] = (() => {
                   let paramArray = [];
-                  for (let p of api.req_headers) // Headers parameters
-                  {
+                  // Headers parameters
+                  for (let p of api.req_headers) {
                     // swagger has consumes proprety, so skip proprety "Content-Type"
                     if (p.name === "Content-Type") {
                       continue;
@@ -162,8 +162,8 @@ class ExportSwaggerController extends BaseController {
                       default: p.value
                     });
                   }
-                  for (let p of api.req_params) // Path parameters
-                  {
+                  // Path parameters
+                  for (let p of api.req_params) {
                     paramArray.push({
                       name: p.name,
                       in: "path",
@@ -172,8 +172,8 @@ class ExportSwaggerController extends BaseController {
                       type: "string" // always be type string
                     });
                   }
-                  for (let p of api.req_query) // Query parameters
-                  {
+                  // Query parameters
+                  for (let p of api.req_query) {
                     paramArray.push({
                       name: p.name,
                       in: "query",
@@ -182,8 +182,8 @@ class ExportSwaggerController extends BaseController {
                       type: "string" // always be type string
                     });
                   }
-                  switch (api.req_body_type) // Body parameters
-                  {
+                  // Body parameters
+                  switch (api.req_body_type) {
                     case "form": {
                       for (let p of api.req_body_form) {
                         paramArray.push({
@@ -266,7 +266,6 @@ class ExportSwaggerController extends BaseController {
           return apisObj;
         })()
       };
-      return swaggerObj;
     }
   }
 }

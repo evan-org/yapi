@@ -1,3 +1,4 @@
+import { inherit } from "anujs/packages/core/util.js";
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -387,87 +388,87 @@ function PrimarySearchAppBar(props) {
   );
   /* mobile */
   const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (<Menu
-    anchorEl={mobileMoreAnchorEl} id={mobileMenuId} keepMounted
-    anchorOrigin={{
-      vertical: "top",
-      horizontal: "right",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "right",
-    }}
-    open={isMobileMenuOpen}
-    onClose={handleMobileMenuClose}>
-    <MenuItem>
-      <IconButton size="large" title={"消息"} aria-label="消息" color="inherit">
-        <Badge badgeContent={4} color="error">
-          <MailIcon/>
-        </Badge>
-      </IconButton>
-      <p>消息</p>
-    </MenuItem>
-    <MenuItem>
-      <IconButton size="large" title={"通知"} aria-label="通知" color="inherit">
-        <Badge badgeContent={17} color="error">
-          <NotificationsIcon/>
-        </Badge>
-      </IconButton>
-      <p>通知</p>
-    </MenuItem>
-    <MenuItem onClick={handleProfileMenuOpen}>
-      <IconButton size="large" aria-label="account of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
-        <AccountCircle/>
-      </IconButton>
-      <p>用户</p>
-    </MenuItem>
-  </Menu>);
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl} id={mobileMenuId} keepMounted
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}>
+      <MenuItem>
+        <IconButton size="large" title={"消息"} aria-label="消息" color="inherit">
+          <Badge badgeContent={4} color="error">
+            <MailIcon/>
+          </Badge>
+        </IconButton>
+        <p>消息</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton size="large" title={"通知"} aria-label="通知" color="inherit">
+          <Badge badgeContent={17} color="error">
+            <NotificationsIcon/>
+          </Badge>
+        </IconButton>
+        <p>通知</p>
+      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton size="large" aria-label="account of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
+          <AccountCircle/>
+        </IconButton>
+        <p>用户</p>
+      </MenuItem>
+    </Menu>
+  );
   /*  */
   return (
-    <Typography variant="header">
-      <Box>
-        <AppBar position="static">
-          <Toolbar>
-            <Link to={"/"}>
-              <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
-                <LogoSVG length="36px"/>
-              </IconButton>
-            </Link>
-            <Typography variant="h6" noWrap component="div" sx={{ fontSize: 0, lineHeight: 1, display: { xs: "none", sm: "block" } }}>
-            </Typography>
-            <SearchStyled>
-              <SearchIconWrapper>
-                <SearchIcon/>
-              </SearchIconWrapper>
-              <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }}/>
-            </SearchStyled>
-            <Box sx={{ flexGrow: 1 }}/>
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton size="large" title={"通知"} aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="error">
-                  <MailIcon fontSize={"small"}/>
-                </Badge>
-              </IconButton>
-              <IconButton size="large" title={"消息"} aria-label="show 17 new notifications" color="inherit">
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon fontSize={"small"}/>
-                </Badge>
-              </IconButton>
-              <IconButton size="large" edge="end" aria-label="account of current user" aria-controls={menuId} aria-haspopup="true"
-                onClick={handleProfileMenuOpen} color="inherit">
-                <AccountCircle fontSize={"small"}/>
-              </IconButton>
-            </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" } }}>
-              <IconButton size="large" aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
-                <MoreIcon fontSize={"small"}/>
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-        {renderMenu}
-      </Box>
+    <Typography variant="header" sx={{ zIndex: 1201 }} component={"div"}>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Link to={"/"}>
+            <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
+              <LogoSVG length="36px"/>
+            </IconButton>
+          </Link>
+          <Typography variant="h6" noWrap component="div" sx={{ fontSize: 0, lineHeight: 1, display: { xs: "none", sm: "block" } }}>
+          </Typography>
+          <SearchStyled>
+            <SearchIconWrapper>
+              <SearchIcon/>
+            </SearchIconWrapper>
+            <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }}/>
+          </SearchStyled>
+          <Box sx={{ flexGrow: 1 }}/>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <IconButton size="large" title={"通知"} aria-label="show 4 new mails" color="inherit">
+              <Badge badgeContent={4} color="error">
+                <MailIcon fontSize={"small"}/>
+              </Badge>
+            </IconButton>
+            <IconButton size="large" title={"消息"} aria-label="show 17 new notifications" color="inherit">
+              <Badge badgeContent={17} color="error">
+                <NotificationsIcon fontSize={"small"}/>
+              </Badge>
+            </IconButton>
+            <IconButton size="large" edge="end" aria-label="account of current user" aria-controls={menuId} aria-haspopup="true"
+              onClick={handleProfileMenuOpen} color="inherit">
+              <AccountCircle fontSize={"small"}/>
+            </IconButton>
+          </Box>
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton size="large" aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
+              <MoreIcon fontSize={"small"}/>
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      {renderMobileMenu}
+      {renderMenu}
     </Typography>
   );
 }

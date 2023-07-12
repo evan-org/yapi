@@ -133,10 +133,10 @@ async function handle(
         let result = await axios.post(apipath, data);
         if (result.data.errcode) {
           successNum--;
-          if (result.data.errcode == 40022) {
+          if (result.data.errcode === 40022) {
             existNum++;
           }
-          if (result.data.errcode == 40033) {
+          if (result.data.errcode === 40033) {
             callback({ showLoading: false });
             messageError("没有权限");
             break;
