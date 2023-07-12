@@ -38,7 +38,7 @@ node_modules/
 /examlpe
 runtime/
 /prd/
-/dev/
+/client/dev/
 .tags
 .tags1
 tsconfig.json
