@@ -50,7 +50,7 @@ function Group(props) {
         }}
         anchor="left">
         <Toolbar/>
-        <Box sx={{ overflow: "auto" }}>
+        <Box sx={{overflow: "hidden"}}>
           <GroupList/>
         </Box>
       </Drawer>

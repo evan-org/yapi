@@ -16,6 +16,8 @@ import { fetchGroupList, setCurrGroup, fetchGroupMsg } from "@/reducer/modules/g
 //
 import styles from "./GroupList.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
+// third-party
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 const tip = (
   <div className="title-container">
@@ -114,35 +116,45 @@ function GroupList(props) {
         {groupList.length === 0 && <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/>}
       </Box>
       {/*  */}
-      <Box sx={{ overflow: "auto" }} component={"div"}>
+      <Box component={"div"}>
         <Divider variant="fullWidth" component="div"/>
-        <List sx={{ width: "100%", p: 0, maxWidth: "100%", bgcolor: "background.paper" }}>
-          {
-            groupList.map((item, index) => (
-              <Box key={index} component={"li"}>
-                <ListItemButton alignItems="flex-start" key={index} divider={(groupList.length - 1) === index}
-                  onClick={(event) => selectGroup({ ...item, key: item._id })}
-                  selected={groupId === item._id}>
-                  <ListItemAvatar>
-                    <Avatar alt={item.group_name} src="/static/images/avatar/1.jpg"/>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={item.group_name}
-                    secondary={
-                      <React.Fragment>
-                        <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                          简介：
-                        </Typography>
-                        {item.group_desc}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItemButton>
-                <Divider variant="inset" component="div"/>
-              </Box>
-            ))
-          }
-        </List>
+        <PerfectScrollbar
+          component="div"
+          style={{
+            height: "calc(100vh - 64px - 166px)",
+            overflowX: "hidden",
+            paddingLeft: "0",
+            paddingRight: "0"
+          }}
+          options={{ suppressScrollX: true, wheelPropagation: false }}>
+          <List sx={{ width: "100%", p: 0, maxWidth: "100%", bgcolor: "background.paper" }}>
+            {
+              groupList.map((item, index) => (
+                <Box key={index} component={"li"}>
+                  <ListItemButton alignItems="flex-start" key={index} divider={(groupList.length - 1) === index}
+                    onClick={(event) => selectGroup({ ...item, key: item._id })}
+                    selected={groupId === item._id}>
+                    <ListItemAvatar>
+                      <Avatar alt={item.group_name} src="/static/images/avatar/1.jpg"/>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={item.group_name}
+                      secondary={
+                        <React.Fragment>
+                          <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
+                            简介：
+                          </Typography>
+                          {item.group_desc}
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItemButton>
+                  {(groupList.length - 1) !== index ? <Divider variant="inset" component="div"/> : null}
+                </Box>
+              ))
+            }
+          </List>
+        </PerfectScrollbar>
       </Box>
     </Box>
   )
