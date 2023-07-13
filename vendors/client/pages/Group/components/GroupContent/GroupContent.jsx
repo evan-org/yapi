@@ -9,20 +9,7 @@ import { connect } from "react-redux";
 import { fetchNewsData } from "@/reducer/modules/news.js";
 import { setCurrGroup } from "@/reducer/modules/group.js";
 import { useParams } from "react-router-dom";
-/*
-* connect(
-  (state) => ({
-    curGroupId: state.group.currGroup._id,
-    curUserRole: state.user.role,
-    curUserRoleInGroup: state.group.currGroup.role || state.group.role,
-    currGroup: state.group.currGroup
-  }),
-  {
-    fetchNewsData: fetchNewsData,
-    setCurrGroup:
-  setCurrGroup
-  }
-)(Group) */
+//
 function GroupContent(props) {
   const params = useParams()
   console.log(props, params);

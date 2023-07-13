@@ -1,6 +1,6 @@
-import "./plugin";
-import { DevSupport } from "@react-buddy/ide-toolbox";
-import { ComponentPreviews, useInitial } from "@/dev/index.js";
+// import "./plugin";
+// import { DevSupport } from "@react-buddy/ide-toolbox";
+// import { ComponentPreviews, useInitial } from "@/dev/index.js";
 import React from "react";
 import ReactDOM from "react-dom/client";
 // third party
@@ -20,10 +20,11 @@ const root = ReactDOM.createRoot(document.getElementById("yapi"));
 root.render(
   <Provider store={store}>
     <BrowserRouter basename={config.basename}>
-      <DevSupport ComponentPreviews={ComponentPreviews}
+      {/* <DevSupport ComponentPreviews={ComponentPreviews}
         useInitialHook={useInitial}>
         <App/>
-      </DevSupport>
+      </DevSupport> */}
+      <App/>
     </BrowserRouter>
   </Provider>
 );

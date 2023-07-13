@@ -3,10 +3,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Input, Spin, Tooltip } from "antd";
 //
-import { Box, List, Paper, InputBase, ListItemAvatar, ListItemText, Typography, Avatar, Divider, ListItemButton } from "@mui/material";
+import { Box, List, Paper, InputBase, ListItemAvatar, ListItemText, Typography, Avatar, Divider, ListItemButton, Toolbar, ListItem } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import DirectionsIcon from "@mui/icons-material/Directions";
 //
 // import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
 import AddGroup from "@/components/AddGroup/AddGroup.jsx";
@@ -87,74 +86,71 @@ function GroupList(props) {
   }
   //
   return (
-    <Box className={styles.GroupList}>
+    <Box className={styles.GroupList} sx={{ overflow: "hidden", height: "100%", display: "flex", flexDirection: "column" }}>
       {!study ? <div className="study-mask"/> : null}
-      <Box elevation={3} className="group-bar">
-        <Box className="curr-group">
+      {/* <Box className="curr-group">
           <Box component={"h3"} className="curr-group-name name">{currGroup.group_name}</Box>
           <Box component={"pre"} className="curr-group-desc">简介: {currGroup.group_desc}</Box>
-        </Box>
-        {/* <div className="group-operate">
+        </Box> */}
+      {/* <div className="group-operate">
           <div className="search">
             <Input.Search placeholder="搜索分类" onChange={(e) => searchGroup(e)} onSearch={(v) => searchGroup(null, v)}/>
           </div>
         </div> */}
-        <Box sx={{ p: "10px" }}>
-          <Paper
-            elevation={3}
-            component="form"
-            sx={{ p: "0 0 0 10px", display: "flex", alignItems: "center", width: "100%" }}>
-            <InputBase sx={{ ml: 1, flex: 1 }} placeholder="搜索分类" inputProps={{ "aria-label": "搜索分类" }}/>
-            <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-              <SearchIcon/>
-            </IconButton>
-            <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical"/>
-            <AddGroup aria-label="添加分组" title={"添加分组"} type={"icon"}/>
-          </Paper>
-        </Box>
-        {/*  */}
-        {groupList.length === 0 && <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/>}
+      <Box sx={{ p: "10px 16px" }}>
+        <Paper
+          elevation={3}
+          component="form"
+          sx={{ p: "0 10px 0 10px", display: "flex", alignItems: "center", width: "100%" }}>
+          <InputBase sx={{ ml: 1, flex: 1 }} placeholder="搜索分类" inputProps={{ "aria-label": "搜索分类" }}/>
+          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+            <SearchIcon/>
+          </IconButton>
+          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical"/>
+          <AddGroup aria-label="添加分组" title={"添加分组"} type={"icon"}/>
+        </Paper>
       </Box>
+      <Divider />
       {/*  */}
-      <Box component={"div"}>
-        <Divider variant="fullWidth" component="div"/>
-        <PerfectScrollbar
+      {groupList.length === 0 && <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/>}
+      {/*  */}
+      <Box component={"div"} style={{ flex: 1, overflow: "hidden", height: "100%" }}>
+        <Box
           component="div"
-          style={{
-            height: "calc(100vh - 64px - 166px)",
+          sx={{
+            height: "100%",
             overflowX: "hidden",
+            overflowY: "auto",
             paddingLeft: "0",
             paddingRight: "0"
-          }}
-          options={{ suppressScrollX: true, wheelPropagation: false }}>
+          }}>
           <List sx={{ width: "100%", p: 0, maxWidth: "100%", bgcolor: "background.paper" }}>
             {
               groupList.map((item, index) => (
-                <Box key={index} component={"li"}>
-                  <ListItemButton alignItems="flex-start" key={index} divider={(groupList.length - 1) === index}
-                    onClick={(event) => selectGroup({ ...item, key: item._id })}
-                    selected={groupId === item._id}>
-                    <ListItemAvatar>
-                      <Avatar alt={item.group_name} src="/static/images/avatar/1.jpg"/>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={item.group_name}
-                      secondary={
-                        <React.Fragment>
-                          <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                            简介：
-                          </Typography>
-                          {item.group_desc}
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItemButton>
-                  {(groupList.length - 1) !== index ? <Divider variant="inset" component="div"/> : null}
-                </Box>
+                <ListItemButton
+                  key={index}
+                  onClick={(event) => selectGroup({ ...item, key: item._id })}
+                  selected={groupId === item._id}>
+                  <ListItemAvatar>
+                    <Avatar alt={item.group_name} src="/static/images/avatar/1.jpg"/>
+                  </ListItemAvatar>
+                  <ListItemText
+                    sx={{ m: 0 }}
+                    primary={item.group_name}
+                    secondary={
+                      <React.Fragment>
+                        <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
+                          简介：
+                        </Typography>
+                        {item.group_desc}
+                      </React.Fragment>
+                    }
+                  />
+                </ListItemButton>
               ))
             }
           </List>
-        </PerfectScrollbar>
+        </Box>
       </Box>
     </Box>
   )
