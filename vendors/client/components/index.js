@@ -1,4 +1,4 @@
-import Breadcrumb from "./Breadcrumb/Breadcrumb.jsx";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb.jsx";
 import Intro from "./Intro/Intro.jsx";
 import Loading from "./Loading/Loading.jsx";
 import ProjectCard from "./ProjectCard/ProjectCard.jsx";

@@ -5,10 +5,6 @@ import { connect } from "react-redux";
 import { Breadcrumb } from "antd";
 import styles from "./Breadcrumb.module.scss";
 //
-@connect(
-  (state) => ({
-    breadcrumb: state.user.breadcrumb
-  }))
 class BreadcrumbNavigation extends Component {
   constructor(props) {
     super(props);
@@ -35,4 +31,7 @@ class BreadcrumbNavigation extends Component {
     );
   }
 }
-export default BreadcrumbNavigation
+export default connect(
+  (state) => ({
+    breadcrumb: state.user.breadcrumb
+  }))(BreadcrumbNavigation)

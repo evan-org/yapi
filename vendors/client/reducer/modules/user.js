@@ -79,6 +79,7 @@ export const appSlice = createSlice({
       state.type = action.payload.data.data.type;
       state.study = action.payload.data.data ? action.payload.data.data.study : false;
     },
+    //
     SET_BREADCRUMB: (state, action) => {
       state.breadcrumb = action.payload;
     },
