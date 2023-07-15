@@ -28,7 +28,7 @@ export default appSlice.reducer;
  */
 export const setCancelToken = (value) => async(dispatch, getState) => {
   console.log("push input value");
-  return dispatch(SET_CANCEL_TOKEN(value))
+  dispatch(SET_CANCEL_TOKEN(value))
 }
 /**
  *

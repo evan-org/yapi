@@ -6,8 +6,7 @@
 import { getToken, getUserId, removeToken } from "@/utils/auth.js";
 import axios from "axios";
 import { v5 as uuidv5 } from "uuid";
-import store from "@/reducer/store.js";
-import { setCancelToken } from "@/reducer/modules/app.js";
+// import {setCancelToken, clearCancelToken} from "@/service/cancelToken.js";
 // 给每个API生成唯一的Hash
 function generateKey(config) {
   return JSON.stringify({
@@ -25,41 +24,44 @@ const instance = axios.create({
   timeout: 1000 * 60 // request timeout
 })
 // 取消请求
-let httpList = []
-const removeHttp = (config) => {
-  let index = httpList.findIndex((v) => v.url === config.url && v.method === config.method)
-  if (index >= 0) {
+const pendingRequests = new Map();
+const addPendingRequests = (config) => {
+  console.log(pendingRequests);
+  const hashKey = uuidv5(generateKey(config), uuidv5.URL);
+  console.log(hashKey);
+  if (!pendingRequests.has(hashKey)) {
+    // 添加请求
+    pendingRequests.set(hashKey, config);
+  }
+}
+const clearPendingRequests = (config) => {
+  const hashKey = uuidv5(generateKey(config), uuidv5.URL);
+  if (pendingRequests.has(hashKey)) {
     // 取消请求
-    httpList[index].controller.abort()
+    pendingRequests.get(hashKey).controller.abort()
     // 删除当前数据
-    httpList.splice(index, 1)
+    pendingRequests.delete(hashKey);
   }
 }
 // request interceptor request拦截器
 instance.interceptors.request.use((config) => {
+  const hashKey = uuidv5(generateKey(config), uuidv5.URL);
   // 取消操作
-  removeHttp(config);
+  clearPendingRequests(config);
   // 在push之前遍历数组找到相同的请求取消掉
   const controller = new AbortController();
   config.signal = controller.signal; // 用来取消操作的key
   config.controller = controller; // 将控制器绑定到每个请求身上
-  httpList.push({ ...config }); // 每次的请求加入到数组
+  addPendingRequests(config) // 每次的请求加入到数组
   //
-  //
-  // 创建 CancelToken 实例
-  const cancelTokenSource = axios.CancelToken.source();
-  // 将 CancelToken 实例添加到请求配置中
-  config.cancelToken = cancelTokenSource.token;
-  // store.dispatch(setCancelToken({key: generateKey(config), value: cancelTokenSource.token}));
-  console.log("uuidv5 key", generateKey(config));
-  config.headers["User-Hash"] = uuidv5(generateKey(config), uuidv5.URL);
+  console.debug("uuidv5 key", hashKey);
+  config.headers["User-Hash"] = hashKey;
   if (getToken()) {
     config.headers["Authorization"] = `Bearer ${getToken()}`;
     config.headers["User-Id"] = `${getUserId()}`;
   }
   //
-  console.log("11111111", config);
-  console.log("22222222", cancelTokenSource);
+  console.debug(`${hashKey} : `, generateKey(config));
   return config
 }, (error) => {
   console.log(error) // for debug
@@ -80,7 +82,7 @@ instance.interceptors.response.use((response) => {
 }, (error) => {
   if (axios.isCancel(error)) {
     // 请求被取消的处理逻辑
-    console.debug("isCancel: " + "请求被取消");
+    console.warn("isCancel: 请求被取消");
   }
   if (error && error.response) {
     const { status } = error.response;
