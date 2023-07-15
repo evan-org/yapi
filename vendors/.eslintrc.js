@@ -29,6 +29,7 @@ module.exports = {
     "import"
   ],
   "rules": {
+    "import/extensions": ["error", "always"],
     //
     // "react/jsx-one-expression-per-line": ["error", {"allow": "literal"}],
     //

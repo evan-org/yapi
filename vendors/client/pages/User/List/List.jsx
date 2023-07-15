@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 //
-import { formatTime } from "@/utils/common";
-import { setBreadcrumb } from "@/reducer/modules/user";
+import { formatTime } from "@/utils/common.js";
+import { setBreadcrumb } from "@/reducer/modules/user.js";
 import { Table, Popconfirm, message, Input } from "antd";
 import request from "@/service/request.js";
 //
