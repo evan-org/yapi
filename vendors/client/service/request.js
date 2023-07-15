@@ -1,4 +1,5 @@
 import service from "./service.js";
+
 /**
  * 请求
  * @author winixi@qq.com
@@ -11,7 +12,7 @@ const request = {
    * @param {object}params
    * @returns {Promise<any>}
    */
-  get(apiUri = "", params = null) {
+  get(apiUri = "", params = {}) {
     return service.request({
       method: "GET",
       url: apiUri,
@@ -24,7 +25,7 @@ const request = {
    * @param data
    * @param params
    */
-  post(apiUri, data, params) {
+  post(apiUri, data = {}, params = {}) {
     return service.request({
       url: apiUri,
       method: "POST",

@@ -23,7 +23,7 @@ import {
   getProject,
   upsetProject
 } from "@/reducer/modules/project";
-import { fetchGroupMsg, fetchGroupList } from "@/reducer/modules/group";
+import { fetchGroupMsg, fetchGroupList } from "@/reducer/modules/group.js";
 import { setBreadcrumb } from "@/reducer/modules/user";
 import { connect } from "react-redux";
 import constants from "@/utils/variable.js";

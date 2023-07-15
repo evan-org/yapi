@@ -1,12 +1,29 @@
-import axios from "axios";
+/**
+ * form
+ * time
+ * service.js
+ */
 import { getToken, getUserId, removeToken } from "@/utils/auth.js";
+import axios from "axios";
+import { v5 as uuidv5 } from "uuid";
+import store from "@/reducer/store.js";
+import { setCancelToken } from "@/reducer/modules/app.js";
+// 给每个API生成唯一的Hash
+function generateKey(config) {
+  return JSON.stringify({
+    baseURL: config.baseURL,
+    method: config.method,
+    url: config.url,
+    params: config.params,
+    data: config.data
+  });
+}
 // create an axios instance
-const service = axios.create({
+const instance = axios.create({
   baseURL: process.env.NODE_ENV === "development" ? "/api" : process.env["REACT_APP_BASE_URL"], // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 1000 * 60 // request timeout
 })
-//
 // 取消请求
 let httpList = []
 const removeHttp = (config) => {
@@ -19,7 +36,7 @@ const removeHttp = (config) => {
   }
 }
 // request interceptor request拦截器
-service.interceptors.request.use((config) => {
+instance.interceptors.request.use((config) => {
   // 取消操作
   removeHttp(config);
   // 在push之前遍历数组找到相同的请求取消掉
@@ -28,17 +45,28 @@ service.interceptors.request.use((config) => {
   config.controller = controller; // 将控制器绑定到每个请求身上
   httpList.push({ ...config }); // 每次的请求加入到数组
   //
+  //
+  // 创建 CancelToken 实例
+  const cancelTokenSource = axios.CancelToken.source();
+  // 将 CancelToken 实例添加到请求配置中
+  config.cancelToken = cancelTokenSource.token;
+  // store.dispatch(setCancelToken({key: generateKey(config), value: cancelTokenSource.token}));
+  console.log("uuidv5 key", generateKey(config));
+  config.headers["User-Hash"] = uuidv5(generateKey(config), uuidv5.URL);
   if (getToken()) {
     config.headers["Authorization"] = `Bearer ${getToken()}`;
     config.headers["User-Id"] = `${getUserId()}`;
   }
+  //
+  console.log("11111111", config);
+  console.log("22222222", cancelTokenSource);
   return config
 }, (error) => {
   console.log(error) // for debug
   return Promise.reject(error)
 })
 // response interceptor response拦截器
-service.interceptors.response.use((response) => {
+instance.interceptors.response.use((response) => {
   const { errcode, message } = response.data;
   if ([0, "0"].includes(errcode)) {
     return response
@@ -50,6 +78,10 @@ service.interceptors.response.use((response) => {
     return Promise.reject(message || "Error")
   }
 }, (error) => {
+  if (axios.isCancel(error)) {
+    // 请求被取消的处理逻辑
+    console.debug("isCancel: " + "请求被取消");
+  }
   if (error && error.response) {
     const { status } = error.response;
     switch (status) {
@@ -98,4 +130,4 @@ service.interceptors.response.use((response) => {
     return Promise.reject(error)
   }
 })
-export default service
+export default instance
