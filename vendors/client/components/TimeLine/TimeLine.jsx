@@ -12,9 +12,7 @@ import { fetchInterfaceList } from "@/reducer/modules/interface.js";
 import ErrMsg from "../ErrMsg/ErrMsg.jsx";
 //
 const { timeago } = require("@common/utils.cjs");
-const showDiffMsg = require("@common/diffView.cjs");
-//
-console.warn(timeago, showDiffMsg);
+const  showDiffMsg = require("@common/diffView.cjs");
 //
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
@@ -188,6 +186,7 @@ class TimeTree extends Component {
     if (this.state.loading) {
       pending = <Spin/>;
     }
+    console.warn("", variable, showDiffMsg);
     let diffView = showDiffMsg(jsondiffpatch, formattersHtml, curDiffData);
     return (
       <section className="news-timeline">
