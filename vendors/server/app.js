@@ -1,4 +1,5 @@
 const path = require("path");
+// eslint-disable-next-line import/extensions
 require("module-alias/register");
 const dotEnv = require("dotenv");
 dotEnv.config({ path: path.resolve(__dirname, "../.env.development") });

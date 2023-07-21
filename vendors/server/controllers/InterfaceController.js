@@ -737,12 +737,10 @@ class InterfaceController extends baseController {
       }/interface/api/${id}`;
       yapi.commons.sendNotice(interfaceData.project_id, {
         title: `${username} 更新了接口`,
-        content: `<html>
+        content: `<html lang="">
         <head>
-        <style>
-        ${annotatedCss}
-        ${htmlCss}
-        </style>
+        <style>${annotatedCss}${htmlCss}</style>
+        <title></title>
         </head>
         <body>
         <div><h3>${username}更新了接口(${data.title})</h3>

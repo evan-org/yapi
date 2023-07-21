@@ -8,7 +8,6 @@ const UserModel = require("@server/models/UserModel.js");
 //
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
-
 const fs = require("fs-extra");
 const path = require("path");
 const showDiffMsg = require("@common/diffView.cjs");
@@ -18,7 +17,6 @@ class WikiController extends baseController {
     this.WikiModel = yapi.getInst(WikiModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
-
   /**
    * 获取wiki信息
    * @interface wiki_desc/get
@@ -39,7 +37,6 @@ class WikiController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 400, err.message);
     }
   }
-
   /**
    * 保存wiki信息
    * @interface wiki_desc/get
@@ -57,7 +54,6 @@ class WikiController extends baseController {
         desc: "string",
         markdown: "string"
       });
-
       if (!params.project_id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
       }
@@ -67,12 +63,10 @@ class WikiController extends baseController {
           return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
         }
       }
-
       let notice = params.email_notice;
       delete params.email_notice;
       const username = this.getUsername();
       const uid = this.getUid();
-
       // 如果当前数据库里面没有数据
       let result = await this.WikiModel.get(params.project_id);
       if (!result) {
@@ -82,7 +76,6 @@ class WikiController extends baseController {
           add_time: yapi.commons.time(),
           up_time: yapi.commons.time()
         });
-
         let res = await this.WikiModel.save(data);
         ctx.body = yapi.commons.resReturn(res);
       } else {
@@ -94,7 +87,6 @@ class WikiController extends baseController {
         let upRes = await this.WikiModel.up(result._id, data);
         ctx.body = yapi.commons.resReturn(upRes);
       }
-
       let logData = {
         type: "wiki",
         project_id: params.project_id,
@@ -102,32 +94,23 @@ class WikiController extends baseController {
         old: result ? result.toObject().desc : ""
       };
       let wikiUrl = `${ctx.request.origin}/project/${params.project_id}/wiki`;
-
       if (notice) {
         let diffView = showDiffMsg(jsondiffpatch, formattersHtml, logData);
-
         let annotatedCss = fs.readFileSync(
-          path.resolve(
-            yapi.WEBROOT,
-            "node_modules/jsondiffpatch/dist/formatters-styles/annotated.css"
-          ),
-          "utf8"
-        );
+          path.resolve(yapi.WEBROOT, "node_modules/jsondiffpatch/dist/formatters-styles/annotated.css"),
+          "utf8");
         let htmlCss = fs.readFileSync(
           path.resolve(yapi.WEBROOT, "node_modules/jsondiffpatch/dist/formatters-styles/html.css"),
           "utf8"
         );
         let project = await this.ProjectModel.getBaseInfo(params.project_id);
-
         yapi.commons.sendNotice(params.project_id, {
           title: `${username} 更新了wiki说明`,
-          content: `<html>
+          content: `<html lang="zh">
           <head>
           <meta charset="utf-8" />
-          <style>
-          ${annotatedCss}
-          ${htmlCss}
-          </style>
+          <title></title>
+          <style>${annotatedCss}${htmlCss}</style>
           </head>
           <body>
           <div><h3>${username}更新了wiki说明</h3>
@@ -138,7 +121,6 @@ class WikiController extends baseController {
           </html>`
         });
       }
-
       // 保存修改日志信息
       yapi.commons.saveLog({
         content: `<a href="/user/profile/${uid}">${username}</a> 更新了 <a href="${wikiUrl}">wiki</a> 的信息`,
@@ -157,13 +139,11 @@ class WikiController extends baseController {
     if (html.length === 0) {
       return "<span style=\"color: #555\">没有改动，该操作未改动wiki数据</span>";
     }
-
     return html.map((item) => `<div>
       <h4 class="title">${item.title}</h4>
       <div>${item.content}</div>
     </div>`);
   }
-
   // 处理编辑冲突
   async wikiConflict(ctx) {
     try {
@@ -179,36 +159,32 @@ class WikiController extends baseController {
           ctx.websocket.send(JSON.stringify(data));
         }
       });
-      ctx.websocket.on("close", async() => {});
+      ctx.websocket.on("close", async() => {
+      });
     } catch (err) {
       yapi.commons.log(err, "error");
     }
   }
-
   websocketMsgMap(msg, result) {
     const map = {
       start: this.startFunc.bind(this),
       end: this.endFunc.bind(this),
       editor: this.editorFunc.bind(this)
     };
-
     return map[msg](result);
   }
-
   // socket 开始链接
   async startFunc(result) {
     if (result && result.edit_uid === this.getUid()) {
       await this.WikiModel.upEditUid(result._id, 0);
     }
   }
-
   // socket 结束链接
   async endFunc(result) {
     if (result) {
       await this.WikiModel.upEditUid(result._id, 0);
     }
   }
-
   // 正在编辑
   async editorFunc(result) {
     let userInst, userinfo, data;
@@ -231,5 +207,4 @@ class WikiController extends baseController {
     return data;
   }
 }
-
 module.exports = WikiController;
