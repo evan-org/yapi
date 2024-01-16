@@ -58,7 +58,9 @@ function Layout(props) {
   //
   return (
     <div className={styles.Layout}>
-      <AppHeader {...props}/>
+      {
+        loginState ? <AppHeader {...props}/> : null
+      }
       <Container component={"section"} className={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
         <Outlet/>
       </Container>
