@@ -1,6 +1,8 @@
 const CancelTokenMap = new Map();
 export function setCancelToken(key, value) {
-  CancelTokenMap.set(key, value);
+  if (!CancelTokenMap.has(key)) {
+    CancelTokenMap.set(key, value);
+  }
 }
 export function getCancelToken(key) {
   return CancelTokenMap.get(key)

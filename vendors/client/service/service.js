@@ -3,6 +3,7 @@
  * time
  * service.js
  */
+import { setCancelToken, clearCancelToken } from "@/service/cancelToken.js";
 import { getToken, getUserId, removeToken } from "@/utils/auth.js";
 import axios from "axios";
 import { v5 as uuidv5 } from "uuid";
@@ -45,17 +46,18 @@ const clearPendingRequests = (config) => {
 }
 // request interceptor request拦截器
 instance.interceptors.request.use((config) => {
+  const cancelTokenSource = axios.CancelToken.source();
+  // 生成hash
   const hashKey = uuidv5(generateKey(config), uuidv5.URL);
-  // 取消操作
-  clearPendingRequests(config);
-  // 在push之前遍历数组找到相同的请求取消掉
-  const controller = new AbortController();
-  config.signal = controller.signal; // 用来取消操作的key
-  config.controller = controller; // 将控制器绑定到每个请求身上
-  addPendingRequests(config) // 每次的请求加入到数组
-  //
-  console.debug("uuidv5 key", hashKey);
+  // 取消重复请求
+  clearCancelToken(hashKey);
+  // config设置cancelToken
+  config.cancelToken = cancelTokenSource.token;
+  // 记录cancelToken
+  setCancelToken(hashKey, cancelTokenSource);
+  // 设置默认Hash
   config.headers["User-Hash"] = hashKey;
+  // 有token 设置uid 和 token
   if (getToken()) {
     config.headers["Authorization"] = `Bearer ${getToken()}`;
     config.headers["User-Id"] = `${getUserId()}`;
