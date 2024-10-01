@@ -143,8 +143,7 @@ module.exports = {
       "@server": resolve("./server"),
       "@client": resolve("./client"),
       "@common": resolve("./common"),
-      "@exts": resolve("./exts"),
-      "@mui/styled-engine": "@mui/styled-engine-sc",
+      "@exts": resolve("./exts")
     },
     plugins: {
       add: [
