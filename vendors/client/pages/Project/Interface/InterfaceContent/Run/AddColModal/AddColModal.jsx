@@ -1,6 +1,7 @@
+import { FolderOpenOutlined } from "@ant-design/icons";
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
-import { Modal, Collapse, Row, Col, Input, message, Button, Icon } from "antd";
+import { Modal, Collapse, Row, Col, Input, message, Button } from "antd";
 import PropTypes from "prop-types";
 import request from "@/service/request.js";
 import { fetchInterfaceColList } from "@/reducer/modules/interfaceCol.js";
@@ -80,7 +81,7 @@ class AddColModal extends Component {
                 className={`col-item ${col._id === id ? "selected" : ""}`}
                 onClick={() => this.select(col._id)}
               >
-                <Icon type="folder-open" style={{ marginRight: 6 }}/>
+                <FolderOpenOutlined  style={{ marginRight: 6 }}/>
                 {col.name}
               </li>
             ))

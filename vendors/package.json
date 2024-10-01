@@ -211,6 +211,9 @@
     "validate-commit-msg": "^2.14.0",
     "ydoc-plugin-img-view": "^1.0.1"
   },
+  "peerDependencies": {
+    "sass-resources-loader": "^2.0.0"
+  },
   "_moduleAliases": {
     "@": ".",
     "@server": "./server",

@@ -1,8 +1,9 @@
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import request from "@/service/request.js";
 import PropTypes from "prop-types";
-import { Table, Button, message, Popconfirm, Tooltip, Icon } from "antd";
+import { Table, Button, message, Popconfirm, Tooltip } from "antd";
 import { fetchMockCol } from "@/reducer/modules/mockCol.js";
 import { formatTime, json5_parse } from "@/utils/common.js";
 import constants from "@/utils/variable.js";
@@ -218,7 +219,7 @@ class MockCol extends Component {
             style={{ marginLeft: 8 }}
           >
             <Tooltip title="点击查看文档">
-              <Icon type="question-circle-o"/>
+              <QuestionCircleOutlined />
             </Tooltip>
           </a>
         </div>
