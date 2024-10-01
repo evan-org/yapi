@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "npm run dev-server & npm run dev-client",
     "install-server": "node server/install.js",
-    "dev-client": "craco start",
+    "dev-client": "export NODE_OPTIONS=--openssl-legacy-provider && craco start",
     "dev-server": "cross-env NODE_ENV=development nodemon -L dev",
     "build-client": "craco build",
     "build-server": "cross-env NODE_ENV=production nodemon -L prod",
@@ -43,8 +43,7 @@
     "@mui/icons-material": "^5.11.11",
     "@mui/lab": "^5.0.0-alpha.134",
     "@mui/material": "^5.11.14",
-    "@mui/styled-engine": "^5.11.11",
-    "@mui/styled-engine-sc": "^5.11.11",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@5.11.11",
     "@mui/styles": "^5.11.13",
     "@mui/system": "^5.11.14",
     "@mui/utils": "^5.11.13",
@@ -237,6 +236,7 @@
     ]
   },
   "resolutions": {
-    "react-error-overlay": "6.0.9"
+    "react-error-overlay": "6.0.9",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@5.11.11"
   }
 }
