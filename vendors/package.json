@@ -6,7 +6,7 @@
   "description": "YAPI",
   "scripts": {
     "dev": "npm run dev-server & npm run dev-client",
-    "install-server": " node server/install.js",
+    "install-server": "node server/install.js",
     "dev-client": "craco start",
     "dev-server": "cross-env NODE_ENV=development nodemon -L dev",
     "build-client": "craco build",
@@ -55,7 +55,7 @@
     "ajv": "^5.5.1",
     "ajv-i18n": "^2.2.0",
     "ajv-keywords": "^5.1.0",
-    "antd": "~3.26.20",
+    "antd": "^5.21.2",
     "apexcharts": "^3.37.2",
     "axios": "^1.4.0",
     "babel-plugin-import": "^1.13.6",
