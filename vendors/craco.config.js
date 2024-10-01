@@ -83,8 +83,7 @@ module.exports = {
         generateScopedName: "[local]___[hash:base64:5]",
         attributeNames: { activeStyleName: "activeClassName" },
       }],
-      ["@babel/plugin-transform-runtime"],
-      ["import", { libraryName: "antd", libraryDirectory: "es", style: "css" }]
+      ["@babel/plugin-transform-runtime"]
     ]
   },
   // 开发服务器

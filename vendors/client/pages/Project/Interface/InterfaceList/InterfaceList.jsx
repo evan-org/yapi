@@ -2,11 +2,12 @@ import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import request from "@/service/request.js";
-import { Table, Button, Modal, message, Tooltip, Select, Icon } from "antd";
-import { fetchInterfaceListMenu, fetchInterfaceList, fetchInterfaceCatList } from "@/reducer/modules/interface";
-import { getProject } from "@/reducer/modules/project";
+import { Table, Button, Modal, message, Tooltip, Select } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
+import { fetchInterfaceListMenu, fetchInterfaceList, fetchInterfaceCatList } from "@/reducer/modules/interface.js";
+import { getProject } from "@/reducer/modules/project.js";
 import { Link } from "react-router-dom";
-import variable from "@/utils/variable";
+import variable from "@/utils/variable.js";
 import Label from "@/components/Label/Label.jsx";
 //
 import AddInterfaceForm from "@/pages/Project/Interface/InterfaceMenu/AddInterfaceForm.jsx";
@@ -192,7 +193,7 @@ class InterfaceList extends Component {
                 {record.method}
               </span>
               <Tooltip title="开放接口" placement="topLeft">
-                <span>{record.api_opened && <Icon className="opened" type="eye-o"/>}</span>
+                <span>{record.api_opened && <EyeOutlined className="opened"/>}</span>
               </Tooltip>
               <Tooltip title={path} placement="topLeft" overlayClassName="toolTip">
                 <span className="path">{path}</span>

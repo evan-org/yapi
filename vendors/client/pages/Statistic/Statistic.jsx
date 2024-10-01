@@ -4,7 +4,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import request from "@/service/request.js";
-import { Row, Col, Tooltip, Icon } from "antd";
+import { Row, Col, Tooltip } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import { setBreadcrumb } from "@/reducer/modules/user.js";
 import StatisticsChart from "@/pages/Statistic/StatisticsChart/StatisticsChart.jsx";
 import StatisticsTable from "@/pages/Statistic/StatisticsTable/StatisticsTable.jsx";
@@ -17,7 +18,7 @@ function CountOverview(props) {
       <Col className="gutter-row" span={6}>
         <span>分组总数
           <Tooltip placement="rightTop" title="统计yapi中一共开启了多少可见的公共分组">
-            <Icon className="m-help" type="question-circle"/>
+            <QuestionCircleOutlined className="m-help"/>
           </Tooltip>
         </span>
         <h2 className="gutter-box">{props.date.groupCount}</h2>
@@ -26,7 +27,7 @@ function CountOverview(props) {
         <span>
         项目总数
           <Tooltip placement="rightTop" title="统计yapi中建立的所有项目总数">
-            <Icon className="m-help" type="question-circle"/>
+            <QuestionCircleOutlined className="m-help"/>
           </Tooltip>
         </span>
         <h2 className="gutter-box">{props.date.projectCount}</h2>
@@ -36,7 +37,7 @@ function CountOverview(props) {
         接口总数
           <Tooltip placement="rightTop" title="统计yapi所有项目中的所有接口总数">
             {/* <a href="javascript:void(0)" className="m-a-help">?</a>*/}
-            <Icon className="m-help" type="question-circle"/>
+            <QuestionCircleOutlined className="m-help"/>
           </Tooltip>
         </span>
         <h2 className="gutter-box">{props.date.interfaceCount}</h2>
@@ -46,7 +47,7 @@ function CountOverview(props) {
         测试接口总数
           <Tooltip placement="rightTop" title="统计yapi所有项目中的所有测试接口总数">
             {/* <a href="javascript:void(0)" className="m-a-help">?</a>*/}
-            <Icon className="m-help" type="question-circle"/>
+            <QuestionCircleOutlined className="m-help"/>
           </Tooltip>
         </span>
         <h2 className="gutter-box">{props.date.interfaceCaseCount}</h2>
@@ -67,7 +68,7 @@ function StatusOverview(props) {
             placement="rightTop"
             title="操作系统类型,返回值有'darwin', 'freebsd', 'linux', 'sunos' , 'win32'"
           >
-            <Icon className="m-help" type="question-circle"/>
+            <QuestionCircleOutlined className="m-help"/>
           </Tooltip>
         </span>
         <h2 className="gutter-box">{props.data.systemName}</h2>
@@ -76,7 +77,7 @@ function StatusOverview(props) {
         <span>
         cpu负载
           <Tooltip placement="rightTop" title="cpu的总负载情况">
-            <Icon className="m-help" type="question-circle"/>
+            <QuestionCircleOutlined className="m-help"/>
           </Tooltip>
         </span>
         <h2 className="gutter-box">{props.data.load} %</h2>
@@ -85,7 +86,7 @@ function StatusOverview(props) {
         <span>
         系统空闲内存总量 / 内存总量
           <Tooltip placement="rightTop" title="系统空闲内存总量 / 内存总量">
-            <Icon className="m-help" type="question-circle"/>
+            <QuestionCircleOutlined className="m-help"/>
           </Tooltip>
         </span>
         <h2 className="gutter-box">
@@ -96,7 +97,7 @@ function StatusOverview(props) {
         <span>
         邮箱状态
           <Tooltip placement="rightTop" title="检测配置文件中配置邮箱的状态">
-            <Icon className="m-help" type="question-circle"/>
+            <QuestionCircleOutlined className="m-help"/>
           </Tooltip>
         </span>
         <h2 className="gutter-box">{props.data.mail}</h2>
@@ -108,9 +109,6 @@ function StatusOverview(props) {
 //   data: PropTypes.object
 // };
 class Statistic extends Component {
-  // static propTypes = {
-  //   setBreadcrumb: PropTypes.func
-  // };
   constructor(props) {
     super(props);
     this.state = {

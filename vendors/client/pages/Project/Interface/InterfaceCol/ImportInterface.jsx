@@ -1,6 +1,7 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
-import { Table, Select, Tooltip, Icon } from "antd";
+import { Table, Select, Tooltip } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import variable from "@/utils/variable.js";
 import { connect } from "react-redux";
 //
@@ -71,9 +72,7 @@ class ImportInterface extends Component {
         if (record.isCategory) {
           selectedRowKeys = record.children.map((item) => item._id).concat(record.key);
           if (selected) {
-            selectedRowKeys = selectedRowKeys
-              .filter((id) => oldSelecteds.indexOf(id) === -1)
-              .concat(oldSelecteds);
+            selectedRowKeys = selectedRowKeys.filter((id) => oldSelecteds.indexOf(id) === -1).concat(oldSelecteds);
             categoryCount[categoryKey] = categoryLength;
           } else {
             selectedRowKeys = oldSelecteds.filter((id) => selectedRowKeys.indexOf(id) === -1);
@@ -163,18 +162,18 @@ class ImportInterface extends Component {
           <span>
             状态{" "}
             <Tooltip title="筛选满足条件的接口集合">
-              <Icon type="question-circle-o"/>
+              <QuestionCircleOutlined/>
             </Tooltip>
           </span>
         ),
         dataIndex: "status",
         render: (text) => (
           text &&
-            (text === "done" ? (
-              <span className="tag-status done">已完成</span>
-            ) : (
-              <span className="tag-status undone">未完成</span>
-            ))
+          (text === "done" ? (
+            <span className="tag-status done">已完成</span>
+          ) : (
+            <span className="tag-status undone">未完成</span>
+          ))
         ),
         filters: [
           {

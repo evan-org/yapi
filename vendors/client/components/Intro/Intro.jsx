@@ -1,31 +1,31 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Icon } from "antd";
 import styles from "./Intro.module.scss";
 import { OverPack } from "rc-scroll-anim";
 import TweenOne from "rc-tween-one";
 import QueueAnim from "rc-queue-anim";
 
-const IntroPart = (props) => (
-  <li className="switch-content">
-    <div className="icon-switch">
-      <Icon type={props.iconType} />
-    </div>
-    <div className="text-switch">
-      <p>
-        <b>{props.title}</b>
-      </p>
-      <p>{props.des}</p>
-    </div>
-  </li>
-);
-
+const IntroPart = (props) => {
+  const IconType = props.iconType
+  return (
+    <li className="switch-content">
+      <div className="icon-switch">
+        {IconType && <IconType/>}
+      </div>
+      <div className="text-switch">
+        <p>
+          <b>{props.title}</b>
+        </p>
+        <p>{props.des}</p>
+      </div>
+    </li>
+  )
+};
 IntroPart.propTypes = {
   title: PropTypes.string,
   des: PropTypes.string,
   iconType: PropTypes.string
 };
-
 class Intro extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -62,10 +62,9 @@ class Intro extends React.PureComponent {
             className="imgWrapper"
           >
             <div className="img-container" id={`${id}-img-container`}>
-              <img src={intro.img} />
+              <img src={intro.img}/>
             </div>
           </TweenOne>
-
           <QueueAnim
             type={animType.queue}
             key={`${id}-text`}
@@ -81,7 +80,7 @@ class Intro extends React.PureComponent {
             <ul className="des-switch" key={`${id}-des-switch`}>
               {intro.detail.map(function(item, i) {
                 return (
-                  <IntroPart key={i} title={item.title} des={item.des} iconType={item.iconType} />
+                  <IntroPart key={i} title={item.title} des={item.des} iconType={item.iconType}/>
                 );
               })}
             </ul>
@@ -91,5 +90,4 @@ class Intro extends React.PureComponent {
     );
   }
 }
-
 export default Intro;

@@ -1,6 +1,6 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
-import { Icon } from "antd";
+import { FrownOutlined, MehOutlined } from "@ant-design/icons";
 import styles from "./ErrMsg.module.scss";
 /**
  * 错误信息提示
@@ -75,7 +75,7 @@ class ErrMsg extends Component {
     }
     return (
       <div className={styles.ErrMsg}>
-        <Icon type={icon} className="icon"/>
+        {icon === "frown-o" ? <FrownOutlined/> : <MehOutlined/>}
         <p className="title">{title}</p>
         <p className="desc">{desc}</p>
         <p className="opration">{opration}</p>
