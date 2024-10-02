@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Layout } from "antd";
+const { Header } = Layout;
 //
-import { Box, AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, InputBase, Badge, useScrollTrigger } from "@mui/material";
+import { Box, AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, InputBase, Badge } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -405,50 +407,15 @@ function PrimarySearchAppBar(props) {
   );
   /*  */
   return (
-    <Typography variant="header" sx={{ zIndex: 1201 }} component={"div"}>
-      <AppBar position="fixed" elevation={0}>
-        <Toolbar>
-          <Link to={"/"}>
-            <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
-              <LogoSVG length="36px"/>
-            </IconButton>
-          </Link>
-          <Typography variant="h6" noWrap component="div"
-            sx={{ fontSize: 0, lineHeight: 1, display: { xs: "none", sm: "block" } }}>
-          </Typography>
-          <Box sx={{ flexGrow: 1 }}/>
-          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}>
-            <SearchStyled>
-              <SearchIconWrapper>
-                <SearchIcon/>
-              </SearchIconWrapper>
-              <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }}/>
-            </SearchStyled>
-            <IconButton size="large" title={"通知"} aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon fontSize={"small"}/>
-              </Badge>
-            </IconButton>
-            <IconButton size="large" title={"消息"} aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon fontSize={"small"}/>
-              </Badge>
-            </IconButton>
-            <IconButton size="large" edge="end" aria-label="account of current user" aria-controls={menuId} aria-haspopup="true"
-              onClick={handleProfileMenuOpen} color="inherit">
-              <AccountCircle fontSize={"small"}/>
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton size="large" aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
-              <MoreIcon fontSize={"small"}/>
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
+    <Header sx={{ zIndex: 1201 }}>
+      <Link to={"/"}>
+        <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
+          <LogoSVG length="36px"/>
+        </IconButton>
+      </Link>
       {renderMobileMenu}
       {renderMenu}
-    </Typography>
+    </Header>
   );
 }
 //
