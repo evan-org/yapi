@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
 // project imports
-import NavigationScroll from "@/layout/NavigationScroll.jsx";
+import NavigationScroll from "@/Layout/NavigationScroll.jsx";
 import themes from "@/themes/index.js";
 import ThemeRoutes from "@/router/index.js";
 // antd

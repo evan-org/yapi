@@ -10,7 +10,7 @@ import {
 } from "@/reducer/modules/project.js";
 
 import "./ProjectList.scss";
-// layout
+// Layout
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },

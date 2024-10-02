@@ -7,7 +7,7 @@ import Icon from "@ant-design/icons";
 import { handleSwaggerUrlData } from "@/reducer/modules/project.js";
 //
 import request from "@/service/request.js";
-// layout
+// Layout
 const formItemLayout = {
   labelCol: {
     lg: { span: 5 },

@@ -32,7 +32,7 @@ import "../Setting.scss";
 import _ from "underscore";
 //
 import ProjectTag from "@/pages/Project/Setting/ProjectMessage/ProjectTag/ProjectTag.jsx";
-// layout
+// Layout
 const formItemLayout = {
   labelCol: {
     lg: { offset: 1, span: 3 },

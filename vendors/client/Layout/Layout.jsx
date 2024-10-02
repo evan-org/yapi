@@ -26,7 +26,7 @@ function AlertContent() {
 }
 //
 function Main(props) {
-  console.debug("layout =>", props);
+  console.debug("Layout =>", props);
   //
   const { loginState, checkLoginState, isLogin } = props;
   const [visible, setVisible] = useState(true);

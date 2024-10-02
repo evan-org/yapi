@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { APP_NAME } from "@/utils/config";
+import { APP_NAME } from "@/utils/config.js";
 import Loading from "@/components/Loading/Loading.jsx";
 import { useRoutes } from "react-router-dom";
 //
@@ -12,12 +12,12 @@ import { useRoutes } from "react-router-dom";
       setting: { name: "设置", path: "/project/:id/setting", component: Setting }
     };*/
 //
-// import Layout from "../layout/Layout.jsx";
+// import Layout from "../Layout/Layout.jsx";
 // import Home from "../pages/Home/Home.jsx";
 const router = [
   {
     path: "/",
-    element: lazy(() => import("../layout/Layout.jsx")),
+    element: lazy(() => import("@/Layout/Layout.jsx")),
     children: [
       {
         index: true,
