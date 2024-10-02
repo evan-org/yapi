@@ -1,10 +1,8 @@
-import { inherit } from "anujs/packages/core/util.js";
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 //
-import { Box, AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, InputBase, Badge, useScrollTrigger, CssBaseline } from "@mui/material";
+import { Box, AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, InputBase, Badge, useScrollTrigger } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -78,14 +76,6 @@ function MenuUser(props) {
     </Menu>
   )
 }
-MenuUser.propTypes = {
-  user: PropTypes.string,
-  msg: PropTypes.string,
-  role: PropTypes.string,
-  uid: PropTypes.number,
-  relieveLink: PropTypes.func,
-  logout: PropTypes.func
-};
 //
 function TipFollow() {
   return <div className="title-container">
@@ -201,18 +191,6 @@ function ToolUser(props) {
     </ul>
   );
 }
-ToolUser.propTypes = {
-  user: PropTypes.string,
-  msg: PropTypes.string,
-  role: PropTypes.string,
-  uid: PropTypes.number,
-  relieveLink: PropTypes.func,
-  logout: PropTypes.func,
-  groupList: PropTypes.array,
-  studyTip: PropTypes.number,
-  study: PropTypes.bool,
-  imageUrl: PropTypes.any
-};
 //
 function HeaderBox(props) {
   const { curUserRole, studyTip, login, study, user, msg, uid, role, imageUrl } = props;
@@ -317,28 +295,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-function ElevationScroll(props) {
-  const { children, window } = props;
-  // Note that you normally won't need to set the window ref as useScrollTrigger
-  // will default to window.
-  // This is only being set here because the demo is in an iframe.
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0,
-    target: window ? window() : undefined,
-  });
-  return React.cloneElement(children, {
-    elevation: trigger ? 0 : 0,
-  });
-}
-ElevationScroll.propTypes = {
-  children: PropTypes.element.isRequired,
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
 //
 function PrimarySearchAppBar(props) {
   const location = useLocation();
@@ -495,6 +451,7 @@ function PrimarySearchAppBar(props) {
     </Typography>
   );
 }
+//
 export default connect(
   (state) => ({
     user: state.user.userName,
