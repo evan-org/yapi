@@ -87,7 +87,7 @@ function GroupList(props) {
   //
   return (
     <Box className={styles.GroupList} sx={{ overflow: "hidden", height: "100%", display: "flex", flexDirection: "column" }}>
-      {!study ? <div className="study-mask"/> : null}
+      {/* {!study ? <div className="study-mask"/> : null} */}
       {/* <Box className="curr-group">
           <Box component={"h3"} className="curr-group-name name">{currGroup.group_name}</Box>
           <Box component={"pre"} className="curr-group-desc">简介: {currGroup.group_desc}</Box>

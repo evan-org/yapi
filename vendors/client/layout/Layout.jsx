@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-// import Loading from "../components/Loading/Loading.jsx";
-// import AppFooter from "@/pages/Home/components/Footer/Footer.jsx";
 import AppHeader from "./components/Header/Header.jsx";
 //
+import {Layout, Slider} from "antd";
 import styles from "./Layout.module.scss";
-import { Container, Alert, Toolbar } from "@mui/material";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Container, Alert } from "@mui/material";
+import { Outlet, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkLoginState } from "@/reducer/modules/user.js";
 //
@@ -25,7 +24,8 @@ function AlertContent() {
     return null
   }
 }
-function Layout(props) {
+//
+function Main(props) {
   console.debug("layout =>", props);
   //
   const { loginState, checkLoginState, isLogin } = props;
@@ -34,7 +34,7 @@ function Layout(props) {
   const location = useLocation();
   //
   useEffect(() => {
-    checkLoginStatus();
+    void checkLoginStatus();
   }, []);
   //
   const checkLoginStatus = async() => {
@@ -57,7 +57,7 @@ function Layout(props) {
   }, [location])
   //
   return (
-    <div className={styles.Layout}>
+    <Layout className={styles.Layout}>
       {
         loginState ? <AppHeader {...props}/> : null
       }
@@ -65,9 +65,10 @@ function Layout(props) {
         <Outlet/>
       </Container>
       <AlertContent/>
-    </div>
+    </Layout>
   )
 }
+//
 export default connect(
   (state) => ({
     isLogin: state.user.isLogin,
@@ -77,4 +78,4 @@ export default connect(
   {
     checkLoginState
   }
-)(Layout);
+)(Main);

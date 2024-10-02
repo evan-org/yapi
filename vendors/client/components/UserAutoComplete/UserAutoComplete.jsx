@@ -121,6 +121,7 @@ function UserAutoCompleteMain(props) {
   // 搜索回调
   const handleSearch = async(value) => {
     const response = await request.get("/user/search", { q: value });
+    console.log(response);
     const data = response.data.data;
     if (data) {
       return data.map((v) => ({ ...v, title: v.username, username: v.username, id: v.uid, value: v.uid }));

@@ -24,12 +24,6 @@ const router = [
         element: lazy(() => import("../pages/Home/Home.jsx")),
         meta: { title: APP_NAME, auth: false },
       },
-      {
-        path: "/dashboard",
-        name: "Dashboard",
-        element: lazy(() => import("../pages/dashboard/Group/Group.jsx")),
-        meta: { title: "仪表盘", auth: true },
-      },
       //
       {
         path: "/group",
