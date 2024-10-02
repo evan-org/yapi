@@ -105,7 +105,7 @@ function GroupList(props) {
       </div>
       <Divider style={{margin: "0px"}}/>
       {/*  */}
-      {groupList.length === 0 && <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/>}
+      {groupList.length === 0 ? <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/> : null}
       {/*  */}
       <Box component={"div"} style={{ flex: 1, overflow: "hidden", height: "100%" }}>
         <Box
