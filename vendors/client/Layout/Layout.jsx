@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import AppHeader from "./components/Header/Header.jsx";
 //
-import {Layout, Slider} from "antd";
+import { Layout } from "antd";
 import styles from "./Layout.module.scss";
-import { Container, Alert } from "@mui/material";
+import { Alert } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkLoginState } from "@/reducer/modules/user.js";
@@ -55,15 +55,12 @@ function Main(props) {
       setCompute(() => styles.compute);
     }
   }, [location])
-  //
   return (
     <Layout className={styles.Layout}>
       {
         loginState ? <AppHeader {...props}/> : null
       }
-      <Container component={"section"} className={[styles.LayoutContainer, compute].join(" ")} maxWidth={false} sx={{ padding: 0 }}>
-        <Outlet/>
-      </Container>
+      <Outlet/>
       <AlertContent/>
     </Layout>
   )
