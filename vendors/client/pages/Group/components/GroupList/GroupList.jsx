@@ -1,10 +1,7 @@
-import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Divider, Flex, Input, Spin, Tooltip } from "antd";
-
-const { Search } = Input;
+import { SearchOutlined } from "@ant-design/icons";
 //
 import { Box, List, ListItemAvatar, ListItemText, Typography, Avatar, ListItemButton } from "@mui/material";
 //
@@ -153,20 +150,6 @@ function GroupList(props) {
   )
 }
 //
-GroupList.propTypes = {
-  groupList: PropTypes.array,
-  currGroup: PropTypes.object,
-  fetchGroupList: PropTypes.func,
-  setCurrGroup: PropTypes.func,
-  match: PropTypes.object,
-  history: PropTypes.object,
-  curUserRole: PropTypes.string,
-  curUserRoleInGroup: PropTypes.string,
-  studyTip: PropTypes.number,
-  study: PropTypes.bool,
-  fetchNewsData: PropTypes.func,
-  fetchGroupMsg: PropTypes.func
-}
 export default connect(
   (state) => ({
     groupList: state.group.groupList,
