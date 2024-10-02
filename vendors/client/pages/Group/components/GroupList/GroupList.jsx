@@ -109,42 +109,32 @@ function GroupList(props) {
       {groupList.length === 0 ? <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/> : null}
       {/*  */}
       <Box component={"div"} style={{ flex: 1, overflow: "hidden", height: "100%" }}>
-        <Box
-          component="div"
-          sx={{
-            height: "100%",
-            overflowX: "hidden",
-            overflowY: "auto",
-            paddingLeft: "0",
-            paddingRight: "0"
-          }}>
-          <List sx={{ width: "100%", p: 0, maxWidth: "100%", bgcolor: "background.paper" }}>
-            {
-              searchGroupList.map((item, index) => (
-                <ListItemButton
-                  key={index}
-                  onClick={(event) => selectGroup({ ...item, key: item._id })}
-                  selected={groupId === item._id}>
-                  <ListItemAvatar>
-                    <Avatar alt={item.group_name} src="/static/images/avatar/1.jpg"/>
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ m: 0 }}
-                    primary={item.group_name}
-                    secondary={
-                      <React.Fragment>
-                        <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                          简介：
-                        </Typography>
-                        {item.group_desc}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItemButton>
-              ))
-            }
-          </List>
-        </Box>
+        <List sx={{ width: "100%", p: 0, maxWidth: "100%", bgcolor: "background.paper" }}>
+          {
+            searchGroupList.map((item, index) => (
+              <ListItemButton
+                key={index}
+                onClick={(event) => selectGroup({ ...item, key: item._id })}
+                selected={groupId === item._id}>
+                <ListItemAvatar>
+                  <Avatar alt={item.group_name} src="/static/images/avatar/1.jpg"/>
+                </ListItemAvatar>
+                <ListItemText
+                  sx={{ m: 0 }}
+                  primary={item.group_name}
+                  secondary={
+                    <React.Fragment>
+                      <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
+                        简介：
+                      </Typography>
+                      {item.group_desc}
+                    </React.Fragment>
+                  }
+                />
+              </ListItemButton>
+            ))
+          }
+        </List>
       </Box>
     </div>
   )
