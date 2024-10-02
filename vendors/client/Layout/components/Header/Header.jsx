@@ -407,7 +407,7 @@ function PrimarySearchAppBar(props) {
   );
   /*  */
   return (
-    <Header sx={{ zIndex: 1201 }}>
+    <Header>
       <Link to={"/"}>
         <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
           <LogoSVG length="36px"/>

@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const appSlice = createSlice({
   name: "app",
   initialState: {
+    theme: "light",
     cancelTokens: new Map()
   },
   reducers: {

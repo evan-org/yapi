@@ -1,8 +1,8 @@
 // project imports
-import config from "@/config";
+import config from "@/config.js";
 
 // action - state management
-import * as actionTypes from "../actions";
+import * as actionTypes from "../actions.js";
 
 export const initialState = {
   isOpen: [], // for active default menu

@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 //
 import { Layout } from "antd";
+
 const { Content, Sider } = Layout;
+import { drawerWidth } from "@/reducer/constant.js";
 //
 import GroupList from "./components/GroupList/GroupList.jsx";
 import GroupContent from "./components/GroupContent/GroupContent.jsx";
@@ -37,12 +39,17 @@ function Group(props) {
   }, []);
   return (
     <Layout>
-      <Sider width={260}>
+      <Sider width={drawerWidth} theme={"light"}>
         <GroupList/>
       </Sider>
-      <Content>
-        <GroupContent/>
-      </Content>
+      <Layout
+        style={{
+          padding: "16px",
+        }}>
+        <Content>
+          <GroupContent/>
+        </Content>
+      </Layout>
     </Layout>
   )
 }
