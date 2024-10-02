@@ -33,6 +33,10 @@ function GroupList(props) {
   const { currGroup, setCurrGroup, groupList, fetchGroupList, study, currentGroupId } = props;
   const [groupId, setGroupId] = useState(() => !isNaN(paramsGroupId) ? parseInt(paramsGroupId) : 0);
   //
+  useEffect(() => {
+    setSearchGroupList(() => groupList);
+  }, [groupList]);
+  //
   const [searchGroupList, setSearchGroupList] = useState(groupList);
   //
   const onLoad = async() => {
@@ -57,7 +61,7 @@ function GroupList(props) {
   }
   //
   useEffect(() => {
-    onLoad();
+    void onLoad();
   }, []);
   //
   const selectGroup = async(e) => {
@@ -95,15 +99,15 @@ function GroupList(props) {
             <Input.Search placeholder="搜索分类" onChange={(e) => searchGroup(e)} onSearch={(v) => searchGroup(null, v)}/>
           </div>
         </div> */}
-      <div style={{ padding: "10px 16px" }}>
+      <div style={{ padding: "10px" }}>
         <Flex>
-          <Input style={{ flex: 1 }} placeholder="搜索分类" allowClear onChange={(e) => searchGroup(e.target.value, e)} suffix={<SearchOutlined />}/>
+          <Input style={{ flex: 1 }} placeholder="搜索分类" allowClear onChange={(e) => searchGroup(e.target.value, e)} suffix={<SearchOutlined/>}/>
           <Tooltip title="添加分组">
             <AddGroup aria-label="添加分组" title={"添加分组"} type={"icon"}/>
           </Tooltip>
         </Flex>
       </div>
-      <Divider style={{margin: "0px"}}/>
+      <Divider style={{ margin: "0px" }}/>
       {/*  */}
       {groupList.length === 0 ? <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/> : null}
       {/*  */}

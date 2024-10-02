@@ -4,13 +4,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Layout } from "antd";
 const { Header } = Layout;
 //
-import { Box, AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, InputBase, Badge } from "@mui/material";
+import { IconButton, Menu, MenuItem, InputBase, Badge } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import MoreIcon from "@mui/icons-material/MoreVert";
 //
 import { Dropdown, message, Tooltip, Popover, Tag } from "antd";
 import Icon from "@ant-design/icons";
@@ -407,7 +405,14 @@ function PrimarySearchAppBar(props) {
   );
   /*  */
   return (
-    <Header>
+    <Header style={{
+      position: "sticky",
+      top: 0,
+      zIndex: 1,
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+    }}>
       <Link to={"/"}>
         <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}>
           <LogoSVG length="36px"/>
