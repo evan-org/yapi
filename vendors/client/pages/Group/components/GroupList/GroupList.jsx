@@ -1,22 +1,20 @@
+import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Input, Spin, Tooltip } from "antd";
+import { Divider, Flex, Input, Spin, Tooltip } from "antd";
+
+const { Search } = Input;
 //
-import { Box, List, Paper, InputBase, ListItemAvatar, ListItemText, Typography, Avatar, Divider, ListItemButton, Toolbar, ListItem } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
+import { Box, List, ListItemAvatar, ListItemText, Typography, Avatar, ListItemButton } from "@mui/material";
 //
-// import GuideBtns from "@/components/GuideBtns/GuideBtns.jsx";
 import AddGroup from "@/components/AddGroup/AddGroup.jsx";
 //
-import { fetchNewsData } from "@/reducer/modules/news";
+import { fetchNewsData } from "@/reducer/modules/news.js";
 import { fetchGroupList, setCurrGroup, fetchGroupMsg } from "@/reducer/modules/group.js";
 //
 import styles from "./GroupList.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
-// third-party
-import PerfectScrollbar from "react-perfect-scrollbar";
 
 const tip = (
   <div className="title-container">
@@ -34,6 +32,8 @@ function GroupList(props) {
   const { groupId: paramsGroupId } = useParams();
   const { currGroup, setCurrGroup, groupList, fetchGroupList, study, currentGroupId } = props;
   const [groupId, setGroupId] = useState(() => !isNaN(paramsGroupId) ? parseInt(paramsGroupId) : 0);
+  //
+  const [searchGroupList, setSearchGroupList] = useState(groupList);
   //
   const onLoad = async() => {
     console.debug("GroupList.jsx onLoad: ", props);
@@ -72,21 +72,19 @@ function GroupList(props) {
     }
   }
   //
-  const searchGroup = (e, value) => {
+  const searchGroup = (value, e) => {
+    console.log(e);
     const v = value || e.target.value;
     console.log(v);
-    // const { groupList } = this.props;
-    // if (v === "") {
-    //   this.setState({ groupList });
-    // } else {
-    //   this.setState({
-    //     groupList: groupList.filter((group) => new RegExp(v, "i").test(group.group_name))
-    //   });
-    // }
+    if (v === "") {
+      setSearchGroupList(groupList);
+    } else {
+      setSearchGroupList(() => groupList.filter((group) => new RegExp(v, "i").test(group.group_name)));
+    }
   }
   //
   return (
-    <Box className={styles.GroupList} sx={{ overflow: "hidden", height: "100%", display: "flex", flexDirection: "column" }}>
+    <div className={styles.GroupList}>
       {/* {!study ? <div className="study-mask"/> : null} */}
       {/* <Box className="curr-group">
           <Box component={"h3"} className="curr-group-name name">{currGroup.group_name}</Box>
@@ -97,20 +95,15 @@ function GroupList(props) {
             <Input.Search placeholder="搜索分类" onChange={(e) => searchGroup(e)} onSearch={(v) => searchGroup(null, v)}/>
           </div>
         </div> */}
-      <Box sx={{ p: "10px 16px" }}>
-        <Paper
-          elevation={3}
-          component="form"
-          sx={{ p: "0 10px 0 10px", display: "flex", alignItems: "center", width: "100%" }}>
-          <InputBase sx={{ ml: 1, flex: 1 }} placeholder="搜索分类" inputProps={{ "aria-label": "搜索分类" }}/>
-          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon/>
-          </IconButton>
-          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical"/>
-          <AddGroup aria-label="添加分组" title={"添加分组"} type={"icon"}/>
-        </Paper>
-      </Box>
-      <Divider />
+      <div style={{ padding: "10px 16px" }}>
+        <Flex>
+          <Input style={{ flex: 1 }} placeholder="搜索分类" allowClear onChange={(e) => searchGroup(e.target.value, e)} suffix={<SearchOutlined />}/>
+          <Tooltip title="添加分组">
+            <AddGroup aria-label="添加分组" title={"添加分组"} type={"icon"}/>
+          </Tooltip>
+        </Flex>
+      </div>
+      <Divider style={{margin: "0px"}}/>
       {/*  */}
       {groupList.length === 0 && <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/>}
       {/*  */}
@@ -126,7 +119,7 @@ function GroupList(props) {
           }}>
           <List sx={{ width: "100%", p: 0, maxWidth: "100%", bgcolor: "background.paper" }}>
             {
-              groupList.map((item, index) => (
+              searchGroupList.map((item, index) => (
                 <ListItemButton
                   key={index}
                   onClick={(event) => selectGroup({ ...item, key: item._id })}
@@ -152,7 +145,7 @@ function GroupList(props) {
           </List>
         </Box>
       </Box>
-    </Box>
+    </div>
   )
 }
 //

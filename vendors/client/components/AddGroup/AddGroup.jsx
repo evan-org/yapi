@@ -5,9 +5,11 @@ import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 //
-import { Box, Snackbar, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, TextField, Zoom } from "@mui/material";
+import { Button } from "antd";
+import { PlusSquareOutlined } from "@ant-design/icons";
+//
+import { Box, Snackbar, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, TextField, Zoom } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import request from "@/service/request.js";
 //
 import UserAutoComplete from "@/components/UserAutoComplete/UserAutoComplete.jsx";
@@ -105,9 +107,9 @@ function AddGroupModal(props) {
     <>
       {
         props.type === "icon"
-          ? <IconButton color="primary" sx={{ p: "10px" }} aria-label="directions" onClick={handleClickOpen}>
-            <AddToPhotosIcon aria-label={props.title} title={props.title}/>
-          </IconButton>
+          ? <Button style={{ marginLeft: "10px", width: "32px" }} type="primary" shape="default"
+            icon={<PlusSquareOutlined/>}
+            onClick={handleClickOpen}/>
           : <Button type={props.type} title={props.title} variant="contained" color="primary" onClick={handleClickOpen}>
             创建分组
           </Button>
@@ -119,7 +121,7 @@ function AddGroupModal(props) {
         <Box sx={{ minWidth: 120 }} component={"form"}>
           <DialogTitle align={"center"}>创建分组</DialogTitle>
           {/*  */}
-          <DialogContent sx={{p: 0}}>
+          <DialogContent sx={{ p: 0 }}>
             <Box sx={{ m: 3, mb: 0 }}>
               <TextField sx={{ mb: 2 }} fullWidth label="分组名称" placeholder={"请输入分组名称"} name={"group_name"} value={formik.values.group_name}
                 error={Boolean(formik.touched.group_name && formik.errors.group_name)}
