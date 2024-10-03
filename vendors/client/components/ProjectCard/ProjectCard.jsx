@@ -7,11 +7,10 @@ import PropTypes from "prop-types";
 import constants from "@/utils/variable.js";
 import produce from "immer";
 //
-import { debounce } from "@/utils/common.js";
+import { debounce, trim } from "@/utils/common.js";
 import { getProject, checkProjectName, copyProjectMsg } from "@/reducer/modules/project.js";
 import { delFollow, addFollow } from "@/reducer/modules/follow.js";
-import { trim } from "@/utils/common.js";
-
+//
 class ProjectCard extends Component {
   constructor(props) {
     super(props);
