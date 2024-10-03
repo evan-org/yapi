@@ -1,7 +1,7 @@
-import React, { PureComponent as Component } from "react";
+import React, { useState, useEffect, PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { matchPath, Outlet } from "react-router-dom";
+import { useNavigate, useParams, Outlet, useMatch, useLocation, useMatches } from "react-router-dom";
 import { SubNav } from "@/components/index.js";
 import Loading from "@/components/Loading/Loading.jsx";
 //
@@ -16,89 +16,33 @@ import { fetchGroupMsg } from "@/reducer/modules/group.js";
 import { setBreadcrumb } from "@/reducer/modules/user.js";
 import { getProject } from "@/reducer/modules/project.js";
 //
-// const plugin = require("@/plugin.js");
-class Project extends Component {
-  static propTypes = {
-    match: PropTypes.object,
-    curProject: PropTypes.object,
-    getProject: PropTypes.func,
-    location: PropTypes.object,
-    fetchGroupMsg: PropTypes.func,
-    setBreadcrumb: PropTypes.func,
-    currGroup: PropTypes.object
+function ProjectMain(props) {
+  //
+  const [defaultName, setDefaultName] = useState("接口");
+  const [subNavData, setSubNavData] = useState([]);
+  const { curProject, currGroup } = props;
+  const navigate = useNavigate();
+  // const matches = useMatches();
+  // console.log(matches);
+  const match = useMatch("/project/:id/:action");
+  console.log(navigate, match);
+  //
+  const routers = {
+    interface: { name: "接口", path: "/project/:id/interface/:action", component: Interface },
+    activity: { name: "动态", path: "/project/:id/activity", component: Activity },
+    data: { name: "数据管理", path: "/project/:id/data", component: Data },
+    members: { name: "成员管理", path: "/project/:id/members", component: Members },
+    setting: { name: "设置", path: "/project/:id/setting", component: Setting },
+    wiki: { name: "Wiki", path: "/project/:id/wiki", component: Wiki }
   };
-  constructor(props) {
-    super(props);
-  }
-  async UNSAFE_componentWillMount() {
-    await this.props.getProject(this.props.match.params.id);
-    await this.props.fetchGroupMsg(this.props.curProject.group_id);
-    this.props.setBreadcrumb([
-      {
-        name: this.props.currGroup.group_name,
-        href: "/group/" + this.props.currGroup._id
-      },
-      {
-        name: this.props.curProject.name
-      }
-    ]);
-  }
-  async UNSAFE_componentWillReceiveProps(nextProps) {
-    const currProjectId = this.props.match.params.id;
-    const nextProjectId = nextProps.match.params.id;
-    if (currProjectId !== nextProjectId) {
-      await this.props.getProject(nextProjectId);
-      await this.props.fetchGroupMsg(this.props.curProject.group_id);
-      this.props.setBreadcrumb([
-        {
-          name: this.props.currGroup.group_name,
-          href: "/group/" + this.props.currGroup._id
-        },
-        {
-          name: this.props.curProject.name
-        }
-      ]);
-    }
-  }
-  render() {
-    const { match, location } = this.props;
-    let routers = {
-      interface: { name: "接口", path: "/project/:id/interface/:action", component: Interface },
-      activity: { name: "动态", path: "/project/:id/activity", component: Activity },
-      data: { name: "数据管理", path: "/project/:id/data", component: Data },
-      members: { name: "成员管理", path: "/project/:id/members", component: Members },
-      setting: { name: "设置", path: "/project/:id/setting", component: Setting },
-      wiki: { name: "Wiki", path: "/project/:id/wiki", component: Wiki }
-    };
-    //
-    let key, defaultName;
-    for (key in routers) {
-      if (
-        matchPath(location.pathname, {
-          path: routers[key].path
-        }) !== null
-      ) {
-        defaultName = routers[key].name;
-        break;
-      }
-    }
-    // let subnavData = [{
-    //   name: routers.interface.name,
-    //   path: `/project/${match.params.id}/interface/api`
-    // }, {
-    //   name: routers.activity.name,
-    //   path: `/project/${match.params.id}/activity`
-    // }, {
-    //   name: routers.data.name,
-    //   path: `/project/${match.params.id}/data`
-    // }, {
-    //   name: routers.members.name,
-    //   path: `/project/${match.params.id}/members`
-    // }, {
-    //   name: routers.setting.name,
-    //   path: `/project/${match.params.id}/setting`
-    // }];
-    let subnavData = [];
+  //
+  useEffect(() => {
+    // for (const key in routers) {
+    //   if (useMatch(routers[key].path)) {
+    //     setDefaultName(routers[key].name);
+    //     break;
+    //   }
+    // }
     Object.keys(routers).forEach((key) => {
       let item = routers[key];
       let value = {};
@@ -113,46 +57,62 @@ class Project extends Component {
           path: item.path.replace(/\:id/gi, match.params.id)
         };
       }
-      subnavData.push(value);
+      setSubNavData((prev) => [...prev, value]);
     });
-    if (this.props.currGroup.type === "private") {
-      subnavData = subnavData.filter((item) => item.name != "成员管理");
+    //
+    if (currGroup.type === "private") {
+      setSubNavData((prev) => prev.filter((item) => item.name !== "成员管理"));
     }
-    if (this.props.curProject == null || Object.keys(this.props.curProject).length === 0) {
-      return <Loading visible/>;
-    }
-    return (
-      <div>
-        <SubNav default={defaultName} data={subnavData}/>
-        <Outlet/>
-        {/* <Switch>*/}
-        {/*  <Redirect exact from="/project/:id" to={`/project/${match.params.id}/interface/api`}/>*/}
-        {/*  <Route path={routers.activity.path} component={Activity}/>*/}
-        {/*  <Route path={routers.setting.path} component={Setting}/>*/}
-        {/*  {this.props.currGroup.type !== "private"*/}
-        {/*    ? <Route path={routers.members.path} component={routers.members.component}/>*/}
-        {/*    : null*/}
-        {/*  }*/}
-        {/*  <Route path={routers.data.path} component={Data}/>*/}
-        {/*  {Object.keys(routers).map((key) => {*/}
-        {/*    let item = routers[key];*/}
-        {/*    return key === "members" ? (*/}
-        {/*      this.props.currGroup.type !== "private" ? (*/}
-        {/*        <Route path={item.path} component={item.component} key={key}/>*/}
-        {/*      ) : null*/}
-        {/*    ) : (*/}
-        {/*      <Route path={item.path} component={item.component} key={key}/>*/}
-        {/*    );*/}
-        {/*  })}*/}
-        {/* </Switch>*/}
-      </div>
-    );
+  }, []);
+  //
+  useEffect(() => {
+    void onInitData();
+  }, [match.params.id]);
+  //
+  const onInitData = async() => {
+    const { currGroup, getProject, fetchGroupMsg, curProject, setBreadcrumb } = props;
+    await getProject(match.params.id);
+    await fetchGroupMsg(curProject.group_id);
+    setBreadcrumb([
+      {
+        name: currGroup.group_name,
+        href: "/group/" + currGroup._id
+      },
+      {
+        name: curProject.name
+      }
+    ]);
   }
-}
-//
-function ProjectMain() {
+  //
+  if (curProject == null || Object.keys(curProject).length === 0) {
+    return <Loading visible/>;
+  }
+  //
   return (
-    <div></div>
+    <div>
+      <SubNav default={defaultName} data={subNavData}/>
+      <Outlet/>
+      {/* <Switch>*/}
+      {/*  <Redirect exact from="/project/:id" to={`/project/${match.params.id}/interface/api`}/>*/}
+      {/*  <Route path={routers.activity.path} component={Activity}/>*/}
+      {/*  <Route path={routers.setting.path} component={Setting}/>*/}
+      {/*  {this.props.currGroup.type !== "private"*/}
+      {/*    ? <Route path={routers.members.path} component={routers.members.component}/>*/}
+      {/*    : null*/}
+      {/*  }*/}
+      {/*  <Route path={routers.data.path} component={Data}/>*/}
+      {/*  {Object.keys(routers).map((key) => {*/}
+      {/*    let item = routers[key];*/}
+      {/*    return key === "members" ? (*/}
+      {/*      this.props.currGroup.type !== "private" ? (*/}
+      {/*        <Route path={item.path} component={item.component} key={key}/>*/}
+      {/*      ) : null*/}
+      {/*    ) : (*/}
+      {/*      <Route path={item.path} component={item.component} key={key}/>*/}
+      {/*    );*/}
+      {/*  })}*/}
+      {/* </Switch>*/}
+    </div>
   )
 }
 export default connect(
@@ -165,4 +125,4 @@ export default connect(
     fetchGroupMsg,
     setBreadcrumb
   }
-)(Project)
+)(ProjectMain);

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Divider, Empty, Flex, Input, Spin, Tooltip } from "antd";
+import { Divider, Empty, Flex, Input, Spin, Tooltip, List } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 //
-import { List, ListItemAvatar, ListItemText, Typography, Avatar, ListItemButton } from "@mui/material";
+import { ListItemAvatar, ListItemText, Typography, Avatar, ListItemButton } from "@mui/material";
 //
 import AddGroup from "@/components/AddGroup/AddGroup.jsx";
 //

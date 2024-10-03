@@ -77,6 +77,38 @@ const router = [
             name: "Project",
             element: lazy(() => import("../pages/Project/Project.jsx")),
             meta: { title: "查看报告", auth: true },
+            children: [
+              {
+                path: "interface/:action",
+                name: "ProjectInterface",
+                element: lazy(() => import("../pages/Project/Interface/Interface.jsx")),
+                meta: { title: "接口", auth: true },
+              },
+              {
+                path: "activity",
+                name: "ProjectActivity",
+                element: lazy(() => import("../pages/Project/Activity/Activity.jsx")),
+                meta: { title: "动态", auth: true }
+              },
+              {
+                path: "data",
+                name: "ProjectData",
+                element: lazy(() => import("../pages/Project/Data/Data.jsx")),
+                meta: { title: "数据管理", auth: true }
+              },
+              {
+                path: "members",
+                name: "ProjectData",
+                element: lazy(() => import("@/pages/Project/Members/Members.jsx")),
+                meta: { title: "成员管理", auth: true }
+              },
+              {
+                path: "setting",
+                name: "ProjectSetting",
+                element: lazy(() => import("../pages/Project/Setting/Setting.jsx")),
+                meta: { title: "设置", auth: true }
+              }
+            ]
           },
           {
             path: "interface",

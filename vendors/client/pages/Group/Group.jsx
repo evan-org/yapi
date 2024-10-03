@@ -39,7 +39,7 @@ function Group(props) {
   }, []);
   return (
     <Layout>
-      <Sider width={drawerWidth} theme={"light"}>
+      <Sider width={drawerWidth} theme={"light"} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <GroupList/>
       </Sider>
       <Layout

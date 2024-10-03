@@ -1,9 +1,9 @@
-import "./ProjectCard.scss";
-import React, { PureComponent as Component } from "react";
+import React from "react";
+import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+//
 import { Card, Tooltip, Modal, Alert, Input, message } from "antd";
 import Icon from "@ant-design/icons";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import constants from "@/utils/variable.js";
 import produce from "immer";
 //
@@ -11,59 +11,34 @@ import { debounce, trim } from "@/utils/common.js";
 import { getProject, checkProjectName, copyProjectMsg } from "@/reducer/modules/project.js";
 import { delFollow, addFollow } from "@/reducer/modules/follow.js";
 //
-class ProjectCard extends Component {
-  constructor(props) {
-    super(props);
-    this.add = debounce(this.add, 400);
-    this.del = debounce(this.del, 400);
-  }
-
-  static propTypes = {
-    projectData: PropTypes.object,
-    uid: PropTypes.number,
-    inFollowPage: PropTypes.bool,
-    callbackResult: PropTypes.func,
-    history: PropTypes.object,
-    delFollow: PropTypes.func,
-    addFollow: PropTypes.func,
-    isShow: PropTypes.bool,
-    getProject: PropTypes.func,
-    checkProjectName: PropTypes.func,
-    copyProjectMsg: PropTypes.func,
-    currPage: PropTypes.number
-  };
-
-  copy = async(projectName) => {
-    const id = this.props.projectData._id;
-
-    let projectData = await this.props.getProject(id);
-    let data = projectData.payload.data.data;
+import styles from "./ProjectCard.module.scss";
+//
+function ProjectCard(props) {
+  const { projectData, inFollowPage, isShow, callbackResult, getProject, copyProjectMsg } = props;
+  //
+  const navigate = useNavigate();
+  //
+  const copy = async(projectName) => {
+    const id = projectData._id;
+    let newProjectData = await getProject(id);
+    let data = newProjectData.payload.data.data;
     let newData = produce(data, (draftData) => {
       draftData.preName = draftData.name;
       draftData.name = projectName;
     });
-
-    await this.props.copyProjectMsg(newData);
+    await copyProjectMsg(newData);
     message.success("项目复制成功");
-    this.props.callbackResult();
+    callbackResult();
   };
-
   // 复制项目的二次确认
-  showConfirm = () => {
-    const that = this;
-
+  const showConfirm = () => {
     Modal.confirm({
-      title: "确认复制 " + that.props.projectData.name + " 项目吗？",
+      title: "确认复制 " + projectData.name + " 项目吗？",
       okText: "确认",
       cancelText: "取消",
       content: (
         <div style={{ marginTop: "10px", fontSize: "13px", lineHeight: "25px" }}>
-          <Alert
-            message={`该操作将会复制 ${
-              that.props.projectData.name
-            } 下的所有接口集合，但不包括测试集合中的接口`}
-            type="info"
-          />
+          <Alert message={`该操作将会复制 ${projectData.name} 下的所有接口集合，但不包括测试集合中的接口`} type="info"/>
           <div style={{ marginTop: "16px" }}>
             <p>
               <b>项目名称:</b>
@@ -74,92 +49,68 @@ class ProjectCard extends Component {
       ),
       async onOk() {
         const projectName = trim(document.getElementById("project_name").value);
-
         // 查询项目名称是否重复
-        const group_id = that.props.projectData.group_id;
-        await that.props.checkProjectName(projectName, group_id);
-        that.copy(projectName);
+        const group_id = projectData.group_id;
+        await checkProjectName(projectName, group_id);
+        await copy(projectName);
       },
       iconType: "copy",
       onCancel() {
       }
     });
   };
-
-  del = () => {
-    const id = this.props.projectData.projectid || this.props.projectData._id;
-    this.props.delFollow(id).then((res) => {
+  const del = () => {
+    const id = projectData.projectid || projectData._id;
+    delFollow(id).then((res) => {
       if (res.payload.data.errcode === 0) {
-        this.props.callbackResult();
+        callbackResult();
         // message.success('已取消关注！');  // 星号已做出反馈 无需重复提醒用户
       }
     });
   };
-
-  add = () => {
-    const { uid, projectData } = this.props;
+  const add = () => {
+    const { uid, projectData, addFollow } = props;
     const param = {
-      uid,
+      uid: uid,
       projectid: projectData._id,
       projectname: projectData.name,
       icon: projectData.icon || constants.PROJECT_ICON[0],
       color: projectData.color || constants.PROJECT_COLOR.blue
     };
-    this.props.addFollow(param).then((res) => {
+    addFollow(param).then((res) => {
       if (res.payload.data.errcode === 0) {
-        this.props.callbackResult();
+        callbackResult();
         // message.success('已添加关注！');  // 星号已做出反馈 无需重复提醒用户
       }
     });
   };
-
-  render() {
-    const { projectData, inFollowPage, isShow } = this.props;
-    return (
-      <div className="card-container">
-        <Card
-          bordered={false}
-          className="m-card"
-          onClick={() =>
-            this.props.history.push("/project/" + (projectData.projectid || projectData._id))
-          }
-        >
-          <Icon
-            type={projectData.icon || "star-o"}
-            className="ui-logo"
-            style={{
-              backgroundColor:
-                constants.PROJECT_COLOR[projectData.color] || constants.PROJECT_COLOR.blue
-            }}
-          />
-          <h4 className="ui-title">{projectData.name || projectData.projectname}</h4>
-        </Card>
-        <div
-          className="card-btns"
-          onClick={projectData.follow || inFollowPage ? this.del : this.add}
-        >
-          <Tooltip
-            placement="rightTop"
-            title={projectData.follow || inFollowPage ? "取消关注" : "添加关注"}
-          >
-            <Icon
-              type={projectData.follow || inFollowPage ? "star" : "star-o"}
-              className={"icon " + (projectData.follow || inFollowPage ? "active" : "")}
-            />
+  //
+  return (
+    <div className={styles.ProjectCardContainer}>
+      <Card bordered={false} className="m-card"
+        onClick={() => navigate({ pathname: "/project/" + (projectData.projectid || projectData._id) })}>
+        <Icon type={projectData.icon || "star-o"} className="ui-logo"
+          style={{
+            backgroundColor: constants.PROJECT_COLOR[projectData.color] || constants.PROJECT_COLOR.blue
+          }}/>
+        <h4 className="ui-title">{projectData.name || projectData.projectname}</h4>
+      </Card>
+      <div className="card-btns" onClick={projectData.follow || inFollowPage ? debounce(del, 400) : debounce(add, 400)}>
+        <Tooltip placement="rightTop" title={projectData.follow || inFollowPage ? "取消关注" : "添加关注"}>
+          <Icon type={projectData.follow || inFollowPage ? "star" : "star-o"}
+            className={"icon " + (projectData.follow || inFollowPage ? "active" : "")}/>
+        </Tooltip>
+      </div>
+      {isShow && (
+        <div className="copy-btns" onClick={showConfirm}>
+          <Tooltip placement="rightTop" title="复制项目">
+            <Icon type="copy" className="icon"/>
           </Tooltip>
         </div>
-        {isShow && (
-          <div className="copy-btns" onClick={this.showConfirm}>
-            <Tooltip placement="rightTop" title="复制项目">
-              <Icon type="copy" className="icon"/>
-            </Tooltip>
-          </div>
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  )
 }
-
 export default connect(
   (state) => ({
     uid: state.user.uid,
