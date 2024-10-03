@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Divider, Flex, Input, Spin, Tooltip } from "antd";
+import { Divider, Empty, Flex, Input, Spin, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 //
-import { Box, List, ListItemAvatar, ListItemText, Typography, Avatar, ListItemButton } from "@mui/material";
+import { List, ListItemAvatar, ListItemText, Typography, Avatar, ListItemButton } from "@mui/material";
 //
 import AddGroup from "@/components/AddGroup/AddGroup.jsx";
 //
@@ -108,34 +108,38 @@ function GroupList(props) {
       {/*  */}
       {groupList.length === 0 ? <Spin style={{ marginTop: 20, display: "flex", justifyContent: "center" }}/> : null}
       {/*  */}
-      <Box component={"div"} style={{ flex: 1, overflow: "hidden", height: "100%" }}>
-        <List sx={{ width: "100%", p: 0, maxWidth: "100%", bgcolor: "background.paper" }}>
-          {
-            searchGroupList.map((item, index) => (
-              <ListItemButton
-                key={index}
-                onClick={(event) => selectGroup({ ...item, key: item._id })}
-                selected={groupId === item._id}>
-                <ListItemAvatar>
-                  <Avatar alt={item.group_name} src="/static/images/avatar/1.jpg"/>
-                </ListItemAvatar>
-                <ListItemText
-                  sx={{ m: 0 }}
-                  primary={item.group_name}
-                  secondary={
-                    <React.Fragment>
-                      <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
-                        简介：
-                      </Typography>
-                      {item.group_desc}
-                    </React.Fragment>
-                  }
-                />
-              </ListItemButton>
-            ))
-          }
-        </List>
-      </Box>
+      <div className="group-list">
+        {
+          groupList.length === 0
+            ? <Empty/>
+            : <List>
+              {
+                searchGroupList.map((item, index) => (
+                  <ListItemButton
+                    key={index}
+                    onClick={(event) => selectGroup({ ...item, key: item._id })}
+                    selected={groupId === item._id}>
+                    <ListItemAvatar>
+                      <Avatar alt={item.group_name} src="/static/images/avatar/1.jpg"/>
+                    </ListItemAvatar>
+                    <ListItemText
+                      sx={{ m: 0 }}
+                      primary={item.group_name}
+                      secondary={
+                        <React.Fragment>
+                          <Typography sx={{ display: "inline" }} component="span" variant="body2" color="text.primary">
+                            简介：
+                          </Typography>
+                          {item.group_desc}
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItemButton>
+                ))
+              }
+            </List>
+        }
+      </div>
     </div>
   )
 }

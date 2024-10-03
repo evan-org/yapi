@@ -1,5 +1,4 @@
 import React, { PureComponent as Component } from "react";
-import PropTypes from "prop-types";
 import { FrownOutlined, MehOutlined } from "@ant-design/icons";
 import styles from "./ErrMsg.module.scss";
 /**
@@ -25,13 +24,6 @@ class ErrMsg extends Component {
   constructor(props) {
     super(props);
   }
-  static propTypes = {
-    type: PropTypes.string,
-    history: PropTypes.object,
-    title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    desc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    opration: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-  };
   render() {
     let { type, title, desc, opration } = this.props;
     let icon = "frown-o";

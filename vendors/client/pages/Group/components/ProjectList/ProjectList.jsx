@@ -8,9 +8,9 @@ import ProjectCard from "@/components/ProjectCard/ProjectCard.jsx";
 import ErrMsg from "@/components/ErrMsg/ErrMsg.jsx";
 //
 import { addProject, fetchProjectList, delProject, } from "@/reducer/modules/project.js";
-import { setBreadcrumb } from "@/reducer/modules/user";
+import { setBreadcrumb } from "@/reducer/modules/user.js";
 //
-import "./ProjectList.scss";
+import "./ProjectList.module.scss";
 
 class ProjectList extends Component {
   constructor(props) {
@@ -87,24 +87,28 @@ class ProjectList extends Component {
     projectData = [...followProject, ...noFollow];
     const isShow = /(admin)|(owner)|(dev)/.test(this.props.currGroup.role);
     const Follow = () => followProject.length ? (
-      <Row>
+      <>
         <h3 className="owner-type">我的关注</h3>
-        {followProject.map((item, index) => (
-          <Col xs={8} lg={6} xxl={4} key={index}>
-            <ProjectCard projectData={item} callbackResult={this.receiveRes}/>
-          </Col>
-        ))}
-      </Row>
+        <Row>
+          {followProject.map((item, index) => (
+            <Col xs={8} lg={6} xxl={4} key={index}>
+              <ProjectCard projectData={item} callbackResult={this.receiveRes}/>
+            </Col>
+          ))}
+        </Row>
+      </>
     ) : null;
     const NoFollow = () => noFollow.length ? (
-      <Row style={{ borderBottom: "1px solid #eee", marginBottom: "15px" }}>
+      <>
         <h3 className="owner-type">我的项目</h3>
-        {noFollow.map((item, index) => (
-          <Col xs={8} lg={6} xxl={4} key={index}>
-            <ProjectCard projectData={item} callbackResult={this.receiveRes} isShow={isShow}/>
-          </Col>
-        ))}
-      </Row>
+        <Row style={{ borderBottom: "1px solid #eee", marginBottom: "15px" }}>
+          {noFollow.map((item, index) => (
+            <Col xs={8} lg={6} xxl={4} key={index}>
+              <ProjectCard projectData={item} callbackResult={this.receiveRes} isShow={isShow}/>
+            </Col>
+          ))}
+        </Row>
+      </>
     ) : null;
     const OwnerSpace = () => projectData.length ? (
       <div>

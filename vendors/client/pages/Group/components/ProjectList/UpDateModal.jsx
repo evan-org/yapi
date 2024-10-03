@@ -4,12 +4,12 @@ import { connect } from "react-redux";
 import { Modal, Form, Input, Tooltip, Select, message, Button, Row, Col } from "antd";
 import Icon from "@ant-design/icons";
 import {
-  updateProject, fetchProjectList, delProject,
+  updateProject, fetchProjectList, delProject, changeTableLoading,
   // changeUpdateModal,
   // changeTableLoading
 } from "@/reducer/modules/project.js";
-
-import "./ProjectList.scss";
+//
+import "./ProjectList.module.scss";
 // Layout
 const formItemLayout = {
   labelCol: {
@@ -28,22 +28,6 @@ const formItemLayoutWithOutLabel = {
   }
 };
 let uuid = 0;
-@connect(
-  (state) => ({
-    projectList: state.project.projectList,
-    isUpdateModalShow: state.project.isUpdateModalShow,
-    handleUpdateIndex: state.project.handleUpdateIndex,
-    tableLoading: state.project.tableLoading,
-    currGroup: state.group.currGroup
-  }),
-  {
-    fetchProjectList,
-    updateProject,
-    delProject,
-    // changeUpdateModal,
-    // changeTableLoading
-  }
-)
 class UpDateModal extends Component {
   constructor(props) {
     super(props);
@@ -98,22 +82,20 @@ class UpDateModal extends Component {
         }));
         // console.log(assignValue);
         // changeTableLoading(true);
-        updateProject(assignValue)
-          .then((res) => {
-            if (res.payload.data.errcode == 0) {
+        updateProject(assignValue).then((res) => {
+          if (res.payload.data.errcode === 0) {
             // changeUpdateModal(false, -1);
-              message.success("修改成功! ");
-              fetchProjectList(currGroup._id).then(() => {
+            message.success("修改成功! ");
+            fetchProjectList(currGroup._id).then(() => {
               // changeTableLoading(false);
-              });
-            } else {
+            });
+          } else {
             // changeTableLoading(false);
-              message.error(res.payload.data.errmsg);
-            }
-          })
-          .catch(() => {
-            changeTableLoading(false);
-          });
+            message.error(res.payload.data.errmsg);
+          }
+        }).catch(() => {
+          changeTableLoading(false);
+        });
         form.resetFields();
       }
     });
@@ -358,4 +340,19 @@ class UpDateModal extends Component {
     );
   }
 }
-export default UpDateModal;
+export default connect(
+  (state) => ({
+    projectList: state.project.projectList,
+    isUpdateModalShow: state.project.isUpdateModalShow,
+    handleUpdateIndex: state.project.handleUpdateIndex,
+    tableLoading: state.project.tableLoading,
+    currGroup: state.group.currGroup
+  }),
+  {
+    fetchProjectList,
+    updateProject,
+    delProject,
+    // changeUpdateModal,
+    // changeTableLoading
+  }
+)(UpDateModal);
