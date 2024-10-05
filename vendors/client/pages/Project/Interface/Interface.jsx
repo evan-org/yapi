@@ -12,8 +12,8 @@ import InterfaceColMenu from "./InterfaceCol/InterfaceColMenu.jsx";
 import InterfaceColContent from "./InterfaceCol/InterfaceColContent.jsx";
 import InterfaceCaseContent from "./InterfaceCol/InterfaceCaseContent.jsx";
 //
-import { getProject } from "@/reducer/modules/project";
-import { setColData } from "@/reducer/modules/interfaceCol";
+import { getProject } from "@/reducer/modules/project.js";
+import { setColData } from "@/reducer/modules/interfaceCol.js";
 //
 import styles from "./Interface.module.scss";
 //

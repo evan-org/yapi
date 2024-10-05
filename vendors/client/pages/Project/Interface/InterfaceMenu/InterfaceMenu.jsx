@@ -9,9 +9,9 @@ import {
   deleteInterfaceData,
   deleteInterfaceCatData,
   initInterface
-} from "@/reducer/modules/interface";
+} from "@/reducer/modules/interface.js";
 //
-import { getProject } from "@/reducer/modules/project";
+import { getProject } from "@/reducer/modules/project.js";
 import { Input, Button, Modal, message, Tree, Tooltip } from "antd";
 //
 import AddInterfaceForm from "@/pages/Project/Interface/InterfaceMenu/AddInterfaceForm.jsx";
@@ -20,7 +20,7 @@ import AddInterfaceCatForm from "@/pages/Project/Interface/InterfaceMenu/AddInte
 import request from "@/service/request.js";
 import { Link } from "react-router-dom";
 import produce from "immer";
-import { arrayChangeIndex } from "@/utils/common";
+import { arrayChangeIndex } from "@/utils/common.js";
 //
 import "./interfaceMenu.scss";
 //

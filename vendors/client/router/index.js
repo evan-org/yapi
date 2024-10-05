@@ -67,62 +67,16 @@ const router = [
       },
       //
       {
-        path: "/project",
+        path: "/project/:id",
         name: "Project",
         element: lazy(() => import("../pages/Project/Project.jsx")),
         meta: { title: "查看报告", auth: true },
         children: [
           {
-            path: ":id",
-            name: "Project",
-            element: lazy(() => import("../pages/Project/Project.jsx")),
-            meta: { title: "查看报告", auth: true },
-            children: [
-              {
-                path: "interface/:action",
-                name: "ProjectInterface",
-                element: lazy(() => import("../pages/Project/Interface/Interface.jsx")),
-                meta: { title: "接口", auth: true },
-              },
-              {
-                path: "activity",
-                name: "ProjectActivity",
-                element: lazy(() => import("../pages/Project/Activity/Activity.jsx")),
-                meta: { title: "动态", auth: true }
-              },
-              {
-                path: "data",
-                name: "ProjectData",
-                element: lazy(() => import("../pages/Project/Data/Data.jsx")),
-                meta: { title: "数据管理", auth: true }
-              },
-              {
-                path: "members",
-                name: "ProjectData",
-                element: lazy(() => import("@/pages/Project/Members/Members.jsx")),
-                meta: { title: "成员管理", auth: true }
-              },
-              {
-                path: "setting",
-                name: "ProjectSetting",
-                element: lazy(() => import("../pages/Project/Setting/Setting.jsx")),
-                meta: { title: "设置", auth: true }
-              }
-            ]
-          },
-          {
-            path: "interface",
+            path: "interface/:action",
             name: "ProjectInterface",
             element: lazy(() => import("../pages/Project/Interface/Interface.jsx")),
-            meta: { title: "接口", auth: true },
-            children: [
-              {
-                path: ":action",
-                name: "ProjectInterface",
-                element: lazy(() => import("../pages/Project/Interface/Interface.jsx")),
-                meta: { title: "接口", auth: true },
-              }
-            ]
+            meta: { title: "接口", auth: true }
           },
           {
             path: "activity",
@@ -191,7 +145,7 @@ console.log("111111", router);
 // import AuthenticationRoutes from "./AuthenticationRoutes";
 // ==============================|| ROUTING RENDER ||============================== //
 export default function ThemeRoutes() {
-  return useRoutes([...router]);
+  return useRoutes(router);
 }
 // 路由处理方式
 const generateRouter = (routers) => routers.map((Item) => {

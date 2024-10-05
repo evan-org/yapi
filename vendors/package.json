@@ -126,7 +126,7 @@
     "react-jsonschema-form": "^1.8.1",
     "react-perfect-scrollbar": "^1.5.8",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^6.9.0",
+    "react-router-dom": "^6.26.2",
     "react-swipeable-views": "^0.14.0",
     "reactabular-dnd": "^8.9.0",
     "reactabular-table": "^8.9.0",
