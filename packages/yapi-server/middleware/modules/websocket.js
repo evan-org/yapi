@@ -26,7 +26,7 @@ function websocket(app) {
   console.log("init ws router", app);
   createAction(router, "/api", InterfaceController, "solveConflict", "/interface/solve_conflict", "get", false);
   //
-  yapi.emitHookSync("add_ws_router", addPluginRouter);
+  // yapi.emitHookSync("add_ws_router", addPluginRouter);
   app.ws.use(router.routes())
   app.ws.use(router.allowedMethods());
   app.ws.use((ctx, next) => ctx.websocket.send(JSON.stringify({

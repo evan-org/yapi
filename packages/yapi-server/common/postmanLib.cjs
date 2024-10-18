@@ -1,18 +1,16 @@
 const yapi = require("@server/yapi.js");
-//
-const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("../common/utils.cjs");
-const constants = require("../client/utils/variable.js");
 const _ = require("underscore");
 const URL = require("url");
-const { utils } = require("../common/powerString.cjs");
-//
-const HTTP_METHOD = constants.HTTP_METHOD;
 const axios = require("axios");
 const qs = require("qs");
 const CryptoJS = require("crypto-js");
 const jsrsasign = require("jsrsasign");
 const https = require("https");
 const isNode = typeof global == "object" && global.global === global;
+//
+const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("../common/utils.cjs");
+const { HTTP_METHOD } = require("./variable.cjs");
+const { utils } = require("../common/powerString.cjs");
 //
 const ContentTypeMap = {
   "application/json": "json",

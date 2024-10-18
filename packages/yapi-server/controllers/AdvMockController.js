@@ -6,7 +6,7 @@ const AdvMockModel = require("@server/models/AdvMockModel.js");
 const AdvMockCaseModel = require("@server/models/AdvMockCaseModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
-const config = require("@exts/yapi-plugin-adv-mock/index.cjs");
+const { HTTP_CODES } = require("../common/variable.cjs");
 
 class AdvMockController extends baseController {
   constructor(ctx) {
@@ -125,7 +125,7 @@ class AdvMockController extends baseController {
 
     data.code = isNaN(data.code) ? 200 : +data.code;
     data.delay = isNaN(data.delay) ? 0 : +data.delay;
-    if (config.httpCodes.indexOf(data.code) === -1) {
+    if (HTTP_CODES.indexOf(data.code) === -1) {
       return (ctx.body = yapi.commons.resReturn(null, 408, "非法的 httpCode"));
     }
 

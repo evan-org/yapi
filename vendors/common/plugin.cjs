@@ -7,7 +7,7 @@ const _ = require("underscore");
 function getPluginConfig(name, type) {
   let pluginConfig;
   if (type === "ext") {
-    pluginConfig = require("../exts/yapi-plugin-" + name + "/index.cjs");
+    pluginConfig = require("../exts/yapi-plugin-" + name + "/index.js");
   } else {
     pluginConfig = require("yapi-plugin-" + name);
   }

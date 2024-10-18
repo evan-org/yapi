@@ -40,8 +40,10 @@ class BaseController {
     }
     // openAPI 不需要任何权限
     const openApiRouteWhiteList = [
+      //
       "/api/open/run_auto_test",
       "/api/open/import_data",
+      //
       "/api/interface/add",
       "/api/interface/save",
       "/api/interface/up",
@@ -51,9 +53,11 @@ class BaseController {
       "/api/interface/add_cat",
       "/api/interface/getCatMenu",
       "/api/interface/list_cat",
+      //
       "/api/project/get",
-      "/api/plugin/export",
       "/api/project/up",
+      //
+      "/api/plugin/export",
       "/api/plugin/exportSwagger"
     ];
     //
