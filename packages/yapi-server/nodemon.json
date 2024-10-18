@@ -1,0 +1,16 @@
+{
+  "watch": [
+    "server/",
+    "common/",
+    "plugins/",
+    "exts/"
+  ],
+  "ext": "js,json,hbs",
+  "ignore": [
+    "node_modules"
+  ],
+  "execMap": {
+    "dev": "npm run server/app.js",
+    "prod": "npm run server/app.js"
+  }
+}

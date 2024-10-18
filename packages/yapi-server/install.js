@@ -1,11 +1,11 @@
 const fs = require("fs-extra");
-const yapi = require("@server/yapi.js");
+const yapi = require("./yapi.js");
 //
-const commons = require("@server/utils/commons.js");
-const useMongodb = require("@server/helper/mongodb.js");
-const UserModel = require("@server/models/UserModel.js");
+const commons = require("./utils/commons.js");
+const useMongodb = require("./helper/mongodb.js");
+const UserModel = require("./models/UserModel.js");
 const mongoose = require("mongoose");
-const { generatePassword, generatePasssalt } = require("@server/utils/sso.js");
+const { generatePassword, generatePasssalt } = require("./utils/sso.js");
 yapi.commons = commons;
 yapi.connect = useMongodb.connect();
 //

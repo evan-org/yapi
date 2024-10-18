@@ -26,10 +26,10 @@ const koaBody = require("koa-body");
 const koaWebsocket = require("koa-websocket");
 /* ******************************************************************************** */
 // 全局挂载
-const yapi = require("@server/yapi.js");
-const commons = require("@server/utils/commons.js");
-const useMongodb = require("@server/helper/mongodb.js");
-const storageCreator = require("@server/utils/storage.js");
+const yapi = require("./yapi.js");
+const commons = require("./utils/commons.js");
+const useMongodb = require("./helper/mongodb.js");
+const storageCreator = require("./utils/storage.js");
 yapi.commons = commons;
 yapi.connect = useMongodb.connect();
 yapi.storageCreator = storageCreator;
@@ -42,9 +42,14 @@ const NoticePlugin = require("./plugins/NoticePlugin.js");
 NoticePlugin();
 /* ******************************************************************************** */
 const app = koaWebsocket(new Koa());
-const { websocketMiddleware } = require("@server/middleware/index.js");
+const yapiMiddleware = require("./middleware/yapi.js");
+const { websocketMiddleware } = require("./middleware/index.js");
+
 // 错误处理中间件
 onerror(app);
+
+// 加载 yapi 中间件
+app.use(yapiMiddleware(yapi));
 
 // 使用 koa-helmet 中间件
 app.use(koaHelmet());
@@ -74,7 +79,7 @@ websocketMiddleware(app);
 // app.proxy = true;
 // app.use(router.routes()).use(router.allowedMethods());
 // console.log("router.routes()", router.routes());
-const router = require("@server/routes/index.js");
+const router = require("./routes/index.js");
 app.use(router());
 // 启动服务器
 const server = app.listen(yapi.WEBROOT_CONFIG.port);
