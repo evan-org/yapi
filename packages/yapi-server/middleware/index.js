@@ -1,4 +1,4 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 const websocket = require("./modules/websocket.js");
 /** ***************************************************************************/
 /**

@@ -1,4 +1,4 @@
-const BaseModel = require("@server/models/BaseModel.js");
+const BaseModel = require("@/models/BaseModel.js");
 const mongoose = require("mongoose");
 class StorageModel extends BaseModel {
   constructor() {

@@ -86,9 +86,6 @@
   },
   "_moduleAliases": {
     "@": ".",
-    "@server": ".",
-    "@common": "./common",
-    "@client": "./client",
-    "@exts": "./exts"
+    "@server": "."
   }
 }

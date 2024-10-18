@@ -187,7 +187,7 @@ function emitHook(name, ...args) {
       let promiseAll = [];
       hook.listener.forEach((item) => {
         if (typeof item === "function") {
-          console.warn("11111111111111111", pluginModule, ...args);
+          console.warn("plugin.js -> emitHook", pluginModule, ...args);
           promiseAll.push(Promise.resolve(item.call(pluginModule, ...args)));
         }
       });

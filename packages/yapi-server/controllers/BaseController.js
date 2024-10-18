@@ -1,14 +1,14 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const ProjectModel = require("@server/models/ProjectModel.js");
-const UserModel = require("@server/models/UserModel.js");
-const InterfaceModel = require("@server/models/InterfaceModel.js");
-const GroupModel = require("@server/models/GroupModel.js");
-const TokenModel = require("@server/models/TokenModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
+const UserModel = require("@/models/UserModel.js");
+const InterfaceModel = require("@/models/InterfaceModel.js");
+const GroupModel = require("@/models/GroupModel.js");
+const TokenModel = require("@/models/TokenModel.js");
 //
 const _ = require("underscore");
 const jwt = require("jsonwebtoken");
-const responseAction = require("@server/utils/responseAction.js");
+const responseAction = require("@/utils/responseAction.js");
 const { parseToken } = require("../utils/sso.js");
 // 不需要登录校验的API
 const whiteList = [
@@ -111,6 +111,8 @@ class BaseController {
     return parseInt(this.$uid, 10);
   }
   async checkLogin(ctx) {
+    console.log("checkLogin", ctx);
+    //
     const { authorization, "user-id": uid } = ctx.headers;
     if (!(authorization && uid)) {
       return false
@@ -123,7 +125,7 @@ class BaseController {
       }
       const userInsert = yapi.getInst(UserModel);
       const result = await userInsert.findById(uid);
-      console.log("11111111111111111", result);
+      console.log("BaseController.js ---> userInsert.findById", result);
       if (!result) {
         return false;
       }

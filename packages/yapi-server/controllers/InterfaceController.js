@@ -1,16 +1,16 @@
 const fs = require("fs-extra");
 const path = require("path");
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const baseController = require("@server/controllers/BaseController.js");
+const baseController = require("@/controllers/BaseController.js");
 //
-const InterfaceModel = require("@server/models/InterfaceModel.js");
-const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
-const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const FollowModel = require("@server/models/FollowModel.js");
-const GroupModel = require("@server/models/GroupModel.js");
-const UserModel = require("@server/models/UserModel.js");
-const ProjectModel = require("@server/models/ProjectModel.js");
+const InterfaceModel = require("@/models/InterfaceModel.js");
+const InterfaceCatModel = require("@/models/InterfaceCatModel.js");
+const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
+const FollowModel = require("@/models/FollowModel.js");
+const GroupModel = require("@/models/GroupModel.js");
+const UserModel = require("@/models/UserModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
 //
 const _ = require("underscore");
 const url = require("url");

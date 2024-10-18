@@ -1,16 +1,16 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 // controllers
-const interfaceController = require("@server/controllers/InterfaceController.js");
-const groupController = require("@server/controllers/GroupController.js");
-const userController = require("@server/controllers/UserController.js");
-const interfaceColController = require("@server/controllers/InterfaceColController.js");
-const testController = require("@server/controllers/TestController.js");
-const projectController = require("@server/controllers/ProjectController.js");
-const logController = require("@server/controllers/LogController.js");
-const followController = require("@server/controllers/FollowController.js");
-const openController = require("@server/controllers/OpenController.js");
+const interfaceController = require("@/controllers/InterfaceController.js");
+const groupController = require("@/controllers/GroupController.js");
+const userController = require("@/controllers/UserController.js");
+const interfaceColController = require("@/controllers/InterfaceColController.js");
+const testController = require("@/controllers/TestController.js");
+const projectController = require("@/controllers/ProjectController.js");
+const logController = require("@/controllers/LogController.js");
+const followController = require("@/controllers/FollowController.js");
+const openController = require("@/controllers/OpenController.js");
 //
-const { createAction } = require("@server/utils/commons.js");
+const { createAction } = require("@/utils/commons.js");
 //
 const Router = require("@koa/router");
 const router = new Router();

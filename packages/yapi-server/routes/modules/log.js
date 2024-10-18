@@ -1,6 +1,6 @@
 const Router = require("@koa/router");
-const requestAction = require("@server/utils/requestAction.js");
-const Controller = require("@server/controllers/LogController.js");
+const requestAction = require("@/utils/requestAction.js");
+const Controller = require("@/controllers/LogController.js");
 const router = new Router({ prefix: "/log" });
 
 // controller: logController

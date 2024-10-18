@@ -1,11 +1,11 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const BaseController = require("@server/controllers/BaseController.js");
+const BaseController = require("@/controllers/BaseController.js");
 //
-const syncModel = require("@server/models/SwaggerAutoSyncModel.js");
-const ProjectModel = require("@server/models/ProjectModel.js");
+const syncModel = require("@/models/SwaggerAutoSyncModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
 //
-const SwaggerAutoSyncUtils = require("@server/controllers/utils/SwaggerAutoSyncUtils.js");
+const SwaggerAutoSyncUtils = require("@/controllers/utils/SwaggerAutoSyncUtils.js");
 class SwaggerAutoSyncController extends BaseController {
   constructor(ctx) {
     super(ctx);

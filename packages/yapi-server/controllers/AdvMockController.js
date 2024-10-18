@@ -1,10 +1,10 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const baseController = require("@server/controllers/BaseController.js");
+const baseController = require("@/controllers/BaseController.js");
 //
-const AdvMockModel = require("@server/models/AdvMockModel.js");
-const AdvMockCaseModel = require("@server/models/AdvMockCaseModel.js");
-const UserModel = require("@server/models/UserModel.js");
+const AdvMockModel = require("@/models/AdvMockModel.js");
+const AdvMockCaseModel = require("@/models/AdvMockCaseModel.js");
+const UserModel = require("@/models/UserModel.js");
 //
 const { HTTP_CODES } = require("../common/variable.cjs");
 

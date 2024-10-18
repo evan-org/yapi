@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-const yapi = require("@server/yapi.js");
-const UserModel = require("@server/models/UserModel.js");
+const yapi = require("@/yapi.js");
+const UserModel = require("@/models/UserModel.js");
 // 定义白名单路由
 const whitelist = ["/login", "/public"];
 /**

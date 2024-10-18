@@ -1,9 +1,9 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const baseController = require("@server/controllers/BaseController.js");
-const InterfaceModel = require("@server/models/InterfaceModel.js");
-const ProjectModel = require("@server/models/ProjectModel.js");
-const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
+const baseController = require("@/controllers/BaseController.js");
+const InterfaceModel = require("@/models/InterfaceModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
+const InterfaceCatModel = require("@/models/InterfaceCatModel.js");
 //
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
@@ -81,7 +81,7 @@ class GenServicesController extends baseController {
       curProject = await this.ProjectModel.get(pid);
       const basepath = curProject.basepath;
       if (isWiki === "true") {
-        const wikiModel = require("@server/models/WikiModel.js");
+        const wikiModel = require("@/models/WikiModel.js");
         wikiData = await yapi.getInst(wikiModel).get(pid);
       }
       ctx.set("Content-Type", "application/octet-stream");

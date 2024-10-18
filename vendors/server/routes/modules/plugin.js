@@ -142,12 +142,12 @@ router.get("/wiki_desc/get", async(ctx) => {
 });
 /**
  *@controller WikiController
- *@action uplodaWikiDesc
+ *@action uploadWikiDesc
  *@method post
  *@name ""
  **/
 router.post("/wiki_desc/up", async(ctx) => {
-  await requestAction(ctx, WikiController, "uplodaWikiDesc");
+  await requestAction(ctx, WikiController, "uploadWikiDesc");
 });
 /* ******************************************************************************** */
 /**

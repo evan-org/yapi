@@ -1,12 +1,12 @@
 const Router = require("@koa/router");
-const requestAction = require("@server/utils/requestAction.js");
+const requestAction = require("@/utils/requestAction.js");
 //
-const AdvMockController = require("@server/controllers/AdvMockController.js");
-const StatisticsMockController = require("@server/controllers/StatisticsMockController.js");
-const ExportDataController = require("@server/controllers/ExportDataController.js");
-const ExportSwaggerController = require("@server/controllers/ExportSwaggerController.js");
-const WikiController = require("@server/controllers/WikiController.js");
-const SwaggerAutoSyncController = require("@server/controllers/SwaggerAutoSyncController.js");
+const AdvMockController = require("@/controllers/AdvMockController.js");
+const StatisticsMockController = require("@/controllers/StatisticsMockController.js");
+const ExportDataController = require("@/controllers/ExportDataController.js");
+const ExportSwaggerController = require("@/controllers/ExportSwaggerController.js");
+const WikiController = require("@/controllers/WikiController.js");
+const SwaggerAutoSyncController = require("@/controllers/SwaggerAutoSyncController.js");
 //
 const router = new Router({ prefix: "/plugin" });
 //
@@ -142,12 +142,12 @@ router.get("/wiki_desc/get", async(ctx) => {
 });
 /**
  *@controller WikiController
- *@action uplodaWikiDesc
+ *@action uploadWikiDesc
  *@method post
  *@name ""
  **/
 router.post("/wiki_desc/up", async(ctx) => {
-  await requestAction(ctx, WikiController, "uplodaWikiDesc");
+  await requestAction(ctx, WikiController, "uploadWikiDesc");
 });
 /* ******************************************************************************** */
 /**

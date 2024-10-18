@@ -78,11 +78,14 @@ websocketMiddleware(app);
 // console.log("router.routes()", router.routes());
 const router = require("./routes/index.js");
 app.use(router());
+// app.context.yapi = yapi;
 // 启动服务器
 const server = app.listen(yapi.WEBROOT_CONFIG.port);
 server.setTimeout(yapi.WEBROOT_CONFIG.timeout);
-app.context.yapi = yapi;
-module.exports = app;
+
 // 日志输出
 const port = yapi.WEBROOT_CONFIG.port?.toString() === "80" ? "" : ":" + yapi.WEBROOT_CONFIG.port;
 yapi.commons.log(`服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${port}/`);
+
+//
+module.exports = app;

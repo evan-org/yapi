@@ -46,7 +46,7 @@ class WikiController extends baseController {
    * @returns {Object}
    */
 
-  async uplodaWikiDesc(ctx) {
+  async uploadWikiDesc(ctx) {
     try {
       let params = ctx.request.body;
       params = yapi.commons.handleParams(params, {

@@ -116,7 +116,7 @@ export const checkLoginState = (payload) => async(dispatch, getState) => {
 // 登录API
 export const loginActions = (payload) => async(dispatch, getState) => {
   const result = await request.post("/user/login", payload);
-  console.log("11111111111111111", result);
+  console.log("loginActions: /user/login", result);
   setToken(result.data.data.token);
   setUserId(result.data.data.uid);
   setUserInfo(result.data.data.info);

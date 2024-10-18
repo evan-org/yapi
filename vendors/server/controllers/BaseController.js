@@ -119,7 +119,7 @@ class BaseController {
       }
       const userInsert = yapi.getInst(UserModel);
       const result = await userInsert.findById(uid);
-      console.log("11111111111111111", result);
+      console.log("BaseController.js ---> userInsert.findById", result);
       if (!result) {
         return false;
       }

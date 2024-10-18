@@ -1,4 +1,4 @@
-const BaseModel = require("@server/models/BaseModel.js");
+const BaseModel = require("@/models/BaseModel.js");
 //
 class WikiModel extends BaseModel {
   constructor() {

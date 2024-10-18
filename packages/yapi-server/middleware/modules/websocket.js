@@ -1,11 +1,11 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const InterfaceController = require("@server/controllers/InterfaceController.js");
+const InterfaceController = require("@/controllers/InterfaceController.js");
 //
 const Router = require("@koa/router");
 const router = new Router();
 //
-const { createAction } = require("@server/utils/commons.js");
+const { createAction } = require("@/utils/commons.js");
 const pluginsRouterPath = [];
 //
 function addPluginRouter(config) {

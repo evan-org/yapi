@@ -1,9 +1,9 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const BaseModel = require("@server/models/BaseModel.js");
+const BaseModel = require("@/models/BaseModel.js");
 const mongoose = require("mongoose");
 //
 class StatisticsMockModel extends BaseModel {

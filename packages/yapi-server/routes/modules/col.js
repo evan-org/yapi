@@ -1,9 +1,9 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 const Router = require("@koa/router");
 const router = new Router({ prefix: "/col" });
 // controller: interfaceColController
-const InterfaceColController = require("@server/controllers/InterfaceColController.js");
-const requestAction = require("@server/utils/requestAction.js");
+const InterfaceColController = require("@/controllers/InterfaceColController.js");
+const requestAction = require("@/utils/requestAction.js");
 /**
  *module col
  *action addCol

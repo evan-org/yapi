@@ -1,4 +1,4 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
 const plugin_path = yapi.path.join(yapi.WEBROOT, "node_modules");
 const plugin_system_path = yapi.path.join(yapi.WEBROOT, "exts");

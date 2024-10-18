@@ -1,7 +1,7 @@
 const path = require("path");
 const Ajv = require("ajv");
 const easyJsonScheme = require("easy-json-schema");
-const { WEBROOT_LOG } = require("@server/yapi.js");
+const { WEBROOT_LOG } = require("@/yapi.js");
 const fs = require("fs-extra");
 /* ******************************************************************************** */
 /**

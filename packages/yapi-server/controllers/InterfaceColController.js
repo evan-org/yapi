@@ -1,11 +1,11 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 const _ = require("underscore");
 // model
-const InterfaceColModel = require("@server/models/InterfaceColModel.js");
-const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const InterfaceModel = require("@server/models/InterfaceModel.js");
-const ProjectModel = require("@server/models/ProjectModel.js");
-const baseController = require("@server/controllers/BaseController.js");
+const InterfaceColModel = require("@/models/InterfaceColModel.js");
+const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
+const InterfaceModel = require("@/models/InterfaceModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
+const baseController = require("@/controllers/BaseController.js");
 //
 class InterfaceColController extends baseController {
   constructor(ctx) {

@@ -1,4 +1,4 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 const _ = require("underscore");
 const URL = require("url");
 const axios = require("axios");

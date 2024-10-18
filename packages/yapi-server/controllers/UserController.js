@@ -1,15 +1,15 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const ldap = require("@server/utils/ldap.js");
-const BaseController = require("@server/controllers/BaseController.js");
+const ldap = require("@/utils/ldap.js");
+const BaseController = require("@/controllers/BaseController.js");
 //
 const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = require("../models/index.cjs");
 //
 const jwt = require("jsonwebtoken");
 //
-const responseAction = require("@server/utils/responseAction.js");
+const responseAction = require("@/utils/responseAction.js");
 //
-const { generatePassword, generatePasssalt } = require("@server/utils/sso.js");
+const { generatePassword, generatePasssalt } = require("@/utils/sso.js");
 class UserController extends BaseController {
   constructor(ctx) {
     super(ctx);

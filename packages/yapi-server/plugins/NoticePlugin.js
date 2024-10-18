@@ -1,4 +1,4 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
 function arrUnique(arr1, arr2) {
   let arr = arr1.concat(arr2);
@@ -24,9 +24,9 @@ const NoticePlugin = () => {
   /*  */
   yapi.emitHook("addNotice", noticeObj)
   yapi.commons.sendNotice = async function(projectId, data) {
-    const ProjectModel = require("@server/models/ProjectModel.js");
-    const UserModel = require("@server/models/UserModel.js");
-    const FollowModel = require("@server/models/FollowModel.js");
+    const ProjectModel = require("@/models/ProjectModel.js");
+    const UserModel = require("@/models/UserModel.js");
+    const FollowModel = require("@/models/FollowModel.js");
     //
     const followInst = yapi.getInst(FollowModel);
     const userInst = yapi.getInst(UserModel);

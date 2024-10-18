@@ -1,13 +1,13 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 // controller
-const baseController = require("@server/controllers/BaseController.js");
+const baseController = require("@/controllers/BaseController.js");
 // model
-const GroupModel = require("@server/models/GroupModel.js");
-const ProjectModel = require("@server/models/ProjectModel.js");
-const UserModel = require("@server/models/UserModel.js");
-const InterfaceModel = require("@server/models/InterfaceModel.js");
-const InterfaceColModel = require("@server/models/InterfaceColModel.js");
-const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
+const GroupModel = require("@/models/GroupModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
+const UserModel = require("@/models/UserModel.js");
+const InterfaceModel = require("@/models/InterfaceModel.js");
+const InterfaceColModel = require("@/models/InterfaceColModel.js");
+const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
 //
 const _ = require("underscore")
 const rolename = {

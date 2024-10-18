@@ -1,14 +1,14 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const BaseController = require("@server/controllers/BaseController.js");
+const BaseController = require("@/controllers/BaseController.js");
 //
-const ProjectModel = require("@server/models/ProjectModel.js");
-const InterfaceColModel = require("@server/models/InterfaceColModel.js");
-const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const InterfaceModel = require("@server/models/InterfaceModel.js");
-const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
-const FollowModel = require("@server/models/FollowModel.js");
-const UserModel = require("@server/models/UserModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
+const InterfaceColModel = require("@/models/InterfaceColModel.js");
+const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
+const InterfaceModel = require("@/models/InterfaceModel.js");
+const InterfaceCatModel = require("@/models/InterfaceCatModel.js");
+const FollowModel = require("@/models/FollowModel.js");
+const UserModel = require("@/models/UserModel.js");
 //
 const {
   handleParams,

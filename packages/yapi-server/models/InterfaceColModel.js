@@ -1,6 +1,6 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
-const BaseModel = require("@server/models/BaseModel.js");
+const BaseModel = require("@/models/BaseModel.js");
 
 class InterfaceColModel extends BaseModel {
   constructor() {

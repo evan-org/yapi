@@ -1,5 +1,5 @@
-const BaseModel = require("@server/models/BaseModel.js");
-// import BaseModel from "@server/models/base.mjs";
+const BaseModel = require("@/models/BaseModel.js");
+// import BaseModel from "@/models/base.mjs";
 class UserModel extends BaseModel {
   constructor() {
     super();

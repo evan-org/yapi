@@ -1,16 +1,16 @@
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 const axios = require("axios")
 //
 const schedule = require("node-schedule");
-const openController = require("@server/controllers/OpenController.js");
+const openController = require("@/controllers/OpenController.js");
 //
-const ProjectModel = require("@server/models/ProjectModel.js");
-const syncModel = require("@server/models/SwaggerAutoSyncModel.js");
-const TokenModel = require("@server/models/TokenModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
+const syncModel = require("@/models/SwaggerAutoSyncModel.js");
+const TokenModel = require("@/models/TokenModel.js");
 
 const sha = require("sha.js");
 const md5 = require("md5");
-const { generatePasssalt, getToken } = require("@server/utils/sso.js");
+const { generatePasssalt, getToken } = require("@/utils/sso.js");
 const jobMap = new Map();
 class SwaggerAutoSyncUtils {
   constructor(ctx) {

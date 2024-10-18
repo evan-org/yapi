@@ -23,7 +23,7 @@ module.exports = function() {
       controller: controller,
       method: "post",
       path: "wiki_desc/up",
-      action: "uplodaWikiDesc"
+      action: "uploadWikiDesc"
     });
   });
   this.bindHook("add_ws_router", function(wsRouter) {

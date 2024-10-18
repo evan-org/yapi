@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs-extra");
-const yapi = require("@server/yapi.js");
+const yapi = require("@/yapi.js");
 //
 const sha1 = require("sha1");
 const json5 = require("json5");
@@ -10,12 +10,12 @@ const Mock = require("mockjs");
 const easyJsonScheme = require("easy-json-schema");
 const jsonSchemaFaker = require("json-schema-faker");
 //
-const LogModel = require("@server/models/LogModel.js");
-const ProjectModel = require("@server/models/ProjectModel.js");
-const InterfaceColModel = require("@server/models/InterfaceColModel.js");
-const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
-const InterfaceModel = require("@server/models/InterfaceModel.js");
-const UserModel = require("@server/models/UserModel.js");
+const LogModel = require("@/models/LogModel.js");
+const ProjectModel = require("@/models/ProjectModel.js");
+const InterfaceColModel = require("@/models/InterfaceColModel.js");
+const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
+const InterfaceModel = require("@/models/InterfaceModel.js");
+const UserModel = require("@/models/UserModel.js");
 //
 const sandboxFn = require("./sandbox.js");
 const { schemaValidator } = require("../common/utils.cjs");
