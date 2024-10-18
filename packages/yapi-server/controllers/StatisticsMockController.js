@@ -12,7 +12,7 @@ const InterfaceCaseModel = require("@server/models/InterfaceCaseModel.js");
 //
 const StatisticsMockModel = require("@server/models/StatisticsMockModel.js");
 //
-const commons = require("@common/statisticsUtils.js");
+const commons = require("../common/statisticsUtils.js");
 //
 const os = require("os");
 let cpu = require("cpu-load");

@@ -34,12 +34,12 @@ yapi.commons = commons;
 yapi.connect = useMongodb.connect();
 yapi.storageCreator = storageCreator;
 /* ******************************************************************************** */
-// Exts插件装载
-const ExtsPlugin = require("./plugins/ExtsPlugin.js");
-ExtsPlugin();
-// Notice插件装载
-const NoticePlugin = require("./plugins/NoticePlugin.js");
-NoticePlugin();
+// // Exts插件装载
+// const ExtsPlugin = require("./plugins/ExtsPlugin.js");
+// ExtsPlugin();
+// // Notice插件装载
+// const NoticePlugin = require("./plugins/NoticePlugin.js");
+// NoticePlugin();
 /* ******************************************************************************** */
 const app = koaWebsocket(new Koa());
 const yapiMiddleware = require("./middleware/yapi.js");

@@ -11,8 +11,8 @@ const WikiModel = require("@server/models/WikiModel.js");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const markdownItTableOfContents = require("markdown-it-table-of-contents");
-const defaultTheme = require("@common/defaultTheme/defaultTheme.js");
-const md = require("@common/markdown.cjs");
+const defaultTheme = require("../common/defaultTheme/defaultTheme.js");
+const md = require("../common/markdown.cjs");
 
 // const htmlToPdf = require("html-pdf");
 class ExportDataController extends BaseController {

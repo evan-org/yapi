@@ -6,7 +6,7 @@ const AdvMockModel = require("@server/models/AdvMockModel.js");
 const AdvMockCaseModel = require("@server/models/AdvMockCaseModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
-const config = require("@exts/yapi-plugin-adv-mock/index.js");
+const config = require("@exts/yapi-plugin-adv-mock/index.cjs");
 
 class AdvMockController extends baseController {
   constructor(ctx) {

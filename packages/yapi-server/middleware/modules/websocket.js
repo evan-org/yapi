@@ -23,6 +23,7 @@ function addPluginRouter(config) {
 }
 //
 function websocket(app) {
+  console.log("init ws router", app);
   createAction(router, "/api", InterfaceController, "solveConflict", "/interface/solve_conflict", "get", false);
   //
   yapi.emitHookSync("add_ws_router", addPluginRouter);

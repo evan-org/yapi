@@ -17,10 +17,12 @@ const url = require("url");
 //
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
-const showDiffMsg = require("@common/diffView.cjs");
-const mergeJsonSchema = require("@common/mergeJsonSchema.cjs");
+const showDiffMsg = require("../common/diffView.cjs");
+//
+const mergeJsonSchema = require("../common/mergeJsonSchema.cjs");
 // const annotatedCss = require("jsondiffpatch/public/formatters-styles/annotated.css");
 // const htmlCss = require("jsondiffpatch/public/formatters-styles/html.css");
+//
 function handleHeaders(values) {
   let isfile = false;
   let isHaveContentType = false;

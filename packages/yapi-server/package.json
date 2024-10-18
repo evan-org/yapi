@@ -22,6 +22,7 @@
     "easy-json-schema": "^0.0.2-beta",
     "fs-extra": "^3.0.1",
     "js-base64": "^2.3.2",
+    "json-schema-faker": "^0.5.3",
     "json5": "^2.2.3",
     "jsondiffpatch": "^0.4.1",
     "jsonwebtoken": "^9.0.1",
@@ -71,7 +72,8 @@
     "underscore": "^1.13.6",
     "url": "^0.11.1",
     "uuid": "^9.0.0",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "yapi-core": "file:../yapi-core"
   },
   "devDependencies": {
     "ava": "^0.22.0",
@@ -79,7 +81,7 @@
   },
   "_moduleAliases": {
     "@": ".",
-    "@server": "./server",
+    "@server": ".",
     "@common": "./common",
     "@client": "./client",
     "@exts": "./exts"

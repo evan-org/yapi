@@ -3,7 +3,7 @@ const yapi = require("@server/yapi.js");
 const ldap = require("@server/utils/ldap.js");
 const BaseController = require("@server/controllers/BaseController.js");
 //
-const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = require("@server/models/index.js");
+const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = require("@server/models/index.cjs");
 //
 const jwt = require("jsonwebtoken");
 //

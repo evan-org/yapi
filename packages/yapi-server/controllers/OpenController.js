@@ -10,13 +10,20 @@ const InterfaceCatModel = require("@server/models/InterfaceCatModel.js");
 const FollowModel = require("@server/models/FollowModel.js");
 const UserModel = require("@server/models/UserModel.js");
 //
-const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("@common/postmanLib.cjs");
-const { handleParamsValue, ArrayToObject } = require("@common/utils.cjs");
+const {
+  handleParams,
+  crossRequest,
+  handleCurrDomain,
+  checkNameIsExistInArray
+} = require("../common/postmanLib.cjs");
+//
+const { handleParamsValue, ArrayToObject } = require("../common/utils.cjs");
+//
 const renderToHtml = require("../views/reportHtml/index.js");
-const HanldeImportData = require("@common/HandleImportData.cjs");
+const HanldeImportData = require("../common/HandleImportData.cjs");
 const _ = require("underscore");
-const createContex = require("@common/createContext.cjs");
-const swaggerRun = require("@common/import/swaggerRun.js");
+const createContex = require("../common/createContext.cjs");
+const swaggerRun = require("../common/import/swaggerRun.js");
 /**
  * {
  *    postman: require('./m')

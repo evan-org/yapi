@@ -1,4 +1,4 @@
-const defaultTheme = require("@common/defaultTheme/defaultTheme.js");
+const defaultTheme = require("../../common/defaultTheme/defaultTheme.js");
 function json_format(json) {
   if (json && typeof json === "object") {
     return JSON.stringify(json, null, "   ");
