@@ -2,18 +2,13 @@ const yapi = require("@/yapi.js");
 //
 const BaseController = require("@/controllers/BaseController.js");
 //
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const ProjectModel = require("@/models/ProjectModel.js");
-const InterfaceCatModel = require("@/models/InterfaceCatModel.js");
-const WikiModel = require("@/models/WikiModel.js");
-// const wikiModel = require('../yapi-plugin-wiki/WikiModel.js');
-
+const { InterfaceModel, ProjectModel, InterfaceCatModel, WikiModel } = require("@/models/index.cjs");
+//
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const markdownItTableOfContents = require("markdown-it-table-of-contents");
 const defaultTheme = require("../common/defaultTheme/defaultTheme.js");
 const md = require("../common/markdown.cjs");
-
 // const htmlToPdf = require("html-pdf");
 class ExportDataController extends BaseController {
   constructor(ctx) {
@@ -21,9 +16,7 @@ class ExportDataController extends BaseController {
     this.InterfaceCatInsert = yapi.getInst(InterfaceCatModel);
     this.InterfaceInsert = yapi.getInst(InterfaceModel);
     this.ProjectInsert = yapi.getInst(ProjectModel);
-
   }
-
   async handleListClass(pid, status) {
     let result = await this.InterfaceCatInsert.list(pid),
       newResult = [];
@@ -36,13 +29,13 @@ class ExportDataController extends BaseController {
         newResult.push(item);
       }
     }
-
     return newResult;
   }
-
   handleExistId(data) {
     function delArrId(arr, fn) {
-      if (!Array.isArray(arr)) {return;}
+      if (!Array.isArray(arr)) {
+        return;
+      }
       arr.forEach((item) => {
         delete item._id;
         delete item.__v;
@@ -50,11 +43,11 @@ class ExportDataController extends BaseController {
         delete item.edit_uid;
         delete item.catid;
         delete item.project_id;
-
-        if (typeof fn === "function") {fn(item);}
+        if (typeof fn === "function") {
+          fn(item);
+        }
       });
     }
-
     delArrId(data, function(item) {
       delArrId(item.list, function(api) {
         delArrId(api.req_body_form);
@@ -66,16 +59,13 @@ class ExportDataController extends BaseController {
         }
       });
     });
-
     return data;
   }
-
   async exportData(ctx) {
     let pid = ctx.request.query.pid;
     let type = ctx.request.query.type;
     let status = ctx.request.query.status;
     let isWiki = ctx.request.query.isWiki;
-
     if (!pid) {
       ctx.body = yapi.commons.resReturn(null, 200, "pid 不为空");
     }
@@ -88,7 +78,6 @@ class ExportDataController extends BaseController {
       }
       ctx.set("Content-Type", "application/octet-stream");
       const list = await this.handleListClass(pid, status);
-
       switch (type) {
         case "markdown": {
           tp = await createMarkdown.bind(this)(list, false);
@@ -112,7 +101,6 @@ class ExportDataController extends BaseController {
       yapi.commons.log(error, "error");
       ctx.body = yapi.commons.resReturn(null, 502, "下载出错");
     }
-
     async function createHtml(list) {
       let md = await createMarkdown.bind(this)(list, true);
       let markdown = markdownIt({ html: true, breaks: true });
@@ -120,7 +108,6 @@ class ExportDataController extends BaseController {
       markdown.use(markdownItTableOfContents, {
         markerPattern: /^\[toc\]/im
       });
-
       // require('fs').writeFileSync('./a.markdown', md);
       let tp = unescape(markdown.render(md));
       // require('fs').writeFileSync('./a.html', tp);
@@ -133,10 +120,8 @@ class ExportDataController extends BaseController {
           return "";
         }
       );
-
       return createHtml5(left || "", content);
     }
-
     function createHtml5(left, tp) {
       // html5模板
       let html = `<!DOCTYPE html>
@@ -168,7 +153,6 @@ class ExportDataController extends BaseController {
       `;
       return html;
     }
-
     function createMarkdown(list, isToc) {
       // 拼接markdown
       // 模板
@@ -186,5 +170,4 @@ class ExportDataController extends BaseController {
     }
   }
 }
-
 module.exports = ExportDataController;

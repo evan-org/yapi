@@ -1,27 +1,12 @@
 const _ = require("underscore");
 const axios = require("axios");
-
-
 const isNode = typeof global == "object" && global.global === global;
-
-async function handle(
-  res,
-  projectId,
-  selectCatid,
-  menuList,
-  basePath,
-  dataSync,
-  messageError,
-  messageSuccess,
-  callback,
-  token,
-  port
-) {
-
+async function handleImportData(res, projectId, selectCatid, menuList, basePath, dataSync, messageError, messageSuccess, callback, token, port) {
+  // 任务通知
   const taskNotice = _.throttle((index, len) => {
     messageSuccess(`正在导入，已执行任务 ${index + 1} 个，共 ${len} 个`)
   }, 3000)
-
+  // 添加分类
   const handleAddCat = async(cats) => {
     let catsObj = {};
     if (cats && Array.isArray(cats)) {
@@ -36,7 +21,6 @@ async function handle(
           if (isNode) {
             apipath = "http://127.0.0.1:" + port + apipath;
           }
-
           let data = {
             name: cat.name,
             project_id: projectId,
@@ -44,7 +28,6 @@ async function handle(
             token
           };
           let result = await axios.post(apipath, data);
-
           if (result.data.errcode) {
             messageError(result.data.errmsg);
             callback({ showLoading: false });
@@ -56,13 +39,12 @@ async function handle(
     }
     return catsObj;
   };
-
+  // 添加接口
   const handleAddInterface = async(info) => {
     const cats = await handleAddCat(info.cats);
     if (cats === false) {
       return;
     }
-
     const res = info.apis;
     let len = res.length;
     let count = 0;
@@ -73,20 +55,17 @@ async function handle(
       callback({ showLoading: false });
       return;
     }
-
     if (info.basePath) {
       let projectApiPath = "/api/project/up";
       if (isNode) {
         projectApiPath = "http://127.0.0.1:" + port + projectApiPath;
       }
-
       await axios.post(projectApiPath, {
         id: projectId,
         basepath: info.basePath,
         token
       })
     }
-
     for (let index = 0; index < res.length; index++) {
       let item = res[index];
       let data = Object.assign(item, {
@@ -106,7 +85,6 @@ async function handle(
         data.catid = cats[data.catname].id;
       }
       data.token = token;
-
       if (dataSync !== "normal") {
         // 开启同步功能
         count++;
@@ -148,12 +126,10 @@ async function handle(
         messageSuccess(`成功导入接口 ${successNum} 个, 已存在的接口 ${existNum} 个`);
         return;
       }
-
       taskNotice(index, res.length)
     }
   };
-
+  // 解析数据
   return await handleAddInterface(res);
 }
-
-module.exports = handle;
+module.exports = handleImportData;

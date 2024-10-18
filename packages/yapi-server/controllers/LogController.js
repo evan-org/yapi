@@ -1,12 +1,9 @@
 const yapi = require("@/yapi.js");
-const baseController = require("@/controllers/BaseController.js");
+const BaseController = require("@/controllers/BaseController.js");
 //
-const GroupModel = require("@/models/GroupModel.js");
-const ProjectModel = require("@/models/ProjectModel.js");
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const LogModel = require("@/models/LogModel.js");
+const { GroupModel, ProjectModel, InterfaceModel, LogModel } = require("@/models/index.cjs");
 //
-class LogController extends baseController {
+class LogController extends BaseController {
   constructor(ctx) {
     super(ctx);
     this.LogModel = yapi.getInst(LogModel);
@@ -26,7 +23,6 @@ class LogController extends baseController {
       }
     };
   }
-
   /**
    * 获取动态列表
    * @interface /log/list
@@ -84,7 +80,6 @@ class LogController extends baseController {
       } else if (type === "project") {
         let result = await this.LogModel.listWithPaging(typeid, type, page, limit, selectValue);
         let count = await this.LogModel.listCount(typeid, type, selectValue);
-
         ctx.body = yapi.commons.resReturn({
           total: Math.ceil(count / limit),
           list: result
@@ -107,13 +102,11 @@ class LogController extends baseController {
 
   async listByUpdate(ctx) {
     let params = ctx.params;
-
     try {
       let { typeid, type, apis } = params;
       let list = [];
       let projectDatas = await this.ProjectModel.getBaseInfo(typeid, "basepath");
       let basePath = projectDatas.toObject().basepath;
-
       for (let i = 0; i < apis.length; i++) {
         let api = apis[i];
         if (basePath) {
@@ -125,16 +118,13 @@ class LogController extends baseController {
           api.method,
           "_id"
         );
-
         for (let j = 0; j < interfaceIdList.length; j++) {
           let interfaceId = interfaceIdList[j];
           let id = interfaceId.id;
           let result = await this.LogModel.listWithCatid(typeid, type, id);
-
           list = list.concat(result);
         }
       }
-
       // let result = await this.LogModel.listWithCatid(typeid, type, catId);
       ctx.body = yapi.commons.resReturn(list);
     } catch (err) {
@@ -142,5 +132,4 @@ class LogController extends baseController {
     }
   }
 }
-
 module.exports = LogController;

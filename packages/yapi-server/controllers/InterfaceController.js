@@ -1,19 +1,20 @@
-const fs = require("fs-extra");
-const path = require("path");
 const yapi = require("@/yapi.js");
-//
-const baseController = require("@/controllers/BaseController.js");
-//
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const InterfaceCatModel = require("@/models/InterfaceCatModel.js");
-const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
-const FollowModel = require("@/models/FollowModel.js");
-const GroupModel = require("@/models/GroupModel.js");
-const UserModel = require("@/models/UserModel.js");
-const ProjectModel = require("@/models/ProjectModel.js");
-//
-const _ = require("underscore");
+const path = require("path");
 const url = require("url");
+const fs = require("fs-extra");
+const _ = require("underscore");
+//
+const BaseController = require("@/controllers/BaseController.js");
+//
+const {
+  ProjectModel,
+  UserModel,
+  GroupModel,
+  FollowModel,
+  InterfaceModel,
+  InterfaceCatModel,
+  InterfaceCaseModel
+} = require("@/models/index.cjs");
 //
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
@@ -62,13 +63,14 @@ function handleHeaders(values) {
     }
   }
 }
-class InterfaceController extends baseController {
+class InterfaceController extends BaseController {
   constructor(ctx) {
     super(ctx);
+    //
     this.InterfaceModel = yapi.getInst(InterfaceModel);
-    this.catModel = yapi.getInst(InterfaceCatModel);
+    this.InterfaceCatModel = yapi.getInst(InterfaceCatModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
-    this.caseModel = yapi.getInst(InterfaceCaseModel);
+    this.InterfaceCaseModel = yapi.getInst(InterfaceCaseModel);
     this.FollowModel = yapi.getInst(FollowModel);
     this.UserModel = yapi.getInst(UserModel);
     this.GroupModel = yapi.getInst(GroupModel);
@@ -262,7 +264,7 @@ class InterfaceController extends baseController {
     }
     let result = await this.InterfaceModel.save(data);
     yapi.emitHook("interface_add", result).then();
-    this.catModel.get(params.catid).then((cate) => {
+    this.InterfaceCatModel.get(params.catid).then((cate) => {
       let username = this.getUsername();
       let title = `<a href="/user/profile/${this.getUid()}">${username}</a> 为分类 <a href="/project/${
         params.project_id
@@ -363,6 +365,9 @@ class InterfaceController extends baseController {
     ctx.body = yapi.commons.resReturn(result);
     // return ctx.body = yapi.commons.resReturn(null, 400, 'path第一位必需为 /, 只允许由 字母数字-/_:.! 组成');
   }
+  /**
+   *
+   * */
   async autoAddTag(params) {
     // 检查是否提交了目前不存在的tag
     let tags = params.tag;
@@ -507,6 +512,9 @@ class InterfaceController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }
   }
+  /**
+   *
+   * */
   async downloadCrx(ctx) {
     let filename = "crossRequest.zip";
     let dataBuffer = yapi.fs.readFileSync(
@@ -516,6 +524,9 @@ class InterfaceController extends baseController {
     ctx.set("Content-Type", "application/zip");
     ctx.body = dataBuffer;
   }
+  /**
+   *
+   * */
   async listByCat(ctx) {
     let catid = ctx.request.query.catid;
     let page = ctx.request.query.page || 1,
@@ -526,7 +537,7 @@ class InterfaceController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 400, "catid不能为空"));
     }
     try {
-      let catdata = await this.catModel.get(catid);
+      let catdata = await this.InterfaceCatModel.get(catid);
       let project = await this.ProjectModel.getBaseInfo(catdata.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
@@ -559,6 +570,9 @@ class InterfaceController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, err.message + "1");
     }
   }
+  /**
+   *
+   * */
   async listByMenu(ctx) {
     let project_id = ctx.params.project_id;
     if (!project_id) {
@@ -574,7 +588,7 @@ class InterfaceController extends baseController {
       }
     }
     try {
-      let result = await this.catModel.list(project_id),
+      let result = await this.InterfaceCatModel.list(project_id),
         newResult = [];
       for (let i = 0, item, list; i < result.length; i++) {
         item = result[i].toObject();
@@ -699,7 +713,7 @@ class InterfaceController extends baseController {
       current: CurrentInterfaceData.toObject(),
       old: interfaceData.toObject()
     };
-    this.catModel.get(interfaceData.catid).then((cate) => {
+    this.InterfaceCatModel.get(interfaceData.catid).then((cate) => {
       let diffView2 = showDiffMsg(jsondiffpatch, formattersHtml, logData);
       if (diffView2.length <= 0) {
         return; // 没有变化时，不写日志
@@ -707,11 +721,11 @@ class InterfaceController extends baseController {
       yapi.commons.saveLog({
         content: `<a href="/user/profile/${this.getUid()}">${username}</a> 
                     更新了分类 <a href="/project/${cate.project_id}/interface/api/cat_${
-  data.catid
-}">${cate.name}</a> 
+          data.catid
+        }">${cate.name}</a> 
                     下的接口 <a href="/project/${cate.project_id}/interface/api/${id}">${
-  interfaceData.title
-}</a><p>${params.message}</p>`,
+          interfaceData.title
+        }</a><p>${params.message}</p>`,
         type: "project",
         uid: this.getUid(),
         username: username,
@@ -760,6 +774,9 @@ class InterfaceController extends baseController {
     ctx.body = yapi.commons.resReturn(result);
     return 1;
   }
+  /**
+   *
+   * */
   diffHTML(html) {
     if (html.length === 0) {
       return "<span style=\"color: #555\">没有改动，该操作未改动Api数据</span>";
@@ -779,7 +796,6 @@ class InterfaceController extends baseController {
    * @returns {Object}
    * @example ./api/interface/del.json
    */
-
   async del(ctx) {
     try {
       let id = ctx.request.body.id;
@@ -796,9 +812,9 @@ class InterfaceController extends baseController {
       // let inter = await this.InterfaceModel.get(id);
       let result = await this.InterfaceModel.del(id);
       yapi.emitHook("interface_del", id).then();
-      await this.caseModel.delByInterfaceId(id);
+      await this.InterfaceCaseModel.delByInterfaceId(id);
       let username = this.getUsername();
-      this.catModel.get(data.catid).then((cate) => {
+      this.InterfaceCatModel.get(data.catid).then((cate) => {
         yapi.commons.saveLog({
           content: `<a href="/user/profile/${this.getUid()}">${username}</a> 删除了分类 <a href="/project/${
             cate.project_id
@@ -849,6 +865,9 @@ class InterfaceController extends baseController {
       yapi.commons.log(err, "error");
     }
   }
+  /**
+   *
+   * */
   async addCat(ctx) {
     try {
       let params = ctx.request.body;
@@ -869,7 +888,7 @@ class InterfaceController extends baseController {
       if (!params.name) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "名称不能为空"));
       }
-      let result = await this.catModel.save({
+      let result = await this.InterfaceCatModel.save({
         name: params.name,
         project_id: params.project_id,
         desc: params.desc,
@@ -892,16 +911,19 @@ class InterfaceController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
+  /**
+   *
+   * */
   async upCat(ctx) {
     try {
       let params = ctx.request.body;
       let username = this.getUsername();
-      let cate = await this.catModel.get(params.catid);
+      let cate = await this.InterfaceCatModel.get(params.catid);
       let auth = await this.checkAuth(cate.project_id, "project", "edit");
       if (!auth) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
       }
-      let result = await this.catModel.up(params.catid, {
+      let result = await this.InterfaceCatModel.up(params.catid, {
         name: params.name,
         desc: params.desc,
         up_time: yapi.commons.time()
@@ -920,10 +942,13 @@ class InterfaceController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 400, e.message);
     }
   }
+  /**
+   *
+   * */
   async delCat(ctx) {
     try {
       let id = ctx.request.body.catid;
-      let catData = await this.catModel.get(id);
+      let catData = await this.InterfaceCatModel.get(id);
       if (!catData) {
         ctx.body = yapi.commons.resReturn(null, 400, "不存在的分类");
       }
@@ -947,12 +972,12 @@ class InterfaceController extends baseController {
       for (const item of interfaceData) {
         try {
           yapi.emitHook("interface_del", item._id).then();
-          await this.caseModel.delByInterfaceId(item._id);
+          await this.InterfaceCaseModel.delByInterfaceId(item._id);
         } catch (e) {
           yapi.commons.log(e.message, "error");
         }
       }
-      await this.catModel.del(id);
+      await this.InterfaceCatModel.del(id);
       let r = await this.InterfaceModel.delByCatid(id);
       return (ctx.body = yapi.commons.resReturn(r));
     } catch (e) {
@@ -981,7 +1006,7 @@ class InterfaceController extends baseController {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
         }
       }
-      let res = await this.catModel.list(project_id);
+      let res = await this.InterfaceCatModel.list(project_id);
       return (ctx.body = yapi.commons.resReturn(res));
     } catch (e) {
       yapi.commons.resReturn(null, 400, e.message);
@@ -995,7 +1020,6 @@ class InterfaceController extends baseController {
    * @foldnumber 10
    * @param {String}   app_code = '111'
    * @returns {Object}
-   *
    */
   async getCustomField(ctx) {
     let params = ctx.request.query;
@@ -1037,6 +1061,9 @@ class InterfaceController extends baseController {
       yapi.commons.resReturn(null, 400, e.message);
     }
   }
+  /**
+   *
+   * */
   requiredSort(params) {
     return params.sort((item1, item2) => item2.required - item1.required);
   }
@@ -1090,7 +1117,7 @@ class InterfaceController extends baseController {
       }
       params.forEach((item) => {
         if (item.id) {
-          this.catModel.upCatIndex(item.id, item.index).then(
+          this.InterfaceCatModel.upCatIndex(item.id, item.index).then(
             (res) => {
             },
             (err) => {
@@ -1104,6 +1131,9 @@ class InterfaceController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 400, e.message);
     }
   }
+  /**
+   *
+   * */
   async schema2json(ctx) {
     let schema = ctx.request.body.schema;
     let required = ctx.request.body.required;
@@ -1130,7 +1160,7 @@ class InterfaceController extends baseController {
     }
     let basepath = project.basepath;
     try {
-      let result = await this.catModel.list(project_id),
+      let result = await this.InterfaceCatModel.list(project_id),
         newResult = [];
       for (let i = 0, item, list; i < result.length; i++) {
         item = result[i].toObject();

@@ -1,22 +1,20 @@
-/**
- * Created by gxl.gao on 2017/10/24.
- */
 const yapi = require("@/yapi.js");
+const os = require("os");
+const cpu = require("cpu-load");
 //
-const baseController = require("@/controllers/BaseController.js");
+const BaseController = require("@/controllers/BaseController.js");
 //
-const GroupModel = require("@/models/GroupModel.js");
-const ProjectModel = require("@/models/ProjectModel.js");
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
-//
-const StatisticsMockModel = require("@/models/StatisticsMockModel.js");
+const {
+  GroupModel,
+  ProjectModel,
+  InterfaceModel,
+  InterfaceCaseModel,
+  StatisticsMockModel
+} = require("@/models/index.cjs");
 //
 const commons = require("../common/statisticsUtils.js");
 //
-const os = require("os");
-let cpu = require("cpu-load");
-class StatisticsMockController extends baseController {
+class StatisticsMockController extends BaseController {
   constructor(ctx) {
     super(ctx);
     this.StatisticsMockModel = yapi.getInst(StatisticsMockModel);

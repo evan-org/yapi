@@ -1,30 +1,30 @@
 const yapi = require("@/yapi.js");
-const axios = require("axios")
-//
-const schedule = require("node-schedule");
-const openController = require("@/controllers/OpenController.js");
-//
-const ProjectModel = require("@/models/ProjectModel.js");
-const syncModel = require("@/models/SwaggerAutoSyncModel.js");
-const TokenModel = require("@/models/TokenModel.js");
-
+const axios = require("axios");
 const sha = require("sha.js");
 const md5 = require("md5");
+const schedule = require("node-schedule");
+//
+const OpenController = require("@/controllers/OpenController.js");
+//
+const {ProjectModel,SwaggerAutoSyncModel, TokenModel} = require("@/models/index.cjs")
+
+
 const { generatePasssalt, getToken } = require("@/utils/sso.js");
 const jobMap = new Map();
+//
 class SwaggerAutoSyncUtils {
   constructor(ctx) {
     yapi.commons.log("-------------------------------------swaggerSyncUtils constructor-----------------------------------------------");
     this.ctx = ctx;
-    this.openController = yapi.getInst(openController);
-    this.syncModel = yapi.getInst(syncModel);
+    this.OpenController = yapi.getInst(OpenController);
+    this.SwaggerAutoSyncModel = yapi.getInst(SwaggerAutoSyncModel);
     this.TokenModel = yapi.getInst(TokenModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.init()
   }
   // 初始化定时任务
   async init() {
-    let allSyncJob = await this.syncModel.listAll();
+    let allSyncJob = await this.SwaggerAutoSyncModel.listAll();
     for (let i = 0, len = allSyncJob.length; i < len; i++) {
       let syncItem = allSyncJob[i];
       if (syncItem.is_sync_open) {
@@ -67,7 +67,7 @@ class SwaggerAutoSyncUtils {
       yapi.commons.log("获取项目:" + projectId + "失败");
       this.deleteSyncJob(projectId);
       // 删除数据库定时任务
-      await this.syncModel.delByProjectId(projectId);
+      await this.SwaggerAutoSyncModel.delByProjectId(projectId);
       return;
     }
     // 如果项目已经删除了
@@ -75,7 +75,7 @@ class SwaggerAutoSyncUtils {
       yapi.commons.log("项目:" + projectId + "不存在");
       this.deleteSyncJob(projectId);
       // 删除数据库定时任务
-      await this.syncModel.delByProjectId(projectId);
+      await this.SwaggerAutoSyncModel.delByProjectId(projectId);
       return;
     }
     let newSwaggerJsonData;
@@ -90,13 +90,13 @@ class SwaggerAutoSyncUtils {
       this.saveSyncLog(0, syncMode, "获取数据失败，请检查", uid, projectId);
       yapi.commons.log("获取数据失败" + e.message)
     }
-    let oldSyncJob = await this.syncModel.getByProjectId(projectId);
+    let oldSyncJob = await this.SwaggerAutoSyncModel.getByProjectId(projectId);
     // 更新之前判断本次swagger json数据是否跟上次的相同,相同则不更新
     if (newSwaggerJsonData && oldSyncJob.old_swagger_content && oldSyncJob.old_swagger_content === md5(newSwaggerJsonData)) {
       // 记录日志
       // this.saveSyncLog(0, syncMode, "接口无更新", uid, projectId);
       oldSyncJob.last_sync_time = yapi.commons.time();
-      await this.syncModel.upById(oldSyncJob._id, oldSyncJob);
+      await this.SwaggerAutoSyncModel.upById(oldSyncJob._id, oldSyncJob);
       return;
     }
     let _params = {
@@ -109,13 +109,13 @@ class SwaggerAutoSyncUtils {
     let requestObj = {
       params: _params
     };
-    await this.openController.importData(requestObj);
+    await this.OpenController.importData(requestObj);
     // 同步成功就更新同步表的数据
     if (requestObj.body.errcode === 0) {
       // 修改sync_model的属性
       oldSyncJob.last_sync_time = yapi.commons.time();
       oldSyncJob.old_swagger_content = md5(newSwaggerJsonData);
-      await this.syncModel.upById(oldSyncJob._id, oldSyncJob);
+      await this.SwaggerAutoSyncModel.upById(oldSyncJob._id, oldSyncJob);
     }
     // 记录日志
     this.saveSyncLog(requestObj.body.errcode, syncMode, requestObj.body.errmsg, uid, projectId);

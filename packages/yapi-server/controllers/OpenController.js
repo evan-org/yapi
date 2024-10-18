@@ -1,29 +1,25 @@
 const yapi = require("@/yapi.js");
+const _ = require("underscore");
 //
 const BaseController = require("@/controllers/BaseController.js");
 //
-const ProjectModel = require("@/models/ProjectModel.js");
-const InterfaceColModel = require("@/models/InterfaceColModel.js");
-const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const InterfaceCatModel = require("@/models/InterfaceCatModel.js");
-const FollowModel = require("@/models/FollowModel.js");
-const UserModel = require("@/models/UserModel.js");
-//
 const {
-  handleParams,
-  crossRequest,
-  handleCurrDomain,
-  checkNameIsExistInArray
-} = require("../common/postmanLib.cjs");
+  ProjectModel,
+  InterfaceModel,
+  InterfaceCatModel,
+  InterfaceCaseModel,
+  InterfaceColModel,
+  FollowModel,
+  UserModel
+} = require("@/models/index.cjs");
 //
+const { handleParams, crossRequest, handleCurrDomain, checkNameIsExistInArray } = require("../common/postmanLib.cjs");
 const { handleParamsValue, ArrayToObject } = require("../common/utils.cjs");
+const handleImportData = require("../common/handleImportData.cjs");
+const createContext = require("../common/createContext.cjs");
+const swaggerRun = require("../common/import/swaggerRun.js");
 //
 const renderToHtml = require("../views/reportHtml/index.js");
-const HanldeImportData = require("../common/HandleImportData.cjs");
-const _ = require("underscore");
-const createContex = require("../common/createContext.cjs");
-const swaggerRun = require("../common/import/swaggerRun.js");
 /**
  * {
  *    postman: require('./m')
@@ -151,7 +147,7 @@ class OpenController extends BaseController {
     let res = await importDataModule[type](content);
     let successMessage;
     let errorMessage = [];
-    await HanldeImportData(
+    await handleImportData(
       res,
       project_id,
       selectCatid,
@@ -313,7 +309,7 @@ class OpenController extends BaseController {
     };
     try {
       options.taskId = this.getUid();
-      let data = await crossRequest(options, interfaceData.pre_script, interfaceData.after_script, createContex(
+      let data = await crossRequest(options, interfaceData.pre_script, interfaceData.after_script, createContext(
         this.getUid(),
         interfaceData.project_id,
         interfaceData.interface_id

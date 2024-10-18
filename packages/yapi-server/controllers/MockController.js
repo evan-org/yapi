@@ -1,17 +1,15 @@
 const yapi = require("@/yapi.js");
+const _ = require("underscore");
+const Mock = require("mockjs");
 //
 const BaseController = require("@/controllers/BaseController.js");
 //
-const ProjectModel = require("@/models/ProjectModel.js");
-const InterfaceModel = require("@/models/InterfaceModel.js");
+const { ProjectModel, InterfaceModel } = require("@/models/index.cjs");
 //
 const mockExtra = require("../common/mockExtra.cjs");
 //
 const { schemaValidator } = require("../common/utils.cjs");
 //
-const _ = require("underscore");
-//
-const Mock = require("mockjs");
 const variable = require("../common/variable.cjs");
 /**
  *
@@ -137,8 +135,8 @@ function mockValidator(interfaceData, ctx) {
 class MockController extends BaseController {
   constructor(ctx) {
     super(ctx);
-    this.interfaceInst = yapi.getInst(InterfaceModel);
-    this.projectInst = yapi.getInst(ProjectModel);
+    this.InterfaceModel = yapi.getInst(InterfaceModel);
+    this.ProjectModel = yapi.getInst(ProjectModel);
   }
   async mockServer(ctx) {
     let path = ctx.path;
@@ -155,7 +153,7 @@ class MockController extends BaseController {
     }
     let project = {};
     try {
-      project = await this.projectInst.get(projectId);
+      project = await this.ProjectModel.get(projectId);
     } catch (e) {
       return (ctx.body = yapi.commons.resReturn(null, 403, e.message));
     }
@@ -166,8 +164,8 @@ class MockController extends BaseController {
     let newpath = "";
     try {
       newpath = path.substr(project.basepath.length);
-      interfaceData = await this.interfaceInst.getByPath(project._id, newpath, ctx.method);
-      let queryPathInterfaceData = await this.interfaceInst.getByQueryPath(project._id, newpath, ctx.method);
+      interfaceData = await this.this.InterfaceModel.getByPath(project._id, newpath, ctx.method);
+      let queryPathInterfaceData = await this.this.InterfaceModel.getByQueryPath(project._id, newpath, ctx.method);
       // 处理query_path情况  url 中有 ?params=xxx
       if ((!interfaceData) || (interfaceData.length !== queryPathInterfaceData.length)) {
         const l = queryPathInterfaceData.length;
@@ -198,7 +196,7 @@ class MockController extends BaseController {
       }
       // 处理动态路由
       if ((!interfaceData) || (interfaceData.length === 0)) {
-        let newData = await this.interfaceInst.getVar(project._id, ctx.method);
+        let newData = await this.this.InterfaceModel.getVar(project._id, ctx.method);
         let findInterface;
         let weight = 0;
         _.each(newData, (item) => {
@@ -220,7 +218,7 @@ class MockController extends BaseController {
           }
           return (ctx.body = yapi.commons.resReturn(null, 404, `不存在的api, 当前请求path为 ${newpath}， 请求方法为 ${ctx.method} ，请确认是否定义此请求。`));
         }
-        interfaceData = [await this.interfaceInst.get(findInterface._id)];
+        interfaceData = [await this.this.InterfaceModel.get(findInterface._id)];
       }
       if (interfaceData.length > 1) {
         return (ctx.body = yapi.commons.resReturn(null, 405, "存在多个api，请检查数据库"));

@@ -1,15 +1,14 @@
 const yapi = require("@/yapi.js");
-//
-const ldap = require("@/utils/ldap.js");
+const jwt = require("jsonwebtoken");
+// base controller
 const BaseController = require("@/controllers/BaseController.js");
-//
+// models
 const { UserModel, InterfaceModel, GroupModel, ProjectModel, AvatarModel } = require("../models/index.cjs");
 //
-const jwt = require("jsonwebtoken");
-//
 const responseAction = require("@/utils/responseAction.js");
-//
+const ldap = require("@/utils/ldap.js");
 const { generatePassword, generatePasssalt } = require("@/utils/sso.js");
+//
 class UserController extends BaseController {
   constructor(ctx) {
     super(ctx);
@@ -195,7 +194,9 @@ class UserController extends BaseController {
       return (ctx.body = responseAction(null, 401, e.message));
     }
   }
-  // 处理第三方登录
+  /**
+   * 处理第三方登录
+   * */
   async handleThirdLogin(email, username) {
     let user, data, passsalt;
     try {
@@ -269,6 +270,7 @@ class UserController extends BaseController {
     }
   }
   /**
+   * 创建私有分组
    * */
   async handlePrivateGroup(uid) {
     let groupInst = yapi.getInst(GroupModel);
@@ -684,4 +686,5 @@ class UserController extends BaseController {
     }
   }
 }
+//
 module.exports = UserController;

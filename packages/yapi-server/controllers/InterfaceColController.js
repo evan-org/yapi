@@ -1,17 +1,16 @@
 const yapi = require("@/yapi.js");
 const _ = require("underscore");
+// base
+const BaseController = require("@/controllers/BaseController.js");
 // model
-const InterfaceColModel = require("@/models/InterfaceColModel.js");
-const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const ProjectModel = require("@/models/ProjectModel.js");
-const baseController = require("@/controllers/BaseController.js");
+const { ProjectModel, InterfaceColModel, InterfaceCaseModel, InterfaceModel } = require("@/models/index.cjs");
 //
-class InterfaceColController extends baseController {
+class InterfaceColController extends BaseController {
   constructor(ctx) {
     super(ctx);
-    this.colModel = yapi.getInst(InterfaceColModel);
-    this.caseModel = yapi.getInst(InterfaceCaseModel);
+    // 获取实例
+    this.InterfaceColModel = yapi.getInst(InterfaceColModel);
+    this.InterfaceCaseModel = yapi.getInst(InterfaceCaseModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
@@ -34,11 +33,11 @@ class InterfaceColController extends baseController {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
         }
       }
-      let result = await this.colModel.list(id);
+      let result = await this.InterfaceColModel.list(id);
       result = result.sort((a, b) => a.index - b.index);
       for (let i = 0; i < result.length; i++) {
         result[i] = result[i].toObject();
-        let caseList = await this.caseModel.list(result[i]._id);
+        let caseList = await this.InterfaceCaseModel.list(result[i]._id);
         for (let j = 0; j < caseList.length; j++) {
           let item = caseList[j].toObject();
           let interfaceData = await this.InterfaceModel.getBaseinfo(item.interface_id);
@@ -63,7 +62,6 @@ class InterfaceColController extends baseController {
    * @example
    * @param ctx
    */
-
   async addCol(ctx) {
     try {
       let params = ctx.request.body;
@@ -82,7 +80,7 @@ class InterfaceColController extends baseController {
       if (!auth) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
       }
-      let result = await this.colModel.save({
+      let result = await this.InterfaceColModel.save({
         name: params.name,
         project_id: params.project_id,
         desc: params.desc,
@@ -122,7 +120,7 @@ class InterfaceColController extends baseController {
       if (!id || id == 0) {
         return (ctx.body = yapi.commons.resReturn(null, 407, "col_id不能为空"));
       }
-      let colData = await this.colModel.get(id);
+      let colData = await this.InterfaceColModel.get(id);
       let project = await this.ProjectModel.getBaseInfo(colData.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
@@ -150,7 +148,7 @@ class InterfaceColController extends baseController {
       if (!id || id == 0) {
         return (ctx.body = yapi.commons.resReturn(null, 407, "col_id不能为空"));
       }
-      let colData = await this.colModel.get(id);
+      let colData = await this.InterfaceColModel.get(id);
       let project = await this.ProjectModel.getBaseInfo(colData.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
@@ -158,7 +156,7 @@ class InterfaceColController extends baseController {
         }
       }
       // 通过col_id 找到 caseList
-      let projectList = await this.caseModel.list(id, "project_id");
+      let projectList = await this.InterfaceCaseModel.list(id, "project_id");
       // 对projectList 进行去重处理
       projectList = this.unique(projectList, "project_id");
       // 遍历projectList 找到项目和env
@@ -192,14 +190,13 @@ class InterfaceColController extends baseController {
    * @example
    * @param ctx
    */
-
   async getCaseListByVariableParams(ctx) {
     try {
       let id = ctx.query.col_id;
       if (!id || id == 0) {
         return (ctx.body = yapi.commons.resReturn(null, 407, "col_id不能为空"));
       }
-      let resultList = await this.caseModel.list(id, "all");
+      let resultList = await this.InterfaceCaseModel.list(id, "all");
       if (resultList.length === 0) {
         return (ctx.body = yapi.commons.resReturn([]));
       }
@@ -218,7 +215,7 @@ class InterfaceColController extends baseController {
           pathParams;
         let data = await this.InterfaceModel.get(result.interface_id);
         if (!data) {
-          await this.caseModel.del(result._id);
+          await this.InterfaceCaseModel.del(result._id);
           continue;
         }
         item._id = result._id;
@@ -293,9 +290,9 @@ class InterfaceColController extends baseController {
       params.index = 0;
       params.add_time = yapi.commons.time();
       params.up_time = yapi.commons.time();
-      let result = await this.caseModel.save(params);
+      let result = await this.InterfaceCaseModel.save(params);
       let username = this.getUsername();
-      this.colModel.get(params.col_id).then((col) => {
+      this.InterfaceColModel.get(params.col_id).then((col) => {
         yapi.commons.saveLog({
           content: `<a href="/user/profile/${this.getUid()}">${username}</a> 在接口集 <a href="/project/${
             params.project_id
@@ -314,6 +311,7 @@ class InterfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
+  //
   async addCaseList(ctx) {
     try {
       let params = ctx.request.body;
@@ -361,9 +359,9 @@ class InterfaceColController extends baseController {
           data.req_body_other = interfaceData.req_body_other;
         }
         data.req_body_type = interfaceData.req_body_type;
-        let caseResultData = await this.caseModel.save(data);
+        let caseResultData = await this.InterfaceCaseModel.save(data);
         let username = this.getUsername();
-        this.colModel.get(params.col_id).then((col) => {
+        this.InterfaceColModel.get(params.col_id).then((col) => {
           yapi.commons.saveLog({
             content: `<a href="/user/profile/${this.getUid()}">${username}</a> 在接口集 <a href="/project/${
               params.project_id
@@ -383,6 +381,7 @@ class InterfaceColController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
+  //
   async cloneCaseList(ctx) {
     try {
       let params = ctx.request.body;
@@ -405,7 +404,7 @@ class InterfaceColController extends baseController {
       if (!new_col_id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "克隆的接口集id不能为空"));
       }
-      let oldColCaselistData = await this.caseModel.list(col_id, "all");
+      let oldColCaselistData = await this.InterfaceCaseModel.list(col_id, "all");
       oldColCaselistData = oldColCaselistData.sort((a, b) => a.index - b.index);
       const newCaseList = [];
       const oldCaseObj = {};
@@ -452,7 +451,7 @@ class InterfaceColController extends baseController {
         // 将被克隆的id和位置绑定
         oldCaseObj[obj._id] = i;
         let caseData = handleParams(obj);
-        let newCase = await this.caseModel.save(caseData);
+        let newCase = await this.InterfaceCaseModel.save(caseData);
         newCaseList.push(newCase._id);
       }
       this.ProjectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
@@ -484,7 +483,7 @@ class InterfaceColController extends baseController {
       // if (!params.casename) {
       //   return (ctx.body = yapi.commons.resReturn(null, 400, '用例名称不能为空'));
       // }
-      let caseData = await this.caseModel.get(params.id);
+      let caseData = await this.InterfaceCaseModel.get(params.id);
       let auth = await this.checkAuth(caseData.project_id, "project", "edit");
       if (!auth) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
@@ -493,9 +492,9 @@ class InterfaceColController extends baseController {
       // 不允许修改接口id和项目id
       delete params.interface_id;
       delete params.project_id;
-      let result = await this.caseModel.up(params.id, params);
+      let result = await this.InterfaceCaseModel.up(params.id, params);
       let username = this.getUsername();
-      this.colModel.get(caseData.col_id).then((col) => {
+      this.InterfaceColModel.get(caseData.col_id).then((col) => {
         yapi.commons.saveLog({
           content: `<a href="/user/profile/${this.getUid()}">${username}</a> 在接口集 <a href="/project/${
             caseData.project_id
@@ -525,11 +524,10 @@ class InterfaceColController extends baseController {
    * @example
    * @param ctx
    */
-
   async getCase(ctx) {
     try {
       let id = ctx.query.caseid;
-      let result = await this.caseModel.get(id);
+      let result = await this.InterfaceCaseModel.get(id);
       if (!result) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的case"));
       }
@@ -571,7 +569,6 @@ class InterfaceColController extends baseController {
    * @returns {Object}
    * @example
    */
-
   async upCol(ctx) {
     try {
       let params = ctx.request.body;
@@ -579,7 +576,7 @@ class InterfaceColController extends baseController {
       if (!id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "缺少 col_id 参数"));
       }
-      let colData = await this.colModel.get(id);
+      let colData = await this.InterfaceColModel.get(id);
       if (!colData) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "不存在"));
       }
@@ -588,7 +585,7 @@ class InterfaceColController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
       }
       delete params.col_id;
-      let result = await this.colModel.up(id, params);
+      let result = await this.InterfaceColModel.up(id, params);
       let username = this.getUsername();
       yapi.commons.saveLog({
         content: `<a href="/user/profile/${this.getUid()}">${username}</a> 更新了测试集合 <a href="/project/${
@@ -614,7 +611,6 @@ class InterfaceColController extends baseController {
    * @returns {Object}
    * @example
    */
-
   async upCaseIndex(ctx) {
     try {
       let params = ctx.request.body;
@@ -623,7 +619,7 @@ class InterfaceColController extends baseController {
       }
       params.forEach((item) => {
         if (item.id) {
-          this.caseModel.upCaseIndex(item.id, item.index).then(
+          this.InterfaceCaseModel.upCaseIndex(item.id, item.index).then(
             (res) => {
             },
             (err) => {
@@ -647,7 +643,6 @@ class InterfaceColController extends baseController {
    * @returns {Object}
    * @example
    */
-
   async upColIndex(ctx) {
     try {
       let params = ctx.request.body;
@@ -656,7 +651,7 @@ class InterfaceColController extends baseController {
       }
       params.forEach((item) => {
         if (item.id) {
-          this.colModel.upColIndex(item.id, item.index).then(
+          this.InterfaceColModel.upColIndex(item.id, item.index).then(
             (res) => {
             },
             (err) => {
@@ -680,11 +675,10 @@ class InterfaceColController extends baseController {
    * @returns {Object}
    * @example
    */
-
   async delCol(ctx) {
     try {
       let id = ctx.query.col_id;
-      let colData = await this.colModel.get(id);
+      let colData = await this.InterfaceColModel.get(id);
       if (!colData) {
         ctx.body = yapi.commons.resReturn(null, 400, "不存在的id");
       }
@@ -694,8 +688,8 @@ class InterfaceColController extends baseController {
           return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
         }
       }
-      let result = await this.colModel.del(id);
-      await this.caseModel.delByCol(id);
+      let result = await this.InterfaceColModel.del(id);
+      await this.InterfaceCaseModel.delByCol(id);
       let username = this.getUsername();
       yapi.commons.saveLog({
         content: `<a href="/user/profile/${this.getUid()}">${username}</a> 删除了接口集 ${
@@ -712,14 +706,13 @@ class InterfaceColController extends baseController {
     }
   }
   /**
-   *
+   * 删除一个接口case
    * @param {*} ctx
    */
-
   async delCase(ctx) {
     try {
       let caseid = ctx.query.caseid;
-      let caseData = await this.caseModel.get(caseid);
+      let caseData = await this.InterfaceCaseModel.get(caseid);
       if (!caseData) {
         ctx.body = yapi.commons.resReturn(null, 400, "不存在的caseid");
       }
@@ -729,9 +722,9 @@ class InterfaceColController extends baseController {
           return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
         }
       }
-      let result = await this.caseModel.del(caseid);
+      let result = await this.InterfaceCaseModel.del(caseid);
       let username = this.getUsername();
-      this.colModel.get(caseData.col_id).then((col) => {
+      this.InterfaceColModel.get(caseData.col_id).then((col) => {
         yapi.commons.saveLog({
           content: `<a href="/user/profile/${this.getUid()}">${username}</a> 删除了接口集 <a href="/project/${
             caseData.project_id
@@ -748,6 +741,7 @@ class InterfaceColController extends baseController {
       yapi.commons.resReturn(null, 400, e.message);
     }
   }
+  // 执行接口测试
   async runCaseScript(ctx) {
     let params = ctx.request.body;
     ctx.body = await yapi.commons.runCaseScript(params, params.col_id, params.interface_id, this.getUid());

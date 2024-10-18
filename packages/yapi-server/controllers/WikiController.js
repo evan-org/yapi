@@ -1,18 +1,16 @@
 const yapi = require("@/yapi.js");
-//
-const baseController = require("@/controllers/BaseController.js");
-//
-const WikiModel = require("@/models/WikiModel.js");
-const ProjectModel = require("@/models/ProjectModel.js");
-const UserModel = require("@/models/UserModel.js");
-//
-const jsondiffpatch = require("jsondiffpatch");
-const formattersHtml = jsondiffpatch.formatters.html;
 const fs = require("fs-extra");
 const path = require("path");
+const jsondiffpatch = require("jsondiffpatch");
+const formattersHtml = jsondiffpatch.formatters.html;
+// base controller
+const BaseController = require("@/controllers/BaseController.js");
+// models
+const { WikiModel, ProjectModel, UserModel } = require("@/models/index.cjs");
+// diff
 const showDiffMsg = require("../common/diffView.cjs");
 //
-class WikiController extends baseController {
+class WikiController extends BaseController {
   constructor(ctx) {
     super(ctx);
     this.WikiModel = yapi.getInst(WikiModel);
@@ -114,7 +112,9 @@ class WikiController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 400, err.message);
     }
   }
-  // 返回html
+  /**
+   * 返回html
+   * */
   diffHTML(html) {
     if (html.length === 0) {
       return "<span style=\"color: #555\">没有改动，该操作未改动wiki数据</span>";
@@ -124,7 +124,9 @@ class WikiController extends baseController {
       <div>${item.content}</div>
     </div>`);
   }
-  // 处理编辑冲突
+  /**
+   * 处理编辑冲突
+   * */
   async wikiConflict(ctx) {
     try {
       let result;

@@ -1,33 +1,36 @@
 const yapi = require("@/yapi.js");
 const _ = require("underscore");
+const sha = require("sha.js");
+const request = require("axios");
 //
-const baseController = require("@/controllers/BaseController.js");
+const BaseController = require("@/controllers/BaseController.js");
 //
-const ProjectModel = require("@/models/ProjectModel.js");
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const InterfaceColModel = require("@/models/InterfaceColModel.js");
-const InterfaceCaseModel = require("@/models/InterfaceCaseModel.js");
-const InterfaceCatModel = require("@/models/InterfaceCatModel.js");
-const GroupModel = require("@/models/GroupModel.js");
-const UserModel = require("@/models/UserModel.js");
-// const LogModel = require("@/models/LogModel.js");
-const FollowModel = require("@/models/FollowModel.js");
-const TokenModel = require("@/models/TokenModel.js");
+const {
+  ProjectModel,
+  InterfaceModel,
+  InterfaceColModel,
+  InterfaceCaseModel,
+  InterfaceCatModel,
+  GroupModel,
+  UserModel,
+  FollowModel,
+  TokenModel
+} = require("@/models/index.cjs");
 //
 const commons = require("@/utils/commons.js");
-//
-const sha = require("sha.js");
 const { generatePasssalt, getToken } = require("@/utils/sso.js");
-const request = require("axios").default;
-class ProjectController extends baseController {
+
+class ProjectController extends BaseController {
   constructor(ctx) {
     super(ctx);
+    //
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.GroupModel = yapi.getInst(GroupModel);
     // this.LogModel = yapi.getInst(LogModel);
     this.FollowModel = yapi.getInst(FollowModel);
     this.TokenModel = yapi.getInst(TokenModel);
     this.InterfaceModel = yapi.getInst(InterfaceModel);
+    //
     const id = "number";
     const member_uid = ["number"];
     const name = {
@@ -116,6 +119,9 @@ class ProjectController extends baseController {
       }
     };
   }
+  /**
+   *
+   * */
   handleBasepath(basepath) {
     if (!basepath) {
       return "";
@@ -134,6 +140,9 @@ class ProjectController extends baseController {
     }
     return basepath;
   }
+  /**
+   *
+   * */
   verifyDomain(domain) {
     if (!domain) {
       return false;
@@ -145,7 +154,6 @@ class ProjectController extends baseController {
    * @interface /project/check_project_name
    * @method get
    */
-
   async checkProjectName(ctx) {
     try {
       let name = ctx.request.query.name;
@@ -413,7 +421,6 @@ class ProjectController extends baseController {
    * @returns {Object}
    * @example ./api/project/del_member.json
    */
-
   async delMember(ctx) {
     try {
       let params = ctx.params;
@@ -455,7 +462,6 @@ class ProjectController extends baseController {
    * @return {Object}
    * @example ./api/project/get_member_list.json
    */
-
   async getMemberList(ctx) {
     let params = ctx.params;
     if (!params.id) {
@@ -474,7 +480,6 @@ class ProjectController extends baseController {
    * @returns {Object}
    * @example ./api/project/get.json
    */
-
   async get(ctx) {
     let params = ctx.params;
     let projectId = params.id || params.project_id; // 通过 token 访问
@@ -508,7 +513,6 @@ class ProjectController extends baseController {
    * @returns {Object}
    * @example ./api/project/list.json
    */
-
   async list(ctx) {
     let group_id = ctx.params.group_id,
       project_list = [];
@@ -562,7 +566,6 @@ class ProjectController extends baseController {
    * @returns {Object}
    * @example ./api/project/del.json
    */
-
   async del(ctx) {
     let id = ctx.params.id;
     if ((await this.checkAuth(id, "project", "danger")) !== true) {
@@ -895,6 +898,9 @@ class ProjectController extends baseController {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
+  /**
+   *
+   * */
   arrRepeat(arr, key) {
     const s = new Set();
     arr.forEach((item) => s.add(item[key]));

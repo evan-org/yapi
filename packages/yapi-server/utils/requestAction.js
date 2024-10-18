@@ -2,8 +2,9 @@ const path = require("path");
 const Ajv = require("ajv");
 const easyJsonScheme = require("easy-json-schema");
 const { WEBROOT_LOG } = require("@/yapi.js");
-const fs = require("fs-extra");
-/* ******************************************************************************** */
+//
+const fse = require("fs-extra");
+//
 /**
  * 参数校验
  * @param {object} schema2
@@ -72,7 +73,7 @@ const logger = (message, type) => {
   }
   // let data = (new Date).toLocaleString() + '\t|\t' + type + '\t|\t' + msg + '\n';
   let data = `[ ${new Date().toLocaleString()} ] [ ${type} ] ${message}\n`;
-  fs.writeFileSync(logfile, data, {
+  fse.writeFileSync(logfile, data, {
     flag: "a"
   });
 };

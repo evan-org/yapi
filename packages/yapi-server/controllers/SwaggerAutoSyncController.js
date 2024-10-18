@@ -2,14 +2,13 @@ const yapi = require("@/yapi.js");
 //
 const BaseController = require("@/controllers/BaseController.js");
 //
-const syncModel = require("@/models/SwaggerAutoSyncModel.js");
-const ProjectModel = require("@/models/ProjectModel.js");
+const { SwaggerAutoSyncModel, ProjectModel } = require("@/models/index.cjs");
 //
 const SwaggerAutoSyncUtils = require("@/controllers/utils/SwaggerAutoSyncUtils.js");
 class SwaggerAutoSyncController extends BaseController {
   constructor(ctx) {
     super(ctx);
-    this.syncModel = yapi.getInst(syncModel);
+    this.SwaggerAutoSyncModel = yapi.getInst(SwaggerAutoSyncModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
     this.SwaggerAutoSyncUtils = yapi.getInst(SwaggerAutoSyncUtils);
   }
@@ -28,9 +27,9 @@ class SwaggerAutoSyncController extends BaseController {
     }
     let result;
     if (requestBody.id) {
-      result = await this.syncModel.up(requestBody);
+      result = await this.SwaggerAutoSyncModel.up(requestBody);
     } else {
-      result = await this.syncModel.save(requestBody);
+      result = await this.SwaggerAutoSyncModel.save(requestBody);
     }
     // 操作定时任务
     if (requestBody.is_sync_open) {
@@ -49,7 +48,7 @@ class SwaggerAutoSyncController extends BaseController {
     if (!projectId) {
       return (ctx.body = yapi.commons.resReturn(null, 408, "缺少项目Id"));
     }
-    let result = await this.syncModel.getByProjectId(projectId);
+    let result = await this.SwaggerAutoSyncModel.getByProjectId(projectId);
     return (ctx.body = yapi.commons.resReturn(result));
   }
 }

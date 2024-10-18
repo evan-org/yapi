@@ -1,10 +1,6 @@
 const yapi = require("@/yapi.js");
 //
-const ProjectModel = require("@/models/ProjectModel.js");
-const UserModel = require("@/models/UserModel.js");
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const GroupModel = require("@/models/GroupModel.js");
-const TokenModel = require("@/models/TokenModel.js");
+const { ProjectModel, UserModel, InterfaceModel, GroupModel, TokenModel } = require("@/models/index.cjs");
 //
 const _ = require("underscore");
 const jwt = require("jsonwebtoken");

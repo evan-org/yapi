@@ -1,9 +1,8 @@
 const yapi = require("@/yapi.js");
-//
-const baseController = require("@/controllers/BaseController.js");
-const InterfaceModel = require("@/models/InterfaceModel.js");
-const ProjectModel = require("@/models/ProjectModel.js");
-const InterfaceCatModel = require("@/models/InterfaceCatModel.js");
+// controller
+const BaseController = require("@/controllers/BaseController.js");
+// model
+const { InterfaceModel, ProjectModel, InterfaceCatModel } = require("@/models/index.cjs");
 //
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
@@ -12,19 +11,19 @@ const markdownItTableOfContents = require("markdown-it-table-of-contents");
 const defaultTheme = require("../common/defaultTheme/defaultTheme.js");
 const md = require("../common/markdown.cjs");
 // const htmlToPdf = require("html-pdf");
-class GenServicesController extends baseController {
+class GenServicesController extends BaseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = yapi.getInst(InterfaceCatModel);
-    this.interModel = yapi.getInst(InterfaceModel);
+    this.InterfaceCatModel = yapi.getInst(InterfaceCatModel);
+    this.InterfaceModel = yapi.getInst(InterfaceModel);
     this.ProjectModel = yapi.getInst(ProjectModel);
   }
   async handleListClass(pid, status) {
-    let result = await this.catModel.list(pid),
+    let result = await this.InterfaceCatModel.list(pid),
       newResult = [];
     for (let i = 0, item, list; i < result.length; i++) {
       item = result[i].toObject();
-      list = await this.interModel.listByInterStatus(item._id, status);
+      list = await this.InterfaceModel.listByInterStatus(item._id, status);
       list = list.sort((a, b) => a.index - b.index);
       if (list.length > 0) {
         item.list = list;

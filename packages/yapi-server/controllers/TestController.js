@@ -1,9 +1,10 @@
 const yapi = require("@/yapi.js");
-//
-const baseController = require("@/controllers/BaseController.js");
-const fs = require("fs"); // 引入文件模块
+const fs = require("fs");
 const path = require("path");
-class TestController extends baseController {
+//
+const BaseController = require("@/controllers/BaseController.js");
+//
+class TestController extends BaseController {
   constructor(ctx) {
     super(ctx);
   }
@@ -34,7 +35,6 @@ class TestController extends baseController {
    * @returns {Object}
    * @example
    */
-
   async testHttpCode(ctx) {
     try {
       let params = ctx.request.body;
@@ -223,4 +223,5 @@ class TestController extends baseController {
     }
   }
 }
+//
 module.exports = TestController;
