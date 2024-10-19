@@ -1,13 +1,13 @@
 /**
  * form
  * time
- * service.js
+ * http.js
  */
-import { setCancelToken, clearCancelToken } from "./cancelToken.js";
-import { getToken, getUserId, removeToken } from "@/utils/auth.js";
 import axios from "axios";
 import { v5 as uuidv5 } from "uuid";
-// import {setCancelToken, clearCancelToken} from "@/service/cancelToken.js";
+import { setCancelToken, clearCancelToken } from "./cancelToken.js";
+import { getToken, getUserId, removeToken } from "./auth.js";
+// import {setCancelToken, clearCancelToken} from "./cancelToken.js";
 // 给每个API生成唯一的Hash
 function generateKey(config) {
   return JSON.stringify({
@@ -26,7 +26,7 @@ const instance = axios.create({
 })
 // 取消请求
 const pendingRequests = new Map();
-const addPendingRequests = (config) => {
+export const addPendingRequests = (config) => {
   console.log(pendingRequests);
   const hashKey = uuidv5(generateKey(config), uuidv5.URL);
   console.log(hashKey);
@@ -35,7 +35,7 @@ const addPendingRequests = (config) => {
     pendingRequests.set(hashKey, config);
   }
 }
-const clearPendingRequests = (config) => {
+export const clearPendingRequests = (config) => {
   const hashKey = uuidv5(generateKey(config), uuidv5.URL);
   if (pendingRequests.has(hashKey)) {
     // 取消请求

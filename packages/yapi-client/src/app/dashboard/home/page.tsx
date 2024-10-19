@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import './index.scss'
-// import styles from './index.scss' //也可以这样导出，可以取出里面的选择器
+// import styles from './index.module.scss' //也可以这样导出，可以取出里面的选择器
 export default function Home(props: any) {
   console.log(props)
   const router = useRouter()

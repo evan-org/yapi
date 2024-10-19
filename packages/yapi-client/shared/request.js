@@ -1,4 +1,4 @@
-import service from "./service.js";
+import service from "./http.js";
 
 /**
  * 请求

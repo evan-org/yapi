@@ -1,7 +1,7 @@
 /**
  * form
  * time
- * service.js
+ * http.js
  */
 import { setCancelToken, clearCancelToken } from "@/service/cancelToken.js";
 import { getToken, getUserId, removeToken } from "@/utils/auth.js";
