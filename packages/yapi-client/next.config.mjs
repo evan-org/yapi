@@ -1,25 +1,50 @@
 /** @type {import('next').NextConfig} */
+import webpack from "webpack";
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 //
-const baseUrl = process.env.REACT_APP_BASE_URL;
-console.log('process.env', process.env);
+const mode = process.env.BUILD_MODE ?? "standalone";
+console.log("[Next] build mode:", mode);
+const disableChunk = !!process.env.DISABLE_CHUNK || mode === "export";
+console.log("[Next] build with chunk:", !disableChunk);
 //
 const nextConfig = {
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"],
+    });
+    if (disableChunk) {
+      config.plugins.push(
+        new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+      );
+    }
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.resolve(__dirname, "./src"),
+      "@utils": path.resolve(__dirname, "./utils"),
+      "@theme": path.resolve(__dirname, "./theme"),
+      "@shared": path.resolve(__dirname, "./shared"),
+      "@store": path.resolve(__dirname, "./store"),
+    }
+    // console.log("config.resolve.alias:", config.resolve.alias)
+    config.resolve.fallback = {
+      child_process: false,
+    };
+    return config;
+  },
+  output: mode,
+  images: {
+    unoptimized: mode === "export",
+  },
+  experimental: {
+    forceSwcTransforms: true,
+  },
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')], //我这里是不行哈
-  },
-  rewrites() {
-    return [
-      // 当请求路径符合 /api 时，将请求转发到代理服务器
-      {
-        source: '/api/:path*', //':path*'通配符
-        destination: `${baseUrl}/api/:path*`,
-      },
-    ];
   },
   redirects() {
     return [
@@ -42,4 +67,62 @@ const nextConfig = {
   },
   reactStrictMode: false, //去掉严格模式，例如 antd这个模式导入使用就会报红，但不影响使用
 };
+const CorsHeaders = [
+  { key: "Access-Control-Allow-Credentials", value: "true" },
+  { key: "Access-Control-Allow-Origin", value: "*" },
+  {
+    key: "Access-Control-Allow-Methods",
+    value: "*",
+  },
+  {
+    key: "Access-Control-Allow-Headers",
+    value: "*",
+  },
+  {
+    key: "Access-Control-Max-Age",
+    value: "86400",
+  },
+];
+if (mode !== "export") {
+  nextConfig.headers = async() => {
+    return [
+      {
+        source: "/api/:path*",
+        headers: CorsHeaders,
+      },
+    ];
+  };
+  nextConfig.rewrites = async() => {
+    const ret = [
+      {
+        // https://{resource_name}.openai.azure.com/openai/deployments/{deploy_name}/chat/completions
+        source: "/api/proxy/azure/:resource_name/deployments/:deploy_name/:path*",
+        destination: "https://:resource_name.openai.azure.com/openai/deployments/:deploy_name/:path*",
+      },
+      {
+        source: "/api/proxy/google/:path*",
+        destination: "https://generativelanguage.googleapis.com/:path*",
+      },
+      {
+        source: "/api/proxy/openai/:path*",
+        destination: "https://api.openai.com/:path*",
+      },
+      {
+        source: "/api/proxy/anthropic/:path*",
+        destination: "https://api.anthropic.com/:path*",
+      },
+      {
+        source: "/google-fonts/:path*",
+        destination: "https://fonts.googleapis.com/:path*",
+      },
+      {
+        source: "/sharegpt",
+        destination: "https://sharegpt.com/api/conversations",
+      },
+    ];
+    return {
+      beforeFiles: ret,
+    };
+  };
+}
 export default nextConfig;

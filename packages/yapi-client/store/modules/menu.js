@@ -1,8 +1,8 @@
-// Actions
+"use client"
 import { createSlice } from "@reduxjs/toolkit";
 // Reducer
 const initialState = {
-  curKey: "/" + window.location.hash.split("/")[1]
+  curKey: null
 };
 //
 export const appSlice = createSlice({

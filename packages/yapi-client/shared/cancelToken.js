@@ -7,7 +7,7 @@ export function setCancelToken(key, value) {
 export function getCancelToken(key) {
   return CancelTokenMap.get(key)
 }
-export function getCancelTokens(key) {
+export function getCancelTokens() {
   return CancelTokenMap;
 }
 export function clearCancelToken(key) {

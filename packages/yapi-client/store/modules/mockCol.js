@@ -1,5 +1,6 @@
+"use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "@/service/request.js";
+import request from "../../shared/request.js";
 // Reducer
 const initialState = {
   list: []

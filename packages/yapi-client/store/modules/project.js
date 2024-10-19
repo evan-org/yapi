@@ -1,7 +1,8 @@
+"use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "@/service/request.js";
-import variable from "@/utils/variable.js";
-import { htmlFilter } from "@/utils/common.js";
+import request from "../../shared/request.js";
+import { PAGE_LIMIT } from "@shared/config.js";
+import { htmlFilter } from "../../utils/common.js";
 // Reducer
 const initialState = {
   isUpdateModalShow: false,
@@ -98,7 +99,7 @@ export const fetchProjectList = (id, pageNum) => async(dispatch, getState) => {
   const result = await request.get("/project/list", {
     group_id: id,
     page: pageNum || 1,
-    limit: variable.PAGE_LIMIT
+    limit: PAGE_LIMIT
   })
   return dispatch(FETCH_PROJECT_LIST({ data: result.data }));
 }
@@ -191,7 +192,7 @@ export const getToken = (project_id) => async(dispatch, getState) => {
 }
 // 更新token
 export const updateToken = (project_id) => async(dispatch, getState) => {
-  const result = await request.get("/project/update_token",  { project_id });
+  const result = await request.get("/project/update_token", { project_id });
   return dispatch(UPDATE_TOKEN({ data: result.data }));
 }
 export const checkProjectName = (name, group_id) => async(dispatch, getState) => {

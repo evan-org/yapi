@@ -1,4 +1,4 @@
-// Action Creators
+"use client"
 import { createSlice } from "@reduxjs/toolkit";
 // Actions
 export const appSlice = createSlice({

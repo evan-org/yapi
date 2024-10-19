@@ -1,6 +1,7 @@
-import { setToken, setUserId, setUserInfo } from "@/utils/auth.js";
+"use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "@/service/request.js";
+import request from "@shared/request.js";
+import { setToken, setUserId, setUserInfo } from "@shared/auth.js";
 // Reducer
 const LOADING_STATUS = 0;
 const GUEST_STATUS = 1;

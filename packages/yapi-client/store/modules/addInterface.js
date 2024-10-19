@@ -1,6 +1,7 @@
+"use client"
 // Action Creators
 import { createSlice } from "@reduxjs/toolkit";
-import request from "@/service/request.js";
+import request from "../../shared/request.js";
 // Actions
 export const appSlice = createSlice({
   name: "addInterface",

@@ -1,7 +1,7 @@
-// Action Creators
+"use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "@/service/request.js";
-import variable from "@/utils/variable.js";
+import request from "../../shared/request.js";
+import { PAGE_LIMIT } from "@shared/config.js";
 // Reducer
 const initialState = {
   newsData: {
@@ -51,7 +51,7 @@ export const fetchNewsData = (typeid, type, page, limit, selectValue) => async(d
     typeid: typeid,
     type: type,
     page: page,
-    limit: limit ? limit : variable.PAGE_LIMIT,
+    limit: limit ? limit : PAGE_LIMIT,
     selectValue
   }
   const result = await request.get("/log/list", param);

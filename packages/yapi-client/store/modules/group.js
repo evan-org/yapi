@@ -1,5 +1,6 @@
-import request from "@/service/request.js";
+"use client"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import request from "../../shared/request.js";
 // 封装 createAsyncThunk 函数
 const createAsyncThunkWithStatus = (name, thunkFn) => {
   const typePrefix = `${name}/status`;
