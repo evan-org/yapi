@@ -2,7 +2,7 @@
 import config from "@/config.js";
 
 // action - state management
-import * as actionTypes from "packages/yapi-client/reducer/actions.js";
+import * as actionTypes from "packages/yapi-client/store/actions.js";
 
 export const initialState = {
   isOpen: [], // for active default menu

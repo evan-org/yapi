@@ -7,14 +7,14 @@ import logger from "redux-logger";
 //   key: "root",
 //   storage,
 // }
-// const persistedReducer = persistReducer(persistConfig, reducer)
+// const persistedReducer = persistReducer(persistConfig, store)
 // const preloadedState = {
 //   login: getTokenInfo(),
 // }
 // logger 日志
 // const loggerMiddleware = createLogger();
 //
-import rootReducers from "packages/yapi-client/reducer/modules/reducer.js";
+import rootReducers from "packages/yapi-client/store/modules/reducer.js";
 
 // mount it on the Store
 export default configureStore({

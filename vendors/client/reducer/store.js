@@ -7,7 +7,7 @@ import logger from "redux-logger";
 //   key: "root",
 //   storage,
 // }
-// const persistedReducer = persistReducer(persistConfig, reducer)
+// const persistedReducer = persistReducer(persistConfig, store)
 // const preloadedState = {
 //   login: getTokenInfo(),
 // }

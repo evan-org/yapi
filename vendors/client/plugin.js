@@ -152,7 +152,7 @@ hooks = {
     listener: []
   },
   /*
-   * 添加 reducer
+   * 添加 store
    * @param Object reducerModules
    *
    * @info

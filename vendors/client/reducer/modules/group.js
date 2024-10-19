@@ -101,7 +101,7 @@ export const appSlice = createSlice({
   },
   // extraReducers: createAsyncReducers([groupList]),
 })
-// 每个 case reducer 函数会生成对应的 Action creators
+// 每个 case store 函数会生成对应的 Action creators
 export const {
   SET_CURRENT_GROUP_ID,
   FETCH_GROUP_LIST,
