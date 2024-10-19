@@ -1,3 +1,4 @@
+"use client"
 /**
  * @author suxiaoxin
  * @info  mockJs 功能增强脚本

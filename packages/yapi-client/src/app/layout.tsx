@@ -2,8 +2,8 @@ import React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { Provider } from "react-redux";
-import store from "@store/store.js";
+// import { Provider } from "react-redux";
+// import store from "@store/store.js";
 
 export const metadata: Metadata = {
   title: "YApi-高效、易用、功能强大的可视化接口管理平台",
@@ -26,9 +26,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     </head>
     <body>
       <AntdRegistry>
-        <Provider store={store}>
-          {children}
-        </Provider>
+        {children}
       </AntdRegistry>
     </body>
     </html>

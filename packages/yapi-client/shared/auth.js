@@ -1,3 +1,4 @@
+"use client"
 import { USER_INFO, USER_TOKEN, USER_ID } from "./config.js";
 // 退出登录
 export function authLogout() {

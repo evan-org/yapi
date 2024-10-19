@@ -1,3 +1,4 @@
+"use client"
 import moment from "moment";
 import MockJs from "mockjs";
 import json5 from "json5";

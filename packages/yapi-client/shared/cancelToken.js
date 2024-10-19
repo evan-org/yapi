@@ -1,3 +1,4 @@
+"use client"
 const CancelTokenMap = new Map();
 export function setCancelToken(key, value) {
   if (!CancelTokenMap.has(key)) {
