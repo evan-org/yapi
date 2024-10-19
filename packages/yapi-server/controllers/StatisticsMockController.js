@@ -12,7 +12,7 @@ const {
   StatisticsMockModel
 } = require("@/models/index.cjs");
 //
-const commons = require("common/statisticsUtils.cjs");
+const commons = require("../common/statisticsUtils.cjs");
 //
 class StatisticsMockController extends BaseController {
   constructor(ctx) {
