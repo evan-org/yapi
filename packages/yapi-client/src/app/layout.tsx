@@ -1,9 +1,12 @@
 import React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { Provider } from "react-redux";
-import store from "@/store/store.js";
+//
+import AntdProvider from "@/context/antdProvider";
+import AuthProvider from "@/context/authProvider";
+import StoreProvider from "@/context/storeProvider";
+//
+import LoginBtn from '@/components/auth/login-btn.js';
 
 export const metadata: Metadata = {
   title: "YApi-高效、易用、功能强大的可视化接口管理平台",
@@ -25,9 +28,18 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     </head>
     <body>
-      <AntdRegistry>
-        {children}
-      </AntdRegistry>
+      <StoreProvider>
+        <AuthProvider>
+          <AntdProvider>
+            <div>
+              <LoginBtn/>
+            </div>
+            <div>
+              {children}
+            </div>
+          </AntdProvider>
+        </AuthProvider>
+      </StoreProvider>
     </body>
     </html>
   );

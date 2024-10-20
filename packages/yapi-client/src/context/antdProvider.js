@@ -3,7 +3,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN';
 import 'dayjs/locale/zh-cn';
-import { useAppSelector } from "../store/hooks.js";
+import { useAppSelector } from "@/store/hooks.js";
 import { useEffect } from "react";
 
 export default function AntdProvider({ children }) {

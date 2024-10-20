@@ -1,6 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from "@/app/(auth)/auth.js";
 // 放到主目录和next.config.mjs同级
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  // 获取session
+  const session = await auth()
+  console.log('哈哈就是我=', session)
+  // return NextResponse.redirect(new URL('/', request.url))
   // console.log("[Next] middleware:", request.headers);
   // Check the origin from the request
   const token = request.headers.get('token') ?? ''

@@ -1,8 +1,8 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "packages/yapi-client/src/shared/request.js";
-import { PAGE_LIMIT } from "packages/yapi-client/src/shared/config.js";
-import { htmlFilter } from "packages/yapi-client/src/utils/common.mjs";
+import request from "@/shared/request.js";
+import { PAGE_LIMIT } from "@/shared/config.js";
+import { htmlFilter } from "@/utils/common.mjs";
 // Reducer
 const initialState = {
   isUpdateModalShow: false,

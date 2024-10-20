@@ -1,6 +1,6 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "packages/yapi-client/src/shared/request.js";
+import request from "@/shared/request.js";
 // Actions
 export const addInterfaceSlice = createSlice({
   name: "addInterface",

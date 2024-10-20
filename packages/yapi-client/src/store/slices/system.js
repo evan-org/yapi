@@ -17,10 +17,10 @@ export const systemSlice = createSlice({
     name: "system",
     initialState,
     reducers: {
-        setMyTheme: (state, action) => {
+        SET_MY_THEME: (state, action) => {
             state.myTheme = action.payload
         }
     },
 })
 
-export const { setMyTheme } = systemSlice.actions;
+export const { SET_MY_THEME } = systemSlice.actions;

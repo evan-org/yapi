@@ -1,7 +1,7 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "packages/yapi-client/src/shared/request.js";
-import { PAGE_LIMIT } from "packages/yapi-client/src/shared/config.js";
+import request from "@/shared/request.js";
+import { PAGE_LIMIT } from "@/shared/config.js";
 // Reducer
 const initialState = {
   newsData: {

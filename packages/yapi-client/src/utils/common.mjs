@@ -4,7 +4,7 @@ import moment from "moment";
 import MockJs from "mockjs";
 import json5 from "json5";
 //
-import MockExtra from "@/utils/mockExtra.mjs";
+import MockExtra from "./mockExtra.mjs";
 import { NAME_LIMIT } from "@/shared/config.js";
 //
 const Roles = {
@@ -179,14 +179,14 @@ export const entries = (obj) => {
   }
   return res;
 };
-// export const getMockText = (mockTpl) => {
-//   try {
-//     return JSON.stringify(MockJs.mock(MockExtra(json5.parse(mockTpl), {})), null, "  ");
-//   } catch (err) {
-//     console.error(err);
-//     return "";
-//   }
-// };
+export const getMockText = (mockTpl) => {
+  try {
+    return JSON.stringify(MockJs.mock(MockExtra(json5.parse(mockTpl), {})), null, "  ");
+  } catch (err) {
+    console.error(err);
+    return "";
+  }
+};
 /**
  * 合并后新的对象属性与 Obj 一致，nextObj 有对应属性则取 nextObj 属性值，否则取 Obj 属性值
  * @param  {Object} Obj     旧对象
