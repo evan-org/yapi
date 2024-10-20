@@ -1,9 +1,8 @@
 "use client"
-// Action Creators
 import { createSlice } from "@reduxjs/toolkit";
-import request from "../../shared/request.js";
+import request from "packages/yapi-client/src/shared/request.js";
 // Actions
-export const appSlice = createSlice({
+export const addInterfaceSlice = createSlice({
   name: "addInterface",
   initialState: {
     interfaceName: "",
@@ -71,8 +70,7 @@ const {
   FETCH_INTERFACE_PROJECT,
   ADD_INTERFACE_CLIPBOARD,
   GET_INTERFACE_RES_PARAMS
-} = appSlice.actions;
-export default appSlice.reducer;
+} = addInterfaceSlice.actions;
 export const pushInputValue = (value) => async(dispatch, getState) => {
   console.log("push input value");
   return dispatch(FETCH_ADD_INTERFACE_INPUT(value))

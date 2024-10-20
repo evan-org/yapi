@@ -1,6 +1,6 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "../../shared/request.js";
+import request from "packages/yapi-client/src/shared/request.js";
 // Reducer
 const initialState = {
   interfaceColList: [
@@ -24,7 +24,7 @@ const initialState = {
   variableParamsList: [],
   envList: []
 };
-export const appSlice = createSlice({
+export const interfaceColSlice = createSlice({
   name: "interfaceCol",
   initialState: initialState,
   reducers: {
@@ -66,8 +66,7 @@ const {
   FETCH_VARIABLE_PARAMS_LIST,
   SET_COL_DATA,
   FETCH_CASE_ENV_LIST
-} = appSlice.actions;
-export default appSlice.reducer
+} = interfaceColSlice.actions;
 // Action Creators
 export const fetchInterfaceColList = (projectId) => async(dispatch, getState) => {
   const result = await request.get("/col/list", { project_id: projectId });

@@ -1,5 +1,5 @@
 "use client"
-import service from "./http.js";
+import service from "@/shared/http.js";
 
 /**
  * 请求

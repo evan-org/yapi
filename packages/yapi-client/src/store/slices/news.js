@@ -1,7 +1,7 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "../../shared/request.js";
-import { PAGE_LIMIT } from "@shared/config.js";
+import request from "packages/yapi-client/src/shared/request.js";
+import { PAGE_LIMIT } from "packages/yapi-client/src/shared/config.js";
 // Reducer
 const initialState = {
   newsData: {
@@ -10,7 +10,7 @@ const initialState = {
   },
   curpage: 1
 };
-export const appSlice = createSlice({
+export const newsSlice = createSlice({
   name: "news",
   initialState: initialState,
   reducers: {
@@ -43,8 +43,10 @@ export const appSlice = createSlice({
   // extraReducers: createAsyncReducers([groupList]),
 })
 // actions
-const { FETCH_NEWS_DATA, FETCH_MORE_NEWS } = appSlice.actions;
-export default appSlice.reducer;
+const { FETCH_NEWS_DATA, FETCH_MORE_NEWS } = newsSlice.actions;
+
+
+
 //
 export const fetchNewsData = (typeid, type, page, limit, selectValue) => async(dispatch, getState) => {
   const param = {

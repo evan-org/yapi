@@ -5,7 +5,7 @@ const initialState = {
   curKey: null
 };
 //
-export const appSlice = createSlice({
+export const menuSlice = createSlice({
   name: "menu",
   initialState: initialState,
   reducers: {
@@ -16,8 +16,7 @@ export const appSlice = createSlice({
   // extraReducers: createAsyncReducers([groupList]),
 });
 //
-const { CHANGE_MENU_ITEM } = appSlice.actions;
-export default appSlice.reducer;
+const { CHANGE_MENU_ITEM } = menuSlice.actions;
 // Action Creators
 export const changeMenuItem = (curKey) => async(dispatch, getState) => {
   console.log(curKey);

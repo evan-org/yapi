@@ -1,6 +1,6 @@
 "use client"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import request from "../../shared/request.js";
+import request from "packages/yapi-client/src/shared/request.js";
 // 封装 createAsyncThunk 函数
 const createAsyncThunkWithStatus = (name, thunkFn) => {
   const typePrefix = `${name}/status`;
@@ -37,7 +37,7 @@ const createAsyncReducers = (asyncThunks) => {
   return reducers;
 };
 //
-export const appSlice = createSlice({
+export const groupSlice = createSlice({
   name: "group",
   initialState: {
     currentGroupId: "", // 当前选择的组ID
@@ -117,9 +117,8 @@ export const {
   CHANGE_GROUP_MEMBER,
   CHANGE_GROUP_MESSAGE,
   DEL_GROUP
-} = appSlice.actions
+} = groupSlice.actions
 //
-export default appSlice.reducer
 // 获取 group 信息 (权限信息)
 export const fetchGroupMsg = (id) => async(dispatch, getState) => {
   const result = await request.get("/group/get", { id });

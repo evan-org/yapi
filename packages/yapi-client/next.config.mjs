@@ -25,10 +25,7 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       "@": path.resolve(__dirname, "./src"),
-      "@utils": path.resolve(__dirname, "./utils"),
       "@theme": path.resolve(__dirname, "./theme"),
-      "@shared": path.resolve(__dirname, "./shared"),
-      "@store": path.resolve(__dirname, "./store"),
     }
     // console.log("config.resolve.alias:", config.resolve.alias)
     config.resolve.fallback = {

@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Box, Button, FormControl, TextField } from "@mui/material";
 //
-// import { pickRandomProperty } from "@/utils/common.js";
+// import { pickRandomProperty } from "@/utils/common.mjs";
 // import constants from "@/utils/variable.js";
 //
 const validationSchema = Yup.object().shape({

@@ -1,8 +1,8 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "../../shared/request.js";
+import request from "packages/yapi-client/src/shared/request.js";
 // Actions
-export const appSlice = createSlice({
+export const followSlice = createSlice({
   name: "follow",
   initialState: {
     data: []
@@ -24,8 +24,7 @@ const {
   GET_FOLLOW_LIST,
   DEL_FOLLOW,
   ADD_FOLLOW
-} = appSlice.actions;
-export default appSlice.reducer
+} = followSlice.actions;
 // 获取关注列表
 export const getFollowList = (uid) => async(dispatch, getState) => {
   const result = await request.get("/follow/list", { uid });

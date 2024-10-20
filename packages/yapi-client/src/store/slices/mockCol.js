@@ -1,11 +1,11 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "../../shared/request.js";
+import request from "packages/yapi-client/src/shared/request.js";
 // Reducer
 const initialState = {
   list: []
 };
-export const appSlice = createSlice({
+export const mockColSlice = createSlice({
   name: "mockCol",
   initialState: initialState,
   reducers: {
@@ -17,8 +17,7 @@ export const appSlice = createSlice({
 })
 const {
   FETCH_MOCK_COL,
-} = appSlice.actions;
-export default appSlice.reducer
+} = mockColSlice.actions;
 // Action Creators
 export const fetchMockCol = (interfaceId) => async(dispatch, getState) => {
   let result = await request.get("/plugin/advmock/case/list?interface_id=" + interfaceId);

@@ -21,7 +21,6 @@ export const appSlice = createSlice({
   // extraReducers: createAsyncReducers([groupList]),
 })
 const { SET_CANCEL_TOKEN, CLEAR_CANCEL_TOKEN } = appSlice.actions;
-export default appSlice.reducer;
 /**
  *
  * @param {{key: string, value: any}} value

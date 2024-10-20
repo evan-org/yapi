@@ -1,6 +1,6 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "../../shared/request.js";
+import request from "packages/yapi-client/src/shared/request.js";
 import qs from "qs";
 //
 const initialState = {
@@ -12,7 +12,7 @@ const initialState = {
   count: 0,
   totalCount: 0
 }
-export const appSlice = createSlice({
+export const interfaceSlice = createSlice({
   name: "interface",
   initialState: initialState,
   reducers: {
@@ -58,8 +58,11 @@ const {
   FETCH_INTERFACE_LIST_MENU,
   FETCH_INTERFACE_LIST,
   FETCH_INTERFACE_CAT_LIST,
-} = appSlice.actions;
-export default appSlice.reducer
+} = interfaceSlice.actions;
+
+
+
+
 // 记录编辑页面是否有编辑
 export const changeEditStatus = (status) => async(dispatch, getState) => {
   console.log(status);

@@ -1,7 +1,7 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "@shared/request.js";
-import { setToken, setUserId, setUserInfo } from "@shared/auth.js";
+import request from "packages/yapi-client/src/shared/request.js";
+import { setToken, setUserId, setUserInfo } from "packages/yapi-client/src/shared/auth.js";
 // Reducer
 const LOADING_STATUS = 0;
 const GUEST_STATUS = 1;
@@ -30,7 +30,7 @@ const initialState = {
   imageUrl: ""
 };
 //
-export const appSlice = createSlice({
+export const userSlice = createSlice({
   name: "user",
   initialState: initialState,
   reducers: {
@@ -61,7 +61,7 @@ export const appSlice = createSlice({
       state.type = action.payload.type;
       state.study = action.payload.study;
     },
-    LOGIN_OUT: (state, action) => {
+    LOGIN_OUT: (state) => {
       state.isLogin = false;
       state.loginState = GUEST_STATUS;
       state.userName = null;
@@ -84,10 +84,10 @@ export const appSlice = createSlice({
     SET_BREADCRUMB: (state, action) => {
       state.breadcrumb = action.payload;
     },
-    CHANGE_STUDY_TIP: (state, action) => {
+    CHANGE_STUDY_TIP: (state) => {
       state.studyTip = state.studyTip + 1
     },
-    FINISH_STUDY: (state, action) => {
+    FINISH_STUDY: (state) => {
       state.study = true;
       state.studyTip = 0;
     },
@@ -107,8 +107,7 @@ const {
   SET_BREADCRUMB,
   CHANGE_STUDY_TIP,
   FINISH_STUDY
-} = appSlice.actions;
-export default appSlice.reducer;
+} = userSlice.actions;
 // Action Creators
 export const checkLoginState = (payload) => async(dispatch, getState) => {
   const result = await request.get("/user/status");

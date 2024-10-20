@@ -1,8 +1,8 @@
 "use client"
 import { createSlice } from "@reduxjs/toolkit";
-import request from "../../shared/request.js";
-import { PAGE_LIMIT } from "@shared/config.js";
-import { htmlFilter } from "../../utils/common.js";
+import request from "packages/yapi-client/src/shared/request.js";
+import { PAGE_LIMIT } from "packages/yapi-client/src/shared/config.js";
+import { htmlFilter } from "packages/yapi-client/src/utils/common.mjs";
 // Reducer
 const initialState = {
   isUpdateModalShow: false,
@@ -25,7 +25,7 @@ const initialState = {
   swaggerUrlData: ""
 };
 //
-export const appSlice = createSlice({
+export const projectSlice = createSlice({
   name: "project",
   initialState: initialState,
   reducers: {
@@ -92,8 +92,12 @@ const {
   PROJECT_UPDATE_ENV,
   PROJECT_UPSET
   //
-} = appSlice.actions;
-export default appSlice.reducer
+} = projectSlice.actions;
+
+
+
+
+
 // 获取某分组下的项目列表
 export const fetchProjectList = (id, pageNum) => async(dispatch, getState) => {
   const result = await request.get("/project/list", {

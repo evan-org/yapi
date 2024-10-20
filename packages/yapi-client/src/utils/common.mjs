@@ -1,10 +1,11 @@
-"use client"
+'use client';
+//
 import moment from "moment";
 import MockJs from "mockjs";
 import json5 from "json5";
 //
-import MockExtra from "../utils/mockExtra.mjs";
-import { NAME_LIMIT } from "@shared/config.js";
+import MockExtra from "@/utils/mockExtra.mjs";
+import { NAME_LIMIT } from "@/shared/config.js";
 //
 const Roles = {
   0: "admin",
@@ -69,9 +70,9 @@ export const json_parse = function(json) {
  * @param json 需要被复制的JSON对象
  * @returns 复制后的JSON对象
  */
-export function deepCopyJson(json) {
-  return JSON.parse(JSON.stringify(json));
-}
+// export function deepCopyJson(json) {
+//   return JSON.parse(JSON.stringify(json));
+// }
 export const checkAuth = (action, role) => Roles[roleAction[action]] <= Roles[role];
 export const formatTime = (timestamp) => moment.unix(timestamp).format("YYYY-MM-DD HH:mm:ss");
 // 防抖函数，减少高频触发的函数执行的频率
@@ -178,14 +179,14 @@ export const entries = (obj) => {
   }
   return res;
 };
-export const getMockText = (mockTpl) => {
-  try {
-    return JSON.stringify(MockJs.mock(MockExtra(json5.parse(mockTpl), {})), null, "  ");
-  } catch (err) {
-    console.error(err);
-    return "";
-  }
-};
+// export const getMockText = (mockTpl) => {
+//   try {
+//     return JSON.stringify(MockJs.mock(MockExtra(json5.parse(mockTpl), {})), null, "  ");
+//   } catch (err) {
+//     console.error(err);
+//     return "";
+//   }
+// };
 /**
  * 合并后新的对象属性与 Obj 一致，nextObj 有对应属性则取 nextObj 属性值，否则取 Obj 属性值
  * @param  {Object} Obj     旧对象
