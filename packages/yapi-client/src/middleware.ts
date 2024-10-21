@@ -3,9 +3,9 @@ import { auth } from "@/auth.ts";
 // 放到主目录和next.config.mjs同级
 export async function middleware(request: NextRequest) {
   // 获取session
-  const session = await auth()
-  console.log('哈哈就是我=session', session)
-  console.log('哈哈就是我=request', request)
+  const session = await auth();
+  console.log('哈哈就是我=session', session);
+  // console.log('哈哈就是我=request', request);
   // return NextResponse.redirect(new URL('/', request.url))
   // console.log("[Next] middleware:", request.headers);
   // Check the origin from the request
@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
   //     { status: 401 }
   //   )
   // }
-  return NextResponse.next()
+  return NextResponse.next();
 }
 export const config = {
   matcher: '/api/:path*',

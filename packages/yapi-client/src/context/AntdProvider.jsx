@@ -15,16 +15,18 @@ export default function AntdProvider({ children }) {
       document.documentElement.classList.remove('dark')
     }
   }, [myTheme])
-  return <AntdRegistry>
-    <ConfigProvider locale={zhCN} theme={{
-      token: {
-        colorPrimary: myTheme === 'dark' ? darkTheme.primary : defaultTheme.primary
-      },
-      algorithm: myTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm
-    }}>
-      <div>
-        {children}
-      </div>
-    </ConfigProvider>
-  </AntdRegistry>
+  return (
+    <AntdRegistry>
+      <ConfigProvider locale={zhCN} theme={{
+        token: {
+          colorPrimary: myTheme === 'dark' ? darkTheme.primary : defaultTheme.primary
+        },
+        algorithm: myTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm
+      }}>
+        <div>
+          {children}
+        </div>
+      </ConfigProvider>
+    </AntdRegistry>
+  )
 }

@@ -2,9 +2,9 @@ import React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 //
-import AntdProvider from "@/context/antdProvider";
-import AuthProvider from "@/context/authProvider";
-import StoreProvider from "@/context/storeProvider";
+import AntdProvider from "@/context/AntdProvider";
+import AuthProvider from "@/context/AuthProvider";
+import StoreProvider from "@/context/StoreProvider.tsx";
 //
 import LoginBtn from '@/components/auth/login-btn.js';
 
@@ -31,12 +31,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       <StoreProvider>
         <AuthProvider>
           <AntdProvider>
-            <div>
-              <LoginBtn/>
-            </div>
-            <div>
-              {children}
-            </div>
+            {children}
           </AntdProvider>
         </AuthProvider>
       </StoreProvider>
