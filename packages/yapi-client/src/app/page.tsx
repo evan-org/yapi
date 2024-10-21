@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "@/app/index.module.scss";
 //
-import { auth } from "@/app/(auth)/auth";
+import { auth } from "@/auth.ts";
 //
 // import Image from "next/image";
 // import { useSession, signIn, signOut } from "next-auth/react"
