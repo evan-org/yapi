@@ -46,7 +46,6 @@ export const newsSlice = createSlice({
 const { FETCH_NEWS_DATA, FETCH_MORE_NEWS } = newsSlice.actions;
 
 
-
 //
 export const fetchNewsData = (typeid, type, page, limit, selectValue) => async(dispatch, getState) => {
   const param = {

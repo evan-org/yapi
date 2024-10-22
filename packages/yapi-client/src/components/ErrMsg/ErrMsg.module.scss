@@ -1,0 +1,20 @@
+.ErrMsg {
+  text-align: center;
+  font-size: 14px;
+  line-height: 2;
+  margin-bottom: 24px;
+  color: rgba(13, 27, 62, 0.43);
+  :global {
+    .icon {
+      font-size: 60px;
+      margin-bottom: 8px;
+    }
+    .title {
+      font-size: 18px;
+    }
+    .desc {
+    }
+    .opration {
+    }
+  }
+}

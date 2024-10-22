@@ -1,0 +1,21 @@
+.MSubNav {
+  margin-bottom: 24px;
+  background-color: #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, .08);
+  font-size: 14px;
+  border: none;
+  :global {
+    .ant-menu {
+      font-size: unset;
+    }
+    .m-subnav-menu {
+      border: none;
+      padding: 0 24px;
+      .item {
+        line-height: 54px;
+        padding: 0 36px;
+        font-weight: normal;
+      }
+    }
+  }
+}

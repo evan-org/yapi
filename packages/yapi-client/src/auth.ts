@@ -7,10 +7,13 @@ import Twitter from "next-auth/providers/twitter";
 
 const providers: Provider[] = [
   Credentials({
-    credentials: { password: { label: "Password", type: "password" } },
+    credentials: {
+      email: { label: "Email", type: "email" },
+      password: { label: "Password", type: "password" },
+    },
     authorize(c) {
       console.log("credentials c:", c);
-      if (c.password !== "password") return null
+      if (c.password !== "password") {return null}
       return {
         id: "test",
         name: "Test User",
@@ -29,10 +32,11 @@ export const providerMap = providers.map((provider) => {
   } else {
     return { id: provider.id, name: provider.name }
   }
-}).filter((provider) => provider.id !== "credentials")
+}).filter((provider) => provider.id !== "credentials");
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers,
   pages: {
     signIn: "/signin",
   },
+  secret: process.env.AUTH_SECRET,
 })

@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 interface PushType {
   (path: string): void;
@@ -23,7 +23,7 @@ export const useRouterWithOptions = () => {
       if (optionsOrParams) {
         if (Array.isArray(optionsOrParams)) {
           for (const value of optionsOrParams) {
-            path += '/' + value;
+            path += "/" + value;
           }
           if (!options) {
             router.push(path);
@@ -34,8 +34,8 @@ export const useRouterWithOptions = () => {
         let idx = 0;
         for (const key in optionsOrParams) {
           const value = optionsOrParams[key];
-          if (value === undefined) continue;
-          path += `${idx === 0 ? '?' : '&'}${key}=${value}`;
+          if (value === undefined) {continue;}
+          path += `${idx === 0 ? "?" : "&"}${key}=${value}`;
           idx++;
         }
       }

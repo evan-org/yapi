@@ -1,14 +1,14 @@
+import React from "react"
 import { redirect } from "next/navigation"
 import { signIn, providerMap } from "@/auth.ts";
 import { AuthError } from "next-auth"
+
 const SIGNIN_ERROR_URL = "http://localhost:3000/signin-error";
-export default async function SignInPage(props: {
-  searchParams: { callbackUrl: string | undefined }
-}) {
+export default function SignInPage(props: { searchParams: { callbackUrl: string | undefined } }) {
   return (
     <div className="flex flex-col gap-2">
       <form
-        action={async (formData) => {
+        action={async(formData) => {
           "use server"
           try {
             await signIn("credentials", formData)
@@ -32,7 +32,7 @@ export default async function SignInPage(props: {
       </form>
       {Object.values(providerMap).map((provider, index) => (
         <form key={index}
-          action={async () => {
+          action={async() => {
             "use server"
             try {
               await signIn(provider.id, {

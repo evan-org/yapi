@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 // import { composeWithDevTools } from "redux-devtools-extension";
 import logger from "redux-logger";
@@ -31,9 +31,9 @@ const rootReducer = combineReducers({
   [mockColSlice.name]: mockColSlice.reducer,
 });
 //
-export const makeStore = () => {
+export const makeStore = () =>
   // mount it on the Store
-  return configureStore({
+  configureStore({
     reducer: rootReducer,
     // devTools: composeWithDevTools(),
     devTools: false,
@@ -42,4 +42,4 @@ export const makeStore = () => {
       serializableCheck: false, // 禁用序列化检查
     }).concat(logger)
   })
-};
+;
