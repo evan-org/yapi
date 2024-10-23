@@ -1,19 +1,14 @@
 .Login {
   height: 100vh;
   position: relative;
+  background-color: #fff;
   :global {
     .login-container {
       height: 100%;
       position: relative;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      .MuiCard-root {
-        display: inherit;
-        position: relative;
-        overflow: inherit;
-        margin-top: 24vh;
-      }
+      align-items: center;
     }
     .login-form-button {
       background-image: linear-gradient(to right, #6d69fe 0%, #48a0fa 100%) !important;
@@ -55,7 +50,7 @@
       }
       .login-title {
         text-align: center;
-        padding-top: 50px;
+        padding-top: 34px;
         font-size: 40px;
         font-weight: 200;
         color: #2e2e5a;

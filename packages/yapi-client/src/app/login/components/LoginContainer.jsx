@@ -3,8 +3,8 @@ import React from "react";
 import { connect } from "react-redux";
 //
 import PropTypes from "prop-types";
-import LoginForm from "./LoginForm.jsx";
-import RegForm from "./RegForm.jsx";
+import LoginForm from "packages/yapi-client/src/app/login/components/LoginForm.tsx";
+import RegForm from "packages/yapi-client/src/app/login/components/RegForm.tsx";
 import SwipeableViews from "react-swipeable-views";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";

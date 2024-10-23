@@ -6,37 +6,37 @@ import { setToken, setUserId, setUserInfo } from "@/shared/auth.js";
 const LOADING_STATUS = 0;
 const GUEST_STATUS = 1;
 const MEMBER_STATUS = 2;
-// Reducer user
-const initialState = {
-  isLogin: false,
-  canRegister: true,
-  isLDAP: false,
-  userName: null,
-  uid: null,
-  email: "",
-  loginState: LOADING_STATUS,
-  loginWrapActiveKey: "1",
-  role: "",
-  type: "",
-  // breadcrumb: [{
-  //   name: 'name',
-  //   href: 'group'
-  // }, {
-  //   name: '当前页面'
-  // }]
-  breadcrumb: [],
-  studyTip: 0,
-  study: false,
-  imageUrl: ""
-};
 //
 export const userSlice = createSlice({
   name: "user",
-  initialState: initialState,
+  initialState: {
+    isLogin: false,
+    canRegister: true,
+    isLDAP: false,
+    userName: null,
+    uid: null,
+    email: "",
+    loginState: LOADING_STATUS,
+    loginWrapActiveKey: "1",
+    role: "",
+    type: "",
+    // breadcrumb: [{
+    //   name: 'name',
+    //   href: 'group'
+    // }, {
+    //   name: '当前页面'
+    // }]
+    breadcrumb: [],
+    studyTip: 0,
+    study: false,
+    imageUrl: ""
+  },
   reducers: {
+    //
     DEFINE_ERROR: (state, action) => {
       console.debug("DEFINE_ERROR", action);
     },
+    //
     GET_LOGIN_STATE: (state, action) => {
       state.isLogin = action.payload.data.errcode === 0;
       //
@@ -122,7 +122,7 @@ export const checkLoginState = (payload) => async(dispatch, getState) => {
   return dispatch(GET_LOGIN_STATE({ data: result.data }))
 }
 // 登录API
-export const loginActions = (payload) => async(dispatch, getState) => {
+export const loginActions = (payload) => async(dispatch) => {
   const result = await request.post("/user/login", payload);
   console.log("loginActions: /user/login", result);
   setToken(result.data.data.token);
@@ -131,7 +131,7 @@ export const loginActions = (payload) => async(dispatch, getState) => {
   return dispatch(LOGIN(result.data.data.info));
 }
 // 登录API
-export const loginLdapActions = (payload) => async(dispatch, getState) => {
+export const loginLdapActions = (payload) => async(dispatch) => {
   const result = await request.post("/user/login_by_ldap", payload);
   return dispatch(LOGIN(result.data));
 }

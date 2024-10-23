@@ -119,6 +119,12 @@ if (mode !== "export") {
     ];
     return {
       beforeFiles: ret,
+      fallback: [
+        {
+          source: "/api/:path*",
+          destination: `http://127.0.0.1:3030/:path*`,
+        },
+      ]
     };
   };
 }

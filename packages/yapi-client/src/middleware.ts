@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
   // 获取session
   const session = await auth();
   console.log("哈哈就是我=session", session);
-  // console.log('哈哈就是我=request', request);
+  console.log("哈哈就是我=request", request.url);
   // return NextResponse.redirect(new URL('/', request.url))
   // console.log("[Next] middleware:", request.headers);
   // Check the origin from the request
