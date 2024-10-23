@@ -213,6 +213,7 @@ $color-bg-lightblue: #c6e2ff;
           font-size: 24px;
           color: #fff;
           margin-bottom: 24px;
+          justify-content: center;
         }
         .title {
           color: $color-text-dark;
@@ -228,6 +229,7 @@ $color-bg-lightblue: #c6e2ff;
         padding: 0 24px;
       }
       .section-card {
+        padding: 8px;
         padding-bottom: 100px;
         .ant-card {
           font-size: 17px;
@@ -255,7 +257,6 @@ $color-bg-lightblue: #c6e2ff;
           padding: 32px;
           min-height: 8em;
         }
-        padding: 8px;
       }
       .code {
         color: $color-text-light;
@@ -346,6 +347,7 @@ $color-bg-lightblue: #c6e2ff;
           font-size: 40px;
           color: #fff;
           margin-bottom: 24px;
+          justify-content: center;
         }
         .desc {
           margin-bottom: 16px;

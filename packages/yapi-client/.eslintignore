@@ -1,0 +1,13 @@
+node_modules
+/common
+/exts
+/public
+/test
+/example
+.yarn
+.yarnrc.yml
+/docs
+/.idea
+/.vscode
+/.eslintrc.js
+/.next

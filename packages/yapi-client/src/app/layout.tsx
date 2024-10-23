@@ -1,6 +1,8 @@
 import React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/assets/styles/reset.scss";
+import "@/assets/styles/costom.scss";
 //
 import AntdProvider from "@/context/AntdProvider.tsx";
 import AuthProvider from "@/context/AuthProvider.tsx";
