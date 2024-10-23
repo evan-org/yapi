@@ -61,6 +61,7 @@ export const userSlice = createSlice({
       state.type = action.payload.type;
       state.study = action.payload.study;
     },
+    //
     LOGIN_OUT: (state) => {
       state.isLogin = false;
       state.loginState = GUEST_STATUS;
@@ -69,9 +70,11 @@ export const userSlice = createSlice({
       state.role = "";
       state.type = "";
     },
+    //
     LOGIN_TYPE: (state, action) => {
       state.loginWrapActiveKey = action.payload;
     },
+    //
     REGISTER: (state, action) => {
       state.isLogin = true;
       state.loginState = MEMBER_STATUS;
@@ -84,13 +87,16 @@ export const userSlice = createSlice({
     SET_BREADCRUMB: (state, action) => {
       state.breadcrumb = action.payload;
     },
+    //
     CHANGE_STUDY_TIP: (state) => {
       state.studyTip = state.studyTip + 1
     },
+    //
     FINISH_STUDY: (state) => {
       state.study = true;
       state.studyTip = 0;
     },
+    //
     SET_IMAGE_URL: (state, action) => {
       state.imageUrl = action.payload;
     }
@@ -109,6 +115,8 @@ const {
   FINISH_STUDY
 } = userSlice.actions;
 // Action Creators
+
+// 登录状态API
 export const checkLoginState = (payload) => async(dispatch, getState) => {
   const result = await request.get("/user/status");
   return dispatch(GET_LOGIN_STATE({ data: result.data }))

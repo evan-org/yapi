@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-import Link from "next/link";
 import { useRouter as useNavigate } from "next/navigation";
 import styles from "./index.module.scss";
 //
@@ -9,7 +8,7 @@ import { AppstoreOutlined, ApiOutlined, DatabaseOutlined, TeamOutlined } from "@
 import LogoSVG from "@/components/LogoSVG/LogoSVG.jsx";
 import HomeFooter from "@/components/HomeFooter/HomeFooter.tsx";
 import { useAppDispatch, useAppSelector } from "@/store/hooks.ts";
-// import { changeMenuItem } from "@/store/slices/menu.js";
+//
 function HomeGuest() {
   return (
     <div className="g-body">
@@ -50,11 +49,9 @@ function HomeGuest() {
                   <span className="desc">旨在为开发、产品、测试人员提供更优雅的接口管理服务</span>
                 </div>
                 <div className="btn-group">
-                  <Link href={"/login"}>
-                    <Button type="primary" className="btn-home btn-login">
-                      登录 / 注册
-                    </Button>
-                  </Link>
+                  <Button href={"/login"} type="primary" className="btn-home btn-login">
+                    登录 / 注册
+                  </Button>
                   {/* {ThirdLogin != null ? <ThirdLogin/> : null}*/}
                 </div>
               </div>
@@ -346,15 +343,13 @@ export default function HomePage(props: any) {
             </div>
             <div className="tip-btns">
               <div className="btn-group">
-                <Link href={"/login"}>
-                  <Button type="primary" className="btn-home btn-login">
-                    登录 / 注册
-                  </Button>
-                </Link>
-                <Button className="btn-home btn-home-normal">
-                  <a target="_blank" rel="noopener noreferrer" href="https://hellosean1025.github.io/yapi">
-                    使用文档
-                  </a>
+                <Button href={"/login"} type="primary" className="btn-home btn-login">
+                  登录 / 注册
+                </Button>
+                <Button className="btn-home btn-home-normal"
+                  href={"https://hellosean1025.github.io/yapi"}
+                  target="_blank" rel="noopener noreferrer">
+                  使用文档
                 </Button>
               </div>
             </div>

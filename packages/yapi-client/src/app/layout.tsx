@@ -7,8 +7,6 @@ import "@/assets/styles/costom.scss";
 import AntdProvider from "@/context/AntdProvider.tsx";
 import AuthProvider from "@/context/AuthProvider.tsx";
 import StoreProvider from "@/context/StoreProvider.tsx";
-//
-// import LoginBtn from '@/components/auth/login-btn.jsx';
 
 export const metadata: Metadata = {
   title: "YApi-高效、易用、功能强大的可视化接口管理平台",
