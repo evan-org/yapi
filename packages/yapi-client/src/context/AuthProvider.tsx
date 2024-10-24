@@ -9,7 +9,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const userState = useAppSelector((state: any) => state.user);
   console.log("AuthProvider", userState);
   console.log("localstorage", getToken(), getUserInfo());
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   //
   useEffect(() => {
     (async() => {
