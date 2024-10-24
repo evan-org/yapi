@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import request from "@/shared/request.js";
 import { setToken, setUserId, setUserInfo } from "@/shared/auth.js";
+import type { UseDispatch } from "react-redux";
 // Reducer
 const LOADING_STATUS = 0;
 const GUEST_STATUS = 1;
@@ -55,6 +56,7 @@ export const userSlice = createSlice({
       console.log("reducers:LOGIN", action);
       state.isLogin = true;
       state.loginState = MEMBER_STATUS;
+      state.email = action.payload.email;
       state.uid = action.payload.uid;
       state.userName = action.payload.username;
       state.role = action.payload.role;
@@ -62,13 +64,14 @@ export const userSlice = createSlice({
       state.study = action.payload.study;
     },
     //
-    LOGIN_OUT: (state) => {
+    LOGIN_OUT: (state, action) => {
       state.isLogin = false;
       state.loginState = GUEST_STATUS;
       state.userName = null;
       state.uid = null;
       state.role = "";
       state.type = "";
+      console.log("reducers:LOGIN_OUT", action);
     },
     //
     LOGIN_TYPE: (state, action) => {
@@ -88,11 +91,13 @@ export const userSlice = createSlice({
       state.breadcrumb = action.payload;
     },
     //
-    CHANGE_STUDY_TIP: (state) => {
-      state.studyTip = state.studyTip + 1
+    CHANGE_STUDY_TIP: (state, action) => {
+      state.studyTip = state.studyTip + 1;
+      console.log("action:CHANGE_STUDY_TIP", action);
     },
     //
-    FINISH_STUDY: (state) => {
+    FINISH_STUDY: (state, action) => {
+      console.log("action:FINISH_STUDY", action);
       state.study = true;
       state.studyTip = 0;
     },
@@ -103,7 +108,7 @@ export const userSlice = createSlice({
   },
   // extraReducers: createAsyncReducers([groupList]),
 })
-const {
+export const {
   GET_LOGIN_STATE,
   LOGIN,
   LOGIN_OUT,
@@ -115,53 +120,63 @@ const {
   FINISH_STUDY
 } = userSlice.actions;
 // Action Creators
-
 // 登录状态API
-export const checkLoginState = (payload) => async(dispatch, getState) => {
+export const checkLoginState = () => async(dispatch: UseDispatch | any) => {
   const result = await request.get("/user/status");
   return dispatch(GET_LOGIN_STATE({ data: result.data }))
 }
 // 登录API
-export const loginActions = (payload) => async(dispatch) => {
+export const loginActions = (payload: any) => async(dispatch: any) => {
+  //
   const result = await request.post("/user/login", payload);
   console.log("loginActions: /user/login", result);
   setToken(result.data.data.token);
   setUserId(result.data.data.uid);
   setUserInfo(result.data.data.info);
-  return dispatch(LOGIN(result.data.data.info));
+  // return dispatch(LOGIN(result.data.data.info));
+  return dispatch({ type: "user/LOGIN", payload: result.data.data.info });
 }
 // 登录API
-export const loginLdapActions = (payload) => async(dispatch) => {
+export const userInfoActions = () => async(dispatch: any) => {
+  //
+  const result = await request.post("/user/profile");
+  console.log("loginActions: /user/login", result);
+  setUserId(result.data.data.userId);
+  setUserInfo(result.data.data);
+  return dispatch({ type: "user/LOGIN", payload: result.data.data });
+}
+// 登录API
+export const loginLdapActions = (payload: any) => async(dispatch: UseDispatch | any) => {
   const result = await request.post("/user/login_by_ldap", payload);
   return dispatch(LOGIN(result.data));
 }
-export const regActions = (payload) => async(dispatch, getState) => {
+export const regActions = (payload: any) => async(dispatch: UseDispatch | any) => {
   const { email, password, userName } = payload;
   const params = { email, password, username: userName };
   const result = await request.post("/user/reg", params);
   return dispatch(REGISTER({ data: result.data }));
 }
-export const logoutActions = (payload) => async(dispatch, getState) => {
+export const logoutActions = () => async(dispatch: UseDispatch | any) => {
   const result = await request.get("/user/logout");
   return dispatch(LOGIN_OUT({ data: result.data }));
 }
-export const loginTypeAction = (payload) => async(dispatch, getState) => {
+export const loginTypeAction = (payload: any) => async(dispatch: UseDispatch | any) => {
   console.debug("action:loginTypeAction", payload)
   return dispatch(LOGIN_TYPE(payload))
 }
-export const setBreadcrumb = (payload) => async(dispatch, getState) => {
+export const setBreadcrumb = (payload: any) => async(dispatch: UseDispatch | any) => {
   console.debug("action:setBreadcrumb", payload)
   return dispatch(SET_BREADCRUMB(payload));
 }
-export const setImageUrl = (payload) => async(dispatch, getState) => {
+export const setImageUrl = (payload: any) => async(dispatch: UseDispatch | any) => {
   console.debug("action:setImageUrl", payload)
   return dispatch(SET_IMAGE_URL(payload));
 }
-export const changeStudyTip = (payload) => async(dispatch, getState) => {
+export const changeStudyTip = (payload: any) => async(dispatch: UseDispatch | any) => {
   console.debug("action:changeStudyTip", payload)
-  return dispatch(CHANGE_STUDY_TIP(payload))
+  return dispatch(CHANGE_STUDY_TIP(payload));
 }
-export const finishStudy = (payload) => async(dispatch, getState) => {
+export const finishStudy = () => async(dispatch: UseDispatch | any) => {
   const result = await request.get("/user/up_study");
-  return dispatch(FINISH_STUDY({ data: result.data }));
+  return dispatch({ type: "user/FINISH_STUDY", payload: { data: result.data } });
 }

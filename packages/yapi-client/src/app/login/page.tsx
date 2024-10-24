@@ -2,19 +2,18 @@
 import React, { useEffect, useState } from "react";
 import LogoSVG from "@/components/LogoSVG/LogoSVG.jsx";
 import styles from "./index.module.scss";
-import { Card, Tabs } from "antd";
+import { Flex, Card, Tabs } from "antd";
 //
 import LoginForm from "@/app/login/components/LoginForm.tsx";
 import RegForm from "@/app/login/components/RegForm.tsx";
 //
 import { useAppSelector } from "@/store/hooks.ts";
-
-const TabPane = Tabs.TabPane;
 //
 function RegisterView() {
   const userState = useAppSelector((state: any) => state.user);
-  const canRegister = userState?.can_reg;
-  return canRegister ? <RegForm/> : <div style={{ minHeight: 200 }}>管理员已禁止注册，请联系管理员</div>
+  console.log("userState", userState);
+  const canRegister = userState?.canRegister;
+  return canRegister ? <RegForm/> : <Flex justify="center" align="center" style={{ minHeight: 270 }}>管理员已禁止注册，请联系管理员</Flex>
 }
 const items = [
   { label: "登录", key: "1", children: <LoginForm/> },
@@ -23,9 +22,6 @@ const items = [
 //
 function Login() {
   const [activeKey, setActiveKey] = useState("1");
-  const userState = useAppSelector((state: any) => state.user);
-  const canRegister = userState?.can_reg;
-  //
   useEffect(() => {
   }, []);
   //
@@ -39,18 +35,20 @@ function Login() {
       </div>
       {/**/}
       <div className="login-container">
-        <Card style={{ width: 440, background: "#fff", padding: "20px", marginTop: "34px" }}>
+        <Card style={{ width: 360, background: "#fff", padding: "20px", marginTop: "34px", borderRadius: "40px" }}>
           <div className="card-login">
             <div className="login-logo">
-              <LogoSVG length="100px"/>
+              <LogoSVG length="80px"/>
             </div>
             <h2 className="login-title">YAPI</h2>
-            <Tabs activeKey={activeKey}
+            <Tabs
+              activeKey={activeKey}
               centered
               defaultActiveKey={activeKey}
               className="login-form"
               items={items}
-              tabBarStyle={{ border: "none" }}>
+              tabBarStyle={{ border: "none" }}
+              onChange={(key) => setActiveKey(key)}>
             </Tabs>
           </div>
         </Card>

@@ -13,7 +13,9 @@ const providers: Provider[] = [
     },
     authorize(c) {
       console.log("credentials c:", c);
-      if (c.password !== "password") {return null}
+      if (c.password !== "password") {
+        return null
+      }
       return {
         id: "test",
         name: "Test User",
@@ -23,7 +25,7 @@ const providers: Provider[] = [
   }),
   GitHub,
   Google,
-  Twitter
+  Twitter,
 ]
 export const providerMap = providers.map((provider) => {
   if (typeof provider === "function") {
@@ -35,6 +37,19 @@ export const providerMap = providers.map((provider) => {
 }).filter((provider) => provider.id !== "credentials");
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers,
+  // callbacks: {
+  //   async session({session, user, token}) {
+  //     // todo:如何把userId传递到session中，因为后续接口需要
+  //     console.log("session=", session)
+  //     console.log("user=", user)
+  //     console.log("token=", token)
+  //     session.accessToken = token
+  //     return session
+  //   },
+  // },
+  session: {
+    strategy: "jwt",
+  },
   pages: {
     signIn: "/signin",
   },

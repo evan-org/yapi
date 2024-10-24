@@ -90,6 +90,7 @@ class UserController extends BaseController {
     if (decoded.uid.toString() === userId) {
       return (ctx.body = responseAction({
         "_id": result._id,
+        "uid": result._id,
         "userId": result._id,
         "study": true,
         "type": result.type,

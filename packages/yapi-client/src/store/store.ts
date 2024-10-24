@@ -5,7 +5,7 @@ import logger from "redux-logger";
 //
 import { systemSlice } from "@/store/slices/system.js";
 import { appSlice } from "@/store/slices/app.js";
-import { userSlice } from "@/store/slices/user.js";
+import { userSlice } from "@/store/slices/user.ts";
 import { groupSlice } from "@/store/slices/group.js";
 import { projectSlice } from "@/store/slices/project.js";
 import { interfaceSlice } from "@/store/slices/interface.js";

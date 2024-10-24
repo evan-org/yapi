@@ -6,7 +6,7 @@ import { Form, Button, Input, message } from "antd";
 import Icon from "@ant-design/icons";
 const FormItem = Form.Item;
 //
-import { regActions } from "@/store/slices/user.js";
+import { regActions } from "@/store/slices/user.ts";
 
 const formItemStyle = {
   marginBottom: "16px"

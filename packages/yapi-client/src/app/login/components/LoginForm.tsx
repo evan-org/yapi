@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
-import { Button, Checkbox, Form, Input, type FormProps } from "antd";
-import { useAppDispatch } from "@/store/hooks";
-import { loginActions } from "@/store/slices/user";
+import { Flex, Button, Checkbox, Form, Input, type FormProps } from "antd";
+import { useAppDispatch, useAppSelector } from "@/store/hooks.ts";
+import { loginActions } from "@/store/slices/user.ts";
+import { useRouter } from "next/navigation";
 
 const FormItem = Form.Item;
 const InputPassword = Input.Password;
@@ -12,27 +13,19 @@ type FieldType = {
   remember?: string;
 };
 //
-function LoginFormMain() {
-  // const userState = useAppSelector((state: { user: any }) => state.user);
+export default function LoginFormMain() {
+  const userState = useAppSelector((state: { user: any }) => state.user);
   const dispatch = useAppDispatch();
+  const router = useRouter();
   // const isLDAP = userState.isLDAP;
   //
   const onFinish: FormProps<FieldType>["onFinish"] = async(values) => {
     console.log("Success:", values);
     try {
       const res = await dispatch(loginActions(values));
-      console.debug("loginActions: ", res);
-      // if (isLDAP && loginType === "ldap") {
-      //   const res = await dispatch(loginLdapActions(values));
-      //   console.log("loginLdapActions: ", res);
-      //   // navigate({ pathname: `/group/${res.payload.uid}` }, { replace: true });
-      //   // message.success("登录成功! ");
-      // } else {
-      //   const res = await dispatch(loginActions(values));
-      //   console.debug("loginActions: ", res);
-      //   // navigate({ pathname: `/group/${res.payload.uid}` }, { replace: true });
-      //   // message.success("登录成功! ");
-      // }
+      console.log("loginActions: ", res);
+      console.log("loginActions:userState: ", userState);
+      router.push("/dashboard", { scroll: true });
     } catch (e) {
       console.error(e);
     }
@@ -45,11 +38,10 @@ function LoginFormMain() {
   return (
     <Form
       name="basic"
-      labelCol={{ span: 6 }}
-      wrapperCol={{ span: 18 }}
+      layout="vertical"
       style={{ maxWidth: 600 }}
       initialValues={{
-        "remember": true,
+        "remember": false,
         "email": "admin@admin.com", // 账号
         "password": "ymfe.org", // 密码
       }}
@@ -71,20 +63,30 @@ function LoginFormMain() {
       >
         <InputPassword/>
       </FormItem>
-      <FormItem<FieldType>
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{ offset: 6, span: 16 }}
-        rules={[{ required: true, message: "Please input your password!" }]}
-      >
-        <Checkbox>Remember me</Checkbox>
+      <FormItem<FieldType>>
+        <Flex justify="space-between" align="center">
+          <FormItem<FieldType> name="remember" valuePropName="checked" noStyle
+            rules={[
+              {
+                validator: (_, value) =>
+                  value ? Promise.resolve() : Promise.reject(new Error("Should accept agreement")),
+              }
+            ]}>
+            <Checkbox>Remember me</Checkbox>
+          </FormItem>
+          <Button variant="link" color="primary" style={{ padding: "4px 0" }}>Forgot password</Button>
+        </Flex>
       </FormItem>
-      <FormItem wrapperCol={{ offset: 6, span: 24 }}>
+      <FormItem>
         <Button type="primary" htmlType="submit" block>
           Submit
         </Button>
       </FormItem>
+      <FormItem>
+        <Button color="primary" variant="link" htmlType="button" href="/signin" block>
+          Sign in
+        </Button>
+      </FormItem>
     </Form>
   )
-}
-export default LoginFormMain;
+};

@@ -7,7 +7,7 @@
 import axios from "axios";
 import { v5 as uuidv5 } from "uuid";
 import { setCancelToken, clearCancelToken } from "@/shared/cancelToken.js";
-import { getToken, getUserId, removeToken } from "@/shared/auth.js";
+import { getToken, getUserId, removeAccount } from "@/shared/auth.js";
 // import {setCancelToken, clearCancelToken} from "./cancelToken.js";
 // 给每个API生成唯一的Hash
 function generateKey(config) {
@@ -95,7 +95,7 @@ instance.interceptors.response.use((response) => {
         break
       case 401:
         error.message = "未授权，请登录";
-        removeToken();
+        removeAccount();
         break
       case 403:
         error.message = "拒绝访问";

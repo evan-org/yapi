@@ -11,7 +11,7 @@ import {
 //
 import { addProject } from "@/reducer/modules/project.js";
 import { fetchGroupList } from "@/reducer/modules/group.js";
-import { setBreadcrumb } from "@/reducer/modules/user.js";
+import { setBreadcrumb } from "@/reducer/modules/user.ts";
 //
 import { pickRandomProperty } from "@/utils/common.js";
 import constants from "@/utils/variable.js";
