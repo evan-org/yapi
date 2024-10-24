@@ -23,7 +23,7 @@ export default function AntdProvider({ children }: { children: React.ReactNode }
         },
         algorithm: myTheme === "dark" ? theme.darkAlgorithm : theme.defaultAlgorithm
       }}>
-        <div>
+        <div className={"__antd_registry__config_provider__main__"}>
           {children}
         </div>
       </ConfigProvider>

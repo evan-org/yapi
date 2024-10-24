@@ -2,7 +2,7 @@
 import React from "react";
 import { Flex, Button, Checkbox, Form, Input, type FormProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/store/hooks.ts";
-import { loginActions } from "@/store/slices/user.ts";
+import { loginAction } from "@/store/slices/user.ts";
 import { useRouter } from "next/navigation";
 
 const FormItem = Form.Item;
@@ -15,14 +15,14 @@ type FieldType = {
 //
 export default function LoginFormMain() {
   const userState = useAppSelector((state: { user: any }) => state.user);
-  const dispatch = useAppDispatch();
+  const dispatch: any = useAppDispatch();
   const router = useRouter();
   // const isLDAP = userState.isLDAP;
   //
   const onFinish: FormProps<FieldType>["onFinish"] = async(values) => {
     console.log("Success:", values);
     try {
-      const res = await dispatch(loginActions(values));
+      const res = await dispatch(loginAction(values));
       console.log("loginActions: ", res);
       console.log("loginActions:userState: ", userState);
       router.push("/dashboard", { scroll: true });

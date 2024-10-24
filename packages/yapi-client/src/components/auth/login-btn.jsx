@@ -5,7 +5,7 @@ import { Button, theme } from "antd";
 import { useRouter } from "next/navigation";
 
 const { useToken } = theme;
-import { SET_MY_THEME } from "@/store/slices/system.js";
+import { SET_MY_THEME } from "@/store/slices/system.ts";
 import { useAppSelector, useAppDispatch } from "@/store/hooks.ts";
 
 export default function Component() {

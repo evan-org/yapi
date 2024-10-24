@@ -1,10 +1,11 @@
 "use client"
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { combineReducers, configureStore, type Action, type  ThunkAction } from "@reduxjs/toolkit";
+
+export type RootState = ReturnType<typeof rootReducer>;
 // import { composeWithDevTools } from "redux-devtools-extension";
 import logger from "redux-logger";
 //
-import { systemSlice } from "@/store/slices/system.js";
-import { appSlice } from "@/store/slices/app.js";
+import { systemSlice } from "@/store/slices/system.ts";
 import { userSlice } from "@/store/slices/user.ts";
 import { groupSlice } from "@/store/slices/group.js";
 import { projectSlice } from "@/store/slices/project.js";
@@ -18,7 +19,6 @@ import { mockColSlice } from "@/store/slices/mockCol.js";
 // 创建 reducer器
 const rootReducer = combineReducers({
   [systemSlice.name]: systemSlice.reducer,
-  [appSlice.name]: appSlice.reducer,
   [userSlice.name]: userSlice.reducer,
   [groupSlice.name]: groupSlice.reducer,
   [projectSlice.name]: projectSlice.reducer,
@@ -43,3 +43,13 @@ export const makeStore = () =>
     }).concat(logger)
   })
 ;
+// Infer the return type of `makeStore`
+export type AppStore = ReturnType<typeof makeStore>;
+// Infer the `AppDispatch` type from the store itself
+export type AppDispatch = AppStore["dispatch"];
+export type AppThunk<ThunkReturnType = void> = ThunkAction<
+  ThunkReturnType,
+  RootState,
+  unknown,
+  Action
+>;
