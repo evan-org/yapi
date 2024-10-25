@@ -78,7 +78,7 @@ export default function LoginFormMain() {
         </Flex>
       </FormItem>
       <FormItem>
-        <Button type="primary" htmlType="submit" block>
+        <Button className={"login-form-button"} type="primary" htmlType="submit" block>
           Submit
         </Button>
       </FormItem>
