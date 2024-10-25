@@ -34,7 +34,6 @@ const tailFormItemLayout = {
   },
 };
 export default function RegForm() {
-  const [confirmDirty] = useState(false);
   const dispatch: any = useAppDispatch();
   const router = useRouter();
   const onFinish: FormProps<FieldType>["onFinish"] = async(values) => {
@@ -49,15 +48,15 @@ export default function RegForm() {
     }
   };
   const checkConfirm = (_: any, value: any) => {
-    if (value && confirmDirty) {
+    if (value) {
+      return Promise.resolve();
       // form.validateFields(["confirm"], { force: true });
     }
-    return Promise.resolve();
+    return Promise.reject("请再次输入密码");
   };
   //
   return (
     <Form
-      name="basic"
       layout="vertical"
       style={{ maxWidth: 600 }}
       initialValues={{

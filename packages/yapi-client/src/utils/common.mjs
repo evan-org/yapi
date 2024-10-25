@@ -1,5 +1,4 @@
 'use client';
-//
 import moment from "moment";
 import MockJs from "mockjs";
 import json5 from "json5";
@@ -21,6 +20,7 @@ const roleAction = {
   viewPrivateInterface: "guest",
   viewGroup: "guest"
 };
+// 检查字符串是否是json
 export function isJson(json) {
   if (!json) {
     return false;
@@ -33,6 +33,7 @@ export function isJson(json) {
     return false;
   }
 }
+// 检查字符串是否是json5
 export function isJson5(json) {
   if (!json) {
     return false;
@@ -45,9 +46,11 @@ export function isJson5(json) {
     return false;
   }
 }
+// 检查字符串是否合法
 export const safeArray = function(arr) {
   return Array.isArray(arr) ? arr : [];
 };
+// 检查字符串是否合法
 export const json5_parse = function(json) {
   try {
     return json5.parse(json);
@@ -56,6 +59,7 @@ export const json5_parse = function(json) {
     return json;
   }
 };
+// 检查字符串是否合法
 export const json_parse = function(json) {
   try {
     return JSON.parse(json);
@@ -70,15 +74,21 @@ export const json_parse = function(json) {
  * @param json 需要被复制的JSON对象
  * @returns 复制后的JSON对象
  */
-// export function deepCopyJson(json) {
-//   return JSON.parse(JSON.stringify(json));
-// }
+export function deepCopyJson(json) {
+  return JSON.parse(JSON.stringify(json));
+}
+/**
+ *
+ * */
 export const checkAuth = (action, role) => Roles[roleAction[action]] <= Roles[role];
+// 格式化时间
 export const formatTime = (timestamp) => moment.unix(timestamp).format("YYYY-MM-DD HH:mm:ss");
-// 防抖函数，减少高频触发的函数执行的频率
-// 请在 constructor 里使用:
-// import { debounce } from '$/common';
-// this.func = debounce(this.func, 400);
+/**
+ * 防抖函数，减少高频触发的函数执行的频率
+ * 请在 constructor 里使用:
+ * import { debounce } from '$/common';
+ * this.func = debounce(this.func, 400);
+ * */
 export const debounce = (func, wait) => {
   let timeout;
   return function() {
@@ -97,10 +107,12 @@ export const pickRandomProperty = (obj) => {
   }
   return result;
 };
+// 获取图片路径
 export const getImgPath = (path, type) => {
   let rate = window.devicePixelRatio >= 2 ? 2 : 1;
   return `${path}@${rate}x.${type}`;
 };
+// 去除空格函数
 export function trim(str) {
   if (!str) {
     return str;
@@ -108,6 +120,7 @@ export function trim(str) {
   str = str + "";
   return str.replace(/(^\s*)|(\s*$)/g, "");
 }
+// 获取url参数
 export const handlePath = (path) => {
   path = trim(path);
   if (!path) {
@@ -120,6 +133,7 @@ export const handlePath = (path) => {
   path = path[path.length - 1] === "/" ? path.substr(0, path.length - 1) : path;
   return path;
 };
+// 获取api路径
 export const handleApiPath = (path) => {
   if (!path) {
     return "";
@@ -128,6 +142,7 @@ export const handleApiPath = (path) => {
   path = path[0] !== "/" ? "/" + path : path;
   return path;
 };
+// 计算字符串长度
 export const charStrLength = (str = "") => {
   let length = 0;
   for (let i = 0; i < str.length; i++) {
@@ -179,6 +194,7 @@ export const entries = (obj) => {
   }
   return res;
 };
+// 获取mock数据
 export const getMockText = (mockTpl) => {
   try {
     return JSON.stringify(MockJs.mock(MockExtra(json5.parse(mockTpl), {})), null, "  ");

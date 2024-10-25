@@ -7,7 +7,7 @@ import { Row, Col, Button, Card } from "antd";
 import { AppstoreOutlined, ApiOutlined, DatabaseOutlined, TeamOutlined } from "@ant-design/icons";
 import LogoSVG from "@/components/LogoSVG/LogoSVG.jsx";
 import HomeFooter from "@/components/HomeFooter/HomeFooter.tsx";
-import { useAppDispatch, useAppSelector } from "@/store/hooks.ts";
+import { useAppSelector } from "@/store/hooks.ts";
 //
 function HomeGuest() {
   return (

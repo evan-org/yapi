@@ -5,16 +5,16 @@
  */
 import MockJs from "mockjs";
 
-let strRegex = /\${([a-zA-Z]+)\.?([a-zA-Z0-9_\.]*)\}/i;
-let varSplit = ".";
-let mockSplit = "|";
-MockJs.Random.extend({
-  timestamp: function() {
-    let time = new Date().getTime() + "";
-    return +time.substr(0, time.length - 3)
-  }
-})
 function mockExtra(mockJSON, context) {
+  let strRegex = /\${([a-zA-Z]+)\.?([a-zA-Z0-9_\.]*)\}/i;
+  let varSplit = ".";
+  let mockSplit = "|";
+  MockJs.Random.extend({
+    timestamp: function() {
+      let time = new Date().getTime() + "";
+      return +time.substr(0, time.length - 3)
+    }
+  })
   //
   function handleRegexp(item) {
     return new RegExp(item);

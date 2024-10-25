@@ -1,0 +1,56 @@
+.m-panel{
+  background-color: #fff;
+  padding: 24px;
+  min-height: 468px;
+  margin-top: 0;
+  // box-shadow: $box-shadow-panel;
+}
+
+.m-tab {
+  overflow: inherit !important;
+}
+
+.btn-container {
+  text-align: right;
+}
+
+.modal-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  .label {
+    text-align: right;
+  }
+  .select {
+    width: 120px;
+  }
+}
+
+.member-opration {
+  text-align: right;
+  .select {
+    width: 120px;
+  }
+  .btn-danger {
+    margin-left: 8px;
+    // background-color: transparent;
+    border-color: transparent;
+  }
+}
+
+.m-user {
+  display: flex;
+  align-items: center;
+  .m-user-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+  }
+  .m-user-name {
+    margin-left: 8px;
+  }
+
+}
+.usernamelabel,.usernameauth{
+  line-height: 36px;
+}

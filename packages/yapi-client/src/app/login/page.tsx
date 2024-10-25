@@ -15,13 +15,14 @@ function RegisterView() {
   const canRegister = userState?.canRegister;
   return canRegister ? <RegForm/> : <Flex justify="center" align="center" style={{ minHeight: 270 }}>管理员已禁止注册，请联系管理员</Flex>
 }
-const items = [
-  { label: "登录", key: "1", children: <LoginForm/> },
-  { label: "注册", key: "2", children: <RegisterView/> },
-];
+
 //
 function Login() {
   const [activeKey, setActiveKey] = useState("1");
+  const items = [
+    { label: "登录", key: "1", children: <LoginForm setActiveKey={setActiveKey}/> },
+    { label: "注册", key: "2", children: <RegisterView/> },
+  ];
   useEffect(() => {
   }, []);
   //

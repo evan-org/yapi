@@ -13,7 +13,8 @@ type FieldType = {
   remember?: string;
 };
 //
-export default function LoginFormMain() {
+export default function LoginFormMain(props: any) {
+  const setActiveKey = props.setActiveKey;
   const userState = useAppSelector((state: { user: any }) => state.user);
   const dispatch: any = useAppDispatch();
   const router = useRouter();
@@ -37,7 +38,6 @@ export default function LoginFormMain() {
   //
   return (
     <Form
-      name="basic"
       layout="vertical"
       style={{ maxWidth: 600 }}
       initialValues={{
@@ -65,7 +65,10 @@ export default function LoginFormMain() {
       </FormItem>
       <FormItem<FieldType>>
         <Flex justify="space-between" align="center">
-          <FormItem<FieldType> name="remember" valuePropName="checked" noStyle
+          <FormItem<FieldType>
+            name="remember"
+            valuePropName="checked"
+            noStyle
             rules={[
               {
                 validator: (_, value) =>
@@ -74,7 +77,13 @@ export default function LoginFormMain() {
             ]}>
             <Checkbox>Remember me</Checkbox>
           </FormItem>
-          <Button variant="link" color="primary" style={{ padding: "4px 0" }}>Forgot password</Button>
+          <Button
+            variant="link"
+            color="primary"
+            style={{ padding: "4px 0" }}
+            onClick={() => setActiveKey("2")}>
+            Forgot password
+          </Button>
         </Flex>
       </FormItem>
       <FormItem>
