@@ -5,7 +5,7 @@ import { Layout } from "antd";
 const { Content, Sider } = Layout;
 //
 import GroupList from "./components/GroupList/GroupList.jsx";
-import GroupContent from "./components/GroupContent/GroupContent.jsx";
+// import GroupContent from "./components/GroupContent/GroupContent.jsx";
 
 const drawerWidth = 300;
 // 这个和其他页面都会传入layout，当其子页面
@@ -23,7 +23,7 @@ export default function Pages() {
           padding: "16px",
         }}>
         <Content>
-          <GroupContent/>
+          {/* <GroupContent/>*/}
         </Content>
       </Layout>
     </Layout>

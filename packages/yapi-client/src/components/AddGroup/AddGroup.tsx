@@ -8,13 +8,21 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { PlusSquareOutlined } from "@ant-design/icons";
 //
-import { Box, Snackbar, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, TextField, Zoom } from "@mui/material";
+import {
+  Box, Snackbar,
+  Dialog, DialogActions,
+  DialogContent,
+  DialogTitle, FormControl,
+  IconButton,
+  TextField, Zoom
+} from "@mui/material";
 import { Close } from "@mui/icons-material";
 import request from "@/service/request.js";
 //
 import UserAutoComplete from "@/components/UserAutoComplete/UserAutoComplete.jsx";
-import { fetchGroupList, fetchGroupMsg } from "@/reducer/modules/group.js";
-import { fetchNewsData } from "@/reducer/modules/news.js";
+//
+import { fetchGroupList, fetchGroupMsg } from "@/store/slices/group.js";
+import { fetchNewsData } from "@/store/slices/news.js";
 //
 // 动画
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -26,14 +34,14 @@ const schema = yup.object().shape({
   owner_uids: yup.array().min(1, "请选择分组所有者"),
 });
 //
-function AddGroupModal(props) {
+function AddGroupModal(props: any) {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false);
   //
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [message, setMessage] = useState("");
   //
-  const dispatch = useDispatch();
+  const dispatch: any = useDispatch();
   //
   const formik = useFormik({
     initialValues: {
@@ -53,7 +61,7 @@ function AddGroupModal(props) {
         setOpenSnackbar(true);
         setOpen(false);
         navigate({ pathname: "/group/" + res.data.data._id });
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         setMessage(e.data.errmsg);
         setOpenSnackbar(true);
@@ -61,12 +69,11 @@ function AddGroupModal(props) {
     },
   });
   //
-  const addGroup = async(values) => {
+  const addGroup = async(values: any) => {
     try {
       const res = await request.post("/group/add", { ...values });
       if (!res.data.errcode) {
-        const action = await fetchGroupList()
-        dispatch(action);
+        await dispatch(fetchGroupList());
         await fetchGroupMsg(res.data.data._id);
         await fetchNewsData(res.data.data._id, "group", 1, 10);
         return res
@@ -88,7 +95,7 @@ function AddGroupModal(props) {
     setOpen(false);
   };
   //
-  const handleSnackbarClose = (event, reason) => {
+  const handleSnackbarClose = (event: React.SyntheticEvent | Event, reason: any) => {
     if (reason === "clickaway") {
       return;
     }
@@ -110,7 +117,7 @@ function AddGroupModal(props) {
           ? <Button style={{ marginLeft: "10px", width: "32px" }} type="primary" shape="default"
             icon={<PlusSquareOutlined/>}
             onClick={handleClickOpen}/>
-          : <Button type={props.type} title={props.title} variant="contained" color="primary" onClick={handleClickOpen}>
+          : <Button type={props.type} title={props.title} color="primary" onClick={handleClickOpen}>
             创建分组
           </Button>
       }
@@ -154,6 +161,7 @@ function AddGroupModal(props) {
           </DialogActions>
         </Box>
       </Dialog>
-    </>)
+    </>
+  )
 }
 export default AddGroupModal;

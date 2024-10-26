@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { connect } from "react-redux";
-import { Divider, Empty, Flex, Input, Spin, Tooltip, List } from "antd";
+import { Divider, Empty, Flex, Input, Spin, Tooltip, List, Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+
+const ListItem = List.Item;
+const TypographyText = Typography.Text;
 //
-import { ListItemAvatar, ListItemText, Typography, Avatar, ListItemButton } from "@mui/material";
-//
-import AddGroup from "@/components/AddGroup/AddGroup.jsx";
+import AddGroup from "@/components/AddGroup/AddGroup.tsx";
 //
 import { useAppSelector } from "@/store/hooks";
 import { fetchNewsData } from "@/store/slices/news.js";
@@ -24,13 +24,14 @@ import styles from "./GroupList.module.scss";
 //   </div>
 // );
 //
-function GroupList(props) {
+export default function GroupList(props) {
   const groupState = useAppSelector((state) => state.group);
   const { groupList } = groupState;
   //
   const navigate = useRouter();
   const { groupId: paramsGroupId } = useParams();
-  const [groupId, setGroupId] = useState(() => !isNaN(paramsGroupId) ? parseInt(paramsGroupId) : 0);
+  //
+  const [groupId, setGroupId] = useState(() => !isNaN(groupId) ? parseInt(groupId) : 0);
   const [searchGroupList, setSearchGroupList] = useState(groupList);
   //
   useEffect(() => {
@@ -113,7 +114,7 @@ function GroupList(props) {
         {
           groupList.length === 0
             ? <Empty/>
-            : <List>
+            /* : <List>
               {
                 searchGroupList.map((item, index) => (
                   <ListItemButton
@@ -138,27 +139,20 @@ function GroupList(props) {
                   </ListItemButton>
                 ))
               }
-            </List>
+            </List> */
+            : <List
+              header={<div>Header</div>}
+              footer={<div>Footer</div>}
+              bordered
+              dataSource={searchGroupList}
+              renderItem={(item) => (
+                <ListItem>
+                  <TypographyText mark>[ITEM]</TypographyText> {item.group_name}
+                </ListItem>
+              )}
+            />
         }
       </div>
     </div>
   )
 }
-//
-export default connect(
-  (state) => ({
-    groupList: state.group.groupList,
-    currGroup: state.group.currGroup,
-    currentGroupId: state.group.currentGroupId,
-    curUserRole: state.user.role,
-    curUserRoleInGroup: state.group.currGroup.role || state.group.role,
-    studyTip: state.user.studyTip,
-    study: state.user.study
-  }),
-  {
-    fetchGroupList,
-    setCurrGroup,
-    fetchNewsData,
-    fetchGroupMsg
-  }
-)(GroupList);
