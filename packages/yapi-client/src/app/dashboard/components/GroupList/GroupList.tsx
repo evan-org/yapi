@@ -145,7 +145,7 @@ export default function GroupList(props) {
               footer={<div>Footer</div>}
               bordered
               dataSource={searchGroupList}
-              renderItem={(item) => (
+              renderItem={(item: any) => (
                 <ListItem>
                   <TypographyText mark>[ITEM]</TypographyText> {item.group_name}
                 </ListItem>

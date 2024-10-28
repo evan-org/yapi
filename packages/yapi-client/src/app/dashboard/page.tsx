@@ -4,7 +4,7 @@ import { Layout } from "antd";
 //
 const { Content, Sider } = Layout;
 //
-import GroupList from "./components/GroupList/GroupList.jsx";
+import GroupList from "./components/GroupList/GroupList.tsx";
 // import GroupContent from "./components/GroupContent/GroupContent.jsx";
 
 const drawerWidth = 300;

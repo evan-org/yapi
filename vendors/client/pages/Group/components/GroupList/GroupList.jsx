@@ -37,11 +37,11 @@ function GroupList(props) {
   const [searchGroupList, setSearchGroupList] = useState(groupList);
   //
   const onLoad = async() => {
-    console.debug("GroupList.jsx onLoad: ", props);
-    console.debug("GroupList.jsx onLoad: ", paramsGroupId);
+    console.debug("GroupList.tsx onLoad: ", props);
+    console.debug("GroupList.tsx onLoad: ", paramsGroupId);
     //
     const req = await fetchGroupList();
-    console.warn("GroupList.jsx fetchGroupList: ", req, groupList, groupId, !!groupId);
+    console.warn("GroupList.tsx fetchGroupList: ", req, groupList, groupId, !!groupId);
     if (groupId) {
       const _currGroup = groupList.find((e) => e._id === groupId);
       if (_currGroup) {
@@ -62,7 +62,7 @@ function GroupList(props) {
   }, []);
   //
   const selectGroup = async(e) => {
-    console.warn("GroupList.jsx selectGroup: ", e);
+    console.warn("GroupList.tsx selectGroup: ", e);
     const groupId = e.key;
     setGroupId(e.key);
     const currGroup = groupList.find((group) => group._id === groupId);
