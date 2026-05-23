@@ -1,4 +1,4 @@
-const koaRouter = require("koa-router");
+const HttpRouter = require("./utils/httpRouter.js");
 const interfaceController = require("./controllers/interface.js");
 const groupController = require("./controllers/group.js");
 const userController = require("./controllers/user.js");

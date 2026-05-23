@@ -132,15 +132,15 @@ function mockValidator(interfaceData, ctx) {
   }
   return { valid: true };
 }
+/** Mock 中间件，兼容 Koa ctx */
 module.exports = async(ctx, next) => {
-  // no used variable 'hostname' & 'config'
-  // let hostname = ctx.hostname;
-  // let config = yapi.WEBCONFIG;
   let path = ctx.path;
   let header = ctx.request.header;
   if (path.indexOf("/mock/") !== 0) {
-    if (next) {await next();}
-    return true;
+    if (next) {
+      await next();
+    }
+    return;
   }
   let paths = path.split("/");
   let projectId = paths[2];

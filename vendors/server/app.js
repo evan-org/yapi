@@ -1,6 +1,8 @@
 process.env.NODE_PATH = __dirname;
 require("module").Module._initPaths();
 
+const path = require("path");
+const fs = require("fs");
 const yapi = require("./yapi.js");
 const commons = require("./utils/commons");
 yapi.commons = commons;
@@ -8,62 +10,129 @@ const dbModule = require("./utils/db.js");
 yapi.connect = dbModule.connect();
 const mockServer = require("./middleware/mockServer.js");
 require("./plugin.js");
-const websockify = require("koa-websocket");
-const websocket = require("./websocket.js");
-const storageCreator = require("./utils/storage")
-require("./utils/notice")
+const registerWebSocket = require("./websocket.js");
+const storageCreator = require("./utils/storage");
+require("./utils/notice");
 
-const Koa = require("koa");
-const koaStatic = require("koa-static");
-// const bodyParser = require('koa-bodyparser');
-const koaBody = require("koa-body");
-const router = require("./router.js");
+const Fastify = require("fastify");
+const fastifyStatic = require("@fastify/static");
+const fastifyCookie = require("@fastify/cookie");
+const fastifyFormbody = require("@fastify/formbody");
+const fastifyMultipart = require("@fastify/multipart");
+const fastifyWebsocket = require("@fastify/websocket");
+
+const apiRouter = require("./router.js");
+const { createKoaContext } = require("./utils/koaContext.js");
+const { parseMultipartBody } = require("./utils/parseMultipart.js");
 
 global.storageCreator = storageCreator;
-let indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
+const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
+const staticRoot = yapi.path.join(yapi.WEBROOT, "static");
 
-const app = websockify(new Koa());
-app.proxy = true;
-yapi.app = app;
-
-// app.use(bodyParser({multipart: true}));
-app.use(koaBody({strict: false, multipart: true, jsonLimit: "2mb", formLimit: "1mb", textLimit: "1mb" }));
-app.use(mockServer);
-app.use(router.routes());
-app.use(router.allowedMethods());
-
-websocket(app);
-
-app.use(async(ctx, next) => {
-  if (/^\/(?!api)[a-zA-Z0-9\/\-_]*$/.test(ctx.path)) {
-    ctx.path = "/";
-    await next();
-  } else {
-    await next();
-  }
-});
-
-app.use(async(ctx, next) => {
-  if (ctx.path.indexOf("/prd") === 0) {
-    ctx.set("Cache-Control", "max-age=8640000000");
-    if (yapi.commons.fileExist(yapi.path.join(yapi.WEBROOT, "static", ctx.path + ".gz"))) {
-      ctx.set("Content-Encoding", "gzip");
-      ctx.path = ctx.path + ".gz";
+function wrapKoaHandler(handler) {
+  return async function koaHandler(request, reply) {
+    const ctx = createKoaContext(request, reply);
+    await handler(ctx);
+    if (!reply.sent && ctx.body !== undefined) {
+      reply.send(ctx.body);
     }
-  }
-  await next();
-});
+  };
+}
 
+async function buildApp() {
+  const fastify = Fastify({
+    logger: false,
+    trustProxy: true,
+    bodyLimit: 2 * 1024 * 1024
+  });
 
-app.use(koaStatic(yapi.path.join(yapi.WEBROOT, "static"), { index: indexFile, gzip: true }));
+  yapi.app = fastify;
 
+  await fastify.register(fastifyCookie);
+  await fastify.register(fastifyFormbody);
+  await fastify.register(fastifyMultipart, {
+    limits: { fileSize: 10 * 1024 * 1024 }
+  });
+  await fastify.register(fastifyWebsocket);
 
-const server = app.listen(yapi.WEBCONFIG.port);
+  fastify.addHook("preHandler", async (request) => {
+    if (request.isMultipart()) {
+      await parseMultipartBody(request);
+    }
+  });
 
-server.setTimeout(yapi.WEBCONFIG.timeout);
+  fastify.addHook("preHandler", async (request, reply) => {
+    const ctx = createKoaContext(request, reply);
+    await mockServer(ctx);
+    if (reply.sent) {
+      return;
+    }
+  });
 
-commons.log(
-  `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${
-    yapi.WEBCONFIG.port == "80" ? "" : ":" + yapi.WEBCONFIG.port
-  }/`
-);
+  apiRouter.registerTo(fastify, wrapKoaHandler);
+  registerWebSocket(fastify);
+
+  fastify.addHook("onRequest", async (request, reply) => {
+    const query = request.url.includes("?") ? request.url.slice(request.url.indexOf("?")) : "";
+    let urlPath = request.url.split("?")[0];
+
+    if (/^\/(?!api)[a-zA-Z0-9\/\-_]*$/.test(urlPath)) {
+      request.url = "/" + query;
+    }
+
+    if (urlPath.indexOf("/prd") === 0) {
+      reply.header("Cache-Control", "max-age=8640000000");
+      const gzPath = yapi.path.join(staticRoot, urlPath + ".gz");
+      if (yapi.commons.fileExist(gzPath)) {
+        reply.header("Content-Encoding", "gzip");
+        request.url = urlPath + ".gz" + query;
+      }
+    }
+  });
+
+  await fastify.register(fastifyStatic, {
+    root: staticRoot,
+    prefix: "/",
+    decorateReply: false,
+    index: indexFile,
+    gzip: true,
+    setHeaders(res, filePath) {
+      if (filePath.endsWith(".gz")) {
+        res.setHeader("Content-Encoding", "gzip");
+      }
+    }
+  });
+
+  fastify.setNotFoundHandler(async (request, reply) => {
+    const urlPath = request.url.split("?")[0];
+    if (urlPath.indexOf("/api") === 0) {
+      return reply.code(404).send({ errcode: 404, errmsg: "No Found" });
+    }
+    const indexPath = path.join(staticRoot, indexFile);
+    if (fs.existsSync(indexPath)) {
+      return reply.sendFile(indexFile, staticRoot);
+    }
+    return reply.code(404).send("Not Found");
+  });
+
+  return fastify;
+}
+
+buildApp()
+  .then((fastify) => {
+    const port = Number(yapi.WEBCONFIG.port) || 3000;
+    fastify.listen({ port, host: "0.0.0.0" }, (err) => {
+      if (err) {
+        commons.log(err, "error");
+        process.exit(1);
+      }
+      fastify.server.setTimeout(yapi.WEBCONFIG.timeout);
+      commons.log(
+        `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${port === 80 ? "" : ":" + port}/`
+      );
+    });
+  })
+  .catch((err) => {
+    commons.log(err, "error");
+    process.exit(1);
+  });
