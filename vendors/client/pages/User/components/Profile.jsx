@@ -1,6 +1,5 @@
 import React, { PureComponent as Component } from "react";
 import { Row, Col, Input, Button, Select, message, Upload, Tooltip } from "antd";
-import axios from "axios";
 import { formatTime } from "../../../utils/common.js";
 import PropTypes from "prop-types";
 import { setBreadcrumb, setImageUrl } from "../../../reducer/modules/user";
@@ -107,7 +106,7 @@ class Profile extends Component {
     let _this = this;
     const { curUid } = this.props;
 
-    axios.get("/api/user/find?id=" + id).then((res) => {
+    fetchUser(id).then((res) => {
       _this.setState({
         userinfo: res.data.data,
         _userinfo: res.data.data
@@ -126,7 +125,7 @@ class Profile extends Component {
     let params = { uid: state.userinfo.uid };
     params[name] = value;
 
-    axios.post("/api/user/update", params).then(
+    updateUser(params).then(
       (res) => {
         let data = res.data;
         if (data.errcode === 0) {
@@ -183,7 +182,7 @@ class Profile extends Component {
       old_password: old_password
     };
 
-    axios.post("/api/user/change_password", params).then(
+    changePassword(params).then(
       (res) => {
         let data = res.data;
         if (data.errcode === 0) {

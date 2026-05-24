@@ -58,7 +58,7 @@ class UsernameAutoComplete extends Component {
     // this.lastFetchId += 1;
     // const fetchId = this.lastFetchId;
     this.setState({ fetching: true });
-    axios.get("/api/user/search", { params }).then((data) => {
+    searchUser(params).then((data) => {
       // if (fetchId !== this.lastFetchId) { // for fetch callback order
       //   return;
       // }

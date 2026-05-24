@@ -8,7 +8,6 @@ import {
   fetchInterfaceData
 } from "../../../../reducer/modules/interface.js";
 import { getProject } from "../../../../reducer/modules/project.js";
-import axios from "axios";
 import { message, Modal } from "antd";
 import "./Edit.scss";
 import { withRouter, Link } from "react-router-dom";
@@ -57,7 +56,7 @@ class InterfaceEdit extends Component {
 
   onSubmit = async(params) => {
     params.id = this.props.match.params.actionId;
-    let result = await axios.post("/api/interface/up", params);
+    let result = await updateInterface(params);
     this.props.fetchInterfaceListMenu(this.props.currProject._id).then();
     this.props.fetchInterfaceData(params.id).then();
     if (result.data.errcode === 0) {
@@ -154,7 +153,7 @@ class InterfaceEdit extends Component {
       id,
       tag
     };
-    let result = await axios.post("/api/project/up_tag", params);
+    let result = await updateProjectTag(params);
 
     if (result.data.errcode === 0) {
       await this.props.getProject(id);

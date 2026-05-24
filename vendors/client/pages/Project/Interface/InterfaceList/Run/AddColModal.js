@@ -2,7 +2,6 @@ import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Collapse, Row, Col, Input, message, Button, Icon } from 'antd';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { withRouter } from 'react-router';
 import { fetchInterfaceColList } from '../../../../../reducer/modules/interfaceCol';
 
@@ -54,7 +53,7 @@ export default class AddColModal extends Component {
   addCol = async () => {
     const { addColName: name, addColDesc: desc } = this.state;
     const project_id = this.props.match.params.id;
-    const res = await axios.post('/api/col/add_col', { name, desc, project_id });
+    const res = await addCol({ name, desc, project_id });
     if (!res.data.errcode) {
       message.success('添加集合成功');
       await this.props.fetchInterfaceColList(project_id);

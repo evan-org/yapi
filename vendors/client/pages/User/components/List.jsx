@@ -6,7 +6,6 @@ import { setBreadcrumb } from "../../../reducer/modules/user";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Table, Popconfirm, message, Input } from "antd";
-import axios from "axios";
 
 const Search = Input.Search;
 const limit = 20;
@@ -43,7 +42,7 @@ class List extends Component {
   };
 
   getUserList() {
-    axios.get("/api/user/list?page=" + this.state.current + "&limit=" + limit).then((res) => {
+    fetchUserList(this.state.current, limit).then((res) => {
       let result = res.data;
 
       if (result.errcode === 0) {
@@ -97,7 +96,7 @@ class List extends Component {
   handleSearch = (value) => {
     let params = { q: value };
     if (params.q !== "") {
-      axios.get("/api/user/search", { params }).then((data) => {
+      searchUser({ params }).then((data) => {
         let userList = [];
 
         data = data.data.data;

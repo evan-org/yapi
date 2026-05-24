@@ -1,7 +1,6 @@
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import axios from "axios";
 import { Table, Button, Modal, message, Tooltip, Select, Icon } from "antd";
 import AddInterfaceForm from "./AddInterfaceForm";
 import {
@@ -101,7 +100,7 @@ class InterfaceList extends Component {
       desc: desc
     };
 
-    axios.post("/api/interface/up_cat", params).then(async(res) => {
+    updateInterfaceCat(params).then(async(res) => {
       if (res.data.errcode !== 0) {
         return message.error(res.data.errmsg);
       }
@@ -141,7 +140,7 @@ class InterfaceList extends Component {
 
   handleAddInterface = (data) => {
     data.project_id = this.props.curProject._id;
-    axios.post("/api/interface/add", data).then((res) => {
+    addInterface(data).then((res) => {
       if (res.data.errcode !== 0) {
         return message.error(`${res.data.errmsg}, 你可以在左侧的接口列表中对接口进行删改`);
       }
@@ -157,7 +156,7 @@ class InterfaceList extends Component {
       id: id,
       catid
     };
-    let result = await axios.post("/api/interface/up", params);
+    let result = await updateInterface(params);
     if (result.data.errcode === 0) {
       message.success("修改成功");
       this.handleRequest(this.props);
@@ -172,7 +171,7 @@ class InterfaceList extends Component {
       id: value.split("-")[0],
       status: value.split("-")[1]
     };
-    let result = await axios.post("/api/interface/up", params);
+    let result = await updateInterface(params);
     if (result.data.errcode === 0) {
       message.success("修改成功");
       this.handleRequest(this.props);

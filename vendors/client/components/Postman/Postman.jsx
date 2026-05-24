@@ -187,7 +187,7 @@ class Postman extends Component {
         console.log("e", e);
         return;
       }
-      let result = await axios.post("/api/interface/schema2json", {
+      let result = await schema2json({
         schema: schema,
         required: true
       });

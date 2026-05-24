@@ -10,7 +10,6 @@ import { message, Affix, Tabs, Modal } from "antd";
 import EasyDragSort from "../../../../components/EasyDragSort/EasyDragSort.jsx";
 import mockEditor from "client/components/AceEditor/utils/mockEditor";
 import AceEditor from "client/components/AceEditor/AceEditor";
-import axios from "axios";
 import { MOCK_SOURCE } from "../../../../utils/variable.js";
 import Editor from "common/tui-editor/dist/tui-editor-Editor-all.min.js";
 const jSchema = require("json-schema-editor-visual");
@@ -416,7 +415,7 @@ class InterfaceEditForm extends Component {
     try {
       if (this.props.form.getFieldValue("res_body_is_json_schema")) {
         let schema = json5.parse(this.props.form.getFieldValue("res_body"));
-        let result = await axios.post("/api/interface/schema2json", {
+        let result = await schema2json({
           schema: schema
         });
         return this.mockPreview.setValue(JSON.stringify(result.data));

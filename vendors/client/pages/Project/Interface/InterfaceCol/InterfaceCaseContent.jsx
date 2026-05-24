@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { message, Tooltip, Input } from "antd";
 import { getEnv } from "../../../../reducer/modules/project";
 import { fetchInterfaceColList, setColData, fetchCaseData, fetchCaseList } from "../../../../reducer/modules/interfaceCol";
@@ -110,7 +109,7 @@ class InterfaceCaseContent extends Component {
       test_res_body,
       test_res_header
     };
-    const res = await axios.post("/api/col/up_case", params);
+    const res = await updateCase(params);
     if (this.props.currCase.casename !== casename) {
       this.props.fetchInterfaceColList(this.props.match.params.id);
     }

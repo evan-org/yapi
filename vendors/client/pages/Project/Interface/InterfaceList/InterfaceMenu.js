@@ -14,7 +14,14 @@ import { getProject } from "../../../../reducer/modules/project.js";
 import { Input, Icon, Button, Modal, message, Tree, Tooltip } from "antd";
 import AddInterfaceForm from "./AddInterfaceForm";
 import AddInterfaceCatForm from "./AddInterfaceCatForm";
-import axios from "axios";
+import {
+  addInterface,
+  addInterfaceCat,
+  updateInterfaceCat,
+  updateInterface,
+  updateInterfaceIndex,
+  updateInterfaceCatIndex
+} from "../../../../api/interface";
 import { Link, withRouter } from "react-router-dom";
 import produce from "immer";
 import { arrayChangeIndex } from "../../../../utils/common.js";
@@ -145,7 +152,7 @@ class InterfaceMenu extends Component {
 
   handleAddInterface = (data, cb) => {
     data.project_id = this.props.projectId;
-    axios.post("/api/interface/add", data).then((res) => {
+    addInterface(data).then((res) => {
       if (res.data.errcode !== 0) {
         return message.error(res.data.errmsg);
       }
@@ -164,7 +171,7 @@ class InterfaceMenu extends Component {
 
   handleAddInterfaceCat = (data) => {
     data.project_id = this.props.projectId;
-    axios.post("/api/interface/add_cat", data).then((res) => {
+    addInterfaceCat(data).then((res) => {
       if (res.data.errcode !== 0) {
         return message.error(res.data.errmsg);
       }
@@ -186,7 +193,7 @@ class InterfaceMenu extends Component {
       desc: data.desc
     };
 
-    axios.post("/api/interface/up_cat", params).then((res) => {
+    updateInterfaceCat(params).then((res) => {
       if (res.data.errcode !== 0) {
         return message.error(res.data.errmsg);
       }
@@ -253,7 +260,7 @@ class InterfaceMenu extends Component {
       draftData.path = draftData.path + "_" + Date.now();
     });
 
-    axios.post("/api/interface/add", newData).then(async(res) => {
+    addInterface(newData).then(async(res) => {
       if (res.data.errcode !== 0) {
         return message.error(res.data.errmsg);
       }
@@ -309,9 +316,9 @@ class InterfaceMenu extends Component {
         // 同一个分类下的接口交换顺序
         let colList = list[dropCatIndex].list;
         let changes = arrayChangeIndex(colList, dragIndex, dropIndex);
-        axios.post("/api/interface/up_index", changes).then();
+        updateInterfaceIndex(changes).then();
       } else {
-        await axios.post("/api/interface/up", { id, catid: dropCatId });
+        await updateInterface({ id, catid: dropCatId });
       }
       const { projectId, router } = this.props;
       this.props.fetchInterfaceListMenu(projectId);
@@ -324,7 +331,7 @@ class InterfaceMenu extends Component {
     } else {
       // 分类之间拖动
       let changes = arrayChangeIndex(list, dragIndex - 1, dropIndex - 1);
-      axios.post("/api/interface/up_cat_index", changes).then();
+      updateInterfaceCatIndex(changes).then();
       this.props.fetchInterfaceListMenu(this.props.projectId);
     }
   };

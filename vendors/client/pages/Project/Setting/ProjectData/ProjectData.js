@@ -16,7 +16,6 @@ import {
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "./ProjectData.scss";
-import axios from "axios";
 
 import URL from "url";
 
@@ -31,6 +30,7 @@ const RadioGroup = Radio.Group;
 const importDataModule = {};
 const exportDataModule = {};
 const HandleImportData = require("common/HandleImportData");
+import { fetchCatMenu } from "../../../../api/interface";
 function handleExportRouteParams(url, status, isWiki) {
   if (!url) {
     return;
@@ -90,7 +90,7 @@ class ProjectData extends Component {
   };
 
   UNSAFE_componentWillMount() {
-    axios.get(`/api/interface/getCatMenu?project_id=${this.props.match.params.id}`).then((data) => {
+    fetchCatMenu(this.props.match.params.id).then((data) => {
       if (data.data.errcode === 0) {
         let menuList = data.data.data;
         this.setState({

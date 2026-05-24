@@ -2,7 +2,6 @@ import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import axios from 'axios';
 import { message } from 'antd';
 import { Postman } from '../../../../../components';
 import AddColModal from './AddColModal';
@@ -71,7 +70,7 @@ export default class Run extends Component {
       params.test_res_body = JSON.stringify(params.test_res_body, null, '   ');
     }
 
-    const res = await axios.post('/api/col/add_case', params);
+    const res = await addCase(params);
     if (res.data.errcode) {
       message.error(res.data.errmsg);
     } else {
