@@ -13,6 +13,7 @@ const storageCreator = require("./utils/storage");
 require("./utils/notice");
 
 const { buildApp } = require("./fastifyApp.js");
+const { assertRuntimeConfig } = require("./utils/configCheck.js");
 
 global.storageCreator = storageCreator;
 
@@ -20,6 +21,7 @@ global.storageCreator = storageCreator;
  * 启动 HTTP 服务
  */
 async function startServer() {
+  assertRuntimeConfig();
   const fastify = await buildApp();
   const port = Number(yapi.WEBCONFIG.port) || 3000;
 

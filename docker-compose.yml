@@ -1,0 +1,26 @@
+# 本地一键启动 YApi + MongoDB（需先准备 config.json）
+# cp vendors/config_example.json config.json 并按需修改 db 连接为 mongo:27017
+
+services:
+  mongo:
+    image: mongo:4.4
+    restart: unless-stopped
+    volumes:
+      - yapi_mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  yapi:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config.json:/yapi/config.json:ro
+    depends_on:
+      - mongo
+    environment:
+      NODE_ENV: production
+
+volumes:
+  yapi_mongo_data:
