@@ -1,5 +1,4 @@
 import React from "react";
-import { getUserAvatarUrl } from "../../../api/paths";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -178,7 +177,7 @@ function ToolUser(props) {
             <span className="avatar-image">
               <img src={imageUrl}/>
             </span>
-            {/* props.imageUrl? <Avatar src={props.imageUrl} />: <Avatar src={getUserAvatarUrl(props.uid)} />*/}
+            {/* props.imageUrl? <Avatar src={props.imageUrl} />: <Avatar src={`/api/user/avatar?uid=${props.uid}`} />*/}
             <span className="name">
               <Icon type="down"/>
             </span>
@@ -247,7 +246,7 @@ function HeaderBox(props) {
   };
   return (
     <Layout.Header className={styles.HeaderBox}>
-      <div className="content g-row header-toolbar">
+      <div className="content g-row">
         <Link onClick={relieveLink} to="/group" className="logo">
           <div className="href">
             <span className="img">
@@ -255,9 +254,7 @@ function HeaderBox(props) {
             </span>
           </div>
         </Link>
-        <div className="toolbar-center">
-          <Breadcrumb/>
-        </div>
+        <Breadcrumb/>
         <div className="user-toolbar" style={{ position: "relative", zIndex: studyTip > 0 ? 3 : 1 }}>
           {login ? <ToolUser{...props} relieveLink={relieveLink} logout={logout}/> : null}
         </div>
