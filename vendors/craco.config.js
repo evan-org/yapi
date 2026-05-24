@@ -122,32 +122,37 @@ module.exports = {
       noParse: [/node_modules\/jsondiffpatch\/public\/build\/.*js/, /tui-eritor/],
     },
     configure: (webpackConfig, { env, paths }) => {
-      const prdOut = resolve("./static/prd");
-      paths.appBuild = prdOut;
+      paths.appBuild = resolve("./example/client");
       paths.appSrc = resolve("./client");
       paths.appIndexJs = resolve("./client/index.jsx");
       paths.swSrc = resolve("./client/service-worker.js");
       paths.testsSetup = resolve("./client/testsSetup.js");
       paths.proxySetup = resolve("./client/proxySetup.js");
       webpackConfig.entry = resolve("./client/index.jsx");
+      //
       const resolveUrlLoader = getLoader(webpackConfig, loaderByName("resolve-url-loader"));
       const babels = getLoader(webpackConfig, loaderByName("babel-loader"));
       if (babels.isFound) {
         babels.match.loader.include = resolve("./client");
       }
+      console.log(babels);
       if (resolveUrlLoader.isFound) {
         removeLoaders(webpackConfig, loaderByName("resolve-url-loader"));
+        // resolveUrlLoader.match.loader.options.root = null;
       }
+      //
       webpackConfig.output = {
         ...webpackConfig.output,
-        path: prdOut,
-        publicPath: whenProd(() => "/prd/", "/"),
-        filename: whenProd(() => "static/js/[name].[contenthash:8].js", "static/js/[name].js"),
-        chunkFilename: whenProd(() => "static/js/[name].[contenthash:8].chunk.js", "static/js/[name].chunk.js")
-      };
+        path: path.resolve(__dirname, "./example/client"), // 修改打包输出文件目录 两步都要写
+        publicPath: whenProd(() => "/", "/"), // 静态资源publicpath
+      }
       if (env === "development") {
         webpackConfig.devtool = "cheap-module-source-map";
+        console.log("当前是开发环境", env, "devtool:", "cheap-module-source-map");
       }
+      // webpackConfig.devtool = false;
+      //
+      console.log("configure new\n\n", webpackConfig);
       return webpackConfig;
       // return smp.wrap(webpackConfig);
     }
@@ -186,7 +191,7 @@ module.exports = {
       proxy: [{
         context: ["/api"],
         // 转发端口自定义
-        target: process.env.YAPI_SERVER || "http://127.0.0.1:3000",
+        target: "http://127.0.0.1:3030",
         changeOrigin: true,
         ws: true,
       }]
@@ -216,7 +221,7 @@ module.exports = {
     {
       plugin: sassResourcesLoader,
       options: {
-        resources: ["./client/styles/mixin.scss"],
+        resources: ["./client/styles/_variables.scss"],
         root: resolve("./client")
       },
     }

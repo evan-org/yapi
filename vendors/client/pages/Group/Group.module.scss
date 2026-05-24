@@ -1,38 +1,27 @@
-.Group{
-  :global{
+.Group {
+  :global {
     .g-doc {
       @include row-width-limit;
-      margin: 0 auto .24rem;
+      margin: 0 auto 0.24rem;
     }
     .group-layout {
-      margin-left: .24rem;
-      margin-right: .24rem;
+      margin-left: 0.24rem;
+      margin-right: 0.24rem;
       position: relative;
     }
     .group-main {
       min-width: 0;
     }
-    .sider-trigger-btn {
-      position: fixed;
-      left: .12rem;
-      top: .72rem;
-      z-index: 10;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-    .group-sider.ant-layout-sider-collapsed + .group-main,
-    .group-layout .ant-layout-sider-zero-width + .group-main {
-      margin-left: 0;
-    }
     @media (max-width: 992px) {
       .group-layout {
-        margin-left: .12rem;
-        margin-right: .12rem;
+        margin-left: 0.12rem;
+        margin-right: 0.12rem;
       }
       .group-main .ant-layout-content {
-        margin: 0 .08rem !important;
+        margin: 0 0.08rem !important;
       }
     }
-    .news-box .news-timeline .ant-timeline-item .ant-timeline-item-content{
+    .news-box .news-timeline .ant-timeline-item .ant-timeline-item-content {
       min-width: 300px !important;
       width: 75% !important;
     }

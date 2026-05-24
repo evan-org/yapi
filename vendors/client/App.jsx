@@ -12,7 +12,6 @@ import MyPopConfirm from "./components/MyPopConfirm/MyPopConfirm";
 //
 import { checkLoginState } from "./reducer/modules/user";
 //
-import "./styles/App.scss";
 import "./styles/antd-ui/theme.less";
 //
 const plugin = require("client/plugin.js");

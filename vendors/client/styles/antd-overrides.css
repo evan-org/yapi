@@ -1,0 +1,57 @@
+/**
+ * Ant Design 3 全局样式微调（原 custom-ui/costom.scss 中的 ant 覆盖）
+ * 新页面优先使用 MUI + Tailwind，此处仅保留存量页面依赖
+ */
+
+.ant-dropdown .user-menu {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.ant-confirm .ant-modal-body {
+  padding: 0.24rem !important;
+}
+
+.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
+  border: none;
+}
+
+.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+  border: none;
+}
+
+.ant-tabs.ant-tabs-card > .ant-tabs-content {
+  margin-top: -1px;
+}
+
+.ant-tree li .ant-tree-node-content-wrapper {
+  padding: 3px 5px;
+  height: unset;
+}
+
+.ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected {
+  background-color: #d5ebfc;
+}
+
+.popover-index {
+  max-width: 3.2rem;
+}
+
+.popover-index .ant-popover-title {
+  height: auto;
+}
+
+.popover-index .title-container {
+  padding: 0.16rem 0;
+}
+
+.popover-index .title-container .title {
+  text-align: center;
+}
+
+.popover-index .btn-container {
+  text-align: center;
+}
+
+.popover-index .btn-container .btn {
+  margin: 0 0.04rem;
+}

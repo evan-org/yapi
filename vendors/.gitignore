@@ -36,6 +36,7 @@ Thumbs.db
 
 node_modules/
 /examlpe
+/example/
 runtime/
 /prd/
 /dev/
@@ -58,5 +59,3 @@ yarn.lock
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
-
-/static/
