@@ -45,7 +45,7 @@
         display: block;
       }
       .logo-name {
-        color: $color-white;
+        color: var(--yapi-white);
         font-size: .24rem;
         font-weight: 300;
         margin-left: .38rem;

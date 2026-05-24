@@ -10,7 +10,7 @@
     .ant-breadcrumb a {
       color: #fff;
       &:hover {
-        color: $color-blue
+        color: var(--yapi-primary)
       }
     }
     .ant-breadcrumb > span:last-child {

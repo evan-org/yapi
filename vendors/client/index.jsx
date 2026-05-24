@@ -7,6 +7,7 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "./reducer/store";
 import muiTheme from "./theme/muiTheme";
+import "./styles/tokens.css";
 import "./styles/globals.css";
 import "./styles/antd-overrides.css";
 // 由于 antd 组件的默认文案是英文，所以需要修改为中文

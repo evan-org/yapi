@@ -4,12 +4,17 @@
       margin: 0 auto 0.24rem;
     }
     .user-box {
-      @include row-width-limit;
-      padding: 0;
+      max-width: var(--yapi-row-max);
+      min-width: var(--yapi-row-min);
+      padding: 0 var(--yapi-row-pad);
       display: -webkit-box;
       -webkit-box-flex: 1;
       margin: 0 auto;
       margin-top: 24px;
+      @media (max-width: 992px) {
+        min-width: 0;
+        padding: 0 0.16rem;
+      }
       .user-list {
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         background: #fff;

@@ -1,7 +1,7 @@
-@import '../../../client/styles/variables';
-
 .g-statistic {
-  @include row-width-limit;
+  max-width: var(--yapi-row-max);
+      min-width: var(--yapi-row-min);
+      padding: 0 var(--yapi-row-pad);
   margin: 0 auto .24rem;
   margin-top: 24px;
   min-width: 11.2rem;

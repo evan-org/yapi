@@ -1,24 +1,15 @@
 .Group {
   :global {
     .g-doc {
-      @include row-width-limit;
+      max-width: var(--yapi-row-max);
+      min-width: var(--yapi-row-min);
+      padding: 0 var(--yapi-row-pad);
       margin: 0 auto 0.24rem;
     }
-    .group-layout {
-      margin-left: 0.24rem;
-      margin-right: 0.24rem;
-      position: relative;
-    }
-    .group-main {
-      min-width: 0;
-    }
     @media (max-width: 992px) {
-      .group-layout {
-        margin-left: 0.12rem;
-        margin-right: 0.12rem;
-      }
-      .group-main .ant-layout-content {
-        margin: 0 0.08rem !important;
+      .g-doc {
+        min-width: 0;
+        padding: 0 0.16rem;
       }
     }
     .news-box .news-timeline .ant-timeline-item .ant-timeline-item-content {

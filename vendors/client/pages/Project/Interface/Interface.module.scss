@@ -25,7 +25,7 @@
       }
       .ant-tabs-nav {
         width: 100%;
-        background-color: $color-bg-gray;
+        background-color: var(--yapi-bg-gray);
       }
       .ant-tabs-tab {
         min-width: 49.4%;
@@ -45,7 +45,7 @@
       .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
         height: 40px;
         background-color: #ddd;
-        // color: $color-white;
+        // color: var(--yapi-white);
       }
       .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-nav-container {
         height: 40px;
@@ -184,7 +184,7 @@
         .ant-tabs-nav {
           width: 100%;
           // background-color: #ddd;
-          // color: $color-white;
+          // color: var(--yapi-white);
         }
         .ant-tabs-nav-wrap {
           text-align: left;

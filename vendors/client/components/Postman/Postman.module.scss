@@ -78,10 +78,10 @@
       border-radius: 2px;
     }
     .res-code.success {
-      background-color: $color-antd-green;
+      background-color: var(--yapi-antd-green);
     }
     .res-code.fail {
-      background-color: $color-antd-red;
+      background-color: var(--yapi-antd-red);
     }
     // 容器：左侧是header 右侧是body
     .container-header-body {

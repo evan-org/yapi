@@ -1,0 +1,16 @@
+/**
+ * 设计令牌（CSS 变量，替代全局 Sass 变量注入）
+ */
+:root {
+  --yapi-primary: #2395f1;
+  --yapi-white: rgba(255, 255, 255, 0.85);
+  --yapi-white-secondary: rgba(255, 255, 255, 0.67);
+  --yapi-bg-gray: #ececec;
+  --yapi-bg-dark: #32363a;
+  --yapi-text-dark: rgba(13, 27, 62, 0.65);
+  --yapi-antd-green: #00a854;
+  --yapi-antd-red: #f56a00;
+  --yapi-row-max: 12.2rem;
+  --yapi-row-min: 10.2rem;
+  --yapi-row-pad: 0.24rem;
+}

@@ -5,7 +5,6 @@ const CracoEnvPlugin = require("craco-plugin-env")
 const CracoLessPlugin = require("craco-less");
 // 打包gzip
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
-const sassResourcesLoader = require("craco-sass-resources-loader");
 // 打包进程分析
 // const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
 // 分析打包时间
@@ -216,13 +215,6 @@ module.exports = {
             javascriptEnabled: true,
           },
         },
-      },
-    },
-    {
-      plugin: sassResourcesLoader,
-      options: {
-        resources: ["./client/styles/_variables.scss"],
-        root: resolve("./client")
       },
     }
   ],
