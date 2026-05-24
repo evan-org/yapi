@@ -131,19 +131,19 @@ export default (state = initialState, action) => {
 export function checkLoginState() {
   return {
     type: GET_LOGIN_STATE,
-    payload: axios.get("/api/user/status")
+    payload: fetchLoginStatus()
   };
 }
 export function loginActions(data) {
   return {
     type: LOGIN,
-    payload: axios.post("/api/user/login", data)
+    payload: login(data)
   };
 }
 export function loginLdapActions(data) {
   return {
     type: LOGIN,
-    payload: axios.post("/api/user/login_by_ldap", data)
+    payload: loginByLdap(data)
   };
 }
 export function regActions(data) {
@@ -155,13 +155,13 @@ export function regActions(data) {
   };
   return {
     type: REGISTER,
-    payload: axios.post("/api/user/reg", param)
+    payload: register(param)
   };
 }
 export function logoutActions() {
   return {
     type: LOGIN_OUT,
-    payload: axios.get("/api/user/logout")
+    payload: logout()
   };
 }
 export function loginTypeAction(index) {

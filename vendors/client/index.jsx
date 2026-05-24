@@ -1,4 +1,5 @@
 import { ConfigProvider } from "antd";
+import "./utils/apiClient";
 import "./plugin";
 import React from "react";
 import ReactDOM from "react-dom/client";

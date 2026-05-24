@@ -20,6 +20,7 @@ const ejs = require("easy-json-schema");
 
 const jsf = require("json-schema-faker");
 const { schemaValidator } = require("../../common/utils");
+const apiResponse = require("../../common/apiResponse");
 const http = require("http");
 
 jsf.extend("mock", function() {
@@ -407,14 +408,7 @@ exports.saveLog = (logData) => {
  * @param {*} ws enable ws
  */
 exports.createAction = (router, baseurl, routerController, action, path, method, ws) => {
-  let routeMethod = (method || "get").toLowerCase();
-  if (routeMethod === "delete") {
-    routeMethod = "del";
-  }
-  if (typeof router[routeMethod] !== "function") {
-    throw new Error(`Unsupported route method: ${method}`);
-  }
-  router[routeMethod](baseurl + path, async(ctx) => {
+  router[method](baseurl + path, async(ctx) => {
     let inst = new routerController(ctx);
     try {
       await inst.init(ctx);

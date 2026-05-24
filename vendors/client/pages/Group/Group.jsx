@@ -13,7 +13,8 @@ import { fetchNewsData } from "../../reducer/modules/news.js";
 import { setCurrGroup } from "../../reducer/modules/group";
 //
 import styles from "./Group.module.scss";
-import axios from "axios";
+import { fetchMyGroup } from "../../api/group";
+import { getApiData, isApiOk } from "../../utils/apiHelpers";
 //
 function GroupSider() {
   return (
