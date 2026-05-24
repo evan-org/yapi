@@ -23,6 +23,9 @@ class syncUtils {
 
   // 初始化定时任务
   async init() {
+    if (process.env.YAPI_ENV === "test") {
+      return;
+    }
     let allSyncJob = await this.syncModel.listAll();
     for (let i = 0, len = allSyncJob.length; i < len; i++) {
       let syncItem = allSyncJob[i];

@@ -10,7 +10,7 @@ const logController = require("./controllers/log.js");
 const followController = require("./controllers/follow.js");
 const openController = require("./controllers/open.js");
 const { createAction } = require("./utils/commons.js");
-const router = koaRouter();
+const router = new HttpRouter();
 let INTERFACE_CONFIG = {
   interface: {
     prefix: "/interface/",
