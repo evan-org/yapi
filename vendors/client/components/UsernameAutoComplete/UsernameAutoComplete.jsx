@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
 import { Select } from "antd";
-import axios from "axios";
+import { searchUser } from "../../api/user";
 
 const Option = Select.Option;
 

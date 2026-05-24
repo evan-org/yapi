@@ -46,3 +46,13 @@ export function updateUser(params) {
 export function changePassword(params) {
   return apiClient.post("/user/change_password", params);
 }
+
+/** 删除用户 */
+export function deleteUser(id) {
+  return apiClient.post("/user/del", { id });
+}
+
+/** 上传头像（base64） */
+export function uploadAvatar(basecode) {
+  return apiClient.post("/user/upload_avatar", { basecode });
+}

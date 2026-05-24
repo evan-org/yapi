@@ -20,7 +20,7 @@ import constants from "../../utils/variable.js";
 import AceEditor from "client/components/AceEditor/AceEditor";
 import _ from "underscore";
 import { isJson, deepCopyJson, json5_parse } from "../../utils/common.js";
-import axios from "axios";
+import { schema2json } from "../../api/interface";
 import ModalPostman from "../ModalPostman/ModalPostman.jsx";
 import CheckCrossInstall, { initCrossRequest } from "./CheckCrossInstall.jsx";
 import ProjectEnv from "../ProjectEnv/ProjectEnv.jsx";

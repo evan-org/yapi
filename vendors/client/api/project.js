@@ -80,3 +80,8 @@ export function fetchSwaggerUrl(url) {
 export function updateProjectTag(params) {
   return apiClient.post("/project/up_tag", params);
 }
+
+/** 全局搜索：分组 / 项目 / 接口 */
+export function searchProject(q) {
+  return apiClient.get("/project/search", { params: { q } });
+}

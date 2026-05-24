@@ -1,6 +1,12 @@
 import React, { PureComponent as Component } from "react";
 import { Row, Col, Input, Button, Select, message, Upload, Tooltip } from "antd";
 import { formatTime } from "../../../utils/common.js";
+import {
+  fetchUser,
+  updateUser,
+  changePassword,
+  uploadAvatar
+} from "../../../api/user";
 import PropTypes from "prop-types";
 import { setBreadcrumb, setImageUrl } from "../../../reducer/modules/user";
 import { connect } from "react-redux";
@@ -477,9 +483,7 @@ class AvatarUpload extends Component {
     url: PropTypes.any
   };
   uploadAvatar(basecode) {
-    axios
-      .post("/api/user/upload_avatar", { basecode: basecode })
-      .then(() => {
+uploadAvatar(basecode).then(() => {
         // this.setState({ imageUrl: basecode });
         this.props.setImageUrl(basecode);
       })

@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import { Icon, Input, AutoComplete } from "antd";
 import styles from "./Search.module.scss";
 import { withRouter } from "react-router";
-import axios from "axios";
+import { searchProject } from "../../../../api/project";
+import { isApiOk } from "../../../../utils/apiHelpers";
 //
 import { setCurrGroup, fetchGroupMsg } from "../../../../reducer/modules/group";
 import { changeMenuItem } from "../../../../reducer/modules/menu";
@@ -58,10 +59,8 @@ class Search extends Component {
     }
   };
   handleSearch = (value) => {
-    axios
-      .get("/api/project/search?q=" + value)
-      .then((res) => {
-        if (res.data && res.data.errcode === 0) {
+    searchProject(value).then((res) => {
+        if (isApiOk(res)) {
           const dataSource = [];
           for (let title in res.data.data) {
             res.data.data[title].map((item) => {

@@ -6,6 +6,7 @@ import { setBreadcrumb } from "../../../reducer/modules/user";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Table, Popconfirm, message, Input } from "antd";
+import { fetchUserList, searchUser, deleteUser } from "../../../api/user";
 
 const Search = Input.Search;
 const limit = 20;
@@ -66,10 +67,7 @@ class List extends Component {
   }
 
   confirm = (uid) => {
-    axios
-      .post("/api/user/del", {
-        id: uid
-      })
+    deleteUser(uid)
       .then(
         (res) => {
           if (res.data.errcode === 0) {
@@ -96,7 +94,7 @@ class List extends Component {
   handleSearch = (value) => {
     let params = { q: value };
     if (params.q !== "") {
-      searchUser({ params }).then((data) => {
+      searchUser(params).then((data) => {
         let userList = [];
 
         data = data.data.data;
