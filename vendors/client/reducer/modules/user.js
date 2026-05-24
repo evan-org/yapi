@@ -1,5 +1,11 @@
-import axios from "axios";
-// import { createAction } from "redux-actions";
+import {
+  fetchLoginStatus,
+  login,
+  loginByLdap,
+  register,
+  logout,
+  finishStudy as finishStudyApi
+} from "../../api/user";
 // Actions
 const LOGIN = "yapi/user/LOGIN";
 const LOGIN_OUT = "yapi/user/LOGIN_OUT";
@@ -26,12 +32,6 @@ const initialState = {
   loginWrapActiveKey: "1",
   role: "",
   type: "",
-  // breadcrumb: [{
-  //   name: 'name',
-  //   href: 'group'
-  // }, {
-  //   name: '当前页面'
-  // }]
   breadcrumb: [],
   studyTip: 0,
   study: false,
@@ -83,19 +83,11 @@ export default (state = initialState, action) => {
     case LOGIN_TYPE: {
       return {
         ...state,
-        loginWrapActiveKey: action.index
+        loginWrapActiveKey: action.index + ""
       };
     }
     case REGISTER: {
-      return {
-        ...state,
-        isLogin: true,
-        loginState: MEMBER_STATUS,
-        uid: action.payload.data.data.uid,
-        userName: action.payload.data.data.username,
-        type: action.payload.data.data.type,
-        study: action.payload.data.data ? action.payload.data.data.study : false
-      };
+      return state;
     }
     case SET_BREADCRUMB: {
       return {
@@ -117,7 +109,6 @@ export default (state = initialState, action) => {
       };
     }
     case SET_IMAGE_URL: {
-      // console.log('state', state);
       return {
         ...state,
         imageUrl: action.data
@@ -188,9 +179,8 @@ export function changeStudyTip() {
   };
 }
 export function finishStudy(actionType = FINISH_STUDY) {
-  // createAction(FINISH_STUDY, axios.get("/api/user/up_study"))
   return {
     type: FINISH_STUDY,
-    payload: axios.get("/api/user/up_study")
+    payload: finishStudyApi()
   };
 }

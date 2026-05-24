@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiClient from "../../utils/apiClient";
 
 // Actions
 const FETCH_MOCK_COL = "yapi/mockCol/FETCH_MOCK_COL";
@@ -22,7 +22,7 @@ export default (state = initialState, action) => {
 
 // Action Creators
 export async function fetchMockCol(interfaceId) {
-  let result = await axios.get("/api/plugin/advmock/case/list?interface_id=" + interfaceId);
+  let result = await apiClient.get("/plugin/advmock/case/list", { params: { interface_id: interfaceId } });
   return {
     type: FETCH_MOCK_COL,
     payload: result.data

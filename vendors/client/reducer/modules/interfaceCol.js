@@ -1,4 +1,10 @@
-import axios from "axios";
+import {
+  fetchColList as fetchColListApi,
+  fetchCase as fetchCaseApi,
+  fetchCaseList as fetchCaseListApi,
+  fetchCaseEnvList as fetchCaseEnvListApi,
+  fetchCaseListByVarParams as fetchCaseListByVarParamsApi
+} from "../../api/col";
 // Actions
 const FETCH_INTERFACE_COL_LIST = "yapi/interfaceCol/FETCH_INTERFACE_COL_LIST";
 const FETCH_CASE_DATA = "yapi/interfaceCol/FETCH_CASE_DATA";
@@ -74,41 +80,38 @@ export default (state = initialState, action) => {
   }
 };
 
-// Action Creators
 export function fetchInterfaceColList(projectId) {
   return {
     type: FETCH_INTERFACE_COL_LIST,
-    payload: axios.get("/api/col/list?project_id=" + projectId)
+    payload: fetchColListApi(projectId)
   };
 }
 
 export function fetchCaseData(caseId) {
   return {
     type: FETCH_CASE_DATA,
-    payload: axios.get("/api/col/case?caseid=" + caseId)
+    payload: fetchCaseApi(caseId)
   };
 }
 
 export function fetchCaseList(colId) {
   return {
     type: FETCH_CASE_LIST,
-    payload: axios.get("/api/col/case_list/?col_id=" + colId)
+    payload: fetchCaseListApi(colId)
   };
 }
 
 export function fetchCaseEnvList(col_id) {
   return {
     type: FETCH_CASE_ENV_LIST,
-    payload: axios.get("/api/col/case_env_list", {
-      params: { col_id }
-    })
+    payload: fetchCaseEnvListApi(col_id)
   };
 }
 
 export function fetchVariableParamsList(colId) {
   return {
     type: FETCH_VARIABLE_PARAMS_LIST,
-    payload: axios.get("/api/col/case_list_by_var_params?col_id=" + colId)
+    payload: fetchCaseListByVarParamsApi(colId)
   };
 }
 

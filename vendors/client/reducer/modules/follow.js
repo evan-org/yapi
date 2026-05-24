@@ -1,11 +1,9 @@
-import axios from "axios";
+import { fetchFollowList, addFollow as addFollowApi, removeFollow } from "../../api/follow";
 
-// Actions
 const GET_FOLLOW_LIST = "yapi/follow/GET_FOLLOW_LIST";
 const DEL_FOLLOW = "yapi/follow/DEL_FOLLOW";
 const ADD_FOLLOW = "yapi/follow/ADD_FOLLOW";
 
-// Reducer
 const initialState = {
   data: []
 };
@@ -16,33 +14,27 @@ export default (state = initialState, action) => {
       ...state,
       data: action.payload.data.data
     };
-  } else {
-    return state;
   }
+  return state;
 };
 
-// 获取关注列表
 export function getFollowList(uid) {
   return {
     type: GET_FOLLOW_LIST,
-    payload: axios.get("/api/follow/list", {
-      params: { uid }
-    })
+    payload: fetchFollowList(uid)
   };
 }
 
-// 添加关注
 export function addFollow(param) {
   return {
     type: ADD_FOLLOW,
-    payload: axios.post("/api/follow/add", param)
+    payload: addFollowApi(param)
   };
 }
 
-// 删除关注
 export function delFollow(id) {
   return {
     type: DEL_FOLLOW,
-    payload: axios.post("/api/follow/del", { projectid: id })
+    payload: removeFollow(id)
   };
 }

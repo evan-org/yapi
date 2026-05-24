@@ -34,3 +34,49 @@ export function fetchProjectEnv(project_id) {
 export function updateProjectEnv(param) {
   return apiClient.post("/project/up_env", param);
 }
+
+export function upsetProject(param) {
+  return apiClient.post("/project/upset", param);
+}
+
+export function addProjectMember(param) {
+  return apiClient.post("/project/add_member", param);
+}
+
+export function removeProjectMember(param) {
+  return apiClient.post("/project/del_member", param);
+}
+
+export function changeProjectMemberRole(param) {
+  return apiClient.post("/project/change_member_role", param);
+}
+
+export function changeProjectMemberEmailNotice(param) {
+  return apiClient.post("/project/change_member_email_notice", param);
+}
+
+export function fetchProjectMemberList(id) {
+  return apiClient.get("/project/get_member_list", { params: { id } });
+}
+
+export function fetchProjectToken(project_id) {
+  return apiClient.get("/project/token", { params: { project_id } });
+}
+
+export function updateProjectToken(project_id) {
+  return apiClient.get("/project/update_token", { params: { project_id } });
+}
+
+export function checkProjectName(name, group_id) {
+  return apiClient.get("/project/check_project_name", { params: { name, group_id } });
+}
+
+export function fetchSwaggerUrl(url) {
+  return apiClient.get("/project/swagger_url", {
+    params: { url: encodeURI(encodeURI(url)) }
+  });
+}
+
+export function updateProjectTag(params) {
+  return apiClient.post("/project/up_tag", params);
+}

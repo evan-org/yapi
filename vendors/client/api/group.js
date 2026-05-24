@@ -38,3 +38,7 @@ export function deleteGroup(param) {
 export function fetchGroupMemberList(params) {
   return apiClient.get("/group/get_member_list", { params });
 }
+
+export function addGroup(data) {
+  return apiClient.post("/group/add", data);
+}

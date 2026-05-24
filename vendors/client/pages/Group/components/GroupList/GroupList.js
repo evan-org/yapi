@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Icon, Modal, Input, message, Spin, Row, Menu, Col, Popover, Tooltip } from "antd";
 import { autobind } from "core-decorators";
-import axios from "axios";
+import { addGroup as addGroupApi, updateGroup as updateGroupApi } from "../../../../api/group";
+import { isErrcodeOk } from "../../../../utils/apiHelpers";
 import { withRouter } from "react-router-dom";
 
 const { TextArea } = Input;
@@ -109,8 +110,8 @@ class GroupList extends Component {
   @autobind
   async addGroup() {
     const { newGroupName: group_name, newGroupDesc: group_desc, owner_uids } = this.state;
-    const res = await axios.post("/api/group/add", { group_name, group_desc, owner_uids });
-    if (!res.data.errcode) {
+    const res = await addGroupApi({ group_name, group_desc, owner_uids });
+    if (isErrcodeOk(res.data)) {
       this.setState({
         newGroupName: "",
         group_name: "",
@@ -129,8 +130,8 @@ class GroupList extends Component {
   async editGroup() {
     const { currGroupName: group_name, currGroupDesc: group_desc } = this.state;
     const id = this.props.currGroup._id;
-    const res = await axios.post("/api/group/up", { group_name, group_desc, id });
-    if (res.data.errcode) {
+    const res = await updateGroupApi({ group_name, group_desc, id });
+    if (!isErrcodeOk(res.data)) {
       message.error(res.data.errmsg);
     } else {
       await this.props.fetchGroupList();

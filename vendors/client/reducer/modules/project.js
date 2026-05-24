@@ -1,4 +1,23 @@
-import axios from "axios";
+import {
+  fetchProjectList as fetchProjectListApi,
+  copyProject as copyProjectApi,
+  addProjectMember,
+  removeProjectMember,
+  changeProjectMemberRole,
+  changeProjectMemberEmailNotice,
+  fetchProjectMemberList,
+  addProject as addProjectApi,
+  updateProject as updateProjectApi,
+  updateProjectEnv,
+  fetchProjectEnv,
+  upsetProject as upsetProjectApi,
+  deleteProject as deleteProjectApi,
+  fetchProject as fetchProjectApi,
+  fetchProjectToken,
+  updateProjectToken,
+  checkProjectName as checkProjectNameApi,
+  fetchSwaggerUrl
+} from "../../api/project";
 import variable from "../../utils/variable";
 import {htmlFilter} from "../../utils/common";
 
@@ -115,12 +134,10 @@ export default (state = initialState, action) => {
 export function fetchProjectList(id, pageNum) {
   return {
     type: FETCH_PROJECT_LIST,
-    payload: axios.get("/api/project/list", {
-      params: {
-        group_id: id,
-        page: pageNum || 1,
-        limit: variable.PAGE_LIMIT
-      }
+    payload: fetchProjectListApi({
+      group_id: id,
+      page: pageNum || 1,
+      limit: variable.PAGE_LIMIT
     })
   };
 }
@@ -129,7 +146,7 @@ export function fetchProjectList(id, pageNum) {
 export function copyProjectMsg(params) {
   return {
     type: COPY_PROJECT_MSG,
-    payload: axios.post("/api/project/copy", params)
+    payload: copyProjectApi(params)
   };
 }
 
@@ -137,7 +154,7 @@ export function copyProjectMsg(params) {
 export function addMember(param) {
   return {
     type: ADD_PROJECT_MEMBER,
-    payload: axios.post("/api/project/add_member", param)
+    payload: addProjectMember(param)
   };
 }
 
@@ -145,7 +162,7 @@ export function addMember(param) {
 export function delMember(param) {
   return {
     type: DEL_PROJECT_MEMBER,
-    payload: axios.post("/api/project/del_member", param)
+    payload: removeProjectMember(param)
   };
 }
 
@@ -153,14 +170,14 @@ export function delMember(param) {
 export function changeMemberRole(param) {
   return {
     type: CHANGE_PROJECT_MEMBER,
-    payload: axios.post("/api/project/change_member_role", param)
+    payload: changeProjectMemberRole(param)
   };
 }
 // 修改项目成员是否收到消息通知
 export function changeMemberEmailNotice(param) {
   return {
     type: CHANGE_MEMBER_EMAIL_NOTICE,
-    payload: axios.post("/api/project/change_member_email_notice", param)
+    payload: changeProjectMemberEmailNotice(param)
   };
 }
 
@@ -168,9 +185,7 @@ export function changeMemberEmailNotice(param) {
 export function getProjectMemberList(id) {
   return {
     type: GET_PEOJECT_MEMBER,
-    payload: axios.get("/api/project/get_member_list", {
-      params: { id }
-    })
+    payload: fetchProjectMemberList(id)
   };
 }
 
@@ -211,7 +226,7 @@ export function addProject(data) {
   };
   return {
     type: PROJECT_ADD,
-    payload: axios.post("/api/project/add", param)
+    payload: addProjectApi(param)
   };
 }
 
@@ -236,7 +251,7 @@ export function updateProject(data) {
   };
   return {
     type: PROJECT_UPDATE,
-    payload: axios.post("/api/project/up", param)
+    payload: updateProjectApi(param)
   };
 }
 
@@ -244,7 +259,7 @@ export function updateProject(data) {
 export function updateProjectScript(data) {
   return {
     type: PROJECT_UPDATE,
-    payload: axios.post("/api/project/up", data)
+    payload: updateProjectApi(data)
   };
 }
 
@@ -252,7 +267,7 @@ export function updateProjectScript(data) {
 export function updateProjectMock(data) {
   return {
     type: PROJECT_UPDATE,
-    payload: axios.post("/api/project/up", data)
+    payload: updateProjectApi(data)
   };
 }
 
@@ -265,7 +280,7 @@ export function updateEnv(data) {
   };
   return {
     type: PROJECT_UPDATE_ENV,
-    payload: axios.post("/api/project/up_env", param)
+    payload: updateProjectEnv(param)
   };
 }
 
@@ -273,7 +288,7 @@ export function updateEnv(data) {
 export function getEnv(project_id) {
   return {
     type: PROJECT_GET_ENV,
-    payload: axios.get("/api/project/get_env", { params: { project_id } })
+    payload: fetchProjectEnv(project_id)
   };
 }
 
@@ -281,7 +296,7 @@ export function getEnv(project_id) {
 export function upsetProject(param) {
   return {
     type: PROJECT_UPSET,
-    payload: axios.post("/api/project/upset", param)
+    payload: upsetProjectApi(param)
   };
 }
 
@@ -290,12 +305,12 @@ export function delProject(id) {
   const param = { id };
   return {
     type: PROJECT_DEL,
-    payload: axios.post("/api/project/del", param)
+    payload: deleteProjectApi(param)
   };
 }
 
 export async function getProject(id) {
-  let result = await axios.get("/api/project/get?id=" + id);
+  let result = await fetchProject(id);
   return {
     type: GET_CURR_PROJECT,
     payload: result
@@ -305,33 +320,27 @@ export async function getProject(id) {
 export async function getToken(project_id) {
   return {
     type: GET_TOKEN,
-    payload: axios.get("/api/project/token", {
-      params: { project_id }
-    })
+    payload: fetchProjectToken(project_id)
   };
 }
 
 export async function updateToken(project_id) {
   return {
     type: UPDATE_TOKEN,
-    payload: axios.get("/api/project/update_token", {
-      params: { project_id }
-    })
+    payload: updateProjectToken(project_id)
   };
 }
 
 export async function checkProjectName(name, group_id) {
   return {
     type: CHECK_PROJECT_NAME,
-    payload: axios.get("/api/project/check_project_name", {
-      params: { name, group_id }
-    })
+    payload: checkProjectNameApi(name, group_id)
   };
 }
 
 export async function handleSwaggerUrlData(url) {
   return {
     type: GET_SWAGGER_URL_DATA,
-    payload: axios.get("/api/project/swagger_url?url=" + encodeURI(encodeURI(url)))
+    payload: fetchSwaggerUrl(url)
   };
 }

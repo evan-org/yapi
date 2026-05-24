@@ -1,5 +1,12 @@
-import axios from "axios";
-import qs from "qs";
+import {
+  deleteInterface as deleteInterfaceApi,
+  saveInterface as saveInterfaceApi,
+  deleteInterfaceCat as deleteInterfaceCatApi,
+  fetchInterface as fetchInterfaceApi,
+  fetchInterfaceListMenu as fetchInterfaceListMenuApi,
+  fetchInterfaceList as fetchInterfaceListApi,
+  fetchInterfaceCatList as fetchInterfaceCatListApi
+} from "../../api/interface";
 // Actions
 const INIT_INTERFACE_DATA = "yapi/interface/INIT_INTERFACE_DATA";
 const FETCH_INTERFACE_DATA = "yapi/interface/FETCH_INTERFACE_DATA";
@@ -94,7 +101,7 @@ export function updateInterfaceData(updata) {
 }
 
 export async function deleteInterfaceData(id) {
-  let result = await axios.post("/api/interface/del", {id: id});
+  let result = await deleteInterfaceApi(id);
   return {
     type: DELETE_INTERFACE_DATA,
     payload: result
@@ -102,7 +109,7 @@ export async function deleteInterfaceData(id) {
 }
 
 export async function saveImportData(data) {
-  let result = await axios.post("/api/interface/save", data);
+  let result = await saveInterfaceApi(data);
   return {
     type: SAVE_IMPORT_DATA,
     payload: result
@@ -110,7 +117,7 @@ export async function saveImportData(data) {
 }
 
 export async function deleteInterfaceCatData(id) {
-  let result = await axios.post("/api/interface/del_cat", {catid: id});
+  let result = await deleteInterfaceCatApi(id);
   return {
     type: DELETE_INTERFACE_CAT_DATA,
     payload: result
@@ -119,7 +126,7 @@ export async function deleteInterfaceCatData(id) {
 
 // Action Creators
 export async function fetchInterfaceData(interfaceId) {
-  let result = await axios.get("/api/interface/get?id=" + interfaceId);
+  let result = await fetchInterfaceApi(interfaceId);
   return {
     type: FETCH_INTERFACE_DATA,
     payload: result
@@ -127,7 +134,7 @@ export async function fetchInterfaceData(interfaceId) {
 }
 
 export async function fetchInterfaceListMenu(projectId) {
-  let result = await axios.get("/api/interface/list_menu?project_id=" + projectId);
+  let result = await fetchInterfaceListMenuApi(projectId);
   return {
     type: FETCH_INTERFACE_LIST_MENU,
     payload: result
@@ -135,10 +142,7 @@ export async function fetchInterfaceListMenu(projectId) {
 }
 
 export async function fetchInterfaceList(params) {
-  let result = await axios.get("/api/interface/list", {
-    params,
-    paramsSerializer: (params) => qs.stringify(params, {indices: false})
-  })
+  let result = await fetchInterfaceListApi(params)
   return {
     type: FETCH_INTERFACE_LIST,
     payload: result
@@ -146,10 +150,7 @@ export async function fetchInterfaceList(params) {
 }
 
 export async function fetchInterfaceCatList(params) {
-  let result = axios.get("/api/interface/list_cat", {
-    params,
-    paramsSerializer: (params) => qs.stringify(params, {indices: false})
-  })
+  let result = fetchInterfaceCatListApi(params)
   return {
     type: FETCH_INTERFACE_CAT_LIST,
     payload: result

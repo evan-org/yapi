@@ -93,7 +93,7 @@ export default (state = initialState, action) => {
 };
 
 // Action Creators
-import axios from "axios";
+import { fetchProject } from "../../api/project";
 
 export function pushInputValue(value) {
   return {
@@ -161,7 +161,7 @@ export function pushInterfaceMethod(value) {
 export function fetchInterfaceProject(id) {
   return {
     type: FETCH_INTERFACE_PROJECT,
-    payload: axios.get("/api/project/get", { params: { id } })
+    payload: fetchProject(id)
   };
 }
 

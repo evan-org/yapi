@@ -26,3 +26,23 @@ export function logout() {
 export function finishStudy() {
   return apiClient.get("/user/up_study");
 }
+
+export function searchUser(params) {
+  return apiClient.get("/user/search", { params });
+}
+
+export function fetchUserList(page, limit) {
+  return apiClient.get("/user/list", { params: { page, limit } });
+}
+
+export function fetchUser(id) {
+  return apiClient.get("/user/find", { params: { id } });
+}
+
+export function updateUser(params) {
+  return apiClient.post("/user/update", params);
+}
+
+export function changePassword(params) {
+  return apiClient.post("/user/change_password", params);
+}

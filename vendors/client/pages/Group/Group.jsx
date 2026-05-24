@@ -64,8 +64,12 @@ function Group(props) {
   const [groupId, setGroupId] = useState(() => props.curGroupId);
   async function init() {
     try {
-      let r = await axios.get("/api/group/get_mygroup");
-      const group = r.data.data;
+      const r = await fetchMyGroup();
+      if (!isApiOk(r)) {
+        console.error("获取我的分组失败", r.data);
+        return;
+      }
+      const group = getApiData(r);
       console.log("111111111", group, group._id);
       setGroupId(group._id);
       //
