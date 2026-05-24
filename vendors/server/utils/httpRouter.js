@@ -61,19 +61,6 @@ class HttpRouter {
     this._register("all", path, handler);
   }
 
-  registerTo(fastify, wrapHandler) {
-    const allMethods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
-    for (const route of this._routes) {
-      const methods = route.method === "ALL" ? allMethods : [route.method];
-      for (const method of methods) {
-        fastify.route({
-          method,
-          url: route.path,
-          handler: wrapHandler(route.handler)
-        });
-      }
-    }
-  }
 
   getRoutes() {
     return this._routes;
@@ -89,3 +76,69 @@ class HttpRouter {
 }
 
 module.exports = HttpRouter;
+
+/**
+ * 将收集的路由注册到 Hono 应用
+ * @param {import('hono').Hono} app
+ * @param {{ createKoaContext: Function, finalizeKoaContext: Function }} adapters
+ */
+HttpRouter.prototype.registerToHono = function registerToHono(app, adapters) {
+  const { createKoaContext, finalizeKoaContext } = adapters;
+  for (const route of this._routes) {
+    const method = route.method === "ALL" ? "ALL" : route.method;
+    const methods = method === "ALL"
+      ? ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
+      : [method];
+    for (const m of methods) {
+      app.on(m, route.path, async (c) => {
+        const ctx = await createKoaContext(c);
+        await route.handler(ctx);
+        return finalizeKoaContext(c, ctx);
+      });
+    }
+  }
+};
+
+/**
+ * 将 WebSocket 路由注册到 Hono（@hono/node-ws）
+ * @param {import('hono').Hono} app
+ * @param {Function} upgradeWebSocket
+ * @param {{ createKoaContext: Function }} adapters
+ */
+HttpRouter.prototype.registerWsToHono = function registerWsToHono(app, upgradeWebSocket, adapters) {
+  const { createKoaContext } = adapters;
+  for (const route of this._routes) {
+    if (route.method !== "GET") {
+      continue;
+    }
+    app.get(
+      route.path,
+      upgradeWebSocket((c) => ({
+        async onOpen(_evt, ws) {
+          const wsAdapter = {
+            send(data) {
+              ws.send(typeof data === "string" ? data : JSON.stringify(data));
+            },
+            on(event, fn) {
+              if (event === "close") {
+                ws.addEventListener("close", fn);
+              }
+              if (event === "message") {
+                ws.addEventListener("message", (e) => fn(e.data));
+              }
+            },
+          };
+          const ctx = await createKoaContext(c, { websocket: wsAdapter });
+          ctx.ws = wsAdapter;
+          ctx.websocket = wsAdapter;
+          try {
+            await route.handler(ctx);
+          } catch (err) {
+            require("../yapi.js").commons.log(err, "error");
+            wsAdapter.send(JSON.stringify({ errcode: 404, errmsg: "No Fount." }));
+          }
+        },
+      }))
+    );
+  }
+};

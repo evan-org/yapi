@@ -2,7 +2,6 @@ const HttpRouter = require("./utils/httpRouter.js");
 const interfaceController = require("./controllers/interface.js");
 const yapi = require("./yapi.js");
 const { createAction } = require("./utils/commons.js");
-const { createKoaContext } = require("./utils/koaContext.js");
 
 const router = new HttpRouter();
 let pluginsRouterPath = [];
@@ -27,53 +26,13 @@ createAction(router, "/api", interfaceController, "solveConflict", "/interface/s
 yapi.emitHookSync("add_ws_router", addPluginRouter);
 
 /**
- * 将 HttpRouter 中的 WS 路由注册到 Fastify
- * @param {import('fastify').FastifyInstance} fastify
+ * 将 WebSocket 路由注册到 Hono
+ * @param {import('hono').Hono} app
+ * @param {Function} upgradeWebSocket
  */
-function registerWebSocket(fastify) {
-  const methodMap = {
-    GET: "get",
-    POST: "post",
-    PUT: "put",
-    DELETE: "delete",
-    PATCH: "patch",
-    HEAD: "head",
-    OPTIONS: "options"
-  };
-
-  for (const route of router.getRoutes()) {
-    const fastifyMethod = methodMap[route.method] || "get";
-    if (typeof fastify[fastifyMethod] !== "function") {
-      continue;
-    }
-
-    fastify[fastifyMethod](route.path, { websocket: true }, (socket, request) => {
-      const wsAdapter = {
-        send(data) {
-          socket.send(data);
-        },
-        on(event, fn) {
-          socket.on(event, fn);
-        }
-      };
-      const fakeReply = {
-        sent: false,
-        header() {},
-        code() {
-          return this;
-        },
-        send(data) {
-          this.sent = true;
-          wsAdapter.send(typeof data === "string" ? data : JSON.stringify(data));
-        }
-      };
-      const ctx = createKoaContext(request, fakeReply, { ws: wsAdapter });
-      route.handler(ctx).catch((err) => {
-        yapi.commons.log(err, "error");
-        wsAdapter.send(JSON.stringify({ errcode: 404, errmsg: "No Fount.", data: null }));
-      });
-    });
-  }
+function registerWebSocket(app, upgradeWebSocket) {
+  const koaCtx = require("./adapter/koa-context");
+  router.registerWsToHono(app, upgradeWebSocket, koaCtx);
 }
 
 module.exports = registerWebSocket;
