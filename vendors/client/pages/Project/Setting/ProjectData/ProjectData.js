@@ -31,6 +31,7 @@ const importDataModule = {};
 const exportDataModule = {};
 const HandleImportData = require("common/HandleImportData");
 import { fetchCatMenu } from "../../../../api/interface";
+import { isApiOk } from "../../../../utils/apiHelpers";
 function handleExportRouteParams(url, status, isWiki) {
   if (!url) {
     return;
@@ -91,7 +92,7 @@ class ProjectData extends Component {
 
   UNSAFE_componentWillMount() {
     fetchCatMenu(this.props.match.params.id).then((data) => {
-      if (data.data.errcode === 0) {
+      if (isApiOk(data)) {
         let menuList = data.data.data;
         this.setState({
           menuList: menuList,
@@ -290,7 +291,6 @@ class ProjectData extends Component {
       name: "interfaceData",
       multiple: true,
       showUploadList: false,
-      action: "/api/interface/interUpload",
       customRequest: this.handleFile,
       onChange: this.uploadChange
     };

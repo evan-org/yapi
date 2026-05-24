@@ -1,4 +1,4 @@
-import apiClient from "../../utils/apiClient";
+import { fetchAdvMockCaseList } from "../../api/plugin";
 
 // Actions
 const FETCH_MOCK_COL = "yapi/mockCol/FETCH_MOCK_COL";
@@ -20,9 +20,11 @@ export default (state = initialState, action) => {
   }
 };
 
-// Action Creators
+/**
+ * 获取高级 Mock 用例列表（插件 advmock）
+ */
 export async function fetchMockCol(interfaceId) {
-  let result = await apiClient.get("/plugin/advmock/case/list", { params: { interface_id: interfaceId } });
+  const result = await fetchAdvMockCaseList(interfaceId);
   return {
     type: FETCH_MOCK_COL,
     payload: result.data

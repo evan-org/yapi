@@ -7,6 +7,8 @@ import {
   changePassword,
   uploadAvatar
 } from "../../../api/user";
+import { getUserAvatarUrl } from "../../../api/paths";
+import { createBase64UploadRequest } from "../../../utils/uploadHelper";
 import PropTypes from "prop-types";
 import { setBreadcrumb, setImageUrl } from "../../../reducer/modules/user";
 import { connect } from "react-redux";
@@ -399,7 +401,7 @@ class Profile extends Component {
                 <AvatarUpload uid={userinfo.uid}>点击上传头像</AvatarUpload>
               ) : (
                 <div className="avatarImg">
-                  <img src={`/api/user/avatar?uid=${userinfo.uid}`} />
+                  <img src={getUserAvatarUrl(userinfo.uid)} />
                 </div>
               )}
             </Col>
@@ -482,27 +484,9 @@ class AvatarUpload extends Component {
     setImageUrl: PropTypes.func,
     url: PropTypes.any
   };
-  uploadAvatar(basecode) {
-uploadAvatar(basecode).then(() => {
-        // this.setState({ imageUrl: basecode });
-        this.props.setImageUrl(basecode);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
-  handleChange(info) {
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (basecode) => {
-        this.uploadAvatar(basecode);
-      });
-    }
-  }
   render() {
     const { url } = this.props;
-    let imageUrl = url ? url : `/api/user/avatar?uid=${this.props.uid}`;
-    // let imageUrl = this.state.imageUrl ? this.state.imageUrl : `/api/user/avatar?uid=${this.props.uid}`;
+    let imageUrl = url ? url : getUserAvatarUrl(this.props.uid);
     // console.log(this.props.uid);
     return (
       <div className="avatar-box">
@@ -515,9 +499,11 @@ uploadAvatar(basecode).then(() => {
               className="avatar-uploader"
               name="basecode"
               showUploadList={false}
-              action="/api/user/upload_avatar"
+              customRequest={createBase64UploadRequest(
+                (basecode) => uploadAvatar(basecode),
+                (basecode) => this.props.setImageUrl(basecode)
+              )}
               beforeUpload={beforeUpload}
-              onChange={this.handleChange.bind(this)}
             >
               {/* <Avatar size="large" src={imageUrl}  />*/}
               <div style={{ width: 100, height: 100 }}>

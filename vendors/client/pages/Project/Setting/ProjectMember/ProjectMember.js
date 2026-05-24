@@ -1,4 +1,5 @@
 import React, { PureComponent as Component } from "react";
+import { getUserAvatarUrl } from "../../../../api/paths";
 import {
   Table,
   Card,
@@ -233,7 +234,7 @@ class ProjectMember extends Component {
         key: "username",
         render: (text, record) => (
           <div className="m-user">
-            <img src={"/api/user/avatar?uid=" + record.uid} className="m-user-img" />
+            <img src={getUserAvatarUrl(record.uid)} className="m-user-img" />
             <p className="m-user-name">{text}</p>
             <Tooltip placement="top" title="消息通知">
               <span>
@@ -389,13 +390,7 @@ class ProjectMember extends Component {
               this.state.groupMemberList.map((item, index) => (
                 <div key={index} className="card-item">
                   <img
-                    src={
-                      location.protocol +
-                        "//" +
-                        location.host +
-                        "/api/user/avatar?uid=" +
-                        item.uid
-                    }
+                    src={getUserAvatarUrl(item.uid)}
                     className="item-img"
                   />
                   <p className="item-name">

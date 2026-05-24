@@ -1,4 +1,5 @@
 import React from "react";
+import { getUserAvatarUrl } from "../../../api/paths";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -104,7 +105,7 @@ function TipDoc() {
   </div>
 }
 function ToolUser(props) {
-  let imageUrl = props.imageUrl ? props.imageUrl : `/api/user/avatar?uid=${props.uid}`;
+  let imageUrl = props.imageUrl ? props.imageUrl : getUserAvatarUrl(props.uid);
   return (
     <ul>
       <li className="toolbar-li item-search">
@@ -177,7 +178,7 @@ function ToolUser(props) {
             <span className="avatar-image">
               <img src={imageUrl}/>
             </span>
-            {/* props.imageUrl? <Avatar src={props.imageUrl} />: <Avatar src={`/api/user/avatar?uid=${props.uid}`} />*/}
+            {/* props.imageUrl? <Avatar src={props.imageUrl} />: <Avatar src={getUserAvatarUrl(props.uid)} />*/}
             <span className="name">
               <Icon type="down"/>
             </span>

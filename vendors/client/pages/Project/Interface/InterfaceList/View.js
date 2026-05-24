@@ -1,4 +1,5 @@
 import "./View.scss";
+import { getUserAvatarUrl } from "../../../../api/paths";
 import React, { PureComponent as Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -390,7 +391,7 @@ class View extends Component {
             </Col>
             <Col span={8} className="colValue">
               <Link className="user-name" to={"/user/profile/" + uid}>
-                <img src={"/api/user/avatar?uid=" + uid} className="user-img" />
+                <img src={getUserAvatarUrl(uid)} className="user-img" />
                 {username}
               </Link>
             </Col>

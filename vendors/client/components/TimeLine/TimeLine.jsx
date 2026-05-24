@@ -1,4 +1,5 @@
 import React, { PureComponent as Component } from "react";
+import { getUserAvatarUrl } from "../../api/paths";
 import { Timeline, Spin, Row, Col, Tag, Avatar, Button, Modal, AutoComplete } from "antd";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -165,7 +166,7 @@ class TimeTree extends Component {
           <Timeline.Item
             dot={
               <Link to={`/user/profile/${item.uid}`}>
-                <Avatar src={`/api/user/avatar?uid=${item.uid}`}/>
+                <Avatar src={getUserAvatarUrl(item.uid)}/>
               </Link>
             }
             key={i}

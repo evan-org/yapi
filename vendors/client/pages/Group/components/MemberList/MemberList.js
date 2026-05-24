@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Table, Select, Button, Modal, Row, Col, message, Popconfirm } from "antd";
 import { Link } from "react-router-dom";
 import "./MemberList.scss";
+import { getUserAvatarUrl } from "../../../../api/paths";
 import { autobind } from "core-decorators";
 import {
   fetchGroupMemberList,
@@ -191,7 +192,7 @@ class MemberList extends Component {
             <Link to={`/user/profile/${record.uid}`}>
               <img
                 src={
-                  location.protocol + "//" + location.host + "/api/user/avatar?uid=" + record.uid
+                  getUserAvatarUrl(record.uid)
                 }
                 className="m-user-img"
               />

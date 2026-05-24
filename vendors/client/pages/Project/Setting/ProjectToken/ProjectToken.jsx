@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Icon, Tooltip, message, Modal } from "antd";
 import copy from "copy-to-clipboard";
 import { getToken, updateToken } from "../../../../reducer/modules/project";
+import { getApiDocPath } from "../../../../api/paths";
 //
 import styles from "./ProjectToken.module.scss";
 //

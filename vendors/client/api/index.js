@@ -9,3 +9,5 @@ export * from "./interface";
 export * from "./col";
 export * from "./log";
 export { default as apiClient } from "../utils/apiClient";
+export * from "./plugin";
+export * from "./paths";

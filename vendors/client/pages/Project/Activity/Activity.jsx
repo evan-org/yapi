@@ -1,4 +1,5 @@
 import React, { PureComponent as Component } from "react";
+import { getProjectDownloadUrl } from "../../../api/paths";
 import TimeTree from "../../../components/TimeLine/TimeLine";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -40,7 +41,7 @@ class Activity extends Component {
                   `/mock/${currProject._id}${currProject.basepath}/yourPath`}
               </p>
               <Button type="primary">
-                <a href={`/api/project/download?project_id=${this.props.match.params.id}`}>
+                <a href={getProjectDownloadUrl(this.props.match.params.id)}>
                   下载Mock数据
                 </a>
               </Button>
