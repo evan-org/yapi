@@ -27,6 +27,7 @@ execSync("npx craco build", {
   env: Object.assign({}, process.env, {
     NODE_ENV: "production",
     GENERATE_SOURCEMAP: "false",
+    DISABLE_ESLINT_PLUGIN: process.env.CI ? "true" : process.env.DISABLE_ESLINT_PLUGIN || "false",
     NODE_OPTIONS: nodeOptions
   })
 });

@@ -13,6 +13,7 @@ const storageCreator = require("./utils/storage");
 require("./utils/notice");
 
 const { buildApp } = require("./fastifyApp.js");
+const path = require("path");
 const { assertRuntimeConfig } = require("./utils/configCheck.js");
 
 global.storageCreator = storageCreator;
@@ -21,6 +22,9 @@ global.storageCreator = storageCreator;
  * 启动 HTTP 服务
  */
 async function startServer() {
+  if (process.argv[2] === "dev") {
+    require(path.join(__dirname, "../scripts/dev-bootstrap.js"));
+  }
   assertRuntimeConfig();
   const fastify = await buildApp();
   const port = Number(yapi.WEBCONFIG.port) || 3000;
@@ -36,9 +40,19 @@ async function startServer() {
   process.on("SIGINT", () => shutdown("SIGINT"));
   process.on("SIGTERM", () => shutdown("SIGTERM"));
 
-  commons.log(
-    `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${port === 80 ? "" : ":" + port}/`
-  );
+  if (process.argv[2] === "dev") {
+    const devPort = process.env.YAPI_DEV_CLIENT_PORT || "4000";
+    commons.log(
+      `开发服务已启动:\n` +
+        `  API:  http://127.0.0.1${port === 80 ? "" : ":" + port}/\n` +
+        `  前端: http://127.0.0.1:${devPort}/ （推荐）\n` +
+        `  访问 API 端口将自动跳转到前端开发服务`
+    );
+  } else {
+    commons.log(
+      `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${port === 80 ? "" : ":" + port}/`
+    );
+  }
   return fastify;
 }
 
