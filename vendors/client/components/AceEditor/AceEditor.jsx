@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import mockEditor from "./utils/mockEditor";
 import PropTypes from "prop-types";
 //
-import styles from "./AceEditor.scss";
+import styles from "./AceEditor.module.scss";
 
 const ModeMap = {
   javascript: "ace/mode/javascript",

@@ -14,7 +14,7 @@ import { checkLoginState } from "./reducer/modules/user";
 //
 import "./styles/antd-ui/theme.less";
 //
-const plugin = require("client/plugin.js");
+import plugin from "client/plugin.js";
 // 增加路由钩子
 plugin.emitHook("app_route", AppRoute);
 function App(props) {

@@ -1,3 +1,5 @@
+import pluginModuleList from "./plugin-module.js";
+
 let hooks, pluginModule;
 
 /**
@@ -290,18 +292,17 @@ pluginModule = {
   bindHook: bindHook,
   emitHook: emitHook
 };
-let pluginModuleList;
-try {
-  pluginModuleList = require("./plugin-module.js");
-} catch (err) {
-  pluginModuleList = {};
-}
 
 Object.keys(pluginModuleList).forEach((plugin) => {
-  if (!pluginModuleList[plugin]) {return null;}
-  if (pluginModuleList[plugin] && typeof pluginModuleList[plugin].module === "function") {
-    pluginModuleList[plugin].module.call(pluginModule, pluginModuleList[plugin].options);
+  if (!pluginModuleList[plugin]) {
+    return null;
+  }
+  const entry = pluginModuleList[plugin];
+  const mod = entry.module && entry.module.default ? entry.module.default : entry.module;
+  if (typeof mod === "function") {
+    mod.call(pluginModule, entry.options);
   }
 });
 
-module.exports = pluginModule;
+export default pluginModule;
+export { bindHook, emitHook };

@@ -9,7 +9,7 @@ import ProjectMock from "./ProjectMock/index.js";
 import { connect } from "react-redux";
 
 const TabPane = Tabs.TabPane;
-const plugin = require("client/plugin.js");
+import plugin from "client/plugin.js";
 const routers = {}
 import "./Setting.scss";
 

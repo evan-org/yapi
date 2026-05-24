@@ -14,7 +14,7 @@ import { fetchGroupMsg } from '../../reducer/modules/group';
 import { setBreadcrumb } from '../../reducer/modules/user';
 import { getProject } from '../../reducer/modules/project';
 //
-const plugin = require('client/plugin.js');
+import plugin from "client/plugin.js";
 @connect(
   state => {
     return {
