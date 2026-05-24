@@ -20,7 +20,6 @@ const ejs = require("easy-json-schema");
 
 const jsf = require("json-schema-faker");
 const { schemaValidator } = require("../../common/utils");
-const apiResponse = require("../../common/apiResponse");
 const http = require("http");
 
 jsf.extend("mock", function() {
@@ -408,7 +407,15 @@ exports.saveLog = (logData) => {
  * @param {*} ws enable ws
  */
 exports.createAction = (router, baseurl, routerController, action, path, method, ws) => {
-  router[method](baseurl + path, async(ctx) => {
+  let routeMethod = (method || "get").toLowerCase();
+  if (routeMethod === "delete") {
+    routeMethod = "del";
+  }
+  if (typeof router[routeMethod] !== "function") {
+    throw new Error(`Unsupported route method: ${method}`);
+  }
+  const fullPath = baseurl + path;
+  router[routeMethod](fullPath, async(ctx) => {
     let inst = new routerController(ctx);
     try {
       await inst.init(ctx);
@@ -418,20 +425,32 @@ exports.createAction = (router, baseurl, routerController, action, path, method,
         let validResult = yapi.commons.validateParams(inst.schemaMap[action], ctx.params);
 
         if (!validResult.valid) {
-          return (ctx.body = yapi.commons.resReturn(null, 400, validResult.message));
+          return (ctx.body = yapi.commons.resReturn(null, apiResponse.ApiCode.BAD_REQUEST, validResult.message));
         }
       }
       if (inst.$auth === true) {
         await inst[action].call(inst, ctx);
+        if (!ws && ctx.body !== undefined) {
+          const reqPath = ctx.path || fullPath;
+          ctx.body = apiResponse.finalizeResponse(reqPath, ctx.body);
+        }
       } else {
         if (ws === true) {
-          ctx.ws.send("请登录...");
+          ctx.ws.send(JSON.stringify(
+            apiResponse.fail(apiResponse.ApiCode.NOT_LOGIN, "请登录...")
+          ));
         } else {
-          ctx.body = yapi.commons.resReturn(null, 40011, "请登录...");
+          ctx.body = yapi.commons.resReturn(null, apiResponse.ApiCode.NOT_LOGIN, "请登录...");
         }
       }
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 40011, "服务器出错...");
+      if (ws === true) {
+        ctx.ws.send(JSON.stringify(
+          apiResponse.fail(apiResponse.ApiCode.SERVER_ERROR, "服务器出错...")
+        ));
+      } else {
+        ctx.body = yapi.commons.resReturn(null, apiResponse.ApiCode.SERVER_ERROR, "服务器出错...");
+      }
       yapi.commons.log(err, "error");
     }
   });
