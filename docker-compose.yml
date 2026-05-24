@@ -1,5 +1,7 @@
-# 本地一键启动 YApi + MongoDB（需先准备 config.json）
-# cp vendors/config_example.json config.json 并按需修改 db 连接为 mongo:27017
+# 本地一键启动 YApi + MongoDB
+# 1. cp config.docker.example.json config.json
+# 2. docker compose up -d --build
+# 3. docker compose exec yapi node server/install.js
 
 services:
   mongo:
@@ -9,6 +11,12 @@ services:
       - yapi_mongo_data:/data/db
     ports:
       - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   yapi:
     build: .
@@ -17,10 +25,15 @@ services:
       - "3000:3000"
     volumes:
       - ./config.json:/yapi/config.json:ro
+      - yapi_runtime:/yapi
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     environment:
       NODE_ENV: production
+      MONGO_HOST: mongo
+      MONGO_PORT: "27017"
 
 volumes:
   yapi_mongo_data:
+  yapi_runtime:

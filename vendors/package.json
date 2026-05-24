@@ -24,12 +24,12 @@
     "dep-analyze": "webpack --color --config webpack.dev --profile --json > ./dist/DependenceNetwork.json"
   },
   "scripts-info": {
-    "start": "运行生产环境服务器",
-    "install-server": "初始化数据库数据，用于安装",
-    "dev": "运行开发服务器",
-    "dev-server": "运行后端开发服务器",
-    "dev-client": "运行前端开发服务器",
-    "test": "执行测试"
+    "start": "\u8fd0\u884c\u751f\u4ea7\u73af\u5883\u670d\u52a1\u5668",
+    "install-server": "\u521d\u59cb\u5316\u6570\u636e\u5e93\u6570\u636e\uff0c\u7528\u4e8e\u5b89\u88c5",
+    "dev": "\u8fd0\u884c\u5f00\u53d1\u670d\u52a1\u5668",
+    "dev-server": "\u8fd0\u884c\u540e\u7aef\u5f00\u53d1\u670d\u52a1\u5668",
+    "dev-client": "\u8fd0\u884c\u524d\u7aef\u5f00\u53d1\u670d\u52a1\u5668",
+    "test": "\u6267\u884c\u6d4b\u8bd5"
   },
   "repository": {
     "type": "git",
@@ -181,8 +181,8 @@
   },
   "config": {},
   "engines": {
-    "node": ">= 7.6.0",
-    "npm": ">= 4.1.2"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "browserslist": {
     "production": [
