@@ -1,6 +1,6 @@
 {
   "name": "yapi-vendor",
-  "homepage": "/",
+  "homepage": "/prd/",
   "version": "1.11.0",
   "description": "YAPI",
   "type": "commonjs",
@@ -8,20 +8,21 @@
     "dev:vite": "vite",
     "build:vite": "tsc && vite build",
     "start:craco": "set PORT=5000 && craco start FAST_REFRESH=true",
-    "build:craco": "craco build",
+    "build:craco": "node scripts/build-client.js",
     "start:react-scripts": "react-scripts start",
     "build:react-scripts": "react-scripts build",
     "start": "node server/app.js",
     "install-server": "node server/install.js",
     "dev": "npm run dev-server & npm run dev-client",
-    "dev-client": "webpack serve --mode=development",
+    "dev-client": "cross-env BROWSER=none PORT=4000 craco start",
     "dev-server": "cross-env NODE_ENV=development nodemon server/app.js dev -L",
-    "build-client": "webpack --mode=development",
+    "build-client": "node scripts/build-client.js",
     "test": "ava",
     "test:server": "ava --serial test/server/*.test.js",
     "npm-publish": "node ./npm-publish.js",
     "fix": "eslint --fix --ext .js,.jsx client/",
-    "dep-analyze": "webpack --color --config webpack.dev --profile --json > ./dist/DependenceNetwork.json"
+    "dep-analyze": "webpack --color --config webpack.dev --profile --json > ./dist/DependenceNetwork.json",
+    "build": "node scripts/build-client.js"
   },
   "scripts-info": {
     "start": "\u8fd0\u884c\u751f\u4ea7\u73af\u5883\u670d\u52a1\u5668",

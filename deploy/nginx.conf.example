@@ -1,0 +1,44 @@
+# YApi + Fastify 反向代理示例
+# 将前端静态资源与 /api、/mock、/prd 转发到 Node 服务
+
+upstream yapi_backend {
+  server 127.0.0.1:3000;
+  keepalive 32;
+}
+
+server {
+  listen 80;
+  server_name yapi.example.com;
+
+  client_max_body_size 10m;
+
+  location /api/ {
+    proxy_pass http://yapi_backend;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location /mock/ {
+    proxy_pass http://yapi_backend;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+
+  location /prd/ {
+    proxy_pass http://yapi_backend;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+  }
+
+  location / {
+    proxy_pass http://yapi_backend;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+}
