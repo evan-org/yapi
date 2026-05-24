@@ -4,7 +4,8 @@ import { Row, Col, Icon } from "antd";
 //
 import styles from "./Footer.module.scss";
 //
-const version = "1.0.0" // process.env.version;
+// 与 vendors/package.json 版本保持一致
+const version = require("../../../../package.json").version;
 class FootItem extends Component {
   constructor(props) {
     super(props);
@@ -16,7 +17,7 @@ class FootItem extends Component {
   };
   render() {
     return (
-      <Col span={6}>
+      <Col xs={12} sm={12} md={6}>
         <h4 className="title">
           {this.props.iconType ? <Icon type={this.props.iconType} className="icon"/> : ""}
           {this.props.title}

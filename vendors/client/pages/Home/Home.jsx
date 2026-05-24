@@ -9,6 +9,40 @@ import { changeMenuItem } from "../../reducer/modules/menu";
 
 const plugin = require("client/plugin.js");
 const ThirdLogin = plugin.emitHook("third_login");
+
+/**
+ * 首页右侧装饰：纯 CSS 模拟接口管理界面预览
+ */
+function HomeHeroIllustration() {
+  return (
+    <div className="hero-panel" aria-hidden="true">
+      <div className="hero-panel-header">
+        <span className="hero-dot"/>
+        <span className="hero-dot"/>
+        <span className="hero-dot"/>
+        <span className="hero-panel-title">API 工作台</span>
+      </div>
+      <div className="hero-panel-body">
+        <div className="hero-sidebar">
+          <div className="hero-line hero-line-short"/>
+          <div className="hero-line"/>
+          <div className="hero-line hero-line-active"/>
+          <div className="hero-line"/>
+        </div>
+        <div className="hero-main">
+          <div className="hero-tag hero-tag-get">GET</div>
+          <div className="hero-line hero-line-wide"/>
+          <div className="hero-code-block">
+            <div className="hero-line hero-line-code"/>
+            <div className="hero-line hero-line-code"/>
+            <div className="hero-line hero-line-code hero-line-short"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HomeGuest() {
   return (
     <div className="g-body">
@@ -58,8 +92,9 @@ function HomeGuest() {
                 </div>
               </div>
             </Col>
-            <Col lg={15} xs={0} className="col-img">
+            <Col lg={15} md={24} xs={24} className="col-img">
               <div className="img-container">
+                <HomeHeroIllustration/>
               </div>
             </Col>
           </Row>
@@ -71,20 +106,20 @@ function HomeGuest() {
           <span className="desc">
           YApi让接口开发更简单高效，让接口的管理更具可读性、可维护性，让团队协作更合理。
           </span>
-          <Row key="feat-motion-row">
-            <Col span={8} className="section-item" key="feat-wrapper-1">
+          <Row key="feat-motion-row" gutter={[24, 24]}>
+            <Col xs={24} sm={24} md={8} className="section-item" key="feat-wrapper-1">
               <Icon type="appstore-o" className="img"/>
               <h4 className="title">项目管理</h4>
               <span className="desc">提供基本的项目分组，项目管理，接口管理功能</span>
             </Col>
-            <Col span={8} className="section-item" key="feat-wrapper-2">
+            <Col xs={24} sm={24} md={8} className="section-item" key="feat-wrapper-2">
               <Icon type="api" className="img"/>
               <h4 className="title">接口管理</h4>
               <span className="desc">
               友好的接口文档，基于websocket的多人协作接口编辑功能和类postman测试工具，让多人协作成倍提升开发效率
               </span>
             </Col>
-            <Col span={8} className="section-item" key="feat-wrapper-3">
+            <Col xs={24} sm={24} md={8} className="section-item" key="feat-wrapper-3">
               <Icon type="database" className="img"/>
               <h4 className="title">MockServer</h4>
               <span className="desc">基于Mockjs，使用简单功能强大</span>
@@ -281,7 +316,7 @@ function HomeGuest() {
       <div className="home-section section-manage">
         <div className="container">
           <Row className="row-card" style={{ marginBottom: ".48rem" }}>
-            <Col lg={7} xs={10} className="section-card">
+            <Col lg={7} xs={24} md={10} className="section-card">
               <Card>
                 <div className="section-block block-first">
                   <h4>超级管理员(* N)</h4>
@@ -302,7 +337,7 @@ function HomeGuest() {
                 </div>
               </Card>
             </Col>
-            <Col lg={17} xs={14} className="section-card manage-word">
+            <Col lg={17} xs={24} md={14} className="section-card manage-word">
               <Icon type="team" className="icon"/>
               <h3 className="title">扁平化管理模式</h3>
               <p className="desc">

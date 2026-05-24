@@ -247,7 +247,7 @@ function HeaderBox(props) {
   };
   return (
     <Layout.Header className={styles.HeaderBox}>
-      <div className="content g-row">
+      <div className="content g-row header-toolbar">
         <Link onClick={relieveLink} to="/group" className="logo">
           <div className="href">
             <span className="img">
@@ -255,7 +255,9 @@ function HeaderBox(props) {
             </span>
           </div>
         </Link>
-        <Breadcrumb/>
+        <div className="toolbar-center">
+          <Breadcrumb/>
+        </div>
         <div className="user-toolbar" style={{ position: "relative", zIndex: studyTip > 0 ? 3 : 1 }}>
           {login ? <ToolUser{...props} relieveLink={relieveLink} logout={logout}/> : null}
         </div>

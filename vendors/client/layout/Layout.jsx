@@ -7,9 +7,12 @@ import { Alert } from "antd";
 //
 import styles from "./Layout.module.scss";
 
+/**
+ * 非 Chrome 浏览器提示（接口测试等功能依赖 Chrome）
+ */
 function AlertContent() {
-  const ua = window.navigator.userAgent,
-    isChrome = ua.indexOf("Chrome") && window.chrome;
+  const ua = window.navigator.userAgent;
+  const isChrome = ua.indexOf("Chrome") > -1 && window.chrome;
   if (!isChrome) {
     return (
       <Alert
@@ -19,34 +22,46 @@ function AlertContent() {
         closable
       />
     );
-  } else {
-    return null
   }
+  return null;
 }
+
+/**
+ * 全局布局：登录态检查完成后关闭 Loading，避免固定 1 秒等待
+ */
 function Layout(props) {
   console.debug("layout =>", props);
   const { loginState, curUserRole, checkLoginState } = props;
   const [visible, setVisible] = useState(true);
-  //
+
   useEffect(() => {
-    (async() => {
-      const a = await checkLoginState();
-      console.log("layout挂载中", loginState, a);
-      setTimeout(() => {
-        setVisible(false);
-      }, 1000)
-    })()
-  }, [])
+    let cancelled = false;
+    (async () => {
+      try {
+        await checkLoginState();
+        console.log("layout挂载中", loginState);
+      } catch (err) {
+        console.error("layout 登录态检查失败", err);
+      } finally {
+        if (!cancelled) {
+          setVisible(false);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className={styles.Main}>
       <Loading visible={visible}/>
       {curUserRole === "admin" && <Notify/>}
       <AlertContent/>
       {loginState !== 0 ? <Header/> : null}
-      {/**/}
       {props.children}
       <Footer/>
     </div>
-  )
+  );
 }
 export default Layout;

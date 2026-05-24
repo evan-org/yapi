@@ -1,5 +1,23 @@
 .Interface {
+  position: relative;
   :global {
+    .sider-trigger-btn {
+      position: fixed;
+      left: .12rem;
+      top: .72rem;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .interface-sider {
+      flex-shrink: 0;
+    }
+    @media (max-width: 992px) {
+      margin-left: .12rem !important;
+      margin-right: .12rem !important;
+      .ant-layout-content {
+        margin: 0 .08rem !important;
+      }
+    }
     .left-menu {
       min-height: 5rem;
       .ant-tag {

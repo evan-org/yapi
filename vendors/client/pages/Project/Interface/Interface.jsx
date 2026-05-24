@@ -1,6 +1,6 @@
 import React, { PureComponent as Component } from "react";
 import PropTypes from "prop-types";
-import { Tabs, Layout } from "antd";
+import { Tabs, Layout, Icon, Button } from "antd";
 import { Route, Switch, matchPath } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -68,9 +68,9 @@ class Interface extends Component {
   };
   constructor(props) {
     super(props);
-    // this.state = {
-    //   curkey: this.props.match.params.action === 'api' ? 'api' : 'colOrCase'
-    // }
+    this.state = {
+      siderCollapsed: false
+    };
   }
   onChange = (action) => {
     let params = this.props.match.params;
@@ -89,9 +89,30 @@ class Interface extends Component {
     const { action } = this.props.match.params;
     // const activeKey = this.state.curkey;
     const activeKey = action === "api" ? "api" : "colOrCase";
+    const { siderCollapsed } = this.state;
     return (
       <Layout className={styles.Interface} style={{ minHeight: "calc(100vh - 156px)", marginLeft: "24px", marginTop: "24px" }}>
-        <Sider style={{ height: "100%" }} width={300}>
+        {siderCollapsed ? (
+          <Button
+            type="primary"
+            className="sider-trigger-btn"
+            onClick={() => this.setState({ siderCollapsed: false })}
+            aria-label="展开接口侧栏"
+          >
+            <Icon type="menu-unfold"/>
+          </Button>
+        ) : null}
+        <Sider
+          className="interface-sider"
+          style={{ height: "100%" }}
+          width={300}
+          collapsible
+          collapsed={siderCollapsed}
+          onCollapse={(collapsed) => this.setState({ siderCollapsed: collapsed })}
+          breakpoint="lg"
+          collapsedWidth={0}
+          trigger={null}
+        >
           <div className="left-menu">
             <Tabs type="card" className="tabs-large" activeKey={activeKey} onChange={this.onChange}>
               <Tabs.TabPane tab="接口列表" key="api"/>

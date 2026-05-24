@@ -10,6 +10,9 @@
       margin: 0 auto !important;
       padding: .48rem .24rem;
       max-width: 12.2rem;
+      @media (max-width: 768px) {
+        padding: .32rem .16rem;
+      }
       .icon {
         font-size: .16rem;
         margin-right: .08rem;

@@ -142,6 +142,10 @@ html, body {
   min-width: 7.52rem; // Col宽度 (752+16)/24 = 32
   margin: 0 auto;
   padding: 0 .24rem;
+  @media (max-width: 992px) {
+    min-width: 0;
+    padding: 0 .16rem;
+  }
 }
 .m-container {
   margin: .24rem auto;

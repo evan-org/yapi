@@ -7,30 +7,56 @@ import GroupSetting from "./components/GroupSetting/GroupSetting.js";
 //
 import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { Tabs, Layout, Spin } from "antd";
+import { Tabs, Layout, Spin, Icon, Button } from "antd";
 //
 import { fetchNewsData } from "../../reducer/modules/news.js";
 import { setCurrGroup } from "../../reducer/modules/group";
-//
-import styles from "./Group.module.scss";
 import { fetchMyGroup } from "../../api/group";
 import { getApiData, isApiOk } from "../../utils/apiHelpers";
 //
-function GroupSider() {
+import styles from "./Group.module.scss";
+
+/**
+ * 分组左侧栏：大屏固定宽度，小屏可折叠（breakpoint=lg）
+ */
+function GroupSider(props) {
+  const { collapsed, onCollapse } = props;
   return (
-    <Layout.Sider style={{ height: "100%" }} width={300}>
+    <Layout.Sider
+      className="group-sider"
+      style={{ height: "100%" }}
+      width={300}
+      collapsible
+      collapsed={collapsed}
+      onCollapse={onCollapse}
+      breakpoint="lg"
+      collapsedWidth={0}
+      trigger={null}
+    >
       <div className="logo"/>
       <GroupList/>
     </Layout.Sider>
-  )
+  );
 }
-//
+
 function GroupContent(props) {
   const { curUserRole, currGroup, curUserRoleInGroup } = props;
+  const [siderCollapsed, setSiderCollapsed] = useState(false);
+
   return (
-    <Layout style={{ minHeight: "calc(100vh - 100px)", marginLeft: "24px", marginTop: "24px" }}>
-      <GroupSider {...props}/>
-      <Layout>
+    <Layout className="group-layout" style={{ minHeight: "calc(100vh - 100px)", marginTop: "24px" }}>
+      {siderCollapsed ? (
+        <Button
+          type="primary"
+          className="sider-trigger-btn"
+          onClick={() => setSiderCollapsed(false)}
+          aria-label="展开分组列表"
+        >
+          <Icon type="menu-unfold"/>
+        </Button>
+      ) : null}
+      <GroupSider collapsed={siderCollapsed} onCollapse={setSiderCollapsed}/>
+      <Layout className="group-main">
         <Layout.Content style={{ height: "100%", margin: "0 24px 0 16px", overflow: "initial", backgroundColor: "#fff" }}>
           <Tabs type="card" className="m-tab tabs-large" style={{ height: "100%" }}>
             <Tabs.TabPane tab="项目列表" key="1">
@@ -57,8 +83,9 @@ function GroupContent(props) {
         </Layout.Content>
       </Layout>
     </Layout>
-  )
+  );
 }
+
 function Group(props) {
   console.debug("1111111111111111111", props);
   const [groupId, setGroupId] = useState(() => props.curGroupId);
@@ -106,4 +133,4 @@ export default connect(
     fetchNewsData: fetchNewsData,
     setCurrGroup: setCurrGroup
   }
-)(Group)
+)(Group);

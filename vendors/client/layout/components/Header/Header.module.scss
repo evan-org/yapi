@@ -3,6 +3,20 @@
   line-height: .56rem;
   padding: 0;
   :global {
+    .header-toolbar {
+      display: flex;
+      align-items: center;
+      max-width: 12.2rem;
+      margin: 0 auto;
+      min-width: 0;
+      height: 100%;
+    }
+    .toolbar-center {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      margin: 0 .08rem;
+    }
     .nav-tooltip {
       color: red;
     }
@@ -15,7 +29,7 @@
     }
     .logo {
       position: relative;
-      float: left;
+      flex-shrink: 0;
       line-height: .56rem;
       height: .56rem;
       width: 56px;
@@ -62,15 +76,15 @@
       margin-top: 20px;
     }
     .user-toolbar {
-      float: right;
+      flex-shrink: 0;
       height: .54rem;
+      margin-left: auto;
       display: flex;
       align-items: center;
       .item-search {
         width: 2rem;
       }
       .toolbar-li {
-        float: left;
         font-size: .14rem;
         cursor: pointer;
         color: #ccc;

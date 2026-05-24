@@ -1,6 +1,20 @@
 .Login {
   height: calc(100vh - 240px);
+  min-height: 4.8rem;
+  @media (max-width: 768px) {
+    height: auto;
+    min-height: calc(100vh - 200px);
+  }
   :global {
+    @media (max-width: 768px) {
+      .login-container .container {
+        margin-top: 12vh;
+        padding: 0 .16rem;
+      }
+      .card-login {
+        margin-bottom: 1rem;
+      }
+    }
     .login-container {
       .container {
         display: inline-block;
