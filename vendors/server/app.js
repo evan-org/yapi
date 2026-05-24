@@ -118,21 +118,32 @@ async function buildApp() {
   return fastify;
 }
 
-buildApp()
-  .then((fastify) => {
-    const port = Number(yapi.WEBCONFIG.port) || 3000;
-    fastify.listen({ port, host: "0.0.0.0" }, (err) => {
-      if (err) {
-        commons.log(err, "error");
-        process.exit(1);
-      }
-      fastify.server.setTimeout(yapi.WEBCONFIG.timeout);
-      commons.log(
-        `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${port === 80 ? "" : ":" + port}/`
-      );
-    });
-  })
-  .catch((err) => {
+module.exports = { buildApp };
+
+async function startServer() {
+  const fastify = await buildApp();
+  const port = Number(yapi.WEBCONFIG.port) || 3000;
+
+  await fastify.listen({ port, host: "0.0.0.0" });
+  fastify.server.setTimeout(yapi.WEBCONFIG.timeout);
+
+  const shutdown = async (signal) => {
+    commons.log(`${signal} received, closing server...`);
+    await fastify.close();
+    process.exit(0);
+  };
+  process.on("SIGINT", () => shutdown("SIGINT"));
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+
+  commons.log(
+    `服务已启动，请打开下面链接访问: \nhttp://127.0.0.1${port === 80 ? "" : ":" + port}/`
+  );
+  return fastify;
+}
+
+if (require.main === module) {
+  startServer().catch((err) => {
     commons.log(err, "error");
     process.exit(1);
   });
+}

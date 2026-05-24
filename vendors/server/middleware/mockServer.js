@@ -133,7 +133,7 @@ function mockValidator(interfaceData, ctx) {
   return { valid: true };
 }
 /** Mock 中间件，兼容 Koa ctx */
-module.exports = async(ctx, next) => {
+async function mockServerMiddleware(ctx, next) {
   let path = ctx.path;
   let header = ctx.request.header;
   if (path.indexOf("/mock/") !== 0) {
@@ -347,4 +347,7 @@ module.exports = async(ctx, next) => {
     yapi.commons.log(e, "error");
     return (ctx.body = yapi.commons.resReturn(null, 409, e.message));
   }
-};
+}
+
+mockServerMiddleware.matchApi = matchApi;
+module.exports = mockServerMiddleware;

@@ -24,8 +24,23 @@ createAction(router, "/api", interfaceController, "solveConflict", "/interface/s
 yapi.emitHookSync("add_ws_router", addPluginRouter);
 
 function registerWebSocket(fastify) {
+  const methodMap = {
+    GET: "get",
+    POST: "post",
+    PUT: "put",
+    DELETE: "delete",
+    PATCH: "patch",
+    HEAD: "head",
+    OPTIONS: "options"
+  };
+
   for (const route of router.getRoutes()) {
-    fastify.get(route.path, { websocket: true }, (socket, request) => {
+    const fastifyMethod = methodMap[route.method] || "get";
+    if (typeof fastify[fastifyMethod] !== "function") {
+      continue;
+    }
+
+    fastify[fastifyMethod](route.path, { websocket: true }, (socket, request) => {
       const wsAdapter = {
         send(data) {
           socket.send(data);

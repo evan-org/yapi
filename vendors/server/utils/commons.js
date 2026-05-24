@@ -407,7 +407,14 @@ exports.saveLog = (logData) => {
  * @param {*} ws enable ws
  */
 exports.createAction = (router, baseurl, routerController, action, path, method, ws) => {
-  router[method](baseurl + path, async(ctx) => {
+  let routeMethod = (method || "get").toLowerCase();
+  if (routeMethod === "delete") {
+    routeMethod = "del";
+  }
+  if (typeof router[routeMethod] !== "function") {
+    throw new Error(`Unsupported route method: ${method}`);
+  }
+  router[routeMethod](baseurl + path, async(ctx) => {
     let inst = new routerController(ctx);
     try {
       await inst.init(ctx);
