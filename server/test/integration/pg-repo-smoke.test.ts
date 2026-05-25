@@ -16,6 +16,10 @@ import {
   avatarRepository,
   storageRepository,
   wikiRepository,
+  advMockRepository,
+  advMockCaseRepository,
+  statisMockRepository,
+  swaggerSyncRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -716,6 +720,232 @@ test("wikiRepository 可写入、查询、更新并删除", async (t) => {
   } finally {
     if (projectId) {
       await wikiRepository.delByProjectId(projectId);
+    }
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("advMockRepository 与 advMockCaseRepository 可写入、查询并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  let projectId;
+  let groupId;
+  let interfaceId;
+  let caseId;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-advmock-${Date.now()}`,
+      group_desc: "ci",
+      uid: 999988,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const project = await projectRepository.save({
+      name: `ci-proj-advmock-${Date.now()}`,
+      group_id: groupId,
+      uid: 999988,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = project._id;
+
+    const iface = await interfaceRepository.save({
+      title: "ci-adv-mock-iface",
+      path: "/ci-adv-mock",
+      method: "GET",
+      project_id: projectId,
+      uid: 999988,
+      add_time: commons.time(),
+      up_time: commons.time(),
+    });
+    interfaceId = iface._id;
+
+    const mockRow = await advMockRepository.save({
+      interface_id: interfaceId,
+      project_id: projectId,
+      uid: 999988,
+      mock_script: "return {}",
+      enable: true,
+    });
+    t.truthy(mockRow._id);
+
+    const mockFound = await advMockRepository.get(interfaceId);
+    t.is(mockFound.mock_script, "return {}");
+
+    await advMockRepository.up({
+      interface_id: interfaceId,
+      project_id: projectId,
+      uid: 999988,
+      mock_script: "return { ok: 1 }",
+      enable: true,
+    });
+    const mockUpdated = await advMockRepository.get(interfaceId);
+    t.is(mockUpdated.mock_script, "return { ok: 1 }");
+
+    const caseRow = await advMockCaseRepository.save({
+      interface_id: interfaceId,
+      project_id: projectId,
+      ip_enable: false,
+      name: "ci-case",
+      params: { q: "1" },
+      uid: 999988,
+      code: 200,
+      delay: 0,
+      headers: [{ name: "Content-Type", value: "application/json" }],
+      res_body: '{"ok":true}',
+      ip: "",
+    });
+    caseId = caseRow._id;
+    t.truthy(caseId);
+
+    const listed = await advMockCaseRepository.list(interfaceId);
+    t.true(listed.some((row) => row._id === caseId));
+
+    const forMock = await advMockCaseRepository.listForMock(interfaceId, {
+      ip_enable: false,
+    });
+    t.true(forMock.some((row) => row._id === caseId));
+
+    await advMockCaseRepository.up({
+      id: caseId,
+      name: "ci-case-updated",
+    });
+    const caseFound = await advMockCaseRepository.get({ _id: caseId });
+    t.is(caseFound.name, "ci-case-updated");
+  } finally {
+    if (caseId) {
+      await advMockCaseRepository.del(caseId);
+    }
+    if (interfaceId) {
+      await advMockCaseRepository.delByInterfaceId(interfaceId);
+      await advMockRepository.delByInterfaceId(interfaceId);
+    }
+    if (interfaceId) {
+      await interfaceRepository.del(interfaceId);
+    }
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("statisMockRepository 可写入、统计并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  let rowId;
+  const groupId = 999987;
+  const dateStr = "2099-01-01";
+
+  try {
+    const saved = await statisMockRepository.save({
+      interface_id: 1,
+      project_id: 1,
+      group_id: groupId,
+      time: commons.time(),
+      ip: "127.0.0.1",
+      date: dateStr,
+    });
+    rowId = saved._id;
+    t.truthy(rowId);
+
+    const total = await statisMockRepository.getTotalCount();
+    t.true(total >= 1);
+
+    const byGroup = await statisMockRepository.countByGroupId(groupId);
+    t.true(byGroup >= 1);
+
+    const dayCount = await statisMockRepository.getDayCount(["2098-12-31", dateStr]);
+    t.true(dayCount.some((row) => row._id === dateStr));
+  } finally {
+    if (rowId) {
+      await statisMockRepository.del(rowId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("swaggerSyncRepository 可写入、查询、更新并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  let projectId;
+  let groupId;
+  let syncId;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-sync-${Date.now()}`,
+      group_desc: "ci",
+      uid: 999986,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const project = await projectRepository.save({
+      name: `ci-proj-sync-${Date.now()}`,
+      group_id: groupId,
+      uid: 999986,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = project._id;
+
+    const saved = await swaggerSyncRepository.save({
+      uid: 999986,
+      project_id: projectId,
+      is_sync_open: true,
+      sync_cron: "0 0 * * *",
+      sync_json_url: "https://example.com/swagger.json",
+      sync_mode: "merge",
+    });
+    syncId = saved._id;
+    t.truthy(syncId);
+
+    const found = await swaggerSyncRepository.getByProjectId(projectId);
+    t.is(found.sync_json_url, "https://example.com/swagger.json");
+
+    await swaggerSyncRepository.upById(syncId, {
+      sync_json_url: "https://example.com/v2.json",
+    });
+    const updated = await swaggerSyncRepository.getByProjectId(projectId);
+    t.is(updated.sync_json_url, "https://example.com/v2.json");
+
+    const all = await swaggerSyncRepository.listAll();
+    t.true(all.some((row) => row._id === syncId));
+  } finally {
+    if (projectId) {
+      await swaggerSyncRepository.delByProjectId(projectId);
     }
     if (projectId) {
       await projectRepository.del(projectId);

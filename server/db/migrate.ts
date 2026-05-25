@@ -198,6 +198,62 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       edit_uid BIGINT NOT NULL DEFAULT 0
     )
   `,
+  adv_mock: `
+    CREATE TABLE IF NOT EXISTS ${tableName("adv_mock")} (
+      _id SERIAL PRIMARY KEY,
+      interface_id BIGINT NOT NULL DEFAULT 0,
+      project_id BIGINT NOT NULL DEFAULT 0,
+      uid BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      mock_script TEXT NOT NULL DEFAULT '',
+      enable BOOLEAN NOT NULL DEFAULT FALSE
+    )
+  `,
+  adv_mock_case: `
+    CREATE TABLE IF NOT EXISTS ${tableName("adv_mock_case")} (
+      _id SERIAL PRIMARY KEY,
+      interface_id BIGINT NOT NULL DEFAULT 0,
+      project_id BIGINT NOT NULL DEFAULT 0,
+      ip_enable BOOLEAN NOT NULL DEFAULT FALSE,
+      name TEXT NOT NULL DEFAULT '',
+      params JSONB NOT NULL DEFAULT '{}'::jsonb,
+      uid BIGINT NOT NULL DEFAULT 0,
+      code INTEGER NOT NULL DEFAULT 200,
+      delay INTEGER NOT NULL DEFAULT 0,
+      headers JSONB NOT NULL DEFAULT '[]'::jsonb,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      res_body TEXT NOT NULL DEFAULT '',
+      ip TEXT NOT NULL DEFAULT '',
+      case_enable BOOLEAN NOT NULL DEFAULT TRUE
+    )
+  `,
+  statis_mock: `
+    CREATE TABLE IF NOT EXISTS ${tableName("statis_mock")} (
+      _id SERIAL PRIMARY KEY,
+      interface_id BIGINT NOT NULL DEFAULT 0,
+      project_id BIGINT NOT NULL DEFAULT 0,
+      group_id BIGINT NOT NULL DEFAULT 0,
+      time BIGINT NOT NULL DEFAULT 0,
+      ip TEXT NOT NULL DEFAULT '',
+      date TEXT NOT NULL DEFAULT '',
+      up_time BIGINT NOT NULL DEFAULT 0
+    )
+  `,
+  interface_auto_sync: `
+    CREATE TABLE IF NOT EXISTS ${tableName("interface_auto_sync")} (
+      _id SERIAL PRIMARY KEY,
+      uid BIGINT NOT NULL DEFAULT 0,
+      project_id BIGINT NOT NULL DEFAULT 0,
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      is_sync_open BOOLEAN NOT NULL DEFAULT FALSE,
+      sync_cron TEXT NOT NULL DEFAULT '',
+      sync_json_url TEXT NOT NULL DEFAULT '',
+      sync_mode TEXT NOT NULL DEFAULT '',
+      old_swagger_content TEXT NOT NULL DEFAULT '',
+      last_sync_time BIGINT NOT NULL DEFAULT 0
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -255,16 +311,16 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_follow_uid_project ON ${tableName("follow")} (uid, projectid)`,
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_storage_key ON ${tableName("storage")} (key)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_wiki_pid ON ${tableName("wiki")} (project_id)`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_pid ON ${tableName("adv_mock")} ((doc->>'project_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_iid ON ${tableName("adv_mock")} ((doc->>'interface_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_case_pid ON ${tableName("adv_mock_case")} ((doc->>'project_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_case_iid ON ${tableName("adv_mock_case")} ((doc->>'interface_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_date ON ${tableName("statis_mock")} ((doc->>'date'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_pid ON ${tableName("statis_mock")} ((doc->>'project_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_gid ON ${tableName("statis_mock")} ((doc->>'group_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_iid ON ${tableName("statis_mock")} ((doc->>'interface_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_time ON ${tableName("statis_mock")} ((doc->>'time'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_auto_sync ON ${tableName("interface_auto_sync")} ((doc->>'project_id'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_pid ON ${tableName("adv_mock")} (project_id)`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_adv_mock_iid ON ${tableName("adv_mock")} (interface_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_case_pid ON ${tableName("adv_mock_case")} (project_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_case_iid ON ${tableName("adv_mock_case")} (interface_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_date ON ${tableName("statis_mock")} (date)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_pid ON ${tableName("statis_mock")} (project_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_gid ON ${tableName("statis_mock")} (group_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_iid ON ${tableName("statis_mock")} (interface_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_time ON ${tableName("statis_mock")} (time)`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_interface_auto_sync_pid ON ${tableName("interface_auto_sync")} (project_id)`,
   ];
   for (const sql of statements) {
     await pool.query(sql);
