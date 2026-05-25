@@ -67,6 +67,12 @@ export async function apiRequest<T>(
   return body;
 }
 
+export { interfaceApi } from "./interface";
+export { followApi } from "./follow";
+export { logApi } from "./log";
+export { projectApi } from "./project";
+export { groupApi } from "./group";
+
 export const userApi = {
   status: () => apiRequest("/user/status"),
   login: (email: string, password: string) =>
@@ -87,18 +93,3 @@ export const userApi = {
     }),
 };
 
-export const groupApi = {
-  /** 我的私人分组 */
-  myPrivate: () => apiRequest<import("./types").GroupItem>("/group/get_mygroup"),
-  /** 可见分组列表 */
-  list: () => apiRequest<import("./types").GroupItem[]>("/group/list"),
-  get: (id: number) => apiRequest<import("./types").GroupItem>(`/group/get?id=${id}`),
-};
-
-export const projectApi = {
-  listByGroup: (group_id: number) =>
-    apiRequest<{ list: import("./types").ProjectItem[] }>(
-      `/project/list?group_id=${group_id}`
-    ),
-  get: (id: number) => apiRequest(`/project/get?id=${id}`),
-};

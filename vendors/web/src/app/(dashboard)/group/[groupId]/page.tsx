@@ -6,8 +6,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { FolderKanban, Settings, Users } from "lucide-react";
+import { FolderKanban, Settings, Star, Users } from "lucide-react";
 import { groupApi, projectApi } from "../../../../lib/api/client";
+import { followApi } from "../../../../lib/api/follow";
 import type { GroupItem, ProjectItem } from "../../../../lib/api/types";
 import { GroupSidebar } from "../../../../components/group/group-sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
@@ -85,27 +86,54 @@ export default function GroupDetailPage() {
           <TabsContent value="projects" className="mt-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {projects.map((p) => (
-                <Link key={p._id} href={`/project/${p._id}/interface/api`}>
-                  <Card className="transition hover:border-[#2395f1]/50 hover:shadow-md">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-center justify-between">
+                <Card
+                  key={p._id}
+                  className="transition hover:border-[#2395f1]/50 hover:shadow-md"
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <Link
+                        href={`/project/${p._id}/interface/api`}
+                        className="min-w-0 flex-1 hover:text-[#2395f1]"
+                      >
                         <CardTitle className="text-base">{p.name}</CardTitle>
+                      </Link>
+                      <div className="flex shrink-0 items-center gap-1">
                         {p.color ? (
                           <span
                             className="h-3 w-3 rounded-full"
                             style={{ backgroundColor: p.color }}
                           />
                         ) : null}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          title="关注项目"
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            try {
+                              await followApi.add(p._id);
+                              console.log("已关注项目", p._id);
+                            } catch (err) {
+                              console.error("关注失败", err);
+                            }
+                          }}
+                        >
+                          <Star className="h-4 w-4" />
+                        </Button>
                       </div>
+                    </div>
                       <CardDescription className="line-clamp-2">
                         {p.desc || "暂无描述"}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <Badge variant="secondary">{p.project_type || "private"}</Badge>
+                      <Link href={`/project/${p._id}/interface/api`}>
+                        <Badge variant="secondary">{p.project_type || "private"}</Badge>
+                      </Link>
                     </CardContent>
                   </Card>
-                </Link>
               ))}
               {projects.length === 0 ? (
                 <Card className="col-span-full border-dashed">

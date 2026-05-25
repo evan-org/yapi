@@ -39,7 +39,73 @@ export interface ProjectItem {
   desc?: string;
   basepath?: string;
   group_id: number;
-  project_type?: string;
+  project_type?: "public" | "private";
   icon?: string;
   color?: string;
+  env?: unknown[];
+  [key: string]: unknown;
+}
+
+/** 接口分类 */
+export interface InterfaceCatItem {
+  _id: number;
+  name: string;
+  project_id: number;
+  desc?: string;
+  index?: number;
+  list: InterfaceListItem[];
+}
+
+/** 接口列表项 */
+export interface InterfaceListItem {
+  _id: number;
+  title: string;
+  path: string;
+  method: string;
+  catid: number;
+  project_id: number;
+  status?: string;
+  tag?: string[];
+}
+
+/** 接口详情 */
+export interface InterfaceDetail extends InterfaceListItem {
+  desc?: string;
+  markdown?: string;
+  req_params?: { name: string; example?: string; desc?: string }[];
+  req_query?: { name: string; value?: string; example?: string; desc?: string; required?: string }[];
+  req_headers?: { name: string; value?: string; example?: string; desc?: string; required?: string }[];
+  req_body_type?: string;
+  req_body_form?: unknown[];
+  req_body_other?: string;
+  res_body_type?: string;
+  res_body?: string;
+  username?: string;
+  up_time?: number;
+  add_time?: number;
+}
+
+export interface FollowItem {
+  _id: number;
+  uid: number;
+  projectid: number;
+  projectname?: string;
+  icon?: string;
+  color?: string;
+}
+
+export interface LogItem {
+  _id: number;
+  type: string;
+  typeid: number;
+  content: string;
+  username?: string;
+  add_time: number;
+  [key: string]: unknown;
+}
+
+export interface PaginatedList<T> {
+  count: number;
+  total: number;
+  list: T[];
 }
