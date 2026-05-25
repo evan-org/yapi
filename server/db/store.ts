@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * PostgreSQL JSONB 表访问
+ * PostgreSQL 整表 JSONB 访问（仅 JSONB_COLLECTIONS 使用，业务表已关系型化）
  */
 import { getPool } from "./pg-pool.js";
 import { buildWhere, type DocRecord } from "./where.js";
@@ -203,19 +203,6 @@ export class TableStore {
     return n;
   }
 
-  /** 统计插件：按 date 分组计数 */
-  async countByDateRange(start: string, end: string): Promise<DocRecord[]> {
-    const pool = getPool();
-    const res = await pool.query(
-      `SELECT doc->>'date' AS _id, COUNT(*)::int AS count
-       FROM ${this.tbl()}
-       WHERE doc->>'date' > $1 AND doc->>'date' <= $2
-       GROUP BY doc->>'date'
-       ORDER BY doc->>'date' ASC`,
-      [String(start), String(end)]
-    );
-    return res.rows;
-  }
 }
 
 export function getTable(name: string): TableStore {
