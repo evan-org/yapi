@@ -8,7 +8,7 @@ import type { InterfaceDetail } from "../../lib/api/types";
 import type { ProjectEnvItem } from "../../lib/api/types";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
+import { JsonCodeEditor } from "../shared/json-code-editor";
 import { Alert, AlertDescription } from "../ui/alert";
 
 export interface RunResponsePayload {
@@ -122,7 +122,7 @@ export function InterfaceRunPanel({ data, envs, onResult }: InterfaceRunPanelPro
         {loading ? "请求中…" : `发送 ${data.method || "GET"}`}
       </Button>
       {result ? (
-        <Textarea readOnly rows={12} className="font-mono text-xs" value={result} />
+        <JsonCodeEditor value={result} readOnly height={360} language="json" />
       ) : null}
     </div>
   );

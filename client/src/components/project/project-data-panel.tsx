@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { JsonCodeEditor } from "../shared/json-code-editor";
 import { Alert, AlertDescription } from "../ui/alert";
 
 interface ProjectDataPanelProps {
@@ -345,12 +346,12 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
             <option value="merge">完全覆盖</option>
           </select>
         </div>
-        <Textarea
-          rows={8}
-          placeholder="粘贴 JSON 或 Swagger URL"
+        <JsonCodeEditor
           value={importJson}
-          onChange={(e) => setImportJson(e.target.value)}
-          className="font-mono text-xs"
+          height={320}
+          language="json"
+          placeholder="粘贴 JSON 或 Swagger URL"
+          onChange={setImportJson}
         />
         <Button type="button" disabled={importing} onClick={handleImport}>
           {importing ? "导入中…" : "开始导入"}

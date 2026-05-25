@@ -6,7 +6,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { pluginApi } from "../../lib/api/plugin";
 import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
+import { MarkdownRichEditor } from "../shared/markdown-rich-editor";
+import { MarkdownPreview } from "../shared/markdown-preview";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
@@ -85,16 +86,16 @@ export function ProjectWikiPanel({ projectId }: ProjectWikiPanelProps) {
           </Alert>
         ) : null}
         {editing ? (
-          <Textarea
-            rows={16}
+          <MarkdownRichEditor
             value={markdown}
-            onChange={(e) => setMarkdown(e.target.value)}
-            className="font-mono text-sm"
+            onChange={setMarkdown}
+            height={360}
           />
         ) : (
-          <div className="prose prose-sm max-w-none whitespace-pre-wrap rounded border bg-muted/30 p-4 text-sm">
-            {markdown || "暂无 Wiki 内容，点击编辑开始编写。"}
-          </div>
+          <MarkdownPreview
+            content={markdown}
+            emptyHint="暂无 Wiki 内容，点击编辑开始编写。"
+          />
         )}
       </CardContent>
     </Card>

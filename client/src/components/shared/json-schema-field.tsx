@@ -13,7 +13,7 @@ import {
 import { JsonSchemaVisualEditor } from "./json-schema-visual-editor";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
+import { JsonCodeEditor } from "./json-code-editor";
 import { Alert, AlertDescription } from "../ui/alert";
 
 interface JsonSchemaFieldProps {
@@ -119,13 +119,12 @@ export function JsonSchemaField({
               disabled={disabled}
             />
           ) : (
-            <Textarea
-              className="font-mono text-xs"
-              rows={6}
-              readOnly={disabled}
-              placeholder='{"type":"object","properties":{...}}'
+            <JsonCodeEditor
               value={schemaText}
-              onChange={(e) => onSchemaTextChange(e.target.value)}
+              readOnly={disabled}
+              height={220}
+              onChange={disabled ? undefined : onSchemaTextChange}
+              placeholder='{"type":"object","properties":{...}}'
             />
           )}
           {!disabled ? (
@@ -139,7 +138,7 @@ export function JsonSchemaField({
             </Alert>
           ) : null}
           {preview ? (
-            <Textarea readOnly rows={6} className="font-mono text-xs bg-muted" value={preview} />
+            <JsonCodeEditor value={preview} readOnly height={180} />
           ) : null}
         </>
       ) : (

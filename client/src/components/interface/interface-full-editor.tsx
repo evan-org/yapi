@@ -19,6 +19,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { JsonCodeEditor } from "../shared/json-code-editor";
+import { MarkdownRichEditor } from "../shared/markdown-rich-editor";
+import { MarkdownPreview } from "../shared/markdown-preview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Alert, AlertDescription } from "../ui/alert";
 
@@ -342,11 +345,10 @@ export function InterfaceFullEditor({
                 </div>
                 <div className="space-y-2">
                   <Label>Markdown 文档</Label>
-                  <Textarea
-                    className="font-mono text-xs"
-                    rows={6}
+                  <MarkdownRichEditor
                     value={form.markdown}
-                    onChange={(e) => setForm((f) => ({ ...f, markdown: e.target.value }))}
+                    onChange={(markdown) => setForm((f) => ({ ...f, markdown }))}
+                    height={260}
                   />
                 </div>
               </>
@@ -357,9 +359,7 @@ export function InterfaceFullEditor({
                   <p className="text-xs text-muted-foreground">标签：{(data.tag || []).join(" · ")}</p>
                 ) : null}
                 {form.markdown || data.markdown ? (
-                  <pre className="rounded bg-muted p-3 text-xs whitespace-pre-wrap">
-                    {form.markdown || data.markdown}
-                  </pre>
+                  <MarkdownPreview content={form.markdown || data.markdown || ""} />
                 ) : null}
               </>
             )}
@@ -428,12 +428,17 @@ export function InterfaceFullEditor({
                     </pre>
                   )
                 ) : (
-                  <Textarea
-                    className="font-mono text-xs"
-                    rows={8}
-                    readOnly={!editing || !!editLock.conflict}
+                  <JsonCodeEditor
                     value={form.req_body_other}
-                    onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
+                    readOnly={!editing || !!editLock.conflict}
+                    height={280}
+                    language={form.req_body_type === "json" ? "json" : "javascript"}
+                    onChange={
+                      !editing || editLock.conflict
+                        ? undefined
+                        : (req_body_other) =>
+                            setForm((f) => ({ ...f, req_body_other }))
+                    }
                   />
                 )}
               </div>
@@ -461,12 +466,15 @@ export function InterfaceFullEditor({
               disabled={!editing || !!editLock.conflict}
             />
             {!form.res_body_is_json_schema ? (
-              <Textarea
-                className="font-mono text-xs"
-                rows={12}
-                readOnly={!editing || !!editLock.conflict}
+              <JsonCodeEditor
                 value={form.res_body}
-                onChange={(e) => setForm((f) => ({ ...f, res_body: e.target.value }))}
+                readOnly={!editing || !!editLock.conflict}
+                height={320}
+                onChange={
+                  !editing || editLock.conflict
+                    ? undefined
+                    : (res_body) => setForm((f) => ({ ...f, res_body }))
+                }
               />
             ) : null}
             {editing && !editLock.conflict ? (

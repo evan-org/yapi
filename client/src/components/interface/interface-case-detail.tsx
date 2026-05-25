@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { JsonCodeEditor } from "../shared/json-code-editor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Alert, AlertDescription } from "../ui/alert";
 
@@ -317,13 +318,15 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
             </div>
             <div className="space-y-2">
               <Label>Body</Label>
-              <Textarea
-                className="font-mono text-xs"
-                rows={8}
-                value={form.req_body_other}
-                onFocus={() => setInsertField("body")}
-                onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
-              />
+              <div onFocus={() => setInsertField("body")}>
+                <JsonCodeEditor
+                  value={form.req_body_other}
+                  height={280}
+                  onChange={(req_body_other) =>
+                    setForm((f) => ({ ...f, req_body_other }))
+                  }
+                />
+              </div>
             </div>
           </TabsContent>
           <TabsContent value="run" className="mt-4">

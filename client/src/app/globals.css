@@ -77,3 +77,18 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+/* @uiw/react-md-editor 与 shadcn 主题对齐 */
+.markdown-editor-root .w-md-editor {
+  --md-editor-bg-color: hsl(var(--background));
+  --md-editor-border-color: hsl(var(--border));
+  border-radius: calc(var(--radius) - 2px);
+  box-shadow: none;
+}
+.markdown-editor-root .w-md-editor-toolbar {
+  background: hsl(var(--muted));
+  border-color: hsl(var(--border));
+}
+.markdown-editor-root .w-md-editor-content {
+  background: hsl(var(--background));
+}
