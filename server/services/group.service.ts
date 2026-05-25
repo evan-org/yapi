@@ -5,7 +5,6 @@
 import yapi from "../runtime.js";
 import groupModel from "../models/group.js";
 import projectModel from "../models/project.js";
-import userModel from "../models/user.js";
 import interfaceModel from "../models/interface.js";
 import interfaceColModel from "../models/interfaceCol.js";
 import interfaceCaseModel from "../models/interfaceCase.js";
