@@ -1,16 +1,26 @@
 // @ts-nocheck
-const userModel = require("../models/user");
-const yapi = require("../yapi");
-const baseController = require("./base");
-const common = require("../utils/commons");
-const ldap = require("../utils/ldap");
+import userModel from '../models/user.js';
 
-const interfaceModel = require("../models/interface");
-const groupModel = require("../models/group");
-const projectModel = require("../models/project");
-const avatarModel = require("../models/avatar");
+import yapi from '../yapi.js';
 
-const jwt = require("jsonwebtoken");
+import baseController from './base.js';
+
+import common from '../utils/commons.js';
+
+import ldap from '../utils/ldap.js';
+
+
+import interfaceModel from '../models/interface.js';
+
+import groupModel from '../models/group.js';
+
+import projectModel from '../models/project.js';
+
+import avatarModel from '../models/avatar.js';
+
+
+import jwt from 'jsonwebtoken';
+
 
 class userController extends baseController {
   constructor(ctx) {
@@ -729,4 +739,4 @@ class userController extends baseController {
   }
 }
 
-module.exports = userController;
+export default userController;

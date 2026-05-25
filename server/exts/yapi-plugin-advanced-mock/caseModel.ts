@@ -1,7 +1,10 @@
 // @ts-nocheck
-const yapi = require("yapi.js");
-const baseModel = require("models/base");
-const  mongoose = require("mongoose");
+import yapi from 'yapi.js';
+
+import baseModel from 'models/base';
+
+import mongoose from 'mongoose';
+
 
 class caseModel extends baseModel {
   getName() {
@@ -74,4 +77,4 @@ class caseModel extends baseModel {
 
 }
 
-module.exports = caseModel;
+export default caseModel;

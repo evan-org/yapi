@@ -1,10 +1,16 @@
 // @ts-nocheck
-const logModel = require("../models/log");
-const yapi = require("../yapi");
-const baseController = require("./base");
-const groupModel = require("../models/group");
-const projectModel = require("../models/project");
-const interfaceModel = require("../models/interface");
+import logModel from '../models/log.js';
+
+import yapi from '../yapi.js';
+
+import baseController from './base.js';
+
+import groupModel from '../models/group.js';
+
+import projectModel from '../models/project.js';
+
+import interfaceModel from '../models/interface.js';
+
 
 class logController extends baseController {
   constructor(ctx) {
@@ -143,4 +149,4 @@ class logController extends baseController {
   }
 }
 
-module.exports = logController;
+export default logController;

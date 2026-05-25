@@ -1,8 +1,10 @@
 // @ts-nocheck
-const HttpRouter = require("./utils/httpRouter");
-const interfaceController = require("./controllers/interface");
-const yapi = require("./yapi");
-const { createAction } = require("./utils/commons");
+import HttpRouter from "./utils/httpRouter.js";
+import interfaceController from "./controllers/interface.js";
+import yapi from "./yapi.js";
+import { createAction } from "./utils/commons.js";
+import koaCtx from "./adapter/koa-context.js";
+
 
 const router = new HttpRouter();
 let pluginsRouterPath = [];
@@ -32,8 +34,7 @@ yapi.emitHookSync("add_ws_router", addPluginRouter);
  * @param {Function} upgradeWebSocket
  */
 function registerWebSocket(app, upgradeWebSocket) {
-  const koaCtx = require("./adapter/koa-context");
   router.registerWsToHono(app, upgradeWebSocket, koaCtx);
 }
 
-module.exports = registerWebSocket;
+export default registerWebSocket;

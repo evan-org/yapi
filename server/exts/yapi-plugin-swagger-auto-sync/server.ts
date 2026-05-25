@@ -1,9 +1,12 @@
 // @ts-nocheck
-const controller = require("./controller/syncController");
-const yapi = require("yapi.js");
-const interfaceSyncUtils = require("./interfaceSyncUtils");
+import controller from './controller/syncController.js';
 
-module.exports = function() {
+import yapi from 'yapi.js';
+
+import interfaceSyncUtils from './interfaceSyncUtils.js';
+
+
+export default function() {
   yapi.getInst(interfaceSyncUtils);
 
   this.bindHook("add_router", function(addRouter) {

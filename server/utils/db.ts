@@ -1,7 +1,10 @@
 // @ts-nocheck
-const mongoose = require("mongoose");
-const yapi = require("../yapi");
-const autoIncrement = require("./mongoose-auto-increment");
+import mongoose from 'mongoose';
+
+import yapi from '../yapi.js';
+
+import autoIncrement from './mongoose-auto-increment.js';
+
 
 function model(model, schema) {
   if (schema instanceof mongoose.Schema === false) {
@@ -78,7 +81,7 @@ function connect(callback) {
 
 yapi.db = model;
 
-module.exports = {
+export default {
   model: model,
   connect: connect
 };

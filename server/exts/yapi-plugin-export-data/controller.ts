@@ -1,17 +1,29 @@
 // @ts-nocheck
-const baseController = require("controllers/base");
-const interfaceModel = require("models/interface");
-const projectModel = require("models/project");
-// const wikiModel = require('../yapi-plugin-wiki/wikiModel');
-const interfaceCatModel = require("models/interfaceCat");
-const yapi = require("yapi.js");
-const markdownIt = require("markdown-it");
-const markdownItAnchor = require("markdown-it-anchor");
-const markdownItTableOfContents = require("markdown-it-table-of-contents");
-const defaultTheme = require("./defaultTheme");
-const md = require("../../common/markdown");
+import baseController from 'controllers/base';
 
-// const htmlToPdf = require("html-pdf");
+import interfaceModel from 'models/interface';
+
+import projectModel from 'models/project';
+
+// import wikiModel from '../yapi-plugin-wiki/wikiModel.js';
+
+import interfaceCatModel from 'models/interfaceCat';
+
+import yapi from "yapi.js";
+import wikiModel from "../yapi-plugin-wiki/wikiModel.js";
+import markdownIt from "markdown-it";
+
+import markdownItAnchor from 'markdown-it-anchor';
+
+import markdownItTableOfContents from 'markdown-it-table-of-contents';
+
+import defaultTheme from './defaultTheme.js';
+
+import md from '../../common/markdown.js';
+
+
+// import htmlToPdf from 'html-pdf';
+
 class exportController extends baseController {
   constructor(ctx) {
     super(ctx);
@@ -81,7 +93,6 @@ class exportController extends baseController {
     try {
       curProject = await this.projectModel.get(pid);
       if (isWiki === "true") {
-        const wikiModel = require("../yapi-plugin-wiki/wikiModel");
         wikiData = await yapi.getInst(wikiModel).get(pid);
       }
       ctx.set("Content-Type", "application/octet-stream");
@@ -185,4 +196,4 @@ class exportController extends baseController {
   }
 }
 
-module.exports = exportController;
+export default exportController;

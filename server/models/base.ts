@@ -1,7 +1,10 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const mongoose = require("mongoose");
-const autoIncrement = require("../utils/mongoose-auto-increment");
+import yapi from '../yapi.js';
+
+import mongoose from 'mongoose';
+
+import autoIncrement from '../utils/mongoose-auto-increment.js';
+
 
 /**
  * 所有的model都需要继承baseModel, 且需要 getSchema和getName方法，不然会报错
@@ -47,4 +50,4 @@ class baseModel {
   }
 }
 
-module.exports = baseModel;
+export default baseModel;

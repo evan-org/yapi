@@ -1,12 +1,20 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const projectModel = require("../models/project");
-const interfaceModel = require("../models/interface");
-const mockExtra = require("../common/mock-extra");
-const { schemaValidator } = require("../common/utils");
-const _ = require("underscore");
-const Mock = require("mockjs");
-const variable = require("../common/variable");
+import yapi from '../yapi.js';
+
+import projectModel from '../models/project.js';
+
+import interfaceModel from '../models/interface.js';
+
+import mockExtra from '../common/mock-extra.js';
+
+import { schemaValidator } from '../common/utils.js';
+
+import _ from 'underscore';
+
+import Mock from 'mockjs';
+
+import variable from '../common/variable.js';
+
 /**
  *
  * @param {*} apiPath /user/tom
@@ -351,4 +359,8 @@ async function mockServerMiddleware(ctx, next) {
 }
 
 mockServerMiddleware.matchApi = matchApi;
-module.exports = mockServerMiddleware;
+
+/** 供单测与外部复用的路径匹配工具 */
+export { matchApi };
+
+export default mockServerMiddleware;

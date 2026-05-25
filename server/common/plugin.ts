@@ -1,12 +1,20 @@
 // @ts-nocheck
-const _ = require("underscore");
+import path from "node:path";
+import _ from "underscore";
+import { createMetaRequire } from "../utils/esm-path.js";
+import { dirnameFromMeta } from "../utils/esm-path.js";
+
+const __dirname = dirnameFromMeta(import.meta);
+const requireDynamic = createMetaRequire(import.meta);
 
 function getPluginConfig(name, type) {
   let pluginConfig;
   if (type === "ext") {
-    pluginConfig = require("../exts/yapi-plugin-" + name);
+    pluginConfig = requireDynamic(
+      path.join(__dirname, "../exts/yapi-plugin-" + name)
+    );
   } else {
-    pluginConfig = require("yapi-plugin-" + name);
+    pluginConfig = requireDynamic("yapi-plugin-" + name);
   }
 
   if (!pluginConfig || typeof pluginConfig !== "object") {
@@ -15,15 +23,14 @@ function getPluginConfig(name, type) {
 
   return {
     server: pluginConfig.server,
-    client: pluginConfig.client
-  }
+    client: pluginConfig.client,
+  };
 }
 
-
 /**
-   * type @string enum[plugin, ext] plugin是外部插件，ext是内部插件
-   */
-exports.initPlugins = function(plugins, type) {
+ * type: plugin 外部插件 | ext 内置插件
+ */
+export function initPlugins(plugins, type) {
   if (!plugins) {
     return [];
   }
@@ -35,19 +42,17 @@ exports.initPlugins = function(plugins, type) {
     let pluginConfig;
     if (item && typeof item === "string") {
       pluginConfig = getPluginConfig(item, type);
-      return Object.assign({}, pluginConfig, { name: item, enable: true })
+      return Object.assign({}, pluginConfig, { name: item, enable: true });
     } else if (item && typeof item === "object") {
       pluginConfig = getPluginConfig(item.name, type);
-      return Object.assign({},
-        pluginConfig,
-        {
-          name: item.name,
-          options: item.options,
-          enable: item.enable !== false
-        })
+      return Object.assign({}, pluginConfig, {
+        name: item.name,
+        options: item.options,
+        enable: item.enable !== false,
+      });
     }
-  })
-  plugins = plugins.filter((item) => item.enable === true && (item.server || item.client))
+  });
+  plugins = plugins.filter((item) => item.enable === true && (item.server || item.client));
 
-  return _.uniq(plugins, (item) => item.name)
+  return _.uniq(plugins, (item) => item.name);
 }

@@ -2,7 +2,8 @@
 /**
  * 将 Hono Context 适配为 YApi 控制器沿用的 Koa 风格 ctx，减少业务层改动
  */
-const { getCookie, setCookie } = require("hono/cookie");
+import { getCookie, setCookie } from 'hono/cookie';
+
 
 /**
  * 解析请求体（JSON / form / multipart），对齐 koa-body 行为
@@ -172,7 +173,7 @@ async function finalizeKoaContext(c, ctx) {
   return c.json(ctx.body, status);
 }
 
-module.exports = {
+export default {
   createKoaContext,
   finalizeKoaContext,
   parseRequestBody,

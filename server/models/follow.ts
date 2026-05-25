@@ -1,5 +1,6 @@
 // @ts-nocheck
-const baseModel = require("./base");
+import baseModel from './base.js';
+
 
 class followModel extends baseModel {
   getName() {
@@ -82,4 +83,4 @@ class followModel extends baseModel {
   }
 }
 
-module.exports = followModel;
+export default followModel;

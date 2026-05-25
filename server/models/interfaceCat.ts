@@ -1,6 +1,8 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const baseModel = require("./base");
+import yapi from '../yapi.js';
+
+import baseModel from './base.js';
+
 
 /**
  * 接口分类
@@ -84,4 +86,4 @@ class interfaceCat extends baseModel {
   }
 }
 
-module.exports = interfaceCat;
+export default interfaceCat;

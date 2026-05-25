@@ -1,7 +1,8 @@
 // @ts-nocheck
 //
-const json5 = require("json5");
-module.exports = function(jsondiffpatch, formattersHtml, curDiffData) {
+import json5 from 'json5';
+
+export default function(jsondiffpatch, formattersHtml, curDiffData) {
   const json5_parse = (json) => {
     if (typeof json === "object" && json) {
       return json;

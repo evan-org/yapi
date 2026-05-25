@@ -1,6 +1,6 @@
 // @ts-nocheck
 import test from "ava";
-const {
+import {
   ApiCode,
   success,
   fail,
@@ -8,8 +8,10 @@ const {
   isApiEnvelope,
   normalizeEnvelope,
   finalizeResponse,
-  isRawResponsePath
-} = require("../../common/apiResponse");
+  isRawResponsePath,
+} from "../../common/apiResponse.js";
+import { resReturn } from "../../utils/commons.js";
+
 
 test("success 响应 errcode 为 0", (t) => {
   const body = success({ id: 1 });
@@ -55,7 +57,6 @@ test("finalizeResponse 跳过原始路径", (t) => {
 });
 
 test("resReturn 兼容 commons", (t) => {
-  const { resReturn } = require("../../utils/commons");
   const ok = resReturn({ a: 1 });
   t.is(ok.errcode, 0);
   const err = resReturn(null, 400, "参数错误");

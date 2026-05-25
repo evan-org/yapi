@@ -1,6 +1,8 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const baseModel = require("./base");
+import yapi from '../yapi.js';
+
+import baseModel from './base.js';
+
 
 class interfaceCol extends baseModel {
   getName() {
@@ -115,4 +117,4 @@ class interfaceCol extends baseModel {
   }
 }
 
-module.exports = interfaceCol;
+export default interfaceCol;

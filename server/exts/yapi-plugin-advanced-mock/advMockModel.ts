@@ -1,6 +1,8 @@
 // @ts-nocheck
-const yapi = require("yapi.js");
-const baseModel = require("models/base");
+import yapi from 'yapi.js';
+
+import baseModel from 'models/base';
+
 
 class advMockModel extends baseModel {
   getName() {
@@ -59,4 +61,4 @@ class advMockModel extends baseModel {
 
 }
 
-module.exports = advMockModel;
+export default advMockModel;

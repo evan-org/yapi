@@ -1,7 +1,8 @@
 // @ts-nocheck
-const yapi = require("../yapi")
+import yapi from '../yapi.js'
 
-const crypto = require("crypto");
+import crypto from 'crypto';
+
 
 /*
  下面是使用加密算法
@@ -42,13 +43,13 @@ const aseDecode = function(data, password) {
 
 const defaultSalt = "abcde";
 
-exports.getToken = function getToken(token, uid) {
+export function getToken(token, uid) {
   if (!token) {throw new Error("token 不能为空")}
   yapi.WEBCONFIG.passsalt = yapi.WEBCONFIG.passsalt || defaultSalt;
   return aseEncode(uid + "|" + token, yapi.WEBCONFIG.passsalt)
 }
 
-exports.parseToken = function parseToken(token) {
+export function parseToken(token) {
   if (!token) {throw new Error("token 不能为空")}
   yapi.WEBCONFIG.passsalt = yapi.WEBCONFIG.passsalt || defaultSalt;
   let tokens;

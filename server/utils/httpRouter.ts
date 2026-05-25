@@ -1,4 +1,6 @@
 // @ts-nocheck
+import yapi from "../yapi.js";
+
 /**
  * 兼容 koa-router API 的路由收集器，最终通过 registerToHono 挂载到 Hono。
  */
@@ -76,7 +78,7 @@ class HttpRouter {
   }
 }
 
-module.exports = HttpRouter;
+export default HttpRouter;
 
 /**
  * 将收集的路由注册到 Hono 应用
@@ -135,7 +137,7 @@ HttpRouter.prototype.registerWsToHono = function registerWsToHono(app, upgradeWe
           try {
             await route.handler(ctx);
           } catch (err) {
-            require("../yapi").commons.log(err, "error");
+            yapi.commons.log(err, "error");
             wsAdapter.send(JSON.stringify({ errcode: 404, errmsg: "No Fount." }));
           }
         },

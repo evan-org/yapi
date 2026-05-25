@@ -1,8 +1,12 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const baseController = require("./base");
-const followModel = require("../models/follow");
-const projectModel = require("../models/project");
+import yapi from '../yapi.js';
+
+import baseController from './base.js';
+
+import followModel from '../models/follow.js';
+
+import projectModel from '../models/project.js';
+
 
 class followController extends baseController {
   constructor(ctx) {
@@ -133,4 +137,4 @@ class followController extends baseController {
   }
 }
 
-module.exports = followController;
+export default followController;

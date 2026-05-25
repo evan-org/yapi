@@ -1,21 +1,36 @@
 // @ts-nocheck
-const projectModel = require("../models/project");
-const yapi = require("../yapi");
-const _ = require("underscore");
-const baseController = require("./base");
-const interfaceModel = require("../models/interface");
-const interfaceColModel = require("../models/interfaceCol");
-const interfaceCaseModel = require("../models/interfaceCase");
-const interfaceCatModel = require("../models/interfaceCat");
-const groupModel = require("../models/group");
-const commons = require("../utils/commons");
-const userModel = require("../models/user");
-const logModel = require("../models/log");
-const followModel = require("../models/follow");
-const tokenModel = require("../models/token");
-const {getToken} = require("../utils/token")
-const sha = require("sha.js");
-const axios = require("axios").default;
+import projectModel from '../models/project.js';
+
+import yapi from '../yapi.js';
+
+import _ from 'underscore';
+
+import baseController from './base.js';
+
+import interfaceModel from '../models/interface.js';
+
+import interfaceColModel from '../models/interfaceCol.js';
+
+import interfaceCaseModel from '../models/interfaceCase.js';
+
+import interfaceCatModel from '../models/interfaceCat.js';
+
+import groupModel from '../models/group.js';
+
+import commons from '../utils/commons.js';
+
+import userModel from '../models/user.js';
+
+import logModel from '../models/log.js';
+
+import followModel from '../models/follow.js';
+
+import tokenModel from '../models/token.js';
+
+import { getToken } from '../utils/token.js'
+import sha from 'sha.js';
+
+import axios from "axios";
 
 class projectController extends baseController {
   constructor(ctx) {
@@ -1133,4 +1148,4 @@ class projectController extends baseController {
   }
 }
 
-module.exports = projectController;
+export default projectController;

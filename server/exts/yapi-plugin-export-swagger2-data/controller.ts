@@ -1,9 +1,14 @@
 // @ts-nocheck
-const baseController = require("controllers/base");
-const interfaceModel = require("models/interface");
-const projectModel = require("models/project");
-const interfaceCatModel = require("models/interfaceCat");
-const yapi = require("yapi.js");
+import baseController from 'controllers/base';
+
+import interfaceModel from 'models/interface';
+
+import projectModel from 'models/project';
+
+import interfaceCatModel from 'models/interfaceCat';
+
+import yapi from 'yapi.js';
+
 
 
 class exportSwaggerController extends baseController {
@@ -284,4 +289,4 @@ class exportSwaggerController extends baseController {
   }
 }
 
-module.exports = exportSwaggerController;
+export default exportSwaggerController;

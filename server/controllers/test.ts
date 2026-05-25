@@ -1,8 +1,12 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const baseController = require("./base");
-const fs = require("fs"); // 引入文件模块
-const path = require("path");
+import yapi from '../yapi.js';
+
+import baseController from './base.js';
+
+import fs from 'fs';
+ // 引入文件模块
+import path from 'path';
+
 
 class interfaceColController extends baseController {
   constructor(ctx) {
@@ -240,4 +244,4 @@ class interfaceColController extends baseController {
   }
 }
 
-module.exports = interfaceColController;
+export default interfaceColController;

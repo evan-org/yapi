@@ -1,13 +1,16 @@
 // @ts-nocheck
-const schedule = require("node-schedule");
-const openController = require("controllers/open");
-const projectModel = require("models/project");
-const syncModel = require("./syncModel");
-const tokenModel = require("models/token");
-const yapi = require("yapi.js")
-const sha = require("sha.js");
-const md5 = require("md5");
-const { getToken } = require("utils/token");
+import schedule from 'node-schedule';
+
+import openController from "../../controllers/open.js";
+import projectModel from "../../models/project.js";
+import syncModel from "./syncModel.js";
+import tokenModel from "../../models/token.js";
+import yapi from "yapi.js";
+import sha from "sha.js";
+import md5 from "md5";
+import { getToken } from "../../utils/token.js";
+import axios from "axios";
+
 const jobMap = new Map();
 
 class syncUtils {
@@ -207,7 +210,6 @@ class syncUtils {
   }
 
   async getSwaggerContent(swaggerUrl) {
-    const axios = require("axios")
     try {
       let response = await axios.get(swaggerUrl);
       if (response.status > 400) {
@@ -222,4 +224,4 @@ class syncUtils {
 
 }
 
-module.exports = syncUtils;
+export default syncUtils;

@@ -1,14 +1,21 @@
 // @ts-nocheck
-const controller = require("./controller");
-const advModel = require("./advMockModel");
-const caseModel = require("./caseModel");
-const yapi = require("yapi.js");
-const mongoose = require("mongoose");
-const _ = require("underscore");
-const path = require("path");
-const lib = require(path.resolve(yapi.WEBROOT, "common/lib.js"));
-const Mock = require("mockjs");
-const mockExtra = require(path.resolve(yapi.WEBROOT, "common/mock-extra.js"));
+import controller from './controller.js';
+
+import advModel from './advMockModel.js';
+
+import caseModel from './caseModel.js';
+
+import yapi from 'yapi.js';
+
+import mongoose from 'mongoose';
+
+import _ from 'underscore';
+
+import path from 'path';
+
+import lib from "../../common/lib.js";
+import mockExtra from "../../common/mock-extra.js";
+import Mock from "mockjs";
 function arrToObj(arr) {
   let obj = { "Set-Cookie": [] };
   arr.forEach((item) => {
@@ -18,7 +25,7 @@ function arrToObj(arr) {
   });
   return obj;
 }
-module.exports = function() {
+export default function() {
   yapi.connect.then(function() {
     let Col = mongoose.connection.db.collection("adv_mock");
     Col.createIndex({

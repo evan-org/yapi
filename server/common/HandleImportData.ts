@@ -1,6 +1,8 @@
 // @ts-nocheck
-const _ = require("underscore");
-const axios = require("axios");
+import _ from 'underscore';
+
+import axios from 'axios';
+
 
 
 const isNode = typeof global == "object" && global.global === global;
@@ -157,4 +159,4 @@ async function handle(
   return await handleAddInterface(res);
 }
 
-module.exports = handle;
+export default handle;

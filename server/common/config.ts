@@ -1,5 +1,5 @@
 // @ts-nocheck
-module.exports = {
+export default {
   exts: [{
     name: "import-postman"
   }, {

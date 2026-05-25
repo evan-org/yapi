@@ -1,5 +1,5 @@
 // @ts-nocheck
-module.exports = {
+export default {
   server: true,
   client: false,
   httpCodes: [

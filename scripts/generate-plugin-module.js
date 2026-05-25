@@ -1,25 +1,34 @@
 /**
- * 根据 server/config.json 生成 client 插件注册表
+ * 根据 server/config.json 生成 client 插件注册表（ESM 加载 server/common/*.ts）
  */
 const fs = require("fs");
 const path = require("path");
+const { pathToFileURL } = require("url");
 
 const repoRoot = path.join(__dirname, "..");
 const serverRoot = path.join(repoRoot, "server");
 const outputFile = path.join(repoRoot, "client", "src", "lib", "plugins", "registry.ts");
 
-const commonLib = require(path.join(serverRoot, "common/plugin"));
-const { exts: systemConfigPlugin } = require(path.join(serverRoot, "common/config"));
+async function loadServerModules() {
+  const pluginUrl = pathToFileURL(path.join(serverRoot, "common/plugin.ts")).href;
+  const configUrl = pathToFileURL(path.join(serverRoot, "common/config.ts")).href;
+  const pluginMod = await import(pluginUrl);
+  const configMod = await import(configUrl);
+  return {
+    initPlugins: pluginMod.initPlugins,
+    systemConfigPlugin: configMod.default.exts,
+  };
+}
 
 /**
  * 收集已启用的插件名（含 server 或历史 client 标记）
  */
-function collectEnabledPluginNames(configPlugin, type) {
+function collectEnabledPluginNames(configPlugin, type, initPlugins) {
   const names = [];
   if (!configPlugin || !Array.isArray(configPlugin) || !configPlugin.length) {
     return names;
   }
-  const initialized = commonLib.initPlugins(configPlugin, type);
+  const initialized = initPlugins(configPlugin, type);
   initialized.forEach((plugin) => {
     if (plugin.enable !== false && (plugin.server || plugin.client)) {
       names.push(plugin.name);
@@ -28,15 +37,17 @@ function collectEnabledPluginNames(configPlugin, type) {
   return names;
 }
 
-function generate() {
+async function generate() {
+  const { initPlugins, systemConfigPlugin } = await loadServerModules();
+
   let configPlugins = [];
   const configPath = path.join(serverRoot, "config.json");
   if (fs.existsSync(configPath)) {
-    configPlugins = require(configPath).plugins || [];
+    configPlugins = JSON.parse(fs.readFileSync(configPath, "utf8")).plugins || [];
   }
 
-  const fromConfig = collectEnabledPluginNames(configPlugins, "plugin");
-  const fromExts = collectEnabledPluginNames(systemConfigPlugin, "ext");
+  const fromConfig = collectEnabledPluginNames(configPlugins, "plugin", initPlugins);
+  const fromExts = collectEnabledPluginNames(systemConfigPlugin, "ext", initPlugins);
   const allNames = [...new Set([...fromConfig, ...fromExts])];
 
   const body = `/**
@@ -77,4 +88,7 @@ export const pluginRegistry: PluginRegistry = {};
   console.log(`[generate-plugin-registry] 已写入 ${outputFile} (${allNames.length} 个插件)`);
 }
 
-generate();
+generate().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

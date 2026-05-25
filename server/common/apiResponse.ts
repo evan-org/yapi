@@ -163,7 +163,22 @@ function finalizeResponse(path, body) {
   return success(body);
 }
 
-module.exports = {
+export {
+  ApiCode,
+  DEFAULT_SUCCESS_MSG,
+  RAW_RESPONSE_PATH_PREFIXES,
+  isApiEnvelope,
+  isRawResponsePath,
+  isSuccess,
+  createResponse,
+  success,
+  fail,
+  normalizeEnvelope,
+  finalizeResponse
+};
+
+/** 默认导出，兼容历史 `import apiResponse from '...'` */
+export default {
   ApiCode,
   DEFAULT_SUCCESS_MSG,
   RAW_RESPONSE_PATH_PREFIXES,

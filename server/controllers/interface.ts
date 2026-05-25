@@ -1,24 +1,42 @@
 // @ts-nocheck
-const interfaceModel = require("../models/interface");
-const interfaceCatModel = require("../models/interfaceCat");
-const interfaceCaseModel = require("../models/interfaceCase");
-const followModel = require("../models/follow");
-const groupModel = require("../models/group");
-const _ = require("underscore");
-const url = require("url");
-const baseController = require("./base");
-const yapi = require("../yapi");
-const userModel = require("../models/user");
-const projectModel = require("../models/project");
-const jsondiffpatch = require("jsondiffpatch");
-const formattersHtml = jsondiffpatch.formatters.html;
-const showDiffMsg = require("../common/diff-view");
-const mergeJsonSchema = require("../common/mergeJsonSchema");
-const fs = require("fs-extra");
-const path = require("path");
+import interfaceModel from '../models/interface.js';
 
-// const annotatedCss = require("jsondiffpatch/public/formatters-styles/annotated.css");
-// const htmlCss = require("jsondiffpatch/public/formatters-styles/html.css");
+import interfaceCatModel from '../models/interfaceCat.js';
+
+import interfaceCaseModel from '../models/interfaceCase.js';
+
+import followModel from '../models/follow.js';
+
+import groupModel from '../models/group.js';
+
+import _ from 'underscore';
+
+import url from 'url';
+
+import baseController from './base.js';
+
+import yapi from '../yapi.js';
+
+import userModel from '../models/user.js';
+
+import projectModel from '../models/project.js';
+
+import jsondiffpatch from 'jsondiffpatch';
+
+const formattersHtml = jsondiffpatch.formatters.html;
+import showDiffMsg from '../common/diff-view.js';
+
+import mergeJsonSchema from '../common/mergeJsonSchema.js';
+
+import fs from 'fs-extra';
+
+import path from 'path';
+
+
+// import annotatedCss from 'jsondiffpatch/public/formatters-styles/annotated.css';
+
+// import htmlCss from 'jsondiffpatch/public/formatters-styles/html.css';
+
 
 
 function handleHeaders(values) {
@@ -1261,4 +1279,4 @@ class interfaceController extends baseController {
   }
 }
 
-module.exports = interfaceController;
+export default interfaceController;

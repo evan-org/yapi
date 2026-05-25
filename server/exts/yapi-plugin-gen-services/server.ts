@@ -1,10 +1,13 @@
 // @ts-nocheck
-const controller = require("./controller");
+import controller from './controller.js';
 
-// const mongoose = require('mongoose');
-// const _ = require('underscore');
 
-module.exports = function() {
+// import mongoose from 'mongoose';
+
+// import _ from 'underscore';
+
+
+export default function() {
   this.bindHook("add_router", function(addRouter) {
     // @feat: serives
     addRouter({

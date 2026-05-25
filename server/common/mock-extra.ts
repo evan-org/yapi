@@ -6,7 +6,8 @@
 let strRegex = /\${([a-zA-Z]+)\.?([a-zA-Z0-9_\.]*)\}/i;
 let varSplit = ".";
 let mockSplit = "|";
-let Mock = require("mockjs");
+import Mock from 'mockjs';
+
 Mock.Random.extend({
   timestamp: function() {
     let time = new Date().getTime() + "";
@@ -93,4 +94,4 @@ function mock(mockJSON, context) {
   }
 }
 
-module.exports = mock;
+export default mock;

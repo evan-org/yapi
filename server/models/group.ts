@@ -1,6 +1,8 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const baseModel = require("./base");
+import yapi from '../yapi.js';
+
+import baseModel from './base.js';
+
 
 class groupModel extends baseModel {
   getName() {
@@ -209,4 +211,4 @@ class groupModel extends baseModel {
   }
 }
 
-module.exports = groupModel;
+export default groupModel;

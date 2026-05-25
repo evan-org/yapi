@@ -1,15 +1,25 @@
 // @ts-nocheck
-const baseController = require("controllers/base");
-const wikiModel = require("./wikiModel");
-const projectModel = require("models/project");
-const userModel = require("models/user");
-const jsondiffpatch = require("jsondiffpatch");
+import baseController from 'controllers/base';
+
+import wikiModel from './wikiModel.js';
+
+import projectModel from 'models/project';
+
+import userModel from 'models/user';
+
+import jsondiffpatch from 'jsondiffpatch';
+
 const formattersHtml = jsondiffpatch.formatters.html;
-const yapi = require("yapi.js");
-// const util = require('./util');
-const fs = require("fs-extra");
-const path = require("path");
-const showDiffMsg = require("../../common/diff-view");
+import yapi from 'yapi.js';
+
+// import util from './util.js';
+
+import fs from 'fs-extra';
+
+import path from 'path';
+
+import showDiffMsg from '../../common/diff-view.js';
+
 class wikiController extends baseController {
   constructor(ctx) {
     super(ctx);
@@ -230,4 +240,4 @@ class wikiController extends baseController {
   }
 }
 
-module.exports = wikiController;
+export default wikiController;

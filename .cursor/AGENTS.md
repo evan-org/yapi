@@ -9,7 +9,7 @@
 ## 路径约定
 
 - `yapi.WEBROOT` = `server/` 目录
-- 配置：`server/config.json`
+- 配置：`server/config.json`；后端源码为 **TypeScript**（`*.ts`），`npm run dev` 使用 `tsx` + `nodemon`
 - 插件：`server/exts/`
 - Docker：`deploy/docker-compose.yml`（构建 context 为仓库根）
 - 前端 API：`client/src/lib/api/`

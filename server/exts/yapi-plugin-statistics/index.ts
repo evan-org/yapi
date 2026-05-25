@@ -2,7 +2,7 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-module.exports = {
+export default {
   server: true,
   client: false,
   httpCodes: [

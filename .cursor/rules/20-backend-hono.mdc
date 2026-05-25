@@ -5,9 +5,9 @@ globs: server/**/*
 
 # 后端（server/）
 
-- 入口：`server/app.ts`（开发 `tsx` / 生产 `tsx` 或 `node dist/app.js`）
-- 源码为 TypeScript（`*.ts`），编译输出 `server/dist/`
+- 入口：`server/app.ts`（**ESM** + `import` 语法；开发/生产 `tsx` 或 `node dist/app.js`）
+- 源码为 TypeScript（`*.ts`），`package.json` 含 `"type": "module"`，编译输出 `server/dist/`
 - 配置：`server/config.json`
-- `WEBROOT` = `server/` 目录（`__dirname` of yapi.js）
-- 新路由：`server/router.js` + `server/controllers/`
+- `WEBROOT` = `server/` 目录（`yapi.ts` 自动识别 `dist/` 编译目录）
+- 新路由：`server/router.ts` + `server/controllers/*.ts`
 - 测试：`npm run test:server`（在仓库根目录）

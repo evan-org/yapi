@@ -1,6 +1,7 @@
 // @ts-nocheck
 import test from "ava";
-const mockExtra = require("../common/mock-extra");
+import mockExtra from '../common/mock-extra.js';
+
 
 
 test("mock-extra", (t) => {

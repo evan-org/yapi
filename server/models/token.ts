@@ -1,6 +1,8 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const baseModel = require("./base");
+import yapi from '../yapi.js';
+
+import baseModel from './base.js';
+
 
 class tokenModel extends baseModel {
   getName() {
@@ -46,4 +48,4 @@ class tokenModel extends baseModel {
   }
 }
 
-module.exports = tokenModel;
+export default tokenModel;

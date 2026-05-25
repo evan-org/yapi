@@ -1,10 +1,16 @@
 // @ts-nocheck
-const baseController = require("controllers/base");
-const advModel = require("./advMockModel");
-const yapi = require("yapi.js");
-const caseModel = require("./caseModel");
-const userModel = require("models/user");
-const config = require("./index");
+import baseController from 'controllers/base';
+
+import advModel from './advMockModel.js';
+
+import yapi from 'yapi.js';
+
+import caseModel from './caseModel.js';
+
+import userModel from 'models/user';
+
+import config from './index.js';
+
 
 class advMockController extends baseController {
   constructor(ctx) {
@@ -184,4 +190,4 @@ class advMockController extends baseController {
   }
 }
 
-module.exports = advMockController;
+export default advMockController;

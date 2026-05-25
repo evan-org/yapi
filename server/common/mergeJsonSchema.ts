@@ -30,6 +30,6 @@ function handleSchema(source, merge) {
   return result;
 }
 
-module.exports = function(sourceJsonSchema, mergeJsonSchema) {
+export default function(sourceJsonSchema, mergeJsonSchema) {
   return handleSchema(sourceJsonSchema, mergeJsonSchema)
 }

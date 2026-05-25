@@ -2,10 +2,11 @@
 /**
  * Hono 应用基础冒烟测试
  */
-const test = require("ava");
+import test from "ava";
+import HttpRouter from "../../utils/httpRouter.js";
+import koaCtx from "../../adapter/koa-context.js";
 
 test("httpRouter 提供 Hono 注册方法", (t) => {
-  const HttpRouter = require("../../utils/httpRouter");
   const router = new HttpRouter();
   t.is(typeof router.registerToHono, "function");
   t.is(typeof router.registerWsToHono, "function");
@@ -13,7 +14,6 @@ test("httpRouter 提供 Hono 注册方法", (t) => {
 });
 
 test("koa-context 适配器可加载", (t) => {
-  const koaCtx = require("../../adapter/koa-context");
   t.is(typeof koaCtx.createKoaContext, "function");
   t.is(typeof koaCtx.finalizeKoaContext, "function");
 });

@@ -1,8 +1,9 @@
 // @ts-nocheck
-const _ = require("underscore");
+import _ from 'underscore';
+
 let fieldNum = 1;
 
-exports.schemaTransformToTable = (schema) => {
+export const schemaTransformToTable = (schema) => {
   try {
     schema = checkJsonSchema(schema);
     let result = Schema(schema, 0);

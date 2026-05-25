@@ -1,12 +1,13 @@
 // @ts-nocheck
 // Module Scope
-let mongoose = require("mongoose"),
-  extend = require("extend"),
-  counterSchema,
-  IdentityCounter;
+import mongoose from "mongoose";
+import extend from "extend";
+
+let counterSchema;
+let IdentityCounter;
 
 // Initialize plugin by creating counter collection in database.
-exports.initialize = function(connection) {
+export const initialize = function(connection) {
   try {
     IdentityCounter = mongoose.model("IdentityCounter");
   } catch (ex) {
@@ -28,7 +29,7 @@ exports.initialize = function(connection) {
 };
 
 // The function to use when invoking the plugin on a custom schema.
-exports.plugin = function(schema, options) {
+export const plugin = function(schema, options) {
 
   // If we don't have reference to the counterSchema or the IdentityCounter model then the plugin was most likely not
   // initialized properly so throw an error.
@@ -170,3 +171,7 @@ exports.plugin = function(schema, options) {
     else {next();}
   });
 };
+
+/** ESM 默认导出，供 models/base、utils/db 等 `import autoIncrement from '...'` 使用 */
+const mongooseAutoIncrement = { initialize, plugin };
+export default mongooseAutoIncrement;

@@ -1,5 +1,6 @@
 // @ts-nocheck
-const _ = require("underscore");
+import _ from 'underscore';
+
 
 function isObj(object) {
   return (
@@ -73,9 +74,9 @@ function CompareObj(objA, objB, flag) {
   return flag;
 }
 
-exports.jsonEqual = Compare;
+export { Compare as jsonEqual };
 
-exports.isDeepMatch = function(obj, properties) {
+export const isDeepMatch = function(obj, properties) {
 
   if (!properties || typeof properties !== "object" || Object.keys(properties).length === 0) {
     return true;

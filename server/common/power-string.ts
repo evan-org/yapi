@@ -9,9 +9,11 @@ const segmentSeparateChar = "|";
 const methodAndArgsSeparateChar = ":";
 const argsSeparateChar = ",";
 
-const md5 = require("md5");
-const sha = require("sha.js");
-const Base64 = require("js-base64").Base64;
+import md5 from 'md5';
+
+import sha from 'sha.js';
+
+import { Base64 } from "js-base64";
 
 const stringHandles = {
   md5: function(str) {
@@ -188,7 +190,7 @@ function handleSegment(str, index) {
   };
 }
 
-module.exports = {
+export default {
   utils: stringHandles,
   PowerString,
   /**

@@ -3,8 +3,11 @@
   "version": "1.11.0",
   "description": "YApi Hono API 服务",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "main": "app.ts",
+  "imports": {
+    "#yapi": "./yapi.ts"
+  },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon",
     "start": "cross-env NODE_ENV=production tsx app.ts",
@@ -12,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "install-server": "tsx install.ts",
     "pretest": "npm run build",
-    "test": "cross-env YAPI_ENV=test node ../node_modules/ava/cli.js dist/test/**/*.test.js",
+    "test": "cross-env YAPI_ENV=test NODE_OPTIONS=--experimental-vm-modules node ../node_modules/ava/cli.js dist/test/**/*.test.js",
     "npm-publish": "tsx npm-publish.ts"
   },
   "license": "Apache-2.0",

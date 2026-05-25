@@ -1,6 +1,8 @@
 // @ts-nocheck
-const baseModel = require("./base");
-const mongoose = require("mongoose");
+import baseModel from './base.js';
+
+import mongoose from 'mongoose';
+
 
 class stroageModel extends baseModel {
   constructor() {
@@ -68,4 +70,4 @@ class stroageModel extends baseModel {
   }
 }
 
-module.exports = stroageModel;
+export default stroageModel;

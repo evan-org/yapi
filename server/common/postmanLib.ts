@@ -1,15 +1,28 @@
 // @ts-nocheck
-const { isJson5, json_parse, handleJson, joinPath, safeArray } = require("./utils");
-const constants = require("./variable");
-const _ = require("underscore");
-const URL = require("url");
-const utils = require("./power-string").utils;
+import { isJson5, json_parse, handleJson, joinPath, safeArray } from './utils.js';
+
+import constants from './variable.js';
+
+import _ from 'underscore';
+
+import URL from 'url';
+
+import powerString from "./power-string.js";
+
+const utils = powerString.utils;
 const HTTP_METHOD = constants.HTTP_METHOD;
-const axios = require("axios");
-const qs = require("qs");
-const CryptoJS = require("crypto-js");
-const jsrsasign = require("jsrsasign");
-const https = require("https");
+import axios from 'axios';
+
+import qs from 'qs';
+
+import CryptoJS from 'crypto-js';
+
+import jsrsasign from 'jsrsasign';
+
+import https from "https";
+import vm from "node:vm";
+import yapi from "../yapi.js";
+
 
 const isNode = typeof global == "object" && global.global === global;
 const ContentTypeMap = {
@@ -177,7 +190,6 @@ function handleCurrDomain(domains, case_env) {
 }
 
 function sandboxByNode(sandbox = {}, script) {
-  const vm = require("vm");
   script = new vm.Script(script);
   const context = new vm.createContext(sandbox);
   script.runInContext(context, {
@@ -303,7 +315,6 @@ async function crossRequest(defaultOptions, preScript, afterScript, commonContex
 
   let scriptEnable = false;
   try {
-    const yapi = require("../server/yapi");
     scriptEnable = yapi.WEBCONFIG.scriptEnable === true;
   } catch (err) {}
 
@@ -478,9 +489,11 @@ function handleParams(interfaceData, handleValue, requestParams) {
   return requestOptions;
 }
 
-exports.checkRequestBodyIsRaw = checkRequestBodyIsRaw;
-exports.handleParams = handleParams;
-exports.handleContentType = handleContentType;
-exports.crossRequest = crossRequest;
-exports.handleCurrDomain = handleCurrDomain;
-exports.checkNameIsExistInArray = checkNameIsExistInArray;
+export {
+  checkRequestBodyIsRaw,
+  handleParams,
+  handleContentType,
+  crossRequest,
+  handleCurrDomain,
+  checkNameIsExistInArray,
+};

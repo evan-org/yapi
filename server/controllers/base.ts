@@ -1,13 +1,21 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const projectModel = require("../models/project");
-const userModel = require("../models/user");
-const interfaceModel = require("../models/interface");
-const groupModel = require("../models/group");
-const tokenModel = require("../models/token");
-const _ = require("underscore");
-const jwt = require("jsonwebtoken");
-const {parseToken} = require("../utils/token")
+import yapi from '../yapi.js';
+
+import projectModel from '../models/project.js';
+
+import userModel from '../models/user.js';
+
+import interfaceModel from '../models/interface.js';
+
+import groupModel from '../models/group.js';
+
+import tokenModel from '../models/token.js';
+
+import _ from 'underscore';
+
+import jwt from 'jsonwebtoken';
+
+import { parseToken } from '../utils/token.js'
 
 class baseController {
   constructor(ctx) {
@@ -315,4 +323,4 @@ class baseController {
   }
 }
 
-module.exports = baseController;
+export default baseController;

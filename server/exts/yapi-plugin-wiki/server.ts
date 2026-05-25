@@ -1,9 +1,12 @@
 // @ts-nocheck
-const yapi = require("yapi.js");
-const mongoose = require("mongoose");
-const controller = require("./controller");
+import yapi from 'yapi.js';
 
-module.exports = function() {
+import mongoose from 'mongoose';
+
+import controller from './controller.js';
+
+
+export default function() {
   yapi.connect.then(function() {
     let Col = mongoose.connection.db.collection("wiki");
     Col.createIndex({

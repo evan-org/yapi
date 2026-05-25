@@ -1,9 +1,9 @@
 // @ts-nocheck
-const baseController = require("controllers/base");
-const yapi = require("yapi.js");
-const syncModel = require("../syncModel");
-const projectModel = require("models/project");
-const interfaceSyncUtils = require("../interfaceSyncUtils")
+import baseController from "../../../controllers/base.js";
+import yapi from "yapi.js";
+import syncModel from "../syncModel.js";
+import projectModel from "../../../models/project.js";
+import interfaceSyncUtils from "../interfaceSyncUtils.js";
 
 class syncController extends baseController {
   constructor(ctx) {
@@ -60,4 +60,4 @@ class syncController extends baseController {
 }
 
 
-module.exports = syncController;
+export default syncController;

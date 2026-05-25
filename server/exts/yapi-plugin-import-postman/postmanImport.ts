@@ -1,9 +1,13 @@
 // @ts-nocheck
 
-const URL = require("url");
-const _ = require("underscore");
-const GenerateSchema = require("generate-schema/src/schemas/json.js");
-const { json_parse } = require("../../common/utils");
+import URL from 'url';
+
+import _ from 'underscore';
+
+import GenerateSchema from 'generate-schema/src/schemas/json.js';
+
+import { json_parse } from '../../common/utils.js';
+
 
 function postman(importDataModule) {
   let folders = [];
@@ -262,4 +266,4 @@ function postman(importDataModule) {
 }
 
 /** 服务端注册 Postman 导入解析 */
-module.exports = postman;
+export default postman;

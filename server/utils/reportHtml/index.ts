@@ -1,5 +1,6 @@
 // @ts-nocheck
-const defaultTheme = require("./defaultTheme");
+import defaultTheme from './defaultTheme.js';
+
 
 function json_format(json) {
   if (json && typeof json === "object") {
@@ -8,7 +9,7 @@ function json_format(json) {
   return json;
 }
 
-module.exports = function renderToHtml(reports) {
+export default function renderToHtml(reports) {
   let tp = createHtml(reports);
   return tp;
 };

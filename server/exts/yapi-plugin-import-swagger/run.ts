@@ -1,7 +1,9 @@
 // @ts-nocheck
-const _ = require("underscore")
-const swagger = require("swagger-client");
-const compareVersions = require("compare-versions");
+import _ from "underscore";
+import swagger from 'swagger-client';
+
+import compareVersions from 'compare-versions';
+
 
 let SwaggerData, isOAS3;
 function handlePath(path) {
@@ -316,4 +318,4 @@ function handleResponse(api) {
 }
 
 
-module.exports = run;
+export default run;

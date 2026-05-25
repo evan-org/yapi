@@ -1,34 +1,36 @@
 // @ts-nocheck
 /**
- * YApi 服务入口（Hono + Node）
+ * YApi 服务入口（Hono + Node，ESM）
  * 仅提供 API / WebSocket / 公共资源；页面由 Next.js（client）承载
  */
-process.env.NODE_PATH = __dirname;
-require("module").Module._initPaths();
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
+import { Hono } from "hono";
+import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
+import { createNodeWebSocket } from "@hono/node-ws";
+import yapi from "./yapi.js";
+import commons from "./utils/commons.js";
+import dbModule from "./utils/db.js";
+import mockServerHono from "./middleware/mockServerHono.js";
+import storageCreator from "./utils/storage.js";
+import koaCtx from "./adapter/koa-context.js";
+import { assertRuntimeConfig } from "./utils/configCheck.js";
+import apiRouter from "./router.js";
+import registerWebSocket from "./websocket.js";
 
-const path = require("path");
-const { Hono } = require("hono");
-const { serve } = require("@hono/node-server");
-const { serveStatic } = require("@hono/node-server/serve-static");
-const { createNodeWebSocket } = require("@hono/node-ws");
-
-const yapi = require("./yapi");
-const commons = require("./utils/commons");
-const dbModule = require("./utils/db");
-const mockServerHono = require("./middleware/mockServerHono");
-const storageCreator = require("./utils/storage");
-const koaCtx = require("./adapter/koa-context");
-const { assertRuntimeConfig } = require("./utils/configCheck");
+const pkg = JSON.parse(
+  readFileSync(path.join(yapi.WEBROOT_SERVER, "package.json"), "utf8")
+);
 
 yapi.commons = commons;
 yapi.connect = dbModule.connect();
-require("./plugin");
-require("./utils/notice");
 
-const apiRouter = require("./router");
-const registerWebSocket = require("./websocket");
+import "./plugin.js";
+import "./utils/notice.js";
 
-global.storageCreator = storageCreator;
+globalThis.storageCreator = storageCreator;
 
 const publicRoot = path.join(yapi.WEBROOT, "public");
 const isDev = process.argv[2] === "dev";
@@ -67,7 +69,7 @@ async function startServer() {
       status: "ok",
       framework: "hono",
       frontend: "nextjs",
-      version: require("../package.json").version,
+      version: pkg.version,
     })
   );
 
@@ -133,11 +135,15 @@ async function startServer() {
   return app;
 }
 
-module.exports = { startServer };
+const isEntry =
+  process.argv[1] &&
+  fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 
-if (require.main === module) {
+if (isEntry) {
   startServer().catch((err) => {
     commons.log(err, "error");
     process.exit(1);
   });
 }
+
+export default { startServer };

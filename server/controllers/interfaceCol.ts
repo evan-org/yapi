@@ -1,11 +1,18 @@
 // @ts-nocheck
-const interfaceColModel = require("../models/interfaceCol");
-const interfaceCaseModel = require("../models/interfaceCase");
-const interfaceModel = require("../models/interface");
-const projectModel = require("../models/project");
-const baseController = require("./base");
-const yapi = require("../yapi");
-const _ = require("underscore");
+import interfaceColModel from '../models/interfaceCol.js';
+
+import interfaceCaseModel from '../models/interfaceCase.js';
+
+import interfaceModel from '../models/interface.js';
+
+import projectModel from '../models/project.js';
+
+import baseController from './base.js';
+
+import yapi from '../yapi.js';
+
+import _ from 'underscore';
+
 
 class interfaceColController extends baseController {
   constructor(ctx) {
@@ -866,4 +873,4 @@ class interfaceColController extends baseController {
   }
 }
 
-module.exports = interfaceColController;
+export default interfaceColController;

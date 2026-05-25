@@ -1,5 +1,9 @@
 // @ts-nocheck
-const yapi = require("../yapi");
+import yapi from "../yapi.js";
+import projectModel from "../models/project.js";
+import userModel from "../models/user.js";
+import followModel from "../models/follow.js";
+
 
 function arrUnique(arr1, arr2) {
   let arr = arr1.concat(arr2);
@@ -24,11 +28,7 @@ const noticeObj = {
 
 yapi.emitHook("addNotice", noticeObj)
 
-yapi.commons.sendNotice = async function(projectId, data) {
-  const projectModel = require("../models/project");
-  const userModel = require("../models/user");
-  const followModel = require("../models/follow");
-
+yapi.commons.sendNotice = async function (projectId, data) {
   const followInst = yapi.getInst(followModel);
   const userInst = yapi.getInst(userModel);
   const projectInst = yapi.getInst(projectModel);

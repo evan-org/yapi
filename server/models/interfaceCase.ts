@@ -1,7 +1,10 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const baseModel = require("./base");
-let mongoose = require("mongoose");
+import yapi from '../yapi.js';
+
+import baseModel from './base.js';
+
+import mongoose from 'mongoose';
+
 let Schema = mongoose.Schema;
 
 class interfaceCase extends baseModel {
@@ -133,4 +136,4 @@ class interfaceCase extends baseModel {
   }
 }
 
-module.exports = interfaceCase;
+export default interfaceCase;

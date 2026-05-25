@@ -1,10 +1,10 @@
 /**
- * 无官方类型或 CJS 模块声明
+ * 无官方类型或 CJS 遗留模块声明（ESM default export）
  */
 declare module "yapi.js" {
-  import type { YapiRuntime } from "./global";
+  import type { YapiRuntime } from "./global.js";
   const yapi: YapiRuntime;
-  export = yapi;
+  export default yapi;
 }
 
 declare module "mockjs";
@@ -23,12 +23,12 @@ declare module "swagger-client";
 declare module "markdown-it-anchor";
 declare module "markdown-it-table-of-contents";
 declare module "html-pdf";
-declare module "json5" {
-  const json5: { parse: (text: string) => unknown; stringify: (v: unknown) => string };
-  export = json5;
-}
+declare module "extend";
 
-declare module "*/config.json" {
-  const value: import("./global").YapiWebConfig;
-  export = value;
+declare module "json5" {
+  const json5: {
+    parse: (text: string) => unknown;
+    stringify: (v: unknown) => string;
+  };
+  export default json5;
 }

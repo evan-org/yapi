@@ -1,27 +1,51 @@
 // @ts-nocheck
-const fs = require("fs-extra");
-const path = require("path");
-const yapi = require("../yapi");
-const sha1 = require("sha1");
-const logModel = require("../models/log");
-const projectModel = require("../models/project");
-const interfaceColModel = require("../models/interfaceCol");
-const interfaceCaseModel = require("../models/interfaceCase");
-const interfaceModel = require("../models/interface");
-const userModel = require("../models/user");
-const followModel = require("../models/follow");
-const json5 = require("json5");
-const _ = require("underscore");
-const Ajv = require("ajv");
-const Mock = require("mockjs");
-const sandboxFn = require("./sandbox")
+import fs from 'fs-extra';
+
+import path from 'path';
+
+import yapi from '../yapi.js';
+
+import apiResponse from '../common/apiResponse.js';
+
+import sha1 from 'sha1';
+
+import logModel from '../models/log.js';
+
+import projectModel from '../models/project.js';
+
+import interfaceColModel from '../models/interfaceCol.js';
+
+import interfaceCaseModel from '../models/interfaceCase.js';
+
+import interfaceModel from '../models/interface.js';
+
+import userModel from '../models/user.js';
+
+import followModel from '../models/follow.js';
+
+import json5 from 'json5';
+
+import _ from 'underscore';
+
+import Ajv from 'ajv';
+
+import Mock from 'mockjs';
+
+import sandboxFn from './sandbox.js'
 
 
-const ejs = require("easy-json-schema");
+import ejs from 'easy-json-schema';
 
-const jsf = require("json-schema-faker");
-const { schemaValidator } = require("../common/utils");
-const http = require("http");
+
+import jsf from 'json-schema-faker';
+
+import { schemaValidator } from '../common/utils.js';
+
+import http from "http";
+import assert from "node:assert";
+import vm from "node:vm";
+import localize from "ajv-i18n";
+
 
 jsf.extend("mock", function() {
   return {
@@ -46,7 +70,7 @@ const defaultOptions = {
 //   });
 // });
 
-exports.schemaToJson = function(schema, options = {}) {
+export const schemaToJson = function(schema, options = {}) {
   Object.assign(options, defaultOptions);
 
   jsf.option(options);
@@ -60,7 +84,7 @@ exports.schemaToJson = function(schema, options = {}) {
   return result;
 };
 
-exports.resReturn = (data, num, errmsg) => {
+export const resReturn = (data, num, errmsg) => {
   num = num || 0;
 
   return {
@@ -70,7 +94,7 @@ exports.resReturn = (data, num, errmsg) => {
   };
 };
 
-exports.log = (msg, type) => {
+export const log = (msg, type) => {
   if (!msg) {
     return;
   }
@@ -114,7 +138,7 @@ exports.log = (msg, type) => {
   });
 };
 
-exports.fileExist = (filePath) => {
+export const fileExist = (filePath) => {
   try {
     return fs.statSync(filePath).isFile();
   } catch (err) {
@@ -122,9 +146,9 @@ exports.fileExist = (filePath) => {
   }
 };
 
-exports.time = () => Date.parse(new Date()) / 1000;
+export const time = () => Date.parse(new Date()) / 1000;
 
-exports.fieldSelect = (data, field) => {
+export const fieldSelect = (data, field) => {
   if (!data || !field || !Array.isArray(field)) {
     return null;
   }
@@ -138,9 +162,9 @@ exports.fieldSelect = (data, field) => {
   return arr;
 };
 
-exports.rand = (min, max) => Math.floor(Math.random() * (max - min) + min);
+export const rand = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
-exports.json_parse = (json) => {
+export const json_parse = (json) => {
   try {
     return json5.parse(json);
   } catch (e) {
@@ -148,10 +172,10 @@ exports.json_parse = (json) => {
   }
 };
 
-exports.randStr = () => Math.random()
+export const randStr = () => Math.random()
   .toString(36)
   .substr(2);
-exports.getIp = (ctx) => {
+export const getIp = (ctx) => {
   let ip;
   try {
     ip = ctx.ip.match(/\d+.\d+.\d+.\d+/) ? ctx.ip.match(/\d+.\d+.\d+.\d+/)[0] : "localhost";
@@ -161,15 +185,15 @@ exports.getIp = (ctx) => {
   return ip;
 };
 
-exports.generatePassword = (password, passsalt) => sha1(password + sha1(passsalt));
+export const generatePassword = (password, passsalt) => sha1(password + sha1(passsalt));
 
-exports.expireDate = (day) => {
+export const expireDate = (day) => {
   let date = new Date();
   date.setTime(date.getTime() + day * 86400000);
   return date;
 };
 
-exports.sendMail = (options, cb) => {
+export const sendMail = (options, cb) => {
   if (!yapi.mail) {return false;}
   options.subject = options.subject ? options.subject + "-YApi 平台" : "YApi 平台";
 
@@ -199,7 +223,7 @@ exports.sendMail = (options, cb) => {
   }
 };
 
-exports.validateSearchKeyword = (keyword) => {
+export const validateSearchKeyword = (keyword) => {
   if (/^\*|\?|\+|\$|\^|\\|\.$/.test(keyword)) {
     return false;
   }
@@ -207,7 +231,7 @@ exports.validateSearchKeyword = (keyword) => {
   return true;
 };
 
-exports.filterRes = (list, rules) => list.map((item) => {
+export const filterRes = (list, rules) => list.map((item) => {
   let filteredRes = {};
 
   rules.forEach((rule) => {
@@ -221,7 +245,7 @@ exports.filterRes = (list, rules) => list.map((item) => {
   return filteredRes;
 });
 
-exports.handleVarPath = (pathname, params) => {
+export const handleVarPath = (pathname, params) => {
   function insertParams(name) {
     if (!_.find(params, { name: name })) {
       params.push({
@@ -252,7 +276,7 @@ exports.handleVarPath = (pathname, params) => {
  * 验证一个 path 是否合法
  * path第一位必需为 /, path 只允许由 字母数字-/_:.{}= 组成
  */
-exports.verifyPath = (path) =>
+export const verifyPath = (path) =>
   // if (/^\/[a-zA-Z0-9\-\/_:!\.\{\}\=]*$/.test(path)) {
   //   return true;
   // } else {
@@ -270,9 +294,8 @@ exports.verifyPath = (path) =>
  * @example let a = sandbox({a: 1}, 'a=2')
  * a = {a: 2}
  */
-exports.sandbox = (sandbox, script) => {
+export const sandbox = (sandbox, script) => {
   try {
-    const vm = require("vm");
     sandbox = sandbox || {};
     script = new vm.Script(script);
     const context = new vm.createContext(sandbox);
@@ -315,9 +338,7 @@ function rtrim(str) {
   return str.replace(/(\s*$)/g, "");
 }
 
-exports.trim = trim;
-exports.ltrim = ltrim;
-exports.rtrim = rtrim;
+export { trim, ltrim, rtrim };
 
 /**
  * 处理请求参数类型，String 字符串去除两边空格，Number 使用parseInt 转换为数字
@@ -325,7 +346,7 @@ exports.rtrim = rtrim;
  * @keys Object {a: 'string', b: 'number'}
  * @return Object {a: 'ab', b: 123}
  */
-exports.handleParams = (params, keys) => {
+export const handleParams = (params, keys) => {
   if (!params || typeof params !== "object" || !keys || typeof keys !== "object") {
     return false;
   }
@@ -349,7 +370,7 @@ exports.handleParams = (params, keys) => {
   return params;
 };
 
-exports.validateParams = (schema2, params) => {
+export const validateParams = (schema2, params) => {
   const flag = schema2.closeRemoveAdditional;
   const ajv = new Ajv({
     allErrors: true,
@@ -358,7 +379,6 @@ exports.validateParams = (schema2, params) => {
     removeAdditional: !flag
   });
 
-  let localize = require("ajv-i18n");
   delete schema2.closeRemoveAdditional;
 
   const schema = ejs(schema2);
@@ -379,7 +399,7 @@ exports.validateParams = (schema2, params) => {
   };
 };
 
-exports.saveLog = (logData) => {
+export const saveLog = (logData) => {
   try {
     let logInst = yapi.getInst(logModel);
     let data = {
@@ -407,7 +427,7 @@ exports.saveLog = (logData) => {
  * @param {*} action controller action_name
  * @param {*} ws enable ws
  */
-exports.createAction = (router, baseurl, routerController, action, path, method, ws) => {
+export const createAction = (router, baseurl, routerController, action, path, method, ws) => {
   let routeMethod = (method || "get").toLowerCase();
   if (routeMethod === "delete") {
     routeMethod = "del";
@@ -462,7 +482,7 @@ exports.createAction = (router, baseurl, routerController, action, path, method,
  * @param {*} params 接口定义的参数
  * @param {*} val  接口case 定义的参数值
  */
-function handleParamsValue(params, val) {
+export function handleParamsValue(params, val) {
   let value = {};
   try {
     params = params.toObject();
@@ -483,9 +503,7 @@ function handleParamsValue(params, val) {
   return params;
 }
 
-exports.handleParamsValue = handleParamsValue;
-
-exports.getCaseList = async function getCaseList(id) {
+export async function getCaseList(id) {
   const caseInst = yapi.getInst(interfaceCaseModel);
   const colInst = yapi.getInst(interfaceColModel);
   const projectInst = yapi.getInst(projectModel);
@@ -533,12 +551,12 @@ function convertString(variable) {
 }
 
 
-exports.runCaseScript = async function runCaseScript(params, colId, interfaceId) {
+export async function runCaseScript(params, colId, interfaceId) {
   const colInst = yapi.getInst(interfaceColModel);
   let colData = await colInst.get(colId);
   const logs = [];
   const context = {
-    assert: require("assert"),
+    assert,
     status: params.response.status,
     body: params.response.body,
     header: params.response.header,
@@ -604,7 +622,7 @@ ${JSON.stringify(schema, null, 2)}`)
   }
 };
 
-exports.getUserdata = async function getUserdata(uid, role) {
+export async function getUserdata(uid, role) {
   role = role || "dev";
   let userInst = yapi.getInst(userModel);
   let userData = await userInst.findById(uid);
@@ -620,7 +638,7 @@ exports.getUserdata = async function getUserdata(uid, role) {
 };
 
 // 处理mockJs脚本
-exports.handleMockScript = async function(script, context) {
+export const handleMockScript = async function(script, context) {
   let sandbox = {
     header: context.ctx.header,
     query: context.ctx.query,
@@ -649,7 +667,7 @@ exports.handleMockScript = async function(script, context) {
 };
 
 
-exports.createWebAPIRequest = function(ops) {
+export const createWebAPIRequest = function(ops) {
   return new Promise(function(resolve, reject) {
     let req = "";
     let http_client = http.request(

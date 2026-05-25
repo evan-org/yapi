@@ -1,6 +1,8 @@
 // @ts-nocheck
-const schema = require("./schema-transformTo-table");
-const _ = require("underscore");
+import schema from './schema-transformTo-table.js';
+
+import _ from 'underscore';
+
 
 const json_parse = function(json) {
   try {
@@ -321,4 +323,4 @@ let r = {
   createClassMarkdown
 };
 
-module.exports = r;
+export default r;

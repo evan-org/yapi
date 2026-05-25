@@ -2,18 +2,29 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-const baseController = require("controllers/base");
-const statisMockModel = require("./statisMockModel");
-const groupModel = require("models/group");
-const projectModel = require("models/project");
-const interfaceModel = require("models/interface");
-const interfaceCaseModel = require("models/interfaceCase");
+import baseController from 'controllers/base';
 
-const yapi = require("yapi.js");
-const config = require("./index");
-const commons = require("./util");
-const os = require("os");
-let cpu = require("cpu-load");
+import statisMockModel from './statisMockModel.js';
+
+import groupModel from 'models/group';
+
+import projectModel from 'models/project';
+
+import interfaceModel from 'models/interface';
+
+import interfaceCaseModel from 'models/interfaceCase';
+
+
+import yapi from 'yapi.js';
+
+import config from './index.js';
+
+import commons from './util.js';
+
+import os from 'os';
+
+import cpu from 'cpu-load';
+
 
 class statisMockController extends baseController {
   constructor(ctx) {
@@ -174,4 +185,4 @@ class statisMockController extends baseController {
   }
 }
 
-module.exports = statisMockController;
+export default statisMockController;

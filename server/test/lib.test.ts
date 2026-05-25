@@ -1,7 +1,8 @@
 // @ts-nocheck
 import test from "ava";
 
-const rewire = require("rewire");
+import rewire from 'rewire';
+
 const lib = rewire("../common/lib.js");
 
 const plugin = rewire("../common/plugin.js")

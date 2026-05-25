@@ -2,8 +2,10 @@
 /**
  * Mock 服务 Hono 中间件包装
  */
-const mockServer = require("./mockServer");
-const { createKoaContext, finalizeKoaContext } = require("../adapter/koa-context");
+import mockServer from './mockServer.js';
+
+import { createKoaContext, finalizeKoaContext } from '../adapter/koa-context.js';
+
 
 /**
  * @param {import('hono').Context} c
@@ -23,4 +25,4 @@ async function mockServerHono(c, next) {
   return finalizeKoaContext(c, ctx);
 }
 
-module.exports = mockServerHono;
+export default mockServerHono;

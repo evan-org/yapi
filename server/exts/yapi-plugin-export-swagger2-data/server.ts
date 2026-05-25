@@ -1,7 +1,8 @@
 // @ts-nocheck
-const exportSwaggerController = require("./controller");
+import exportSwaggerController from './controller.js';
 
-module.exports = function() {
+
+export default function() {
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: exportSwaggerController,

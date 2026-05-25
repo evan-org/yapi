@@ -1,13 +1,21 @@
 // @ts-nocheck
-const groupModel = require("../models/group");
-const yapi = require("../yapi");
-const baseController = require("./base");
-const projectModel = require("../models/project");
-const userModel = require("../models/user");
-const interfaceModel = require("../models/interface");
-const interfaceColModel = require("../models/interfaceCol");
-const interfaceCaseModel = require("../models/interfaceCase");
-const _ = require("underscore")
+import groupModel from '../models/group.js';
+
+import yapi from '../yapi.js';
+
+import baseController from './base.js';
+
+import projectModel from '../models/project.js';
+
+import userModel from '../models/user.js';
+
+import interfaceModel from '../models/interface.js';
+
+import interfaceColModel from '../models/interfaceCol.js';
+
+import interfaceCaseModel from '../models/interfaceCase.js';
+
+import _ from "underscore";
 
 const rolename = {
   owner: "组长",
@@ -530,4 +538,4 @@ class groupController extends baseController {
   }
 }
 
-module.exports = groupController;
+export default groupController;

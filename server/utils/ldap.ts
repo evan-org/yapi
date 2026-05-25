@@ -1,9 +1,12 @@
 // @ts-nocheck
-const ldap = require("ldapjs");
-const yapi = require("../yapi");
-const util = require("util");
+import ldap from 'ldapjs';
 
-exports.ldapQuery = (username, password) =>
+import yapi from '../yapi.js';
+
+import util from 'util';
+
+
+export const ldapQuery = (username, password) =>
 // const deferred = Q.defer();
 
   new Promise((resolve, reject) => {

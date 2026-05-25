@@ -2,8 +2,10 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-const yapi = require("yapi.js");
-const baseModel = require("models/base");
+import yapi from 'yapi.js';
+
+import baseModel from 'models/base';
+
 
 class statisMockModel extends baseModel {
   getName() {
@@ -73,4 +75,4 @@ class statisMockModel extends baseModel {
   }
 }
 
-module.exports = statisMockModel;
+export default statisMockModel;

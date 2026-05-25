@@ -1,29 +1,25 @@
 // @ts-nocheck
-module.exports = function storageCreator(id) {
-  const storageModel = require("../models/storage");
-  const yapi = require("../yapi");
-  const defaultData = {}
+import storageModel from "../models/storage.js";
+import yapi from "../yapi.js";
+
+export default function storageCreator(id) {
+  const defaultData = {};
   return {
-    getItem: async(name = "") => {
-      let inst = yapi.getInst(storageModel);
+    getItem: async (name = "") => {
+      const inst = yapi.getInst(storageModel);
       let data = await inst.get(id);
       data = data || defaultData;
-      if (name) {return data[name];}
+      if (name) {
+        return data[name];
+      }
       return data;
     },
-    setItem: async(name, value) => {
-      let inst = yapi.getInst(storageModel);
-      let curData = await inst.get(id);
-      let data =  curData || defaultData;
-      let result;
+    setItem: async (name, value) => {
+      const inst = yapi.getInst(storageModel);
+      let data = await inst.get(id);
+      data = data || defaultData;
       data[name] = value;
-      if (!curData) {
-        result = await inst.save(id, data, true)
-      } else {
-        result = await inst.save(id, data, false)
-      }
-
-      return result;
-    }
-  }
+      await inst.save(id, data);
+    },
+  };
 }

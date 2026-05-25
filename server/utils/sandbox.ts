@@ -1,7 +1,8 @@
 // @ts-nocheck
-const Safeify = require("safeify").default;
+import SafeifyModule from "safeify";
+const Safeify = SafeifyModule.default || SafeifyModule;
 
-module.exports = async function sandboxFn(context, script) {
+export default async function sandboxFn(context, script) {
   // 创建 safeify 实例
   const safeVm = new Safeify({
     timeout: 3000,

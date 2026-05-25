@@ -2,7 +2,7 @@
 /**
  * 服务端注册 YApi JSON 数据导入钩子
  */
-module.exports = function () {
+export default function () {
   this.bindHook("import_data", function (importDataModule) {
     if (!importDataModule || typeof importDataModule !== "object") {
       console.error("importDataModule 参数Must be Object Type");

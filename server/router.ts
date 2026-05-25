@@ -1,16 +1,28 @@
 // @ts-nocheck
-const HttpRouter = require("./utils/httpRouter");
-const interfaceController = require("./controllers/interface");
-const groupController = require("./controllers/group");
-const userController = require("./controllers/user");
-const interfaceColController = require("./controllers/interfaceCol");
-const testController = require("./controllers/test");
-const yapi = require("./yapi");
-const projectController = require("./controllers/project");
-const logController = require("./controllers/log");
-const followController = require("./controllers/follow");
-const openController = require("./controllers/open");
-const { createAction } = require("./utils/commons");
+import HttpRouter from './utils/httpRouter.js';
+
+import interfaceController from './controllers/interface.js';
+
+import groupController from './controllers/group.js';
+
+import userController from './controllers/user.js';
+
+import interfaceColController from './controllers/interfaceCol.js';
+
+import testController from './controllers/test.js';
+
+import yapi from './yapi.js';
+
+import projectController from './controllers/project.js';
+
+import logController from './controllers/log.js';
+
+import followController from './controllers/follow.js';
+
+import openController from './controllers/open.js';
+
+import { createAction } from './utils/commons.js';
+
 const router = new HttpRouter();
 let INTERFACE_CONFIG = {
   interface: {
@@ -599,4 +611,4 @@ for (let ctrl in routerConfig) {
     createAction(router, "/api", routerController, item.action, routerPath, item.method);
   });
 }
-module.exports = router;
+export default router;

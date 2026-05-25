@@ -6,7 +6,7 @@ const convert2Decimal = (num) => (num > 9 ? num : `0${num}`);
  * @param val {Object | String | Number} 日期对象 或是可new Date的对象或时间戳
  * @return {String} 2017-01-20 20:00:00
  */
-exports.formatDate = (val) => {
+export const formatDate = (val) => {
   let date = val;
   if (typeof val !== "object") {
     date = new Date(val);

@@ -2,13 +2,18 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-const yapi = require("yapi.js");
-const mongoose = require("mongoose");
-const controller = require("./controller");
-const statisModel = require("./statisMockModel");
-const commons = require("./util");
+import yapi from 'yapi.js';
 
-module.exports = function() {
+import mongoose from 'mongoose';
+
+import controller from './controller.js';
+
+import statisModel from './statisMockModel.js';
+
+import commons from './util.js';
+
+
+export default function() {
   yapi.connect.then(function() {
     let Col = mongoose.connection.db.collection("statis_mock");
     Col.createIndex({

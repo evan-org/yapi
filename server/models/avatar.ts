@@ -1,6 +1,8 @@
 // @ts-nocheck
-const yapi = require("../yapi");
-const baseModel = require("./base");
+import yapi from '../yapi.js';
+
+import baseModel from './base.js';
+
 
 class avatarModel extends baseModel {
   getName() {
@@ -37,4 +39,4 @@ class avatarModel extends baseModel {
   }
 }
 
-module.exports = avatarModel;
+export default avatarModel;

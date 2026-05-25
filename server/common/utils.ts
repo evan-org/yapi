@@ -1,9 +1,16 @@
 // @ts-nocheck
-const Mock = require("mockjs");
-const filter = require("./power-string").filter;
-const stringUtils = require("./power-string").utils;
-const json5 = require("json5");
-const Ajv = require("ajv");
+import Mock from 'mockjs';
+
+import powerString from "./power-string.js";
+
+const filter = powerString.filter;
+const stringUtils = powerString.utils;
+import json5 from 'json5';
+
+import Ajv from "ajv";
+import metaSchema from "ajv/lib/refs/json-schema-draft-04.json" with { type: "json" };
+import localize from "ajv-i18n";
+
 /**
  * 作用：解析规则串 key ，然后根据规则串的规则以及路径找到在 json 中对应的数据
  * 规则串：$.{key}.{body||params}.{dataPath} 其中 body 为返回数据，params 为请求数据，datapath 为数据的路径
@@ -56,7 +63,7 @@ function handleMockWord(word) {
  * @param {*} data
  * @param {*} handleValueFn 处理参数值函数
  */
-function handleJson(data, handleValueFn) {
+export function handleJson(data, handleValueFn) {
   if (!data) {
     return data;
   }
@@ -97,7 +104,7 @@ function handleFilter(str, match, context) {
   }
 }
 
-function handleParamsValue(val, context = {}) {
+export function handleParamsValue(val, context = {}) {
   const variableRegexp = /\{\{\s*([^}]+?)\}\}/g;
   if (!val || typeof val !== "string") {
     return val;
@@ -117,13 +124,9 @@ function handleParamsValue(val, context = {}) {
   return val.replace(variableRegexp, (str, match) => handleFilter(str, match, context));
 }
 
-exports.handleJson = handleJson;
-exports.handleParamsValue = handleParamsValue;
+export { simpleJsonPathParse, handleMockWord };
 
-exports.simpleJsonPathParse = simpleJsonPathParse;
-exports.handleMockWord = handleMockWord;
-
-exports.joinPath = (domain, joinPath) => {
+export const joinPath = (domain, joinPath) => {
   let l = domain.length;
   if (domain[l - 1] === "/") {
     domain = domain.substr(0, l - 1);
@@ -134,15 +137,14 @@ exports.joinPath = (domain, joinPath) => {
   return domain + joinPath;
 };
 
-// exports.safeArray = arr => {
+// export const safeArray = arr => {
 //   return Array.isArray(arr) ? arr : [];
 // };
-function safeArray(arr) {
+export function safeArray(arr) {
   return Array.isArray(arr) ? arr : [];
 }
-exports.safeArray = safeArray;
 
-exports.isJson5 = function isJson5(json) {
+export function isJson5(json) {
   if (!json) {return false;}
   try {
     json = json5.parse(json);
@@ -152,7 +154,7 @@ exports.isJson5 = function isJson5(json) {
   }
 };
 
-function isJson(json) {
+export function isJson(json) {
   if (!json) {return false;}
   try {
     json = JSON.parse(json);
@@ -162,9 +164,7 @@ function isJson(json) {
   }
 }
 
-exports.isJson = isJson;
-
-exports.unbase64 = function(base64Str) {
+export const unbase64 = function(base64Str) {
   try {
     return stringUtils.unbase64(base64Str);
   } catch (err) {
@@ -172,7 +172,7 @@ exports.unbase64 = function(base64Str) {
   }
 };
 
-exports.json_parse = function(json) {
+export const json_parse = function(json) {
   try {
     return JSON.parse(json);
   } catch (err) {
@@ -180,7 +180,7 @@ exports.json_parse = function(json) {
   }
 };
 
-exports.json_format = function(json) {
+export const json_format = function(json) {
   try {
     return JSON.stringify(JSON.parse(json), null, "   ");
   } catch (e) {
@@ -188,7 +188,7 @@ exports.json_format = function(json) {
   }
 };
 
-exports.ArrayToObject = function(arr) {
+export const ArrayToObject = function(arr) {
   let obj = {};
   safeArray(arr).forEach((item) => {
     obj[item.name] = item.value;
@@ -197,7 +197,7 @@ exports.ArrayToObject = function(arr) {
   return obj;
 };
 
-exports.timeago = function(timestamp) {
+export const timeago = function(timestamp) {
   let minutes, hours, days, seconds, mouth, year;
   const timeNow = parseInt(new Date().getTime() / 1000);
   seconds = timeNow - timestamp;
@@ -244,17 +244,15 @@ exports.timeago = function(timestamp) {
 };
 
 // json schema 验证器
-exports.schemaValidator = function(schema, params) {
+export const schemaValidator = function(schema, params) {
   try {
     const ajv = new Ajv({
       format: false,
       meta: false
     });
-    let metaSchema = require("ajv/lib/refs/json-schema-draft-04.json");
     ajv.addMetaSchema(metaSchema);
     ajv._opts.defaultMeta = metaSchema.id;
     ajv._refs["http://json-schema.org/schema"] = "http://json-schema.org/draft-04/schema";
-    let localize = require("ajv-i18n");
 
     schema = schema || {
       type: "object",

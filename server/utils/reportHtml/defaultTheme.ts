@@ -1,5 +1,9 @@
 // @ts-nocheck
-const fs = require("fs");
-const sysPath = require("path");
+import { dirnameFromMeta } from '../esm-path.js';
+const __dirname = dirnameFromMeta(import.meta);
+import fs from 'fs';
+
+import sysPath from 'path';
+
 const css = fs.readFileSync(sysPath.join(__dirname, "./defaultTheme.css"));
-module.exports = "<style>" + css + "</style>";
+export default "<style>" + css + "</style>";

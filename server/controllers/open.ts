@@ -1,25 +1,39 @@
 // @ts-nocheck
-const projectModel = require("../models/project");
-const interfaceColModel = require("../models/interfaceCol");
-const interfaceCaseModel = require("../models/interfaceCase");
-const interfaceModel = require("../models/interface");
-const interfaceCatModel = require("../models/interfaceCat");
-const followModel = require("../models/follow");
-const userModel = require("../models/user");
-const yapi = require("../yapi");
-const baseController = require("./base");
-const {
-  handleParams,
+import projectModel from '../models/project.js';
+
+import interfaceColModel from '../models/interfaceCol.js';
+
+import interfaceCaseModel from '../models/interfaceCase.js';
+
+import interfaceModel from '../models/interface.js';
+
+import interfaceCatModel from '../models/interfaceCat.js';
+
+import followModel from '../models/follow.js';
+
+import userModel from '../models/user.js';
+
+import yapi from '../yapi.js';
+
+import baseController from './base.js';
+
+import { handleParams,
   crossRequest,
   handleCurrDomain,
-  checkNameIsExistInArray
-} = require("../common/postmanLib");
-const { handleParamsValue, ArrayToObject } = require("../common/utils");
-const renderToHtml = require("../utils/reportHtml");
-const axios = require("axios");
-const HanldeImportData = require("../common/HandleImportData");
-const _ = require("underscore");
-const createContex = require("../common/createContext")
+  checkNameIsExistInArray } from '../common/postmanLib.js';
+
+import { handleParamsValue, ArrayToObject } from '../common/utils.js';
+
+import renderToHtml from '../utils/reportHtml.js';
+
+import axios from "axios";
+import request from "request";
+
+import HanldeImportData from '../common/HandleImportData.js';
+
+import _ from 'underscore';
+
+import createContex from '../common/createContext.js'
 
 /**
  * {
@@ -100,8 +114,7 @@ class openController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "json 或者 url 参数，不能都为空"));
     }
     try {
-      let request = require("request");// let Promise = require('Promise');
-      let syncGet = function(url) {
+      const syncGet = function (url) {
         return new Promise(function(resolve, reject) {
           request.get({url: url}, function(error, response, body) {
             if (error) {
@@ -416,4 +429,4 @@ class openController extends baseController {
   }
 }
 
-module.exports = openController;
+export default openController;

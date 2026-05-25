@@ -7,7 +7,7 @@
  * @param withToday {Boolean} 是否包含今天
  * @return {Array} ['2017-01-17 00:00:00', '2017-01-20 23:59:59']
  */
-exports.getDateRange = (time = 90, start = false, withToday = true) => {
+export const getDateRange = (time = 90, start = false, withToday = true) => {
   const gapTime = time * 24 * 3600 * 1000;
   if (!start) {
     // 没有规定start时间
@@ -32,7 +32,7 @@ const convert2Decimal = (num) => (num > 9 ? num : `0${num}`)
  *  @return {Array} ['2017-01-17', '2017-01-28', '2017-10-29',...]
  */
 
-exports.getDateInterval = (time = 30) => {
+export const getDateInterval = (time = 30) => {
   // const gapTime = time * 24 * 3600 * 1000;
   // 今天
   let endTime = new Date().getTime();
@@ -50,7 +50,7 @@ exports.getDateInterval = (time = 30) => {
  *  @return {Array} [ 1509033600000, 1509119999000 ]
  */
 
-exports.getTimeInterval = (date) => {
+export const getTimeInterval = (date) => {
   const startTime = (getNowMidnightDate(date).getTime() - 86400000) / 1000;
   const endTime = (getNowMidnightDate(date).getTime() - 1000) / 1000;
   return [startTime, endTime];
@@ -95,7 +95,7 @@ const formatDate = (val) => {
  * @param val {Object or String or Number} 日期对象 或是可new Date的对象或时间戳
  * @return {String} 2017-01-20
  */
-exports.formatYMD = (val, joinStr = "-") => {
+export const formatYMD = (val, joinStr = "-") => {
   let date = val;
   if (typeof val !== "object") {
     date = new Date(val);
@@ -114,7 +114,7 @@ exports.formatYMD = (val, joinStr = "-") => {
  * @param Array ['2017-01-17 00:00:00', '2017-01-20 23:59:59']
  * @return {Number} 3
  */
-exports.getDayGapFromRange = (dateRange) => {
+export const getDayGapFromRange = (dateRange) => {
   const startTime = dateSpacialWithSafari(dateRange[0]);
   const endTime = dateSpacialWithSafari(dateRange[1]);
   return Math.ceil((endTime - startTime) / 86400000);
@@ -142,6 +142,6 @@ const dateSpacialWithSafari = (str) => {
  * 将内存单位从字节(b)变成GB
  */
 
-exports.transformBytesToGB = (bytes) => (bytes / 1024 / 1024 / 1024).toFixed(2)
+export const transformBytesToGB = (bytes) => (bytes / 1024 / 1024 / 1024).toFixed(2)
 
-exports.transformSecondsToDay = (seconds) => (seconds / 3600 / 24).toFixed(2)
+export const transformSecondsToDay = (seconds) => (seconds / 3600 / 24).toFixed(2)

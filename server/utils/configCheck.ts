@@ -1,7 +1,10 @@
 // @ts-nocheck
-const fs = require("fs");
-const path = require("path");
-const yapi = require("../yapi");
+import fs from 'fs';
+
+import path from 'path';
+
+import yapi from '../yapi.js';
+
 
 /**
  * 启动前校验 config.json 是否存在且包含必要字段
@@ -31,6 +34,8 @@ function assertRuntimeConfig() {
   }
 }
 
-module.exports = {
+export { assertRuntimeConfig };
+
+export default {
   assertRuntimeConfig
 };

@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
-    "moduleResolution": "node",
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
     "rootDir": ".",
     "outDir": "dist",
     "strict": false,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
@@ -17,12 +18,19 @@
     "noImplicitAny": false,
     "strictNullChecks": false,
     "types": ["node"],
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    "baseUrl": ".",
+    "paths": {
+      "yapi.js": ["./yapi.ts"],
+      "models/*": ["./models/*"],
+      "controllers/*": ["./controllers/*"],
+      "utils/*": ["./utils/*"],
+      "common/*": ["./common/*"],
+      "middleware/*": ["./middleware/*"],
+      "adapter/*": ["./adapter/*"]
+    }
   },
-  "include": [
-    "**/*.ts",
-    "types/**/*.d.ts"
-  ],
+  "include": ["**/*.ts", "types/**/*.d.ts"],
   "exclude": [
     "node_modules",
     "dist",

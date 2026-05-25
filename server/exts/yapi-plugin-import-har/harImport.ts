@@ -1,8 +1,11 @@
 // @ts-nocheck
 
-const URL = require("url");
-const GenerateSchema = require("generate-schema/src/schemas/json.js");
-const { json_parse, unbase64 } = require("../../common/utils");
+import URL from 'url';
+
+import GenerateSchema from 'generate-schema/src/schemas/json.js';
+
+import { json_parse, unbase64 } from '../../common/utils.js';
+
 
 const transformJsonToSchema = (json) => {
   json = json || {};
@@ -226,4 +229,4 @@ function postman(importDataModule) {
 }
 
 /** 服务端注册 HAR 导入解析 */
-module.exports = postman;
+export default postman;

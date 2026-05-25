@@ -1,6 +1,7 @@
 // @ts-nocheck
 import test from "ava";
-const { matchApi } = require("../../middleware/mockServer");
+import { matchApi } from '../../middleware/mockServer.js';
+
 
 test("matchApi", (t) => {
   const apiRule = "/user/:username";
