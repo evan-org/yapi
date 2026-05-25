@@ -16,9 +16,9 @@ import {
   avatarRepository,
   storageRepository,
   wikiRepository,
-  advMockRepository,
-  advMockCaseRepository,
-  statisMockRepository,
+  advancedMockRepository,
+  advancedMockCaseRepository,
+  mockStatisticsRepository,
   swaggerSyncRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
@@ -731,7 +731,7 @@ test("wikiRepository 可写入、查询、更新并删除", async (t) => {
   }
 });
 
-test("advMockRepository 与 advMockCaseRepository 可写入、查询并删除", async (t) => {
+test("advancedMockRepository 与 advancedMockCaseRepository 可写入、查询并删除", async (t) => {
   if (!shouldRunPgCi()) {
     t.pass();
     return;
@@ -776,7 +776,7 @@ test("advMockRepository 与 advMockCaseRepository 可写入、查询并删除", 
     });
     interfaceId = iface._id;
 
-    const mockRow = await advMockRepository.save({
+    const mockRow = await advancedMockRepository.save({
       interface_id: interfaceId,
       project_id: projectId,
       uid: 999988,
@@ -785,20 +785,20 @@ test("advMockRepository 与 advMockCaseRepository 可写入、查询并删除", 
     });
     t.truthy(mockRow._id);
 
-    const mockFound = await advMockRepository.get(interfaceId);
+    const mockFound = await advancedMockRepository.get(interfaceId);
     t.is(mockFound.mock_script, "return {}");
 
-    await advMockRepository.up({
+    await advancedMockRepository.up({
       interface_id: interfaceId,
       project_id: projectId,
       uid: 999988,
       mock_script: "return { ok: 1 }",
       enable: true,
     });
-    const mockUpdated = await advMockRepository.get(interfaceId);
+    const mockUpdated = await advancedMockRepository.get(interfaceId);
     t.is(mockUpdated.mock_script, "return { ok: 1 }");
 
-    const caseRow = await advMockCaseRepository.save({
+    const caseRow = await advancedMockCaseRepository.save({
       interface_id: interfaceId,
       project_id: projectId,
       ip_enable: false,
@@ -814,27 +814,27 @@ test("advMockRepository 与 advMockCaseRepository 可写入、查询并删除", 
     caseId = caseRow._id;
     t.truthy(caseId);
 
-    const listed = await advMockCaseRepository.list(interfaceId);
+    const listed = await advancedMockCaseRepository.list(interfaceId);
     t.true(listed.some((row) => row._id === caseId));
 
-    const forMock = await advMockCaseRepository.listForMock(interfaceId, {
+    const forMock = await advancedMockCaseRepository.listForMock(interfaceId, {
       ip_enable: false,
     });
     t.true(forMock.some((row) => row._id === caseId));
 
-    await advMockCaseRepository.up({
+    await advancedMockCaseRepository.up({
       id: caseId,
       name: "ci-case-updated",
     });
-    const caseFound = await advMockCaseRepository.get({ _id: caseId });
+    const caseFound = await advancedMockCaseRepository.get({ _id: caseId });
     t.is(caseFound.name, "ci-case-updated");
   } finally {
     if (caseId) {
-      await advMockCaseRepository.del(caseId);
+      await advancedMockCaseRepository.del(caseId);
     }
     if (interfaceId) {
-      await advMockCaseRepository.delByInterfaceId(interfaceId);
-      await advMockRepository.delByInterfaceId(interfaceId);
+      await advancedMockCaseRepository.delByInterfaceId(interfaceId);
+      await advancedMockRepository.delByInterfaceId(interfaceId);
     }
     if (interfaceId) {
       await interfaceRepository.del(interfaceId);
@@ -849,7 +849,7 @@ test("advMockRepository 与 advMockCaseRepository 可写入、查询并删除", 
   }
 });
 
-test("statisMockRepository 可写入、统计并删除", async (t) => {
+test("mockStatisticsRepository 可写入、统计并删除", async (t) => {
   if (!shouldRunPgCi()) {
     t.pass();
     return;
@@ -861,7 +861,7 @@ test("statisMockRepository 可写入、统计并删除", async (t) => {
   const dateStr = "2099-01-01";
 
   try {
-    const saved = await statisMockRepository.save({
+    const saved = await mockStatisticsRepository.save({
       interface_id: 1,
       project_id: 1,
       group_id: groupId,
@@ -872,17 +872,17 @@ test("statisMockRepository 可写入、统计并删除", async (t) => {
     rowId = saved._id;
     t.truthy(rowId);
 
-    const total = await statisMockRepository.getTotalCount();
+    const total = await mockStatisticsRepository.getTotalCount();
     t.true(total >= 1);
 
-    const byGroup = await statisMockRepository.countByGroupId(groupId);
+    const byGroup = await mockStatisticsRepository.countByGroupId(groupId);
     t.true(byGroup >= 1);
 
-    const dayCount = await statisMockRepository.getDayCount(["2098-12-31", dateStr]);
+    const dayCount = await mockStatisticsRepository.getDayCount(["2098-12-31", dateStr]);
     t.true(dayCount.some((row) => row._id === dateStr));
   } finally {
     if (rowId) {
-      await statisMockRepository.del(rowId);
+      await mockStatisticsRepository.del(rowId);
     }
     await disconnectPg();
   }

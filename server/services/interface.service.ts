@@ -6,7 +6,7 @@ import fs from "fs-extra";
 import path from "path";
 import jsondiffpatch from "jsondiffpatch";
 import showDiffMsg from "../utils/diff-view.js";
-import { onInterfaceDeleted } from "./advMock.mock.js";
+import { onInterfaceDeleted } from "./advancedMock.service.js";
 import yapi from "../runtime.js";
 import commons from "../utils/commons.js";
 import {

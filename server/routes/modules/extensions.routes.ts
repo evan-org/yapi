@@ -2,10 +2,10 @@
 /**
  * 内置扩展 HTTP 路由（/api/extensions/*）
  */
-import advMockController from "../../controllers/advMock.js";
+import advancedMockController from "../../controllers/advancedMock.js";
 import statisticsController from "../../controllers/statistics.js";
 import wikiController from "../../controllers/wiki.js";
-import exportPluginController from "../../controllers/exportPlugin.js";
+import exportDataController from "../../controllers/exportData.js";
 import exportSwaggerController from "../../controllers/exportSwagger.js";
 import swaggerSyncController from "../../controllers/swaggerSync.js";
 import { registerModuleRoutes } from "../register-routes.js";
@@ -27,7 +27,7 @@ export function registerExtensionRoutes(binder) {
   const prefix = EXTENSIONS_ROUTE_PREFIX;
 
   registerModuleRoutes(binder, {
-    controller: advMockController,
+    controller: advancedMockController,
     prefix,
     routes: extensionHttpRoutes.filter((r) => r.path.startsWith("advanced-mock")),
   });
@@ -42,7 +42,7 @@ export function registerExtensionRoutes(binder) {
     routes: extensionHttpRoutes.filter((r) => r.path === "wiki"),
   });
   registerModuleRoutes(binder, {
-    controller: exportPluginController,
+    controller: exportDataController,
     prefix,
     routes: [{ action: "exportData", path: "export/data", method: "get" }],
   });

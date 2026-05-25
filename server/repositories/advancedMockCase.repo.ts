@@ -7,7 +7,7 @@ import yapi from "../runtime.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import {
-  advMockCaseFromRow,
+  advancedMockCaseFromRow,
   ADV_MOCK_CASE_SELECT,
   jsonCol,
 } from "../db/relational.js";
@@ -53,18 +53,18 @@ async function fetchOne(where: DocRecord) {
   if (!res.rows.length) {
     return null;
   }
-  return advMockCaseFromRow(res.rows[0]);
+  return advancedMockCaseFromRow(res.rows[0]);
 }
 
 async function fetchMany(sql: string, sqlParams: unknown[]) {
   const pool = getPool();
   const res = await pool.query(sql, sqlParams);
-  return res.rows.map((row) => advMockCaseFromRow(row));
+  return res.rows.map((row) => advancedMockCaseFromRow(row));
 }
 
-export type AdvMockCaseRepository = ModelInstance;
+export type AdvancedMockCaseRepository = ModelInstance;
 
-export const advMockCaseRepository: AdvMockCaseRepository = {
+export const advancedMockCaseRepository: AdvancedMockCaseRepository = {
   async get(data: DocRecord) {
     return fetchOne(data);
   },
@@ -129,7 +129,7 @@ export const advMockCaseRepository: AdvMockCaseRepository = {
         data.case_enable !== false,
       ]
     );
-    return advMockCaseFromRow(res.rows[0]);
+    return advancedMockCaseFromRow(res.rows[0]);
   },
 
   async up(data: DocRecord) {

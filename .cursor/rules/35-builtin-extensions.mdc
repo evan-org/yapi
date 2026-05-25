@@ -9,7 +9,7 @@ globs:
 
 # 内置扩展功能
 
-- 服务端：`server/controllers/`（advMock、wiki、statistics 等）+ `server/routes/modules/extensions.routes.ts`（`/api/extensions/*`）
+- 服务端：`server/controllers/`（advancedMock、wiki、statistics 等）+ `server/routes/modules/extensions.routes.ts`（`/api/extensions/*`）
 - 导入：`server/services/import/`
 - 客户端：`client/src/lib/features.ts`（功能入口映射）
-- Mock 统计/高级 Mock：`server/services/advMock.mock.ts`、`server/services/statisMock.track.ts`
+- Mock 统计/高级 Mock：`server/services/advancedMock.service.ts`、`server/services/mockStatistics.track.ts`

@@ -4,7 +4,7 @@
 import axios from "axios";
 import _ from "underscore";
 import sha from "sha.js";
-import { onProjectDeleted } from "./advMock.mock.js";
+import { onProjectDeleted } from "./advancedMock.service.js";
 import commons from "../utils/commons.js";
 import { getToken } from "../utils/token.js";
 import {

@@ -48,7 +48,7 @@ export const extensionsApi = {
   exportSwagger2Url: (pid: number) =>
     `/api${EXT}/export/swagger?type=OpenAPIV2&pid=${pid}`,
 
-  autoSyncGet: (project_id: number) =>
+  swaggerSyncGet: (project_id: number) =>
     apiRequest<{
       _id?: number;
       project_id: number;
@@ -58,40 +58,40 @@ export const extensionsApi = {
       is_sync_open?: boolean;
     }>(`${EXT}/swagger-sync?project_id=${project_id}`),
 
-  autoSyncSave: (payload: Record<string, unknown>) =>
+  swaggerSyncSave: (payload: Record<string, unknown>) =>
     apiRequest(`${EXT}/swagger-sync`, {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
-  advMockGet: (interface_id: number) =>
+  advancedMockGet: (interface_id: number) =>
     apiRequest(`${EXT}/advanced-mock?interface_id=${interface_id}`),
 
-  advMockSave: (payload: Record<string, unknown>) =>
+  advancedMockSave: (payload: Record<string, unknown>) =>
     apiRequest(`${EXT}/advanced-mock`, {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
-  advMockCaseList: (interface_id: number) =>
+  advancedMockCaseList: (interface_id: number) =>
     apiRequest(`${EXT}/advanced-mock/cases?interface_id=${interface_id}`),
 
-  advMockCaseGet: (id: number) =>
+  advancedMockCaseGet: (id: number) =>
     apiRequest(`${EXT}/advanced-mock/cases/detail?id=${id}`),
 
-  advMockCaseSave: (payload: Record<string, unknown>) =>
+  advancedMockCaseSave: (payload: Record<string, unknown>) =>
     apiRequest(`${EXT}/advanced-mock/cases`, {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
-  advMockCaseDel: (id: number) =>
+  advancedMockCaseDel: (id: number) =>
     apiRequest(`${EXT}/advanced-mock/cases/delete`, {
       method: "POST",
       body: JSON.stringify({ id }),
     }),
 
-  advMockCaseHide: (id: number) =>
+  advancedMockCaseHide: (id: number) =>
     apiRequest(`${EXT}/advanced-mock/cases/hide`, {
       method: "POST",
       body: JSON.stringify({ id }),

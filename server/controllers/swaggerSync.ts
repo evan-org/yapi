@@ -16,7 +16,7 @@ class syncController extends baseController {
   /**
    * 保存定时任务
    */
-  async upSync(ctx) {
+  async save(ctx) {
     let requestBody = ctx.request.body;
     let projectId = requestBody.project_id;
     if (!projectId) {
@@ -49,7 +49,7 @@ class syncController extends baseController {
   /**
    * 查询定时任务
    */
-  async getSync(ctx) {
+  async get(ctx) {
     let projectId = ctx.query.project_id;
     const result = await swaggerSyncService.getByProjectId(projectId);
     if (!result.ok) {

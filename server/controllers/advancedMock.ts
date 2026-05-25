@@ -3,8 +3,8 @@ import baseController from "./base.js";
 
 import yapi from "../runtime.js";
 import {
-  advMockRepository,
-  advMockCaseRepository,
+  advancedMockRepository,
+  advancedMockCaseRepository,
   userRepository,
 } from "../repositories/index.js";
 
@@ -14,15 +14,15 @@ const HTTP_CODES = [
 ];
 
 
-class advMockController extends baseController {
+class advancedMockController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = advMockRepository;
-    this.caseModel = advMockCaseRepository;
+    this.Model = advancedMockRepository;
+    this.caseModel = advancedMockCaseRepository;
     this.userModel = userRepository;
   }
 
-  async getMock(ctx) {
+  async get(ctx) {
     let id = ctx.query.interface_id;
     let mockData = await this.Model.get(id);
     if (!mockData) {
@@ -31,7 +31,7 @@ class advMockController extends baseController {
     return (ctx.body = yapi.commons.resReturn(mockData));
   }
 
-  async upMock(ctx) {
+  async save(ctx) {
     let params = ctx.request.body;
     try {
       let auth = await this.checkAuth(params.project_id, "project", "edit");
@@ -67,7 +67,7 @@ class advMockController extends baseController {
     }
   }
 
-  async list(ctx) {
+  async listCases(ctx) {
     try {
       let id = ctx.query.interface_id;
       if (!id) {
@@ -168,7 +168,7 @@ class advMockController extends baseController {
     return (ctx.body = yapi.commons.resReturn(result));
   }
 
-  async delCase(ctx) {
+  async deleteCase(ctx) {
     let id = ctx.request.body.id;
     if (!id) {
       return (ctx.body = yapi.commons.resReturn(null, 408, "缺少 id"));
@@ -192,4 +192,4 @@ class advMockController extends baseController {
   }
 }
 
-export default advMockController;
+export default advancedMockController;
