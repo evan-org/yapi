@@ -73,6 +73,19 @@ export function buildQueryPathFromUrl(pathStr) {
   });
   return { http_path, query_path };
 }
+
+/**
+ * 列表查询 option 附加 status / tag 过滤
+ */
+export function applyStatusTagFilter(option, status, tag) {
+  if (status) {
+    option.status = Array.isArray(status) ? { $in: status } : status;
+  }
+  if (tag) {
+    option.tag = Array.isArray(tag) ? { $in: tag } : tag;
+  }
+  return option;
+}
 import {
   interfaceRepository,
   interfaceCatRepository,
@@ -328,6 +341,104 @@ class InterfaceService extends BaseService {
       typeid: project_id,
     });
     return ok(result);
+  }
+
+  /**
+   * 项目接口分页列表
+   */
+  async listByProject({ project_id, page, limit, status, tag }) {
+    if (!project_id) {
+      return fail(400, "项目id不能为空");
+    }
+    const project = await this.projectModel.getBaseInfo(project_id);
+    if (!project) {
+      return fail(407, "不存在的项目");
+    }
+
+    let result;
+    let count;
+    if (limit === "all") {
+      result = await this.interfaceModel.list(project_id);
+      count = await this.interfaceModel.listCount({ project_id });
+    } else {
+      const option = applyStatusTagFilter({ project_id }, status, tag);
+      result = await this.interfaceModel.listByOptionWithPage(option, page, limit);
+      count = await this.interfaceModel.listCount(option);
+    }
+
+    yapi.emitHook("interface_list", result).then();
+    return ok({
+      count,
+      total: Math.ceil(count / limit),
+      list: result,
+    });
+  }
+
+  /**
+   * 分类下接口分页列表
+   */
+  async listByCategory({ catid, page, limit, status, tag }) {
+    if (!catid) {
+      return fail(400, "catid不能为空");
+    }
+    const catdata = await this.catModel.get(catid);
+    if (!catdata) {
+      return fail(400, "分类不存在");
+    }
+    const project = await this.projectModel.getBaseInfo(catdata.project_id);
+    if (!project) {
+      return fail(407, "不存在的项目");
+    }
+
+    const option = applyStatusTagFilter({ catid }, status, tag);
+    const result = await this.interfaceModel.listByOptionWithPage(option, page, limit);
+    const count = await this.interfaceModel.listCount(option);
+    return ok({
+      count,
+      total: Math.ceil(count / limit),
+      list: result,
+      project,
+    });
+  }
+
+  /**
+   * 批量更新接口排序 index
+   */
+  updateIndexBatch(items) {
+    if (!items || !Array.isArray(items)) {
+      return fail(400, "请求参数必须是数组");
+    }
+    items.forEach((item) => {
+      if (item.id) {
+        this.interfaceModel.upIndex(item.id, item.index).then(
+          () => {},
+          (err) => {
+            yapi.commons.log(err.message, "error");
+          }
+        );
+      }
+    });
+    return ok("成功！");
+  }
+
+  /**
+   * 批量更新分类排序 index
+   */
+  updateCatIndexBatch(items) {
+    if (!items || !Array.isArray(items)) {
+      return fail(400, "请求参数必须是数组");
+    }
+    items.forEach((item) => {
+      if (item.id) {
+        this.catModel.upCatIndex(item.id, item.index).then(
+          () => {},
+          (err) => {
+            yapi.commons.log(err.message, "error");
+          }
+        );
+      }
+    });
+    return ok("成功！");
   }
 
   /**

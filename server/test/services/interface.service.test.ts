@@ -5,6 +5,7 @@
 import test from "ava";
 import interfaceService, {
   buildQueryPathFromUrl,
+  applyStatusTagFilter,
 } from "../../services/interface.service.js";
 
 test("addCategory 缺少项目 id 返回失败", async (t) => {
@@ -24,4 +25,10 @@ test("buildQueryPathFromUrl 解析 path 与 query", (t) => {
   t.is(query_path.path, "/api/user");
   t.is(query_path.params.length, 1);
   t.is(query_path.params[0].name, "id");
+});
+
+test("applyStatusTagFilter 附加 status 与 tag", (t) => {
+  const option = applyStatusTagFilter({ project_id: 1 }, "done", ["a", "b"]);
+  t.deepEqual(option.status, "done");
+  t.deepEqual(option.tag, { $in: ["a", "b"] });
 });

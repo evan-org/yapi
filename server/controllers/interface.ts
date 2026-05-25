@@ -332,52 +332,29 @@ class interfaceController extends baseController {
       limit = ctx.request.query.limit || 10;
     let status = ctx.request.query.status,
       tag = ctx.request.query.tag;
-    let project = await this.projectModel.getBaseInfo(project_id);
-    if (!project) {
-      return (ctx.body = yapi.commons.resReturn(null, 407, "不存在的项目"));
+
+    const proj = await interfaceService.getProjectBaseInfo(project_id);
+    if (!proj.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, proj.code, proj.message));
     }
-    if (project.project_type === "private") {
-      if ((await this.checkAuth(project._id, "project", "view")) !== true) {
+    if (proj.data.project_type === "private") {
+      if ((await this.checkAuth(proj.data._id, "project", "view")) !== true) {
         return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
       }
     }
-    if (!project_id) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
-    }
 
     try {
-      let result, count;
-      if (limit === "all") {
-        result = await this.Model.list(project_id);
-        count = await this.Model.listCount({project_id});
-      } else {
-        let option = {project_id};
-        if (status) {
-          if (Array.isArray(status)) {
-            option.status = {"$in": status};
-          } else {
-            option.status = status;
-          }
-        }
-        if (tag) {
-          if (Array.isArray(tag)) {
-            option.tag = {"$in": tag};
-          } else {
-            option.tag = tag;
-          }
-        }
-
-        result = await this.Model.listByOptionWithPage(option, page, limit);
-        count = await this.Model.listCount(option);
-      }
-
-
-      ctx.body = yapi.commons.resReturn({
-        count: count,
-        total: Math.ceil(count / limit),
-        list: result
+      const result = await interfaceService.listByProject({
+        project_id,
+        page,
+        limit,
+        status,
+        tag,
       });
-      yapi.emitHook("interface_list", result).then();
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      ctx.body = yapi.commons.resReturn(result.data);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }
@@ -400,44 +377,26 @@ class interfaceController extends baseController {
     let status = ctx.request.query.status,
       tag = ctx.request.query.tag;
 
-    if (!catid) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "catid不能为空"));
-    }
     try {
-      let catdata = await this.catModel.get(catid);
-
-      let project = await this.projectModel.getBaseInfo(catdata.project_id);
-      if (project.project_type === "private") {
-        if ((await this.checkAuth(project._id, "project", "view")) !== true) {
+      const result = await interfaceService.listByCategory({
+        catid,
+        page,
+        limit,
+        status,
+        tag,
+      });
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      if (result.data.project.project_type === "private") {
+        if ((await this.checkAuth(result.data.project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
         }
       }
-
-
-      let option = {catid}
-      if (status) {
-        if (Array.isArray(status)) {
-          option.status = {"$in": status};
-        } else {
-          option.status = status;
-        }
-      }
-      if (tag) {
-        if (Array.isArray(tag)) {
-          option.tag = {"$in": tag};
-        } else {
-          option.tag = tag;
-        }
-      }
-
-      let result = await this.Model.listByOptionWithPage(option, page, limit);
-
-      let count = await this.Model.listCount(option);
-
       ctx.body = yapi.commons.resReturn({
-        count: count,
-        total: Math.ceil(count / limit),
-        list: result
+        count: result.data.count,
+        total: result.data.total,
+        list: result.data.list,
       });
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message + "1");
@@ -772,22 +731,11 @@ class interfaceController extends baseController {
    */
   async upIndex(ctx) {
     try {
-      let params = ctx.request.body;
-      if (!params || !Array.isArray(params)) {
-        ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
+      const result = interfaceService.updateIndexBatch(ctx.request.body);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
       }
-      params.forEach((item) => {
-        if (item.id) {
-          this.Model.upIndex(item.id, item.index).then(
-            (res) => {},
-            (err) => {
-              yapi.commons.log(err.message, "error");
-            }
-          );
-        }
-      });
-
-      return (ctx.body = yapi.commons.resReturn("成功！"));
+      return (ctx.body = yapi.commons.resReturn(result.data));
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 400, e.message);
     }
@@ -805,22 +753,11 @@ class interfaceController extends baseController {
    */
   async upCatIndex(ctx) {
     try {
-      let params = ctx.request.body;
-      if (!params || !Array.isArray(params)) {
-        ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
+      const result = interfaceService.updateCatIndexBatch(ctx.request.body);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
       }
-      params.forEach((item) => {
-        if (item.id) {
-          this.catModel.upCatIndex(item.id, item.index).then(
-            (res) => {},
-            (err) => {
-              yapi.commons.log(err.message, "error");
-            }
-          );
-        }
-      });
-
-      return (ctx.body = yapi.commons.resReturn("成功！"));
+      return (ctx.body = yapi.commons.resReturn(result.data));
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 400, e.message);
     }
