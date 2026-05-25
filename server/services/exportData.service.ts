@@ -24,7 +24,7 @@ class ExportDataService extends BaseService {
     const result = await this.catModel.list(projectId);
     const newResult = [];
     for (let i = 0; i < result.length; i++) {
-      const item = result[i].toObject();
+      const item = result[i];
       let list = await this.interfaceModel.listByInterStatus(item._id, status);
       list = list.sort((a, b) => a.index - b.index);
       if (list.length > 0) {

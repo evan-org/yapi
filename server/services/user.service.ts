@@ -30,7 +30,7 @@ type UserActor = {
 
 type NavigationChainResult = {
   interface?: { project_id: number | string };
-  project?: { group_id: number | string; toObject: () => Record<string, unknown> };
+  project?: { group_id: number | string };
   group?: Record<string, unknown>;
 };
 
@@ -446,7 +446,7 @@ class UserService extends BaseService {
       }
       if (currentType === "group") {
         const groupData = await this.groupModel.get(currentId);
-        result.group = groupData.toObject();
+        result.group = groupData;
       }
       return ok(result);
     } catch (e) {

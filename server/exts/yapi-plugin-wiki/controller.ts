@@ -107,7 +107,7 @@ class wikiController extends baseController {
         type: "wiki",
         project_id: params.project_id,
         current: params.desc,
-        old: result ? result.toObject().desc : ""
+        old: result ? result.desc : ""
       };
       let wikiUrl = `${ctx.request.origin}/project/${params.project_id}/wiki`;
 

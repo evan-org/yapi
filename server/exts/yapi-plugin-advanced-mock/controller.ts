@@ -74,7 +74,7 @@ class advMockController extends baseController {
       let result = await this.caseModel.list(id);
       for (let i = 0, len = result.length; i < len; i++) {
         let userinfo = await this.userModel.findById(result[i].uid);
-        result[i] = result[i].toObject();
+        result[i] = result[i];
         // if (userinfo) {
         result[i].username = userinfo.username;
         // }

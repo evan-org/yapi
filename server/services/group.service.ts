@@ -39,7 +39,7 @@ class GroupService extends BaseService {
     if (!result) {
       return fail(404, "分组不存在");
     }
-    return ok(enrichGroupForDisplay(result.toObject()));
+    return ok(enrichGroupForDisplay(result));
   }
 
   /**
@@ -252,7 +252,7 @@ class GroupService extends BaseService {
       let result = await this.groupModel.list();
       if (result && result.length > 0) {
         for (let i = 0; i < result.length; i++) {
-          result[i] = result[i].toObject();
+          result[i] = result[i];
           newResult.unshift(result[i]);
         }
       }
@@ -260,7 +260,7 @@ class GroupService extends BaseService {
       let result = await this.groupModel.getAuthList(uid);
       if (result && result.length > 0) {
         for (let i = 0; i < result.length; i++) {
-          result[i] = result[i].toObject();
+          result[i] = result[i];
           newResult.unshift(result[i]);
         }
       }
@@ -277,13 +277,13 @@ class GroupService extends BaseService {
       }
       const newData = await this.groupModel.findByGroups(newGroupIds);
       newData.forEach((_data) => {
-        _data = _data.toObject();
+        _data = _data;
         newResult.push(_data);
       });
     }
 
     if (privateGroup) {
-      privateGroup = privateGroup.toObject();
+      privateGroup = privateGroup;
       privateGroup.group_name = "个人空间";
       privateGroup.role = "owner";
       newResult.unshift(privateGroup);

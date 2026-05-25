@@ -1,14 +1,13 @@
 /**
- * 将 Mongoose 风格 filter 转为 PostgreSQL WHERE（doc JSONB + _id）
+ * 将业务查询条件转为 PostgreSQL WHERE（JSONB doc + _id）
  */
-import type { DocRecord } from "./document.js";
+export type DocRecord = Record<string, unknown>;
 
 export type SqlParts = {
   where: string;
   params: unknown[];
 };
 
-/** JSONB 字段在 SQL 中的表示 */
 type JsonField =
   | { kind: "column"; sql: string }
   | { kind: "text"; sql: string }
@@ -20,8 +19,13 @@ function jsonPathKey(key: string): JsonField {
   }
   if (key.includes(".")) {
     const parts = key.split(".");
-    if (parts.length === 2) {
+    if (parts.length === 2 && parts[0] === "members") {
       return { kind: "array", arrKey: parts[0], field: parts[1] };
+    }
+    if (parts.length === 2) {
+      const a = parts[0].replace(/'/g, "''");
+      const b = parts[1].replace(/'/g, "''");
+      return { kind: "text", sql: `doc->'${a}'->>'${b}'` };
     }
     return { kind: "text", sql: `doc#>>'{${parts.join(",")}}'` };
   }
@@ -33,7 +37,6 @@ function fieldExpr(field: JsonField): string {
     return field.sql;
   }
   if (field.kind === "array") {
-    const arr = field.arrKey.replace(/'/g, "''");
     const f = field.field.replace(/'/g, "''");
     return `(elem->>'${f}')`;
   }
@@ -139,7 +142,7 @@ function buildClause(filter: DocRecord, params: unknown[]): string[] {
   return clauses;
 }
 
-export function filterToSql(filter: DocRecord | null | undefined): SqlParts {
+export function buildWhere(filter: DocRecord | null | undefined): SqlParts {
   if (!filter || Object.keys(filter).length === 0) {
     return { where: "TRUE", params: [] };
   }

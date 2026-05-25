@@ -97,11 +97,11 @@ class OpenService extends BaseService {
     const exportList = [];
 
     for (let i = 0; i < cats.length; i++) {
-      const cat = cats[i].toObject();
+      const cat = cats[i];
       let list = await this.interfaceModel.listByCatid(cat._id);
       list = list.sort((a, b) => (a.index || 0) - (b.index || 0));
       cat.list = list.map((item) => {
-        const api = item.toObject();
+        const api = item;
         delete api.__v;
         return api;
       });
