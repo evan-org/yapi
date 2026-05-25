@@ -12,24 +12,21 @@ import { loadWebConfig } from "./config/load-config.js";
 const __dirname = dirnameFromMeta(import.meta);
 
 /**
- * 解析 server 根目录：支持 tsx 直跑（server/）与 tsc 编译后（server/dist/）
+ * 解析 server 根目录：YAPI_WEBROOT > 含 .env 的目录 > tsx/tsc 布局
  */
 function resolveWebrootServer() {
   const fromEnv = process.env.YAPI_WEBROOT;
   if (fromEnv && fs.existsSync(fromEnv)) {
     return path.resolve(fromEnv);
   }
-  if (fs.existsSync(path.join(__dirname, "config.json"))) {
-    return __dirname;
-  }
-  const parent = path.join(__dirname, "..");
-  if (fs.existsSync(path.join(parent, "config.json"))) {
-    return parent;
-  }
   if (fs.existsSync(path.join(__dirname, ".env"))) {
     return __dirname;
   }
+  const parent = path.join(__dirname, "..");
   if (fs.existsSync(path.join(parent, ".env"))) {
+    return parent;
+  }
+  if (fs.existsSync(path.join(parent, "package.json"))) {
     return parent;
   }
   return __dirname;
@@ -80,10 +77,7 @@ const runtime = {
   getInst,
   delInst,
   getInsts: insts,
+  mail,
 };
-
-if (mail) {
-  runtime.mail = mail;
-}
 
 export default runtime;

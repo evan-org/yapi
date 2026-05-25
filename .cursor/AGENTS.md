@@ -23,7 +23,7 @@
 ## 路径约定
 
 - `yapi.WEBROOT` = `server/` 目录
-- 配置：**环境变量**（`server/.env`，见 `server/.env.example`），`config.json` 可选兜底；运行时单例 `server/runtime.ts`
+- 配置：**仅环境变量**（`server/.env` ← `.env.example`；Docker 用 `deploy/.env`）；`server/config/load-config.ts`
 - 扩展 API：`/api/extensions/*`（`routes/modules/extensions.routes.ts`）
 - Docker：`deploy/docker-compose.yml`（构建 context 为仓库根）
 - 前端 API：`client/src/lib/api/`
@@ -39,6 +39,6 @@ npm run build
 
 ## 不要做的事
 
-- 不要把 `config.json` 放回根目录；勿恢复 `common/`、`exts/` 目录
+- 不要使用 `server/config.json`；勿恢复 `common/`、`exts/` 目录
 - 不要恢复 `vendors/` 中间层
 - 不要引入 MongoDB / Mongoose，不要编写旧库数据迁移或 ETL 脚本

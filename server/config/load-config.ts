@@ -1,8 +1,9 @@
 // @ts-nocheck
 /**
- * 从环境变量加载配置，config.json 仅作可选兜底
+ * 运行时配置：仅通过环境变量 + server/.env 加载（12-Factor）
+ * 不再读取或合并 config.json
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { config as loadDotenv } from "dotenv";
 import type { YapiWebConfig } from "../types/global.js";
@@ -18,59 +19,70 @@ function envStr(key: string): string | undefined {
   return v;
 }
 
-/**
- * 环境变量优先，否则使用文件配置中的值
- */
-function pick<T>(envKey: string, fallback: T | undefined): T | undefined {
-  const fromEnv = envStr(envKey);
-  if (fromEnv !== undefined) {
-    return fromEnv as T;
+/** 解析布尔环境变量 */
+function envBool(key: string, defaultValue = false): boolean {
+  const v = envStr(key);
+  if (v === undefined) {
+    return defaultValue;
   }
-  return fallback;
+  return v === "true" || v === "1" || v === "yes";
+}
+
+/** 解析 JSON 对象环境变量 */
+function parseJsonEnv<T extends Record<string, unknown>>(
+  key: string
+): T | undefined {
+  const raw = envStr(key);
+  if (!raw) {
+    return undefined;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? (parsed as T) : undefined;
+  } catch (err) {
+    console.error(`${key} JSON 解析失败`, err);
+    return undefined;
+  }
+}
+
+/** 解析 JSON 数组环境变量 */
+function parseJsonArrayEnv(key: string): unknown[] {
+  const raw = envStr(key);
+  if (!raw) {
+    return [];
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    console.error(`${key} JSON 解析失败`, err);
+    return [];
+  }
 }
 
 /**
- * 解析第三方集成配置 integrations（JSON，如 qsso 登录）
+ * PostgreSQL：YAPI_DATABASE_URL 或分项变量
  */
-function parseIntegrations(
-  raw: string | undefined,
-  fileIntegrations: unknown
-): unknown[] {
-  if (raw) {
-    try {
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (err) {
-      console.error("YAPI_INTEGRATIONS 解析失败，回退 config.json", err);
-    }
+function buildDbFromEnv(): Record<string, unknown> {
+  const connectString =
+    envStr("YAPI_DATABASE_URL") || envStr("YAPI_POSTGRES_URI");
+  if (connectString) {
+    return { connectString };
   }
-  return Array.isArray(fileIntegrations) ? fileIntegrations : [];
-}
 
-/**
- * 合并 db 段：支持 YAPI_DATABASE_URL 或分项变量（PostgreSQL）
- */
-function buildDb(fileDb: Record<string, unknown> = {}): Record<string, unknown> {
-  const uri = envStr("YAPI_DATABASE_URL") || envStr("YAPI_POSTGRES_URI");
-  if (uri) {
-    return { ...fileDb, connectString: uri };
-  }
-  const servername = pick("YAPI_DB_HOST", fileDb.servername as string);
-  const DATABASE = pick("YAPI_DB_NAME", fileDb.DATABASE as string);
-  const portRaw =
-    pick("YAPI_DB_PORT", fileDb.port != null ? String(fileDb.port) : undefined) || "5432";
-  const user = pick("YAPI_DB_USER", fileDb.user as string);
-  const pass = pick("YAPI_DB_PASS", fileDb.pass as string);
+  const servername = envStr("YAPI_DB_HOST");
+  const DATABASE = envStr("YAPI_DB_NAME");
+  const port = Number(envStr("YAPI_DB_PORT") || "5432");
+  const user = envStr("YAPI_DB_USER");
+  const pass = envStr("YAPI_DB_PASS");
+  const poolSize = envStr("YAPI_DB_POOL_SIZE");
 
-  const db: Record<string, unknown> = { ...fileDb };
+  const db: Record<string, unknown> = { port };
   if (servername) {
     db.servername = servername;
   }
   if (DATABASE) {
     db.DATABASE = DATABASE;
-  }
-  if (portRaw) {
-    db.port = Number(portRaw);
   }
   if (user) {
     db.user = user;
@@ -78,36 +90,32 @@ function buildDb(fileDb: Record<string, unknown> = {}): Record<string, unknown> 
   if (pass) {
     db.pass = pass;
   }
+  if (poolSize) {
+    db.poolSize = Number(poolSize);
+  }
   return db;
 }
 
-/**
- * 合并 mail 段
- */
-function buildMail(fileMail: Record<string, unknown> = {}): Record<string, unknown> {
-  const enableEnv = envStr("YAPI_MAIL_ENABLE");
-  const enable =
-    enableEnv !== undefined ? enableEnv === "true" || enableEnv === "1" : fileMail.enable;
-
-  const host = pick("YAPI_MAIL_HOST", fileMail.host as string);
-  const portRaw = pick("YAPI_MAIL_PORT", fileMail.port != null ? String(fileMail.port) : undefined);
-  const from = pick("YAPI_MAIL_FROM", fileMail.from as string);
-  const user = pick("YAPI_MAIL_USER", (fileMail.auth as Record<string, string>)?.user);
-  const pass = pick("YAPI_MAIL_PASS", (fileMail.auth as Record<string, string>)?.pass);
-
-  const mail: Record<string, unknown> = { ...fileMail, enable };
+/** 邮件配置 */
+function buildMailFromEnv(): Record<string, unknown> {
+  const enable = envBool("YAPI_MAIL_ENABLE", false);
+  const mail: Record<string, unknown> = { enable };
+  const host = envStr("YAPI_MAIL_HOST");
+  const port = envStr("YAPI_MAIL_PORT");
+  const from = envStr("YAPI_MAIL_FROM");
+  const user = envStr("YAPI_MAIL_USER");
+  const pass = envStr("YAPI_MAIL_PASS");
   if (host) {
     mail.host = host;
   }
-  if (portRaw) {
-    mail.port = Number(portRaw);
+  if (port) {
+    mail.port = Number(port);
   }
   if (from) {
     mail.from = from;
   }
   if (user || pass) {
     mail.auth = {
-      ...(fileMail.auth as object),
       ...(user ? { user } : {}),
       ...(pass ? { pass } : {}),
     };
@@ -116,37 +124,36 @@ function buildMail(fileMail: Record<string, unknown> = {}): Record<string, unkno
 }
 
 /**
- * 加载 WEBCONFIG：先读 server/.env，再与 config.json 合并（环境变量优先）
+ * 若仍存在废弃的 config.json，仅提示迁移
  */
-export function loadWebConfig(webrootServer: string): YapiWebConfig {
-  loadDotenv({ path: path.join(webrootServer, ".env") });
-
-  let fileConfig: YapiWebConfig = {};
-  const configPath = path.join(webrootServer, "config.json");
-  if (existsSync(configPath)) {
-    fileConfig = JSON.parse(readFileSync(configPath, "utf8"));
+function warnDeprecatedConfigFile(serverRoot: string) {
+  const legacy = path.join(serverRoot, "config.json");
+  if (existsSync(legacy)) {
+    console.warn(
+      "[yapi] 已忽略 server/config.json，请改用 server/.env（见 server/.env.example）"
+    );
   }
+}
 
-  const portRaw = pick("YAPI_PORT", fileConfig.port != null ? String(fileConfig.port) : "3001");
-  const timeoutRaw = pick(
-    "YAPI_TIMEOUT",
-    fileConfig.timeout != null ? String(fileConfig.timeout) : "120000"
-  );
+/**
+ * 加载 WEBCONFIG：dotenv + process.env
+ * @param serverRoot server 工作区根目录（含 .env）
+ */
+export function loadWebConfig(serverRoot: string): YapiWebConfig {
+  loadDotenv({ path: path.join(serverRoot, ".env") });
+  warnDeprecatedConfigFile(serverRoot);
 
   return {
-    ...fileConfig,
-    port: Number(portRaw),
-    adminAccount: pick("YAPI_ADMIN_ACCOUNT", fileConfig.adminAccount),
-    timeout: Number(timeoutRaw),
-    closeRegister:
-      envStr("YAPI_CLOSE_REGISTER") === "true" || fileConfig.closeRegister === true,
-    passsalt: pick("YAPI_PASS_SALT", fileConfig.passsalt as string),
-    db: buildDb((fileConfig.db || {}) as Record<string, unknown>),
-    mail: buildMail((fileConfig.mail || {}) as Record<string, unknown>),
-    ldap: fileConfig.ldap,
-    integrations: parseIntegrations(
-      envStr("YAPI_INTEGRATIONS"),
-      fileConfig.integrations
-    ),
+    port: Number(envStr("YAPI_PORT") || "3001"),
+    adminAccount: envStr("YAPI_ADMIN_ACCOUNT"),
+    timeout: Number(envStr("YAPI_TIMEOUT") || "120000"),
+    closeRegister: envBool("YAPI_CLOSE_REGISTER", false),
+    passsalt: envStr("YAPI_PASS_SALT"),
+    scriptEnable: envBool("YAPI_SCRIPT_ENABLE", false),
+    versionNotify: envBool("YAPI_VERSION_NOTIFY", false),
+    db: buildDbFromEnv(),
+    mail: buildMailFromEnv(),
+    ldapLogin: parseJsonEnv("YAPI_LDAP_LOGIN"),
+    integrations: parseJsonArrayEnv("YAPI_INTEGRATIONS"),
   };
 }

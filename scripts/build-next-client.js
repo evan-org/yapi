@@ -7,7 +7,7 @@ const { execSync } = require("child_process");
 const projectRoot = path.join(__dirname, "..");
 const clientRoot = path.join(projectRoot, "client");
 
-require("./ensure-config.js");
+require("./ensure-env.js");
 
 const clientLock = path.join(clientRoot, "package-lock.json");
 if (!require("fs").existsSync(path.join(clientRoot, "node_modules"))) {

@@ -1,0 +1,10 @@
+---
+description: 脚本与构建辅助
+globs:
+  - scripts/**/*
+---
+
+# 脚本
+
+- `scripts/ensure-env.js`：构建前确保 `server/.env` 存在（从 `.env.example` 复制）
+- `scripts/build-next-client.js`：构建 Next 前端
