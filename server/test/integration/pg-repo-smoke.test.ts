@@ -15,6 +15,7 @@ import {
   followRepository,
   avatarRepository,
   storageRepository,
+  wikiRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -648,6 +649,80 @@ test("storageRepository 可写入、读取、更新并删除", async (t) => {
     t.deepEqual(updated, { foo: "baz", extra: 1 });
   } finally {
     await storageRepository.del(key);
+    await disconnectPg();
+  }
+});
+
+test("wikiRepository 可写入、查询、更新并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  let projectId;
+  let groupId;
+  let wikiId;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-wiki-${Date.now()}`,
+      group_desc: "ci",
+      uid: 999989,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const project = await projectRepository.save({
+      name: `ci-proj-wiki-${Date.now()}`,
+      group_id: groupId,
+      uid: 999989,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = project._id;
+
+    const saved = await wikiRepository.save({
+      project_id: projectId,
+      desc: "ci wiki desc",
+      markdown: "# wiki",
+      username: "ci-user",
+      uid: 999989,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      edit_uid: 0,
+    });
+    wikiId = saved._id;
+    t.truthy(wikiId);
+
+    const found = await wikiRepository.get(projectId);
+    t.truthy(found);
+    t.is(found.desc, "ci wiki desc");
+
+    await wikiRepository.up(wikiId, {
+      desc: "ci wiki updated",
+      up_time: commons.time(),
+    });
+    const afterUp = await wikiRepository.get(projectId);
+    t.is(afterUp.desc, "ci wiki updated");
+
+    await wikiRepository.upEditUid(wikiId, 999989);
+    const afterEdit = await wikiRepository.get(projectId);
+    t.is(afterEdit.edit_uid, 999989);
+  } finally {
+    if (projectId) {
+      await wikiRepository.delByProjectId(projectId);
+    }
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
     await disconnectPg();
   }
 });

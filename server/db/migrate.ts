@@ -185,6 +185,19 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       data TEXT NOT NULL DEFAULT ''
     )
   `,
+  wiki: `
+    CREATE TABLE IF NOT EXISTS ${tableName("wiki")} (
+      _id SERIAL PRIMARY KEY,
+      project_id BIGINT NOT NULL DEFAULT 0,
+      desc TEXT NOT NULL DEFAULT '',
+      markdown TEXT NOT NULL DEFAULT '',
+      username TEXT NOT NULL DEFAULT '',
+      uid BIGINT NOT NULL DEFAULT 0,
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      edit_uid BIGINT NOT NULL DEFAULT 0
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -241,7 +254,7 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_follow_projectid ON ${tableName("follow")} (projectid)`,
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_follow_uid_project ON ${tableName("follow")} (uid, projectid)`,
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_storage_key ON ${tableName("storage")} (key)`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_wiki_pid ON ${tableName("wiki")} ((doc->>'project_id'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_wiki_pid ON ${tableName("wiki")} (project_id)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_pid ON ${tableName("adv_mock")} ((doc->>'project_id'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_iid ON ${tableName("adv_mock")} ((doc->>'interface_id'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_case_pid ON ${tableName("adv_mock_case")} ((doc->>'project_id'))`,

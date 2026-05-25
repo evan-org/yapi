@@ -1,5 +1,9 @@
 // @ts-nocheck
+/**
+ * Wiki 模型：委托关系型 wikiRepository
+ */
 import baseModel from "models/base";
+import { wikiRepository } from "../../repositories/wiki.repo.js";
 
 class wikiModel extends baseModel {
   getName() {
@@ -7,19 +11,19 @@ class wikiModel extends baseModel {
   }
 
   save(data) {
-    return this.store.insert(data);
+    return wikiRepository.save(data);
   }
 
   get(project_id) {
-    return this.store.findOne({ project_id });
+    return wikiRepository.get(project_id);
   }
 
   up(id, data) {
-    return this.store.updateById(id, data);
+    return wikiRepository.up(id, data);
   }
 
   upEditUid(id, uid) {
-    return this.store.updateById(id, { edit_uid: uid });
+    return wikiRepository.upEditUid(id, uid);
   }
 }
 

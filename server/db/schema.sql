@@ -157,7 +157,14 @@ CREATE TABLE IF NOT EXISTS yapi_storage (
 );
 CREATE TABLE IF NOT EXISTS yapi_wiki (
   _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
+  project_id BIGINT NOT NULL DEFAULT 0,
+  desc TEXT NOT NULL DEFAULT '',
+  markdown TEXT NOT NULL DEFAULT '',
+  username TEXT NOT NULL DEFAULT '',
+  uid BIGINT NOT NULL DEFAULT 0,
+  add_time BIGINT NOT NULL DEFAULT 0,
+  up_time BIGINT NOT NULL DEFAULT 0,
+  edit_uid BIGINT NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS yapi_adv_mock (
   _id SERIAL PRIMARY KEY,
@@ -209,7 +216,7 @@ CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON yapi_follow (uid);
 CREATE INDEX IF NOT EXISTS idx_yapi_follow_projectid ON yapi_follow (projectid);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_follow_uid_project ON yapi_follow (uid, projectid);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_storage_key ON yapi_storage (key);
-CREATE INDEX IF NOT EXISTS idx_yapi_wiki_pid ON yapi_wiki ((doc->>'project_id'));
+CREATE INDEX IF NOT EXISTS idx_yapi_wiki_pid ON yapi_wiki (project_id);
 CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_pid ON yapi_adv_mock ((doc->>'project_id'));
 CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_iid ON yapi_adv_mock ((doc->>'interface_id'));
 CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_case_pid ON yapi_adv_mock_case ((doc->>'project_id'));
