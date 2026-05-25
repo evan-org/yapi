@@ -1,16 +1,16 @@
 const path = require("path");
 const fs = require("fs-extra");
 const nodemailer = require("nodemailer");
-const config = require("../config.json");
+const config = require(path.join(__dirname, "config.json"));
 
 let insts = new Map();
 let mail;
 
-/** 仓库根目录（server、client、exts、node_modules 同级） */
-const WEBROOT = path.resolve(__dirname, "..");
+/** 后端工作区根目录（config、exts、common、node_modules 均在 server/ 内） */
+const WEBROOT = path.resolve(__dirname, ".");
 const WEBROOT_SERVER = __dirname;
 const WEBROOT_RUNTIME = WEBROOT;
-const WEBROOT_LOG = path.join(WEBROOT_RUNTIME, "log");
+const WEBROOT_LOG = path.join(WEBROOT, "log");
 const WEBCONFIG = config;
 
 fs.ensureDirSync(WEBROOT_LOG);

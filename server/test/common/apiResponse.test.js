@@ -54,7 +54,7 @@ test("finalizeResponse 跳过原始路径", (t) => {
 });
 
 test("resReturn 兼容 commons", (t) => {
-  const { resReturn } = require("../../server/utils/commons");
+  const { resReturn } = require("../../utils/commons");
   const ok = resReturn({ a: 1 });
   t.is(ok.errcode, 0);
   const err = resReturn(null, 400, "参数错误");

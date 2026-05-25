@@ -15,11 +15,11 @@ setTimeout(() => process.exit(1), 3000);
 done
 echo "MongoDB 已就绪"
 
-if [ ! -f /yapi/init.lock ]; then
-  echo "提示: 首次部署请执行: docker compose exec yapi node server/install.js"
+if [ ! -f /yapi/server/init.lock ]; then
+  echo "提示: 首次部署请执行: docker compose exec yapi npm run install-server -w yapi-server"
   echo "      默认管理员密码: ymfe.org"
 fi
 
-# Hono API（内网 3001），Next.js 对外 4000（/api 由 next.config 反代）
-node server/app.js "$@" &
-exec npm run start:client -- -p 4000 -H 0.0.0.0
+# API 在 server/ 工作区内启动；Next 在 client/
+cd /yapi/server && node app.js "$@" &
+cd /yapi && exec npm run start:client --workspace=client -- -p 4000 -H 0.0.0.0

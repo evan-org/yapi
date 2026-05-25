@@ -19,7 +19,7 @@ const sandboxFn = require("./sandbox")
 const ejs = require("easy-json-schema");
 
 const jsf = require("json-schema-faker");
-const { schemaValidator } = require("../../common/utils");
+const { schemaValidator } = require("../common/utils");
 const http = require("http");
 
 jsf.extend("mock", function() {

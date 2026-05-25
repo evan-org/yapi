@@ -11,8 +11,8 @@ const userModel = require("../models/user.js");
 const projectModel = require("../models/project.js");
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
-const showDiffMsg = require("../../common/diff-view.js");
-const mergeJsonSchema = require("../../common/mergeJsonSchema");
+const showDiffMsg = require("../common/diff-view.js");
+const mergeJsonSchema = require("../common/mergeJsonSchema");
 const fs = require("fs-extra");
 const path = require("path");
 

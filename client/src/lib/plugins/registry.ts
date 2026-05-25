@@ -1,6 +1,6 @@
 /**
  * 自动生成：npm run predev / prebuild 会重新生成 enabledPluginNames
- * 插件业务能力由服务端 exts 提供，Next 通过路由与项目设置页接入
+ * 插件业务能力由 server/exts 提供，Next 通过路由与项目设置页接入
  */
 export const enabledPluginNames: string[] = [
   "import-postman",

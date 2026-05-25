@@ -1,5 +1,5 @@
 import test from "ava";
-const { matchApi } = require("../../server/middleware/mockServer.js");
+const { matchApi } = require("../../middleware/mockServer.js");
 
 test("matchApi", (t) => {
   const apiRule = "/user/:username";

@@ -1,32 +1,25 @@
-# 阶段一：安装依赖、构建前端、裁剪 devDependencies
+# 阶段一：安装依赖、构建前端
 FROM node:18-bookworm-slim AS builder
 
 WORKDIR /yapi
 
-COPY config.docker.example.json ./config.json
-COPY package.json package-lock.json ./
+COPY package.json ./
+COPY server/package.json server/package-lock.json ./server/
 COPY client/package.json client/package-lock.json ./client/
 
-RUN npm ci --legacy-peer-deps
-WORKDIR /yapi/client
-RUN npm ci --legacy-peer-deps
+RUN npm install --legacy-peer-deps --workspace=yapi-server --workspace=client
 
-WORKDIR /yapi
 COPY . .
 
-WORKDIR /yapi
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV YAPI_API_URL="http://127.0.0.1:3001"
-RUN npm run build && npm prune --production
-WORKDIR /yapi/client
-RUN npm prune --production
+RUN npm run build-client && npm prune --production --workspace=yapi-server && npm prune --production --workspace=client
 
 # 阶段二：生产运行
 FROM node:18-bookworm-slim
 
 WORKDIR /yapi
 
-COPY --from=builder /yapi/config.json /yapi/config.json
 COPY --from=builder /yapi /yapi
 
 RUN chmod +x docker-entrypoint.sh

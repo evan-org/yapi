@@ -1,8 +1,8 @@
 import test from "ava";
 import path from "path";
 
-const configCheckPath = path.join(__dirname, "../../server/utils/configCheck.js");
-const yapiPath = path.join(__dirname, "../../server/yapi.js");
+const configCheckPath = path.join(__dirname, "../../utils/configCheck.js");
+const yapiPath = path.join(__dirname, "../../yapi.js");
 
 test("db 配置缺失时应抛出错误", (t) => {
   const yapi = require(yapiPath);

@@ -1,17 +1,9 @@
 ---
-description: 插件与构建脚本
-globs: exts/**/*,scripts/**/*,client/src/lib/plugins/**/*
+description: 插件与脚本
+globs: server/exts/**/*,scripts/**/*,client/src/lib/plugins/**/*
 ---
 
-# 插件与脚本
+# 插件
 
-## 插件目录 `exts/`
-
-- 业务能力在 `server.js`；`import_data` 等钩子在此注册。
-- 勿在 Next 中加载 `client.js`。
-
-## 构建
-
-- `scripts/generate-plugin-module.js` → `client/src/lib/plugins/registry.ts`
-- `scripts/build-next-client.js` → 产物 `client/.next/`
-- Next 反代：`client/next.config.ts` 中 `/api` → `YAPI_API_URL`
+- 目录：`server/exts/`
+- 注册表生成：`scripts/generate-plugin-module.js`（读取 `server/config.json`）

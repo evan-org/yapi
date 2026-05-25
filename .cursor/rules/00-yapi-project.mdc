@@ -1,34 +1,20 @@
 ---
-description: YApi 项目身份与架构边界，防止回退到已删除技术栈
+description: YApi 项目身份与架构边界
 alwaysApply: true
 ---
 
-# YApi 项目核心（始终遵守）
+# YApi 项目核心
 
-## 架构（不可偏移）
+## 架构
 
-- **前端唯一入口**：`client/`（Next.js 15 App Router + shadcn/ui + Tailwind）。
-- **后端**：`server/`（Hono + Node），配置在仓库根目录 `config.json`。
-- **已废弃、禁止恢复**：`vendors/` 包装层、Vite、`static/prd` 构建、Ant Design / Redux 作为正式 UI。
+- **后端**：`server/` 自包含（config、common、exts、依赖、测试均在 server 内）
+- **前端**：`client/`
+- **根目录**：workspaces 编排 + `scripts/`，禁止把后端配置/依赖散落在根目录
 
-## 工作目录
+## 命令（仓库根目录）
 
-- 安装、构建、测试均在**仓库根目录**执行：`npm run dev` | `build` | `test:server`。
-- 改前端前先读 `client/src/lib/api/` 是否已有封装，避免重复造 fetch。
+`npm run dev` | `dev-server` | `dev-client` | `test:server` | `build`
 
-## 文档优先级
+## 配置
 
-1. 根目录 `AGENTS.md`（AI 协作）
-2. 根目录 `README.md`（人类上手）
-3. 本目录 `.cursor/rules/*.mdc`
-
-## 禁止行为
-
-- 不要未经用户要求新增总结类 markdown（README/AGENTS/规则除外）。
-- 不要批量删除 `console.log` / `console.error`。
-- 不要在 Next 中 `require` `exts/**/client.js`（旧 React 插件 UI 路径已失效）。
-
-## Git 分支（Cloud Agent）
-
-- 功能分支：`cursor/<描述>-5bb5`（全小写），基于 `main`。
-- 改 `server`/`common` 后跑 `npm run test:server`；改 `client` 后跑 `npm run build`。
+复制 `server/config.example.json` → `server/config.json`，勿使用根目录 `config.json`（已废弃）。

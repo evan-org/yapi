@@ -1,7 +1,7 @@
 # 本地一键启动 YApi + MongoDB
-# 1. cp config.docker.example.json config.json
+# 1. cp server/config.docker.example.json server/config.json
 # 2. docker compose up -d --build
-# 3. docker compose exec yapi node server/install.js
+# 3. docker compose exec yapi npm run install-server -w yapi-server
 
 services:
   mongo:
@@ -29,8 +29,8 @@ services:
       MONGO_PORT: "27017"
       YAPI_API_URL: "http://127.0.0.1:3000"
     volumes:
-      - ./config.json:/yapi/config.json:ro
-      - yapi_runtime:/yapi
+      - ./server/config.json:/yapi/server/config.json:ro
+      - yapi_runtime:/yapi/server
     depends_on:
       mongo:
         condition: service_healthy

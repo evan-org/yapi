@@ -7,7 +7,7 @@ import {
   verifyPath,
   sandbox,
   handleVarPath
-} from "../../server/utils/commons.js";
+} from "../../utils/commons.js";
 
 test("trim", (t) => {
   t.is(trim(" a   b  ksjdfk    "), "a   b  ksjdfk");

@@ -20,8 +20,11 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+      - name: Prepare server config
+        run: cp server/config.example.json server/config.json
+
+      - name: Install workspaces
+        run: npm install --legacy-peer-deps
 
       - name: Run server tests
         run: npm run test:server
@@ -39,23 +42,16 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Prepare config
-        run: cp config_example.json config.json
+      - name: Prepare server config
+        run: cp server/config.example.json server/config.json
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+      - name: Install workspaces
+        run: npm install --legacy-peer-deps
 
-      - name: Install Next.js client dependencies
-        run: npm ci --legacy-peer-deps
-        working-directory: client
-
-      - name: Build frontend (Next.js)
+      - name: Build frontend
         run: npm run build
         env:
           CI: "true"
 
-      - name: Verify Next.js build output
-        run: node scripts/verify-next-build.js
-
-      - name: Lint Next.js client
+      - name: Lint client
         run: npm run lint:client
