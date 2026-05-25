@@ -193,3 +193,20 @@ export function interfaceCaseFromRow(row: DocRecord): DocRecord {
 
 export const INTERFACE_CASE_SELECT =
   '_id, uid, casename, col_id, interface_id, project_id, "index", add_time, up_time, case_env, req_body_type, req_body_other, test_script, req_headers, req_query, req_params, req_body_form';
+
+/** log 表行 → 业务对象 */
+export function logFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    content: row.content,
+    type: row.type,
+    uid: row.uid,
+    username: row.username,
+    typeid: row.typeid,
+    add_time: row.add_time,
+    data: readJsonCol(row.data, {}),
+  };
+}
+
+export const LOG_SELECT =
+  "_id, content, type, uid, username, typeid, add_time, data";

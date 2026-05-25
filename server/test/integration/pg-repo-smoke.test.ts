@@ -10,6 +10,7 @@ import {
   interfaceCatRepository,
   interfaceColRepository,
   interfaceCaseRepository,
+  logRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -377,6 +378,69 @@ test("interfaceCaseRepository 可写入、查询并删除", async (t) => {
     }
     if (interfaceId) {
       await interfaceRepository.del(interfaceId);
+    }
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("logRepository 可写入、分页查询并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  let logId;
+  let projectId;
+  let groupId;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-log-${Date.now()}`,
+      group_desc: "ci",
+      uid: 999993,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const project = await projectRepository.save({
+      name: `ci-proj-log-${Date.now()}`,
+      group_id: groupId,
+      uid: 999993,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = project._id;
+
+    const saved = await logRepository.save({
+      content: "ci log entry",
+      type: "project",
+      uid: 999993,
+      username: "ci-user",
+      typeid: projectId,
+      data: { type: "wiki" },
+    });
+    logId = saved._id;
+    t.truthy(logId);
+
+    const count = await logRepository.listCount(projectId, "project", "wiki");
+    t.true(count >= 1);
+
+    const page = await logRepository.listWithPaging(projectId, "project", 1, 10, "wiki");
+    t.true(page.some((row) => row._id === logId));
+  } finally {
+    if (logId) {
+      await logRepository.del(logId);
     }
     if (projectId) {
       await projectRepository.del(projectId);
