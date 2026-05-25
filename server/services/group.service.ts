@@ -1,9 +1,8 @@
-// @ts-nocheck
 /**
  * 项目分组业务逻辑
  */
-import yapi from "../runtime.js";
 import _ from "underscore";
+import commons from "../utils/commons.js";
 import {
   groupRepository,
   projectRepository,
@@ -14,42 +13,46 @@ import {
 import BaseService from "./base.service.js";
 import userService from "./user.service.js";
 import { ok, fail } from "./service-result.js";
+import {
+  GROUP_ROLE_LABEL,
+  enrichGroupForDisplay,
+  resolveMemberRole,
+} from "./group.util.js";
 
-const ROLE_LABEL = {
-  owner: "组长",
-  dev: "开发者",
-  guest: "访客",
+type GroupOperator = {
+  uid: number | string;
+  username: string;
 };
 
 class GroupService extends BaseService {
-  constructor() {
-    super();
-    this.groupModel = groupRepository;
-    this.projectModel = projectRepository;
-    this.interfaceModel = interfaceRepository;
-    this.interfaceColModel = interfaceColRepository;
-    this.interfaceCaseModel = interfaceCaseRepository;
-  }
+  groupModel = groupRepository;
+  projectModel = projectRepository;
+  interfaceModel = interfaceRepository;
+  interfaceColModel = interfaceColRepository;
+  interfaceCaseModel = interfaceCaseRepository;
 
   /**
    * 获取分组详情（不含 role，role 由 controller 注入）
    */
-  async getById(id) {
+  async getById(id: number | string) {
     const result = await this.groupModel.getGroupById(id);
     if (!result) {
       return fail(404, "分组不存在");
     }
-    const group = result.toObject();
-    if (group.type === "private") {
-      group.group_name = "个人空间";
-    }
-    return ok(group);
+    return ok(enrichGroupForDisplay(result.toObject()));
   }
 
   /**
    * 新增分组
    */
-  async create(params, operator) {
+  async create(
+    params: {
+      group_name: string;
+      group_desc?: string;
+      owner_uids?: Array<number | string>;
+    },
+    operator: GroupOperator
+  ) {
     let ownerUids = params.owner_uids || [];
     if (ownerUids.length === 0) {
       ownerUids.push(operator.uid);
@@ -70,12 +73,12 @@ class GroupService extends BaseService {
       group_name: params.group_name,
       group_desc: params.group_desc,
       uid: operator.uid,
-      add_time: yapi.commons.time(),
-      up_time: yapi.commons.time(),
+      add_time: commons.time(),
+      up_time: commons.time(),
       members: owners,
     };
     let result = await this.groupModel.save(data);
-    result = yapi.commons.fieldSelect(result, [
+    result = commons.fieldSelect(result, [
       "_id",
       "group_name",
       "group_desc",
@@ -83,7 +86,7 @@ class GroupService extends BaseService {
       "members",
       "type",
     ]);
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 新增了分组 <a href="/group/${result._id}">${params.group_name}</a>`,
       type: "group",
       uid: operator.uid,
@@ -96,14 +99,14 @@ class GroupService extends BaseService {
   /**
    * 获取或创建当前用户私有空间
    */
-  async getOrCreatePrivateGroup(uid) {
+  async getOrCreatePrivateGroup(uid: number | string) {
     let privateGroup = await this.groupModel.getByPrivateUid(uid);
     if (!privateGroup) {
       privateGroup = await this.groupModel.save({
         uid,
         group_name: "User-" + uid,
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
+        add_time: commons.time(),
+        up_time: commons.time(),
         type: "private",
       });
     }
@@ -113,9 +116,15 @@ class GroupService extends BaseService {
   /**
    * 添加分组成员
    */
-  async addMembers(params, operator) {
-    const role =
-      ["owner", "dev", "guest"].find((v) => v === params.role) || "dev";
+  async addMembers(
+    params: {
+      id: number | string;
+      role?: string;
+      member_uids: Array<number | string>;
+    },
+    operator: GroupOperator
+  ) {
+    const role = resolveMemberRole(params.role);
     const addMembers = [];
     const existMembers = [];
     const noMembers = [];
@@ -134,12 +143,11 @@ class GroupService extends BaseService {
     }
     const result = await this.groupModel.addMember(params.id, addMembers);
     if (addMembers.length) {
-      let members = addMembers.map(
-        (item) => `<a href = "/user/profile/${item.uid}">${item.username}</a>`
-      );
-      members = members.join("、");
-      yapi.commons.saveLog({
-        content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 新增了分组成员 ${members} 为 ${ROLE_LABEL[role]}`,
+      const memberLinks = addMembers
+        .map((item) => `<a href = "/user/profile/${item.uid}">${item.username}</a>`)
+        .join("、");
+      commons.saveLog({
+        content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 新增了分组成员 ${memberLinks} 为 ${GROUP_ROLE_LABEL[role]}`,
         type: "group",
         uid: operator.uid,
         username: operator.username,
@@ -157,7 +165,14 @@ class GroupService extends BaseService {
   /**
    * 修改成员角色（不含权限校验）
    */
-  async changeMemberRole(params, operator) {
+  async changeMemberRole(
+    params: {
+      id: number | string;
+      member_uid: number | string;
+      role?: string;
+    },
+    operator: GroupOperator
+  ) {
     const check = await this.groupModel.checkMemberRepeat(
       params.id,
       params.member_uid
@@ -165,8 +180,7 @@ class GroupService extends BaseService {
     if (check === 0) {
       return fail(400, "分组成员不存在");
     }
-    const role =
-      ["owner", "dev", "guest"].find((v) => v === params.role) || "dev";
+    const role = resolveMemberRole(params.role);
     const result = await this.groupModel.changeMemberRole(
       params.id,
       params.member_uid,
@@ -176,8 +190,8 @@ class GroupService extends BaseService {
       params.member_uid,
       role
     );
-    yapi.commons.saveLog({
-      content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 更改了分组成员 <a href="/user/profile/${params.member_uid}">${groupUserdata ? groupUserdata.username : ""}</a> 的权限为 "${ROLE_LABEL[role]}"`,
+    commons.saveLog({
+      content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 更改了分组成员 <a href="/user/profile/${params.member_uid}">${groupUserdata ? groupUserdata.username : ""}</a> 的权限为 "${GROUP_ROLE_LABEL[role]}"`,
       type: "group",
       uid: operator.uid,
       username: operator.username,
@@ -189,7 +203,7 @@ class GroupService extends BaseService {
   /**
    * 分组成员列表
    */
-  async getMemberList(groupId) {
+  async getMemberList(groupId: number | string) {
     const group = await this.groupModel.get(groupId);
     return ok(group.members);
   }
@@ -197,7 +211,14 @@ class GroupService extends BaseService {
   /**
    * 删除分组成员（不含权限校验）
    */
-  async removeMember(params, operator) {
+  async removeMember(
+    params: {
+      id: number | string;
+      member_uid: number | string;
+      role?: string;
+    },
+    operator: GroupOperator
+  ) {
     const check = await this.groupModel.checkMemberRepeat(
       params.id,
       params.member_uid
@@ -210,7 +231,7 @@ class GroupService extends BaseService {
       params.member_uid,
       params.role
     );
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 删除了分组成员 <a href="/user/profile/${params.member_uid}">${groupUserdata ? groupUserdata.username : ""}</a>`,
       type: "group",
       uid: operator.uid,
@@ -223,7 +244,7 @@ class GroupService extends BaseService {
   /**
    * 当前用户可见的分组列表
    */
-  async listForUser(uid, role) {
+  async listForUser(uid: number | string, role: string) {
     let privateGroup = await this.getOrCreatePrivateGroup(uid);
     const newResult = [];
 
@@ -273,7 +294,7 @@ class GroupService extends BaseService {
   /**
    * 删除分组及下属项目数据（仅 admin）
    */
-  async removeGroup(groupId) {
+  async removeGroup(groupId: number | string) {
     const projectList = await this.projectModel.list(groupId, true);
     for (const p of projectList) {
       await this.interfaceModel.delByProjectId(p._id);
@@ -290,9 +311,12 @@ class GroupService extends BaseService {
   /**
    * 更新分组（不含权限校验）
    */
-  async updateGroup(params, operator) {
+  async updateGroup(
+    params: { id: number | string; group_name: string; [key: string]: unknown },
+    operator: GroupOperator
+  ) {
     const result = await this.groupModel.up(params.id, params);
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 更新了 <a href="/group/${params.id}">${params.group_name}</a> 分组`,
       type: "group",
       uid: operator.uid,
