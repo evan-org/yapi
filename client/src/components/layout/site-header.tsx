@@ -18,6 +18,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { cn } from "../../lib/utils";
+import { featureRoutes } from "../../lib/features";
 
 const navItems = [
   { href: "/group", label: "分组" },
@@ -60,9 +61,9 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2">
           {user?.role === "admin" ? (
             <Button variant="ghost" size="sm" className="text-white hover:bg-white/10" asChild>
-              <Link href="/statistic">
+              <Link href={featureRoutes.statistics.path || "/statistic"}>
                 <BarChart3 className="mr-1 h-4 w-4" />
-                系统信息
+                {featureRoutes.statistics.label}
               </Link>
             </Button>
           ) : null}

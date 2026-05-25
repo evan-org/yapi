@@ -1,14 +1,14 @@
 // @ts-nocheck
-import baseController from 'controllers/base';
+import baseController from "./base.js";
 
 import { wikiRepository, projectRepository } from "../repositories/index.js";
 
-import userModel from 'models/user';
+import { userRepository } from "../repositories/index.js";
 
 import jsondiffpatch from 'jsondiffpatch';
 
 const formattersHtml = jsondiffpatch.formatters.html;
-import yapi from 'runtime.js';
+import yapi from "../runtime.js";
 
 // import util from './util.js';
 
@@ -219,8 +219,7 @@ class wikiController extends baseController {
   async editorFunc(result) {
     let userInst, userinfo, data;
     if (result && result.edit_uid !== 0 && result.edit_uid !== this.getUid()) {
-      userInst = yapi.getInst(userModel);
-      userinfo = await userInst.findById(result.edit_uid);
+      userinfo = await userRepository.findById(result.edit_uid);
       data = {
         errno: result.edit_uid,
         data: { uid: result.edit_uid, username: userinfo.username }

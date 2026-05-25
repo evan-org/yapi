@@ -25,7 +25,7 @@ createAction(
   API_BASE,
   wikiController,
   "wikiConflict",
-  "/ws_plugin/wiki_desc/solve_conflict",
+  "/wiki/solve_conflict",
   "get",
   true
 );

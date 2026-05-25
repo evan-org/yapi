@@ -1,7 +1,7 @@
 // @ts-nocheck
-import baseController from 'controllers/base';
+import baseController from "./base.js";
 
-import yapi from 'runtime.js';
+import yapi from "../runtime.js";
 import {
   advMockRepository,
   advMockCaseRepository,

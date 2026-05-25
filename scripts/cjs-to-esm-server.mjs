@@ -9,7 +9,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const serverRoot = path.join(__dirname, "..", "server");
 
-const SKIP_PARTS = ["common/tui-editor/dist", "types/"];
+const SKIP_PARTS = ["types/"];
 
 function shouldSkip(rel) {
   return SKIP_PARTS.some((p) => rel.includes(p));
