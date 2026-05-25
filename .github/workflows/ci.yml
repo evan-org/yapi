@@ -26,6 +26,9 @@ jobs:
       - name: Install workspaces
         run: npm install --legacy-peer-deps
 
+      - name: Typecheck server
+        run: npm run typecheck:server
+
       - name: Run server tests
         run: npm run test:server
 
@@ -52,6 +55,9 @@ jobs:
         run: npm run build
         env:
           CI: "true"
+
+      - name: Typecheck client
+        run: npm run typecheck:client
 
       - name: Lint client
         run: npm run lint:client

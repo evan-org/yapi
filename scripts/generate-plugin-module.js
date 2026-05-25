@@ -8,7 +8,7 @@ const repoRoot = path.join(__dirname, "..");
 const serverRoot = path.join(repoRoot, "server");
 const outputFile = path.join(repoRoot, "client", "src", "lib", "plugins", "registry.ts");
 
-const commonLib = require(path.join(serverRoot, "common/plugin.js"));
+const commonLib = require(path.join(serverRoot, "common/plugin"));
 const { exts: systemConfigPlugin } = require(path.join(serverRoot, "common/config"));
 
 /**

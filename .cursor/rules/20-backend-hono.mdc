@@ -5,7 +5,8 @@ globs: server/**/*
 
 # 后端（server/）
 
-- 入口：`server/app.js`
+- 入口：`server/app.ts`（开发 `tsx` / 生产 `tsx` 或 `node dist/app.js`）
+- 源码为 TypeScript（`*.ts`），编译输出 `server/dist/`
 - 配置：`server/config.json`
 - `WEBROOT` = `server/` 目录（`__dirname` of yapi.js）
 - 新路由：`server/router.js` + `server/controllers/`

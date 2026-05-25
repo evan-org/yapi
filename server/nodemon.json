@@ -1,3 +1,6 @@
 {
-    "watch": ["server/", "common/", "plugins", "exts/"]
+  "watch": ["./", "common/", "exts/"],
+  "ext": "ts,json",
+  "ignore": ["dist/", "node_modules/", "common/tui-editor/dist/"],
+  "exec": "tsx app.ts dev -L"
 }

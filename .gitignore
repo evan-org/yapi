@@ -2,6 +2,7 @@
 server/config.json
 server/init.lock
 server/log/
+server/dist/
 
 # 根目录遗留（请改用 server/config.json）
 config.json

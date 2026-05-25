@@ -4,13 +4,16 @@
   "description": "YApi Hono API 服务",
   "private": true,
   "type": "commonjs",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon app.js dev -L",
-    "start": "cross-env NODE_ENV=production node app.js",
-    "install-server": "node install.js",
-    "test": "ava test/**/*.test.js",
-    "npm-publish": "node npm-publish.js"
+    "dev": "cross-env NODE_ENV=development nodemon",
+    "start": "cross-env NODE_ENV=production tsx app.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "install-server": "tsx install.ts",
+    "pretest": "npm run build",
+    "test": "cross-env YAPI_ENV=test node ../node_modules/ava/cli.js dist/test/**/*.test.js",
+    "npm-publish": "tsx npm-publish.ts"
   },
   "license": "Apache-2.0",
   "dependencies": {
@@ -58,11 +61,18 @@
     "yapi-plugin-qsso": "^1.1.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/ldapjs": "^2.2.5",
+    "@types/md5": "^2.3.5",
     "@types/node": "^18.15.5",
+    "@types/nodemailer": "^6.4.17",
+    "@types/underscore": "^1.13.0",
     "ava": "^0.22.0",
     "cross-env": "^5.2.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">= 18.0.0",

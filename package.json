@@ -8,8 +8,8 @@
     "client"
   ],
   "scripts": {
-    "predev": "node scripts/generate-plugin-module.js",
-    "prebuild": "node scripts/generate-plugin-module.js",
+    "predev": "node --import tsx scripts/generate-plugin-module.js",
+    "prebuild": "node --import tsx scripts/generate-plugin-module.js",
     "dev": "npm run dev --workspace=yapi-server & npm run dev --workspace=client",
     "dev-server": "npm run dev --workspace=yapi-server",
     "dev-client": "npm run dev --workspace=client -- -p 4000",
@@ -20,6 +20,10 @@
     "start-server": "npm run start --workspace=yapi-server",
     "start-client": "npm run start --workspace=client -- -p 4000 -H 0.0.0.0",
     "install-server": "npm run install-server --workspace=yapi-server",
+    "build:server": "npm run build --workspace=yapi-server",
+    "typecheck": "npm run typecheck --workspace=yapi-server && npm run typecheck --workspace=client",
+    "typecheck:server": "npm run typecheck --workspace=yapi-server",
+    "typecheck:client": "npm run typecheck --workspace=client",
     "test:server": "npm run test --workspace=yapi-server",
     "lint:client": "npm run lint --workspace=client"
   },
