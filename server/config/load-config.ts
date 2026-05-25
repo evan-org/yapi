@@ -30,18 +30,21 @@ function pick<T>(envKey: string, fallback: T | undefined): T | undefined {
 }
 
 /**
- * 解析扩展配置 plugins（JSON，如 qsso 第三方登录）
+ * 解析第三方集成配置 integrations（JSON，如 qsso 登录）
  */
-function parsePlugins(raw: string | undefined, filePlugins: unknown): unknown[] {
+function parseIntegrations(
+  raw: string | undefined,
+  fileIntegrations: unknown
+): unknown[] {
   if (raw) {
     try {
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
     } catch (err) {
-      console.error("YAPI_PLUGINS 解析失败，回退 config.json", err);
+      console.error("YAPI_INTEGRATIONS 解析失败，回退 config.json", err);
     }
   }
-  return Array.isArray(filePlugins) ? filePlugins : [];
+  return Array.isArray(fileIntegrations) ? fileIntegrations : [];
 }
 
 /**
@@ -141,6 +144,9 @@ export function loadWebConfig(webrootServer: string): YapiWebConfig {
     db: buildDb((fileConfig.db || {}) as Record<string, unknown>),
     mail: buildMail((fileConfig.mail || {}) as Record<string, unknown>),
     ldap: fileConfig.ldap,
-    plugins: parsePlugins(envStr("YAPI_PLUGINS"), fileConfig.plugins),
+    integrations: parseIntegrations(
+      envStr("YAPI_INTEGRATIONS"),
+      fileConfig.integrations
+    ),
   };
 }
