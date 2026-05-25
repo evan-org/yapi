@@ -6,12 +6,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { Loader2, Pencil, Save, Trash2 } from "lucide-react";
 import { interfaceApi, projectApi } from "../../lib/api/client";
-import type { InterfaceDetail, ProjectEnvItem } from "../../lib/api/types";
+import type { InterfaceDetail, ProjectEnvItem, ProjectTagItem } from "../../lib/api/types";
 import { MethodBadge } from "./method-badge";
 import { InterfaceAdvMockPanel } from "./interface-adv-mock-panel";
 import { InterfaceRunPanel } from "./interface-run-panel";
 import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
 import { JsonSchemaField } from "../shared/json-schema-field";
+import { FormBodyEditor, type FormBodyRow } from "../shared/form-body-editor";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
@@ -39,6 +40,7 @@ export function InterfaceFullEditor({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [envs, setEnvs] = useState<ProjectEnvItem[]>([]);
+  const [projectTags, setProjectTags] = useState<ProjectTagItem[]>([]);
   const [form, setForm] = useState({
     title: "",
     path: "",
@@ -56,6 +58,8 @@ export function InterfaceFullEditor({
     req_body_is_json_schema: false,
     res_body_is_json_schema: false,
     api_opened: false,
+    tagText: "",
+    req_body_form: [] as FormBodyRow[],
   });
 
   const load = useCallback(async () => {
@@ -82,11 +86,18 @@ export function InterfaceFullEditor({
         req_body_is_json_schema: !!d.req_body_is_json_schema,
         res_body_is_json_schema: !!d.res_body_is_json_schema,
         api_opened: !!d.api_opened,
+        tagText: (d.tag || []).join(", "),
+        req_body_form: (d.req_body_form as FormBodyRow[]) || [],
       });
       if (d.project_id) {
-        const envRes = await projectApi.getEnv(d.project_id);
+        const [envRes, projRes] = await Promise.all([
+          projectApi.getEnv(d.project_id),
+          projectApi.get(d.project_id),
+        ]);
         const envData = envRes.data as { env?: ProjectEnvItem[] };
         setEnvs(envData?.env || []);
+        const proj = projRes.data as { tag?: ProjectTagItem[] };
+        setProjectTags(proj?.tag || []);
       }
     } catch (err) {
       console.error("加载接口详情失败", err);
@@ -124,6 +135,11 @@ export function InterfaceFullEditor({
         req_body_is_json_schema: form.req_body_is_json_schema,
         res_body_is_json_schema: form.res_body_is_json_schema,
         api_opened: form.api_opened,
+        tag: form.tagText
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+        req_body_form: form.req_body_form,
       });
       setEditing(false);
       await load();
@@ -270,6 +286,20 @@ export function InterfaceFullEditor({
                   />
                 </div>
                 <div className="space-y-2">
+                  <Label>标签（逗号分隔）</Label>
+                  <Input
+                    value={form.tagText}
+                    onChange={(e) => setForm((f) => ({ ...f, tagText: e.target.value }))}
+                    placeholder="例如：用户,核心"
+                    list="project-tag-suggestions"
+                  />
+                  <datalist id="project-tag-suggestions">
+                    {projectTags.map((t) => (
+                      <option key={t.name} value={t.name} />
+                    ))}
+                  </datalist>
+                </div>
+                <div className="space-y-2">
                   <Label>备注</Label>
                   <Textarea
                     value={form.desc}
@@ -290,6 +320,9 @@ export function InterfaceFullEditor({
             ) : (
               <>
                 {data.desc ? <p className="text-sm text-muted-foreground">{data.desc}</p> : null}
+                {(data.tag || []).length > 0 ? (
+                  <p className="text-xs text-muted-foreground">标签：{(data.tag || []).join(" · ")}</p>
+                ) : null}
                 {form.markdown || data.markdown ? (
                   <pre className="rounded bg-muted p-3 text-xs whitespace-pre-wrap">
                     {form.markdown || data.markdown}
@@ -347,13 +380,26 @@ export function InterfaceFullEditor({
                   <option value="form">form</option>
                   <option value="raw">raw</option>
                 </select>
-                <Textarea
-                  className="font-mono text-xs"
-                  rows={8}
-                  readOnly={!editing}
-                  value={form.req_body_other}
-                  onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
-                />
+                {form.req_body_type === "form" ? (
+                  editing ? (
+                    <FormBodyEditor
+                      rows={form.req_body_form}
+                      onChange={(req_body_form) => setForm((f) => ({ ...f, req_body_form }))}
+                    />
+                  ) : (
+                    <pre className="rounded bg-muted p-3 text-xs overflow-auto">
+                      {JSON.stringify(form.req_body_form, null, 2)}
+                    </pre>
+                  )
+                ) : (
+                  <Textarea
+                    className="font-mono text-xs"
+                    rows={8}
+                    readOnly={!editing}
+                    value={form.req_body_other}
+                    onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
+                  />
+                )}
               </div>
             ) : null}
             {editing ? (

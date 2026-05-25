@@ -4,7 +4,7 @@
  * 接口分类与列表侧栏
  */
 import Link from "next/link";
-import { ChevronRight, FolderOpen, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronRight, FolderOpen, Plus, Trash2 } from "lucide-react";
 import type { InterfaceCatItem } from "../../lib/api/types";
 import { MethodBadge } from "./method-badge";
 import { cn } from "../../lib/utils";
@@ -18,6 +18,10 @@ interface InterfaceSidebarProps {
   onAddCat?: () => void;
   /** 删除分类 */
   onDelCat?: (catid: number, name: string) => void;
+  /** 分类排序 */
+  onMoveCat?: (catid: number, direction: "up" | "down") => void;
+  /** 接口排序（分类内） */
+  onMoveInterface?: (interfaceId: number, catid: number, direction: "up" | "down") => void;
 }
 
 export function InterfaceSidebar({
@@ -26,6 +30,8 @@ export function InterfaceSidebar({
   activeId,
   onAddCat,
   onDelCat,
+  onMoveCat,
+  onMoveInterface,
 }: InterfaceSidebarProps) {
   return (
     <aside className="flex w-full flex-col rounded-lg border bg-card md:w-64 md:shrink-0">
@@ -39,7 +45,7 @@ export function InterfaceSidebar({
       </div>
       <ScrollArea className="h-[calc(100vh-280px)] min-h-[320px]">
         <div className="p-2">
-          {menu.map((cat) => (
+          {menu.map((cat, catIdx) => (
             <div key={cat._id} className="mb-3">
               <div className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-muted-foreground">
                 <FolderOpen className="h-3.5 w-3.5 shrink-0" />
@@ -51,6 +57,30 @@ export function InterfaceSidebar({
                   {cat.name}
                 </Link>
                 <span className="text-[10px]">({cat.list?.length || 0})</span>
+                {onMoveCat ? (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 shrink-0"
+                      disabled={catIdx === 0}
+                      title="分类上移"
+                      onClick={() => onMoveCat(cat._id, "up")}
+                    >
+                      <ArrowUp className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 shrink-0"
+                      disabled={catIdx === menu.length - 1}
+                      title="分类下移"
+                      onClick={() => onMoveCat(cat._id, "down")}
+                    >
+                      <ArrowDown className="h-3 w-3" />
+                    </Button>
+                  </>
+                ) : null}
                 {onDelCat ? (
                   <Button
                     variant="ghost"
@@ -64,15 +94,15 @@ export function InterfaceSidebar({
                 ) : null}
               </div>
               <ul className="mt-0.5 space-y-0.5">
-                {(cat.list || []).map((item) => {
+                {(cat.list || []).map((item, itemIdx) => {
                   const href = `/project/${projectId}/interface/api/${item._id}`;
                   const active = activeId === item._id;
                   return (
-                    <li key={item._id}>
+                    <li key={item._id} className="flex items-center gap-0.5">
                       <Link
                         href={href}
                         className={cn(
-                          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition hover:bg-accent",
+                          "flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition hover:bg-accent",
                           active && "bg-[#2395f1]/10 text-[#2395f1]"
                         )}
                       >
@@ -80,6 +110,30 @@ export function InterfaceSidebar({
                         <span className="min-w-0 flex-1 truncate">{item.title}</span>
                         <ChevronRight className="h-3 w-3 shrink-0 opacity-40" />
                       </Link>
+                      {onMoveInterface ? (
+                        <div className="flex shrink-0 flex-col">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5"
+                            disabled={itemIdx === 0}
+                            title="接口上移"
+                            onClick={() => onMoveInterface(item._id, cat._id, "up")}
+                          >
+                            <ArrowUp className="h-2.5 w-2.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5"
+                            disabled={itemIdx === (cat.list?.length || 0) - 1}
+                            title="接口下移"
+                            onClick={() => onMoveInterface(item._id, cat._id, "down")}
+                          >
+                            <ArrowDown className="h-2.5 w-2.5" />
+                          </Button>
+                        </div>
+                      ) : null}
                     </li>
                   );
                 })}

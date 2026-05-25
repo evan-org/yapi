@@ -12,6 +12,7 @@ import type { InterfaceDetail, ProjectEnvItem } from "../../lib/api/types";
 import { MethodBadge } from "./method-badge";
 import { InterfaceRunPanel, type RunResponsePayload } from "./interface-run-panel";
 import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
+import { MockExpressionPicker } from "../shared/mock-expression-picker";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
@@ -47,6 +48,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
   const [data, setData] = useState<CaseDetail | null>(null);
   const [lastResponse, setLastResponse] = useState<RunResponsePayload | null>(null);
   const [assertMsg, setAssertMsg] = useState("");
+  const [insertField, setInsertField] = useState<"body" | "query">("body");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -220,6 +222,44 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
             <TabsTrigger value="test">断言</TabsTrigger>
           </TabsList>
           <TabsContent value="edit" className="mt-4 space-y-4">
+            <MockExpressionPicker
+              caseKey={data._id}
+              onInsert={(text) => {
+                if (insertField === "body") {
+                  setForm((f) => ({ ...f, req_body_other: `${f.req_body_other || ""}${text}` }));
+                } else {
+                  setForm((f) => {
+                    const rows = [...f.req_query];
+                    if (rows.length === 0) {
+                      rows.push({ name: "", value: text, example: "", required: "0" });
+                    } else {
+                      const last = rows[rows.length - 1];
+                      rows[rows.length - 1] = {
+                        ...last,
+                        value: `${last.value || ""}${text}`,
+                      };
+                    }
+                    return { ...f, req_query: rows };
+                  });
+                }
+              }}
+            />
+            <div className="flex gap-2 text-xs">
+              <button
+                type="button"
+                className={insertField === "body" ? "font-medium text-[#2395f1]" : "text-muted-foreground"}
+                onClick={() => setInsertField("body")}
+              >
+                插入到 Body
+              </button>
+              <button
+                type="button"
+                className={insertField === "query" ? "font-medium text-[#2395f1]" : "text-muted-foreground"}
+                onClick={() => setInsertField("query")}
+              >
+                插入到 Query
+              </button>
+            </div>
             <div className="space-y-2">
               <Label>用例名称</Label>
               <Input
@@ -248,6 +288,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
                 className="font-mono text-xs"
                 rows={8}
                 value={form.req_body_other}
+                onFocus={() => setInsertField("body")}
                 onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
               />
             </div>

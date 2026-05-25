@@ -87,4 +87,18 @@ export const interfaceApi = {
       method: "POST",
       body: JSON.stringify({ schema, required }),
     }),
+
+  /** 调整接口在分类内的排序 */
+  upIndex: (items: { id: number; index: number }[]) =>
+    apiRequest("/interface/up_index", {
+      method: "POST",
+      body: JSON.stringify(items),
+    }),
+
+  /** 调整分类排序 */
+  upCatIndex: (items: { id: number; index: number }[]) =>
+    apiRequest("/interface/up_cat_index", {
+      method: "POST",
+      body: JSON.stringify(items),
+    }),
 };

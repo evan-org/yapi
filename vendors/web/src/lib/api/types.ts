@@ -33,12 +33,18 @@ export interface GroupItem {
   role?: string;
 }
 
+export interface ProjectTagItem {
+  name: string;
+  desc?: string;
+}
+
 export interface ProjectItem {
   _id: number;
   name: string;
   desc?: string;
   basepath?: string;
   group_id: number;
+  tag?: ProjectTagItem[];
   project_type?: "public" | "private";
   icon?: string;
   color?: string;

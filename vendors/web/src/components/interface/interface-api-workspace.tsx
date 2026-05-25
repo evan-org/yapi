@@ -91,6 +91,50 @@ export function InterfaceApiWorkspace({ projectId, interfaceId }: InterfaceApiWo
     }
   }
 
+  async function handleMoveCat(catid: number, direction: "up" | "down") {
+    const idx = menu.findIndex((c) => c._id === catid);
+    if (idx < 0) return;
+    const swap = direction === "up" ? idx - 1 : idx + 1;
+    if (swap < 0 || swap >= menu.length) return;
+    const items = menu.map((c, i) => {
+      if (i === idx) return { id: c._id, index: swap };
+      if (i === swap) return { id: menu[swap]._id, index: idx };
+      return { id: c._id, index: i };
+    });
+    try {
+      await interfaceApi.upCatIndex(items);
+      await loadMenu();
+    } catch (err) {
+      console.error("调整分类顺序失败", err);
+      setError(err instanceof Error ? err.message : "排序失败");
+    }
+  }
+
+  async function handleMoveInterface(
+    ifaceId: number,
+    catid: number,
+    direction: "up" | "down"
+  ) {
+    const cat = menu.find((c) => c._id === catid);
+    const list = cat?.list || [];
+    const idx = list.findIndex((it) => it._id === ifaceId);
+    if (idx < 0) return;
+    const swap = direction === "up" ? idx - 1 : idx + 1;
+    if (swap < 0 || swap >= list.length) return;
+    const items = list.map((it, i) => {
+      if (i === idx) return { id: it._id, index: swap };
+      if (i === swap) return { id: list[swap]._id, index: idx };
+      return { id: it._id, index: i };
+    });
+    try {
+      await interfaceApi.upIndex(items);
+      await loadMenu();
+    } catch (err) {
+      console.error("调整接口顺序失败", err);
+      setError(err instanceof Error ? err.message : "排序失败");
+    }
+  }
+
   async function handleDelCat(catid: number, name: string) {
     if (!confirm(`确定删除分类「${name}」及其下接口？`)) return;
     try {
@@ -136,6 +180,8 @@ export function InterfaceApiWorkspace({ projectId, interfaceId }: InterfaceApiWo
         activeId={interfaceId}
         onAddCat={() => setShowAddCat(true)}
         onDelCat={handleDelCat}
+        onMoveCat={handleMoveCat}
+        onMoveInterface={handleMoveInterface}
       />
 
       <div className="min-w-0 flex-1">

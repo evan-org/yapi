@@ -5,6 +5,7 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import { colApi, interfaceApi } from "../../lib/api/client";
 import { InterfaceModuleTabs } from "./interface-module-tabs";
@@ -18,9 +19,12 @@ import { MethodBadge } from "./method-badge";
 
 interface ColWorkspaceProps {
   projectId: number;
+  /** 路由深链指定的集合 id */
+  initialColId?: number;
 }
 
-export function ColWorkspace({ projectId }: ColWorkspaceProps) {
+export function ColWorkspace({ projectId, initialColId }: ColWorkspaceProps) {
+  const router = useRouter();
   const [cols, setCols] = useState<InterfaceColItem[]>([]);
   const [menu, setMenu] = useState<InterfaceCatItem[]>([]);
   const [activeColId, setActiveColId] = useState<number | null>(null);
@@ -44,10 +48,19 @@ export function ColWorkspace({ projectId }: ColWorkspaceProps) {
   }, [projectId]);
 
   useEffect(() => {
+    if (initialColId && cols.some((c) => c._id === initialColId)) {
+      setActiveColId(initialColId);
+      return;
+    }
     if (cols.length > 0 && activeColId === null) {
       setActiveColId(cols[0]._id);
     }
-  }, [cols, activeColId]);
+  }, [cols, activeColId, initialColId]);
+
+  function selectCol(colId: number) {
+    setActiveColId(colId);
+    router.replace(`/project/${projectId}/interface/col/${colId}`);
+  }
 
   useEffect(() => {
     load();
@@ -159,7 +172,7 @@ export function ColWorkspace({ projectId }: ColWorkspaceProps) {
                 className={`w-full rounded-md px-3 py-2 text-left text-sm ${
                   activeColId === c._id ? "bg-[#2395f1]/10 text-[#2395f1]" : "hover:bg-accent"
                 }`}
-                onClick={() => setActiveColId(c._id)}
+                onClick={() => selectCol(c._id)}
               >
                 {c.name}
                 <span className="ml-1 text-xs text-muted-foreground">
