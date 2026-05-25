@@ -118,11 +118,10 @@ class interfaceColController extends baseController {
   async getCaseList(ctx) {
     try {
       let id = ctx.query.col_id;
-      if (!id || id == 0) {
-        return (ctx.body = yapi.commons.resReturn(null, 407, "col_id不能为空"));
-      }
-
       let colData = await this.colModel.get(id);
+      if (!colData) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的接口集"));
+      }
       let project = await this.projectModel.getBaseInfo(colData.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
@@ -130,7 +129,11 @@ class interfaceColController extends baseController {
         }
       }
 
-      ctx.body = await yapi.commons.getCaseList(id);
+      const result = await interfaceColService.fetchCaseList(id);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      ctx.body = result.data;
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
@@ -536,7 +539,13 @@ class interfaceColController extends baseController {
 
   async runCaseScript(ctx) {
     let params = ctx.request.body;
-    ctx.body = await yapi.commons.runCaseScript(params, params.col_id, params.interface_id, this.getUid());
+    const result = await interfaceColService.runCaseScript(
+      params,
+      params.col_id,
+      params.interface_id,
+      this.getUid()
+    );
+    ctx.body = result.data;
   }
 }
 

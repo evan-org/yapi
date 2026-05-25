@@ -536,6 +536,28 @@ class InterfaceColService extends BaseService {
     });
     return ok("成功！");
   }
+
+  /**
+   * 获取测试集合用例列表（commons.getCaseList 封装）
+   */
+  async fetchCaseList(colId) {
+    if (!colId || colId == 0) {
+      return fail(407, "col_id不能为空");
+    }
+    const body = await yapi.commons.getCaseList(colId);
+    if (body.errcode !== 0) {
+      return fail(body.errcode, body.errmsg);
+    }
+    return ok(body);
+  }
+
+  /**
+   * 执行用例测试脚本
+   */
+  async runCaseScript(params, colId, interfaceId, uid) {
+    const body = await yapi.commons.runCaseScript(params, colId, interfaceId, uid);
+    return ok(body);
+  }
 }
 
 export default new InterfaceColService();

@@ -701,6 +701,117 @@ class InterfaceService extends BaseService {
     await this.autoAddTag(params);
     return ok(result);
   }
+
+  /**
+   * 从批量上传 payload 解析接口列表
+   */
+  parseUploadApis(raw) {
+    let apis = [];
+    if (Array.isArray(raw)) {
+      if (raw[0] && raw[0].list) {
+        raw.forEach((c) => {
+          apis = apis.concat(c.list || []);
+        });
+      } else {
+        apis = raw;
+      }
+    } else if (raw && raw.list) {
+      raw.list.forEach((c) => {
+        apis = apis.concat(c.list || []);
+      });
+    } else {
+      return fail(400, "data 格式有误");
+    }
+    return ok(apis);
+  }
+
+  /**
+   * Chrome 插件 / 批量上传接口 JSON
+   */
+  async batchUploadInterfaces({ project_id, catid, raw }, { uid, username, role }) {
+    if (!project_id) {
+      return fail(400, "project_id 不能为空");
+    }
+    if (!raw) {
+      return fail(400, "data 不能为空");
+    }
+
+    let parsed = raw;
+    if (typeof parsed === "string") {
+      parsed = JSON.parse(parsed);
+    }
+
+    const apisResult = this.parseUploadApis(parsed);
+    if (!apisResult.ok) {
+      return apisResult;
+    }
+    const apis = apisResult.data;
+
+    let resolvedCatid = catid;
+    if (!resolvedCatid) {
+      const cats = await this.catModel.list(project_id);
+      if (!cats.length) {
+        return fail(400, "请先创建接口分类");
+      }
+      resolvedCatid = cats[0]._id;
+    }
+
+    let success = 0;
+    const errors = [];
+    for (const api of apis) {
+      const item = Object.assign({}, api, {
+        project_id: Number(project_id),
+        catid: api.catid || resolvedCatid,
+      });
+      delete item._id;
+      delete item.__v;
+
+      const addResult = await this.addInterface(item, { uid, username, role });
+      if (addResult.ok) {
+        success++;
+      } else {
+        errors.push(addResult.message || `${item.title || item.path}: 导入失败`);
+      }
+    }
+
+    return ok({
+      success,
+      failed: errors.length,
+      errors: errors.slice(0, 20),
+    });
+  }
+
+  /**
+   * 接口编辑冲突检测（WebSocket）
+   */
+  async checkEditConflict(id, uid) {
+    if (!id) {
+      return fail(400, "id 参数有误");
+    }
+    const result = await this.interfaceModel.get(id);
+    if (!result) {
+      return fail(400, "接口不存在");
+    }
+    if (result.edit_uid !== 0 && result.edit_uid !== uid) {
+      const userinfo = await this.userModel.findById(result.edit_uid);
+      return ok({
+        errno: result.edit_uid,
+        data: { uid: result.edit_uid, username: userinfo.username },
+      });
+    }
+    this.interfaceModel.upEditUid(id, uid).then();
+    return ok({
+      errno: 0,
+      data: result,
+    });
+  }
+
+  /**
+   * 释放接口编辑锁
+   */
+  releaseEditLock(id) {
+    this.interfaceModel.upEditUid(id, 0).then();
+  }
 }
 
 export default new InterfaceService();

@@ -530,33 +530,17 @@ class interfaceController extends baseController {
   // 处理编辑冲突
   async solveConflict(ctx) {
     try {
-      let id = parseInt(ctx.query.id, 10),
-        result,
-        userInst,
-        userinfo,
-        data;
+      let id = parseInt(ctx.query.id, 10);
       if (!id) {
         return ctx.websocket.send("id 参数有误");
       }
-      result = await this.Model.get(id);
-
-      if (result.edit_uid !== 0 && result.edit_uid !== this.getUid()) {
-        userInst = userRepository;
-        userinfo = await userInst.findById(result.edit_uid);
-        data = {
-          errno: result.edit_uid,
-          data: { uid: result.edit_uid, username: userinfo.username }
-        };
-      } else {
-        this.Model.upEditUid(id, this.getUid()).then();
-        data = {
-          errno: 0,
-          data: result
-        };
+      const result = await interfaceService.checkEditConflict(id, this.getUid());
+      if (!result.ok) {
+        return ctx.websocket.send(result.message || "id 参数有误");
       }
-      ctx.websocket.send(JSON.stringify(data));
+      ctx.websocket.send(JSON.stringify(result.data));
       ctx.websocket.on("close", () => {
-        this.Model.upEditUid(id, 0).then();
+        interfaceService.releaseEditLock(id);
       });
     } catch (err) {
       yapi.commons.log(err, "error");
@@ -777,8 +761,6 @@ class interfaceController extends baseController {
     try {
       const params = ctx.request.body || {};
       const project_id = params.project_id;
-      let catid = params.catid;
-      let raw = params.data || params.json;
 
       if (!project_id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "project_id 不能为空"));
@@ -789,64 +771,22 @@ class interfaceController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 40033, "没有权限"));
       }
 
-      if (!raw) {
-        return (ctx.body = yapi.commons.resReturn(null, 400, "data 不能为空"));
-      }
-
-      if (typeof raw === "string") {
-        raw = JSON.parse(raw);
-      }
-
-      if (!catid) {
-        const cats = await this.catModel.list(project_id);
-        if (!cats.length) {
-          return (ctx.body = yapi.commons.resReturn(null, 400, "请先创建接口分类"));
+      const result = await interfaceService.batchUploadInterfaces(
+        {
+          project_id,
+          catid: params.catid,
+          raw: params.data || params.json,
+        },
+        {
+          uid: this.getUid(),
+          username: this.getUsername(),
+          role: this.getRole(),
         }
-        catid = cats[0]._id;
+      );
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
       }
-
-      let apis = [];
-      if (Array.isArray(raw)) {
-        if (raw[0] && raw[0].list) {
-          raw.forEach((c) => {
-            apis = apis.concat(c.list || []);
-          });
-        } else {
-          apis = raw;
-        }
-      } else if (raw && raw.list) {
-        raw.list.forEach((c) => {
-          apis = apis.concat(c.list || []);
-        });
-      } else {
-        return (ctx.body = yapi.commons.resReturn(null, 400, "data 格式有误"));
-      }
-
-      let success = 0;
-      const errors = [];
-
-      for (const api of apis) {
-        const item = Object.assign({}, api, {
-          project_id: Number(project_id),
-          catid: api.catid || catid
-        });
-        delete item._id;
-        delete item.__v;
-
-        const subCtx = Object.assign({}, ctx, { params: item });
-        await this.add(subCtx);
-        if (subCtx.body && subCtx.body.errcode === 0) {
-          success++;
-        } else {
-          errors.push(subCtx.body?.errmsg || `${item.title || item.path}: 导入失败`);
-        }
-      }
-
-      ctx.body = yapi.commons.resReturn({
-        success,
-        failed: errors.length,
-        errors: errors.slice(0, 20)
-      });
+      ctx.body = yapi.commons.resReturn(result.data);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }

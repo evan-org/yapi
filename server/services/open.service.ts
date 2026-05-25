@@ -1,16 +1,80 @@
 // @ts-nocheck
 /**
- * 开放 API 业务逻辑（导入、导出、远程 JSON 拉取）
+ * 开放 API 业务逻辑（导入、导出、自动化测试等）
  */
 import axios from "axios";
+import _ from "underscore";
 import yapi from "../runtime.js";
 import {
   projectRepository,
   interfaceRepository,
   interfaceCatRepository,
+  interfaceColRepository,
 } from "../repositories/index.js";
+import {
+  handleParams as postmanHandleParams,
+  crossRequest,
+  handleCurrDomain,
+  checkNameIsExistInArray,
+} from "../common/postmanLib.js";
+import { handleParamsValue, ArrayToObject } from "../common/utils.js";
+import createContex from "../common/createContext.js";
+import { trim } from "../utils/commons.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+
+/**
+ * 解析自动化测试 env_* 环境参数
+ */
+export function parseEnvParams(params) {
+  const result = [];
+  Object.keys(params || {}).forEach((item) => {
+    if (/env_/gi.test(item)) {
+      const curEnv = trim(params[item]);
+      result.push({ curEnv, project_id: item.split("_")[1] });
+    }
+  });
+  return result;
+}
+
+/**
+ * 汇总测试用例执行结果
+ */
+export function summarizeTestResults(testList) {
+  let successNum = 0;
+  let failedNum = 0;
+  let len = 0;
+  testList.forEach((item) => {
+    len++;
+    if (item.code === 0) {
+      successNum++;
+    } else {
+      failedNum++;
+    }
+  });
+  let msg;
+  if (failedNum === 0) {
+    msg = `一共 ${len} 测试用例，全部验证通过`;
+  } else {
+    msg = `一共 ${len} 测试用例，${successNum} 个验证通过， ${failedNum} 个未通过。`;
+  }
+  return { msg, len, successNum, failedNum };
+}
+
+/**
+ * 合并项目环境 header 到用例请求头
+ */
+export function mergeEnvReqHeaders(req_header, envData, curEnvName) {
+  const currDomain = handleCurrDomain(envData, curEnvName);
+  const header = currDomain.header;
+  header.forEach((item) => {
+    if (!checkNameIsExistInArray(item.name, req_header)) {
+      item.abled = true;
+      req_header.push(item);
+    }
+  });
+  return req_header.filter((item) => item && typeof item === "object");
+}
 
 class OpenService extends BaseService {
   constructor() {
@@ -18,6 +82,7 @@ class OpenService extends BaseService {
     this.projectModel = projectRepository;
     this.interfaceModel = interfaceRepository;
     this.interfaceCatModel = interfaceCatRepository;
+    this.interfaceColModel = interfaceColRepository;
   }
 
   /**
@@ -109,6 +174,177 @@ class OpenService extends BaseService {
       menuList.push(menu);
     }
     return { menuList, selectCatid: menuList[0]._id };
+  }
+
+  /**
+   * 变量替换（自动化测试上下文）
+   */
+  resolveParamValue(val, global, records) {
+    const globalValue = ArrayToObject(global);
+    const context = Object.assign({}, { global: globalValue }, records);
+    return handleParamsValue(val, context);
+  }
+
+  /**
+   * 执行单条测试用例
+   */
+  async executeTestCase(interfaceData, uid, records) {
+    const handleValue = (val, global) => this.resolveParamValue(val, global, records);
+    let requestParams = {};
+    let options;
+    options = postmanHandleParams(interfaceData, handleValue, requestParams);
+    let result = {
+      id: interfaceData.id,
+      name: interfaceData.casename,
+      path: interfaceData.path,
+      code: 400,
+      validRes: [],
+    };
+    try {
+      options.taskId = uid;
+      const data = await crossRequest(
+        options,
+        interfaceData.pre_script,
+        interfaceData.after_script,
+        createContex(uid, interfaceData.project_id, interfaceData.interface_id)
+      );
+      const res = data.res;
+
+      result = Object.assign(result, {
+        status: res.status,
+        statusText: res.statusText,
+        url: data.req.url,
+        method: data.req.method,
+        data: data.req.data,
+        headers: data.req.headers,
+        res_header: res.header,
+        res_body: res.body,
+      });
+      if (options.data && typeof options.data === "object") {
+        requestParams = Object.assign(requestParams, options.data);
+      }
+
+      const validRes = [];
+      const responseData = Object.assign(
+        {},
+        {
+          status: res.status,
+          body: res.body,
+          header: res.header,
+          statusText: res.statusText,
+        }
+      );
+
+      await this.runScriptValidation(interfaceData, responseData, validRes, requestParams, uid, records);
+      result.params = requestParams;
+      if (validRes.length === 0) {
+        result.code = 0;
+        result.validRes = [{ message: "验证通过" }];
+      } else {
+        result.code = 1;
+        result.validRes = validRes;
+      }
+    } catch (data) {
+      result = Object.assign(options, result, {
+        res_header: data.header,
+        res_body: data.body || data.message,
+        status: null,
+        statusText: data.message,
+        code: 400,
+      });
+    }
+
+    return result;
+  }
+
+  /**
+   * 用例自定义脚本校验
+   */
+  async runScriptValidation(interfaceData, response, validRes, requestParams, uid, records) {
+    try {
+      const test = await yapi.commons.runCaseScript(
+        {
+          response,
+          records,
+          script: interfaceData.test_script,
+          params: requestParams,
+        },
+        interfaceData.col_id,
+        interfaceData.interface_id,
+        uid
+      );
+      if (test.errcode !== 0) {
+        test.data.logs.forEach((item) => {
+          validRes.push({ message: item });
+        });
+      }
+    } catch (err) {
+      validRes.push({ message: "Error: " + err.message });
+    }
+  }
+
+  /**
+   * 开放 API：执行测试集合自动化测试
+   */
+  async runAutoTest({ colId, projectId, params, uid }) {
+    const startTime = new Date().getTime();
+    const records = {};
+    const testList = [];
+    const curEnvList = parseEnvParams(params);
+
+    const colData = await this.interfaceColModel.get(colId);
+    if (!colData) {
+      return fail(40022, "id值不存在");
+    }
+
+    const projectData = await this.projectModel.get(projectId);
+    const caseListResult = await yapi.commons.getCaseList(colId);
+    if (caseListResult.errcode !== 0) {
+      return fail(caseListResult.errcode, caseListResult.errmsg || "获取用例失败", caseListResult);
+    }
+
+    let caseList = caseListResult.data;
+    for (let i = 0, l = caseList.length; i < l; i++) {
+      let item = caseList[i];
+      const projectEvn = await this.projectModel.getByEnv(item.project_id);
+
+      item.id = item._id;
+      const curEnvItem = _.find(curEnvList, (key) => key.project_id == item.project_id);
+      item.case_env = curEnvItem ? curEnvItem.curEnv || item.case_env : item.case_env;
+      item.req_headers = mergeEnvReqHeaders(item.req_headers, projectEvn.env, item.case_env);
+      item.pre_script = projectData.pre_script;
+      item.after_script = projectData.after_script;
+      item.env = projectEvn.env;
+
+      let result;
+      try {
+        result = await this.executeTestCase(item, uid, records);
+      } catch (err) {
+        result = err;
+      }
+
+      records[item.id] = {
+        params: result.params,
+        body: result.res_body,
+      };
+      testList.push(result);
+    }
+
+    const endTime = new Date().getTime();
+    const executionTime = (endTime - startTime) / 1000;
+    const message = summarizeTestResults(testList);
+
+    return ok({
+      reportsResult: {
+        message,
+        runTime: executionTime + "s",
+        numbs: testList.length,
+        list: testList,
+      },
+      projectId,
+      colId,
+      params,
+    });
   }
 }
 

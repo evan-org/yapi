@@ -32,3 +32,10 @@ test("applyStatusTagFilter 附加 status 与 tag", (t) => {
   t.deepEqual(option.status, "done");
   t.deepEqual(option.tag, { $in: ["a", "b"] });
 });
+
+test("parseUploadApis 解析分类嵌套列表", (t) => {
+  const result = interfaceService.parseUploadApis([{ list: [{ title: "a" }] }]);
+  t.true(result.ok);
+  t.is(result.data.length, 1);
+  t.is(result.data[0].title, "a");
+});
