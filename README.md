@@ -45,7 +45,7 @@ docker compose -f deploy/docker-compose.yml up -d --build
 docker compose -f deploy/docker-compose.yml exec yapi npm run install-server -w yapi-server
 ```
 
-Compose 通过 `env_file` 注入环境变量，无需挂载 `config.json`。
+Compose 通过 `env_file` 注入环境变量。
 
 ## 许可证
 
