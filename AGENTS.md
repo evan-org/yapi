@@ -42,7 +42,8 @@ config.json                    # 根配置（CI 用 vendors/config_example.json 
 npm run dev              # API + Next
 npm run dev-server       # 仅 API（默认端口见 config）
 npm run dev-client       # 仅 Next :4000
-npm run build            # prebuild 会生成 plugin registry
+npm run build-web        # Next 生产构建
+npm run build            # build-web + verify-build
 npm run test:server      # ava，改 server/common 后应跑
 npm run lint:web         # 改 web/ 后建议跑
 ```
