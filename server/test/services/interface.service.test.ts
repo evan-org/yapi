@@ -6,6 +6,7 @@ import test from "ava";
 import interfaceService, {
   buildQueryPathFromUrl,
   applyStatusTagFilter,
+  mergeSaveResBody,
 } from "../../services/interface.service.js";
 
 test("addCategory 缺少项目 id 返回失败", async (t) => {
@@ -38,4 +39,27 @@ test("parseUploadApis 解析分类嵌套列表", (t) => {
   t.true(result.ok);
   t.is(result.data.length, 1);
   t.is(result.data[0].title, "a");
+});
+
+test("mergeSaveResBody dataSync=good 时合并 schema 新字段", (t) => {
+  const merged = mergeSaveResBody(
+    {
+      res_body_is_json_schema: true,
+      dataSync: "good",
+      res_body: '{"type":"object","properties":{"b":{"type":"string"}}}',
+    },
+    { res_body: '{"type":"object","properties":{"a":{"type":"number"}}}' }
+  );
+  const parsed = JSON.parse(merged);
+  t.is(parsed.type, "object");
+  t.truthy(parsed.properties.b);
+});
+
+test("mergeSaveResBody 非 good 同步时保留新 res_body", (t) => {
+  const body = '{"only":"new"}';
+  const merged = mergeSaveResBody(
+    { res_body_is_json_schema: true, dataSync: "merge", res_body: body },
+    { res_body: '{"old":true}' }
+  );
+  t.is(merged, body);
 });
