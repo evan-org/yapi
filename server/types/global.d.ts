@@ -10,7 +10,8 @@ export interface YapiWebConfig {
   db?: Record<string, unknown>;
   mail?: Record<string, unknown>;
   ldap?: Record<string, unknown>;
-  plugins?: unknown[];
+  /** 第三方集成（如 qsso），与内置 /api/extensions 无关 */
+  integrations?: unknown[];
   [key: string]: unknown;
 }
 

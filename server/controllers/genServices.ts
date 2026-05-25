@@ -13,7 +13,7 @@ import markdownItTableOfContents from 'markdown-it-table-of-contents';
 import defaultTheme from "../assets/export/gen-defaultTheme.js";
 import md from "../utils/markdown.js";
 
-class exportController extends baseController {
+class genServicesController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.catModel = interfaceCatRepository;
@@ -162,4 +162,4 @@ class exportController extends baseController {
   }
 }
 
-export default exportController;
+export default genServicesController;

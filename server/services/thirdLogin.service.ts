@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 第三方登录（qsso，按 WEBCONFIG.plugins / YAPI_PLUGINS 配置启用）
+ * 第三方登录（qsso，按 WEBCONFIG.integrations / YAPI_INTEGRATIONS 配置启用）
  */
 import request from "request";
 import yapi from "../runtime.js";
@@ -10,13 +10,13 @@ type QssoOptions = {
   emailPostfix: string;
 };
 
-/** 从 WEBCONFIG.plugins 解析 qsso 配置 */
+/** 从 WEBCONFIG.integrations 解析 qsso 配置 */
 function getQssoOptions(): QssoOptions | null {
-  const plugins = yapi.WEBCONFIG.plugins;
-  if (!Array.isArray(plugins)) {
+  const integrations = yapi.WEBCONFIG.integrations;
+  if (!Array.isArray(integrations)) {
     return null;
   }
-  for (const item of plugins) {
+  for (const item of integrations) {
     const name = typeof item === "string" ? item : item && item.name;
     if (name !== "qsso") {
       continue;
@@ -37,7 +37,9 @@ function getQssoOptions(): QssoOptions | null {
 export function thirdLoginByToken(ctx) {
   const qsso = getQssoOptions();
   if (!qsso) {
-    return Promise.reject(new Error("未配置 qsso 第三方登录（plugins 中需包含 qsso 及 options）"));
+    return Promise.reject(
+      new Error("未配置 qsso 第三方登录（integrations 中需包含 qsso 及 options）")
+    );
   }
   const token = ctx.request.body.token || ctx.request.query.token;
   return new Promise((resolve, reject) => {

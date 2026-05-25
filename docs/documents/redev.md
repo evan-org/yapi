@@ -98,7 +98,7 @@ npm run dev
 | `client/src/lib/features.ts` | 前端功能入口映射 |
 | `client/src/lib/api/extensions.ts` | 扩展 API 客户端封装 |
 
-第三方登录（qsso）等仍可通过 `config.json` 的 `plugins` 或环境变量 `YAPI_PLUGINS` 配置，实现见 `server/services/thirdLogin.service.ts`。
+第三方登录（qsso）等通过 `config.json` 的 `integrations` 或环境变量 `YAPI_INTEGRATIONS` 配置，实现见 `server/services/thirdLogin.service.ts`。
 
 ## 技术栈说明
 
