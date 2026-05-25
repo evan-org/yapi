@@ -12,7 +12,7 @@ import { registerLogRoutes } from "./modules/log.routes.js";
 import { registerFollowRoutes } from "./modules/follow.routes.js";
 import { registerColRoutes } from "./modules/col.routes.js";
 import { registerOpenRoutes } from "./modules/open.routes.js";
-import { registerPluginRoutes } from "./modules/plugin.routes.js";
+import { registerExtensionRoutes } from "./modules/extensions.routes.js";
 
 const binder = new RouteBinder();
 
@@ -26,11 +26,11 @@ const builtinRegistrars = [
   registerFollowRoutes,
   registerColRoutes,
   registerOpenRoutes,
-  registerPluginRoutes,
+  registerExtensionRoutes,
 ];
 
 /**
- * 初始化 HTTP 路由（插件路由 + 内置模块）
+ * 初始化 HTTP 路由（内置模块 + 扩展路由）
  */
 function setupHttpRoutes() {
   for (const register of builtinRegistrars) {

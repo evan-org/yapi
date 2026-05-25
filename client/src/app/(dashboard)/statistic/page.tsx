@@ -5,7 +5,7 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { pluginApi } from "../../../lib/api/plugin";
+import { extensionsApi } from "../../../lib/api/extensions";
 import { useAuth } from "../../../lib/auth/auth-context";
 import {
   MockTrendChart,
@@ -30,9 +30,9 @@ export default function StatisticPage() {
     setError("");
     try {
       const [countRes, statusRes, mockRes] = await Promise.all([
-        pluginApi.statisticsCount(),
-        pluginApi.systemStatus(),
-        pluginApi.statisticsMock().catch((err) => {
+        extensionsApi.statisticsCount(),
+        extensionsApi.systemStatus(),
+        extensionsApi.statisticsMock().catch((err) => {
           console.error("加载 Mock 统计失败", err);
           return null;
         }),

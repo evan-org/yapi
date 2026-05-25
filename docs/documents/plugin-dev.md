@@ -1,3 +1,5 @@
+> **说明**：原 `server/exts/` 内置能力已并入 `server/controllers`、`server/services`、`server/routes/modules/extensions.routes.ts`（路径仍为 `/api/plugin/*`）。下文描述的是 **npm 第三方插件**（`config.json` 的 `plugins` + `node_modules/yapi-plugin-*`），目前仅 **qsso** 通过 `server/services/thirdLogin.service.ts` 接入。
+
 ## 运行开发服务器
 ```bash
 npm install
@@ -24,7 +26,7 @@ npm run dev #启动开发服务器
 
 ## 初始化目录
 
-可参考 项目exts 目录下的插件
+可参考仓库内已内置实现的扩展模块（如 `server/services/import/`）
 
 在 node_modules 下新建 yapi-plugin-demo 目录和 npm init,最后生成的目录结构如下
 ```

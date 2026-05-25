@@ -4,7 +4,7 @@
  * gen-services 代码生成向导：拉取全量 JSON、预览、下载
  */
 import { useState } from "react";
-import { pluginApi } from "../../lib/api/plugin";
+import { extensionsApi } from "../../lib/api/extensions";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { JsonCodeEditor } from "../shared/json-code-editor";
@@ -24,7 +24,7 @@ export function GenServicesWizard({ projectId }: GenServicesWizardProps) {
   const [interfaceCount, setInterfaceCount] = useState(0);
   const [statusFilter, setStatusFilter] = useState("");
 
-  const exportUrl = pluginApi.exportFullUrl(projectId);
+  const exportUrl = extensionsApi.exportFullUrl(projectId);
   const downloadUrl = statusFilter
     ? `${exportUrl}&status=${statusFilter}`
     : exportUrl;

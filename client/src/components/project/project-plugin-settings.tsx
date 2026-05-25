@@ -4,7 +4,7 @@
  * 项目插件设置：Swagger 自动同步、代码生成说明
  */
 import { useCallback, useEffect, useState } from "react";
-import { pluginApi } from "../../lib/api/plugin";
+import { extensionsApi } from "../../lib/api/extensions";
 import { GenServicesWizard } from "./gen-services-wizard";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -29,7 +29,7 @@ export function ProjectPluginSettings({ projectId }: ProjectPluginSettingsProps)
   const load = useCallback(async () => {
     setError("");
     try {
-      const res = await pluginApi.autoSyncGet(projectId);
+      const res = await extensionsApi.autoSyncGet(projectId);
       const data = res.data as {
         _id?: number;
         sync_json_url?: string;
@@ -59,7 +59,7 @@ export function ProjectPluginSettings({ projectId }: ProjectPluginSettingsProps)
     setSaving(true);
     setError("");
     try {
-      await pluginApi.autoSyncSave({
+      await extensionsApi.autoSyncSave({
         id: sync.id,
         project_id: projectId,
         sync_json_url: sync.sync_json_url,

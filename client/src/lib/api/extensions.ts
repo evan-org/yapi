@@ -1,9 +1,9 @@
 /**
- * 插件扩展 API（/api/plugin/*）
+ * 内置扩展能力 API（路径仍为 /api/plugin/*，与历史 YApi 兼容）
  */
 import { apiRequest } from "./client";
 
-export const pluginApi = {
+export const extensionsApi = {
   statisticsCount: () =>
     apiRequest<{
       groupCount: number;
