@@ -1,6 +1,5 @@
 const yapi = require("../yapi.js");
-const projectModel = require("../models/project.js");
-const interfaceModel = require("../models/interface.js");
+const { projectRepository, interfaceRepository } = require("../repositories");
 const mockExtra = require("../common/mock-extra.js");
 const { schemaValidator } = require("../common/utils.js");
 const _ = require("underscore");
@@ -152,7 +151,7 @@ async function mockServerMiddleware(ctx, next) {
   if (!projectId) {
     return (ctx.body = yapi.commons.resReturn(null, 400, "projectId不能为空"));
   }
-  let projectInst = yapi.getInst(projectModel),
+  let projectInst = projectRepository,
     project;
   try {
     project = await projectInst.get(projectId);
@@ -163,7 +162,7 @@ async function mockServerMiddleware(ctx, next) {
     return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的项目"));
   }
   let interfaceData, newpath;
-  let interfaceInst = yapi.getInst(interfaceModel);
+  let interfaceInst = interfaceRepository;
   try {
     newpath = path.substr(project.basepath.length);
     interfaceData = await interfaceInst.getByPath(project._id, newpath, ctx.method);

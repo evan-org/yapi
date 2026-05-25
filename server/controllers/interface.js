@@ -1,14 +1,16 @@
-const interfaceModel = require("../models/interface.js");
-const interfaceCatModel = require("../models/interfaceCat.js");
-const interfaceCaseModel = require("../models/interfaceCase.js");
-const followModel = require("../models/follow.js");
-const groupModel = require("../models/group.js");
 const _ = require("underscore");
 const url = require("url");
 const baseController = require("./base.js");
 const yapi = require("../yapi.js");
-const userModel = require("../models/user.js");
-const projectModel = require("../models/project.js");
+const {
+  interfaceRepository,
+  interfaceCatRepository,
+  interfaceCaseRepository,
+  followRepository,
+  groupRepository,
+  userRepository,
+  projectRepository,
+} = require("../repositories");
 const jsondiffpatch = require("jsondiffpatch");
 const formattersHtml = jsondiffpatch.formatters.html;
 const showDiffMsg = require("../common/diff-view.js");
@@ -65,13 +67,13 @@ function handleHeaders(values) {
 class interfaceController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(interfaceModel);
-    this.catModel = yapi.getInst(interfaceCatModel);
-    this.projectModel = yapi.getInst(projectModel);
-    this.caseModel = yapi.getInst(interfaceCaseModel);
-    this.followModel = yapi.getInst(followModel);
-    this.userModel = yapi.getInst(userModel);
-    this.groupModel = yapi.getInst(groupModel);
+    this.Model = interfaceRepository;
+    this.catModel = interfaceCatRepository;
+    this.projectModel = projectRepository;
+    this.caseModel = interfaceCaseRepository;
+    this.followModel = followRepository;
+    this.userModel = userRepository;
+    this.groupModel = groupRepository;
 
     const minLengthStringField = {
       type: "string",
@@ -901,7 +903,7 @@ class interfaceController extends baseController {
       result = await this.Model.get(id);
 
       if (result.edit_uid !== 0 && result.edit_uid !== this.getUid()) {
-        userInst = yapi.getInst(userModel);
+        userInst = userRepository;
         userinfo = await userInst.findById(result.edit_uid);
         data = {
           errno: result.edit_uid,

@@ -1,18 +1,20 @@
-const interfaceColModel = require("../models/interfaceCol.js");
-const interfaceCaseModel = require("../models/interfaceCase.js");
-const interfaceModel = require("../models/interface.js");
-const projectModel = require("../models/project.js");
 const baseController = require("./base.js");
 const yapi = require("../yapi.js");
+const {
+  interfaceColRepository,
+  interfaceCaseRepository,
+  interfaceRepository,
+  projectRepository,
+} = require("../repositories");
 const _ = require("underscore");
 
 class interfaceColController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.colModel = yapi.getInst(interfaceColModel);
-    this.caseModel = yapi.getInst(interfaceCaseModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.colModel = interfaceColRepository;
+    this.caseModel = interfaceCaseRepository;
+    this.interfaceModel = interfaceRepository;
+    this.projectModel = projectRepository;
   }
 
   /**

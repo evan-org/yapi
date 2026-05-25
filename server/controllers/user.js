@@ -1,20 +1,21 @@
-const userModel = require("../models/user.js");
 const yapi = require("../yapi.js");
 const baseController = require("./base.js");
 const common = require("../utils/commons.js");
 const ldap = require("../utils/ldap.js");
-
-const interfaceModel = require("../models/interface.js");
-const groupModel = require("../models/group.js");
-const projectModel = require("../models/project.js");
-const avatarModel = require("../models/avatar.js");
+const {
+  userRepository,
+  interfaceRepository,
+  groupRepository,
+  projectRepository,
+  avatarRepository,
+} = require("../repositories");
 
 const jwt = require("jsonwebtoken");
 
 class userController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(userModel);
+    this.Model = userRepository;
   }
   /**
    * 用户登录接口
@@ -29,7 +30,7 @@ class userController extends baseController {
    */
   async login(ctx) {
     // 登录
-    let userInst = yapi.getInst(userModel); // 创建user实体
+    let userInst = userRepository; // 创建user实体
     let email = ctx.request.body.email;
     email = (email || "").trim();
     let password = ctx.request.body.password;
@@ -94,7 +95,7 @@ class userController extends baseController {
    */
 
   async upStudy(ctx) {
-    let userInst = yapi.getInst(userModel); // 创建user实体
+    let userInst = userRepository; // 创建user实体
     let data = {
       up_time: yapi.commons.time(),
       study: true
@@ -148,7 +149,7 @@ class userController extends baseController {
       let login = await this.handleThirdLogin(emailParams, username);
 
       if (login === true) {
-        let userInst = yapi.getInst(userModel); // 创建user实体
+        let userInst = userRepository; // 创建user实体
         let result = await userInst.findByEmail(emailParams);
         return (ctx.body = yapi.commons.resReturn(
           {
@@ -174,7 +175,7 @@ class userController extends baseController {
   // 处理第三方登录
   async handleThirdLogin(email, username) {
     let user, data, passsalt;
-    let userInst = yapi.getInst(userModel);
+    let userInst = userRepository;
 
     try {
       user = await userInst.findByEmail(email);
@@ -221,7 +222,7 @@ class userController extends baseController {
    */
   async changePassword(ctx) {
     let params = ctx.request.body;
-    let userInst = yapi.getInst(userModel);
+    let userInst = userRepository;
 
     if (!params.uid) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "uid不能为空"));
@@ -261,7 +262,7 @@ class userController extends baseController {
   }
 
   async handlePrivateGroup(uid) {
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
     await groupInst.save({
       uid: uid,
       group_name: "User-" + uid,
@@ -301,7 +302,7 @@ class userController extends baseController {
     if (yapi.WEBCONFIG.closeRegister) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "禁止注册，请联系管理员"));
     }
-    let userInst = yapi.getInst(userModel);
+    let userInst = userRepository;
     let params = ctx.request.body; // 获取请求的参数,检查是否存在用户名和密码
 
     params = yapi.commons.handleParams(params, {
@@ -381,7 +382,7 @@ class userController extends baseController {
     let page = ctx.request.query.page || 1,
       limit = ctx.request.query.limit || 10;
 
-    const userInst = yapi.getInst(userModel);
+    const userInst = userRepository;
     try {
       let user = await userInst.listWithPaging(page, limit);
       let count = await userInst.listCount();
@@ -408,7 +409,7 @@ class userController extends baseController {
   async findById(ctx) {
     // 根据id获取用户信息
     try {
-      let userInst = yapi.getInst(userModel);
+      let userInst = userRepository;
       let id = ctx.request.query.id;
 
       if (this.getRole() !== "admin" && id != this.getUid()) {
@@ -456,7 +457,7 @@ class userController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 402, "Without permission."));
       }
 
-      let userInst = yapi.getInst(userModel);
+      let userInst = userRepository;
       let id = ctx.request.body.id;
       if (id == this.getUid()) {
         return (ctx.body = yapi.commons.resReturn(null, 403, "禁止删除管理员"));
@@ -500,7 +501,7 @@ class userController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 401, "没有权限"));
       }
 
-      let userInst = yapi.getInst(userModel);
+      let userInst = userRepository;
       let id = params.uid;
 
       if (!id) {
@@ -531,9 +532,9 @@ class userController extends baseController {
         username: data.username || userData.username,
         email: data.email || userData.email
       };
-      let groupInst = yapi.getInst(groupModel);
+      let groupInst = groupRepository;
       await groupInst.updateMember(member);
-      let projectInst = yapi.getInst(projectModel);
+      let projectInst = projectRepository;
       await projectInst.updateMember(member);
 
       let result = await userInst.update(id, data);
@@ -576,7 +577,7 @@ class userController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 400, "图片大小不能超过200kb"));
       }
 
-      let avatarInst = yapi.getInst(avatarModel);
+      let avatarInst = avatarRepository;
       let result = await avatarInst.up(this.getUid(), basecode, type);
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
@@ -597,7 +598,7 @@ class userController extends baseController {
   async avatar(ctx) {
     try {
       let uid = ctx.query.uid ? ctx.query.uid : this.getUid();
-      let avatarInst = yapi.getInst(avatarModel);
+      let avatarInst = avatarRepository;
       let data = await avatarInst.get(uid);
       let dataBuffer, type;
       if (!data || !data.basecode) {
@@ -676,7 +677,7 @@ class userController extends baseController {
     let result = {};
     try {
       if (type === "interface") {
-        let interfaceInst = yapi.getInst(interfaceModel);
+        let interfaceInst = interfaceRepository;
         let interfaceData = await interfaceInst.get(id);
         result.interface = interfaceData;
         type = "project";
@@ -684,7 +685,7 @@ class userController extends baseController {
       }
 
       if (type === "project") {
-        let projectInst = yapi.getInst(projectModel);
+        let projectInst = projectRepository;
         let projectData = await projectInst.get(id);
         result.project = projectData.toObject();
         let ownerAuth = await this.checkAuth(id, "project", "danger"),
@@ -704,7 +705,7 @@ class userController extends baseController {
       }
 
       if (type === "group") {
-        let groupInst = yapi.getInst(groupModel);
+        let groupInst = groupRepository;
         let groupData = await groupInst.get(id);
         result.group = groupData.toObject();
         let ownerAuth = await this.checkAuth(id, "group", "danger"),

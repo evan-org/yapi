@@ -1,11 +1,13 @@
-const projectModel = require("../models/project.js");
-const interfaceColModel = require("../models/interfaceCol.js");
-const interfaceCaseModel = require("../models/interfaceCase.js");
-const interfaceModel = require("../models/interface.js");
-const interfaceCatModel = require("../models/interfaceCat.js");
-const followModel = require("../models/follow.js");
-const userModel = require("../models/user.js");
 const yapi = require("../yapi.js");
+const {
+  projectRepository,
+  interfaceColRepository,
+  interfaceCaseRepository,
+  interfaceRepository,
+  interfaceCatRepository,
+  followRepository,
+  userRepository,
+} = require("../repositories");
 const baseController = require("./base.js");
 const {
   handleParams,
@@ -31,13 +33,13 @@ yapi.emitHook("import_data", importDataModule);
 class openController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.projectModel = yapi.getInst(projectModel);
-    this.interfaceColModel = yapi.getInst(interfaceColModel);
-    this.interfaceCaseModel = yapi.getInst(interfaceCaseModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
-    this.interfaceCatModel = yapi.getInst(interfaceCatModel);
-    this.followModel = yapi.getInst(followModel);
-    this.userModel = yapi.getInst(userModel);
+    this.projectModel = projectRepository;
+    this.interfaceColModel = interfaceColRepository;
+    this.interfaceCaseModel = interfaceCaseRepository;
+    this.interfaceModel = interfaceRepository;
+    this.interfaceCatModel = interfaceCatRepository;
+    this.followModel = followRepository;
+    this.userModel = userRepository;
     this.handleValue = this.handleValue.bind(this);
     this.schemaMap = {
       runAutoTest: {
@@ -127,7 +129,7 @@ class openController extends baseController {
      * 如果没有分类,增加一个默认分类
      */
     if (menuList.length === 0) {
-      const catInst = yapi.getInst(interfaceCatModel);
+      const catInst = interfaceCatRepository;
       const menu = await catInst.save({
         name: "默认分类",
         project_id: project_id,

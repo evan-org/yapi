@@ -20,7 +20,7 @@
     "start-server": "npm run start --workspace=yapi-server",
     "start-client": "npm run start --workspace=client -- -p 4000 -H 0.0.0.0",
     "install-server": "npm run install-server --workspace=yapi-server",
-    "test:server": "npm run test --workspace=yapi-server",
+    "test:server": "npm run compile:repos --workspace=yapi-server && npm run test --workspace=yapi-server",
     "lint:client": "npm run lint --workspace=client"
   },
   "license": "Apache-2.0",

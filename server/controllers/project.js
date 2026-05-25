@@ -1,17 +1,19 @@
-const projectModel = require("../models/project.js");
 const yapi = require("../yapi.js");
 const _ = require("underscore");
 const baseController = require("./base.js");
-const interfaceModel = require("../models/interface.js");
-const interfaceColModel = require("../models/interfaceCol.js");
-const interfaceCaseModel = require("../models/interfaceCase.js");
-const interfaceCatModel = require("../models/interfaceCat.js");
-const groupModel = require("../models/group");
 const commons = require("../utils/commons.js");
-const userModel = require("../models/user.js");
-const logModel = require("../models/log.js");
-const followModel = require("../models/follow.js");
-const tokenModel = require("../models/token.js");
+const {
+  projectRepository,
+  userRepository,
+  interfaceRepository,
+  interfaceColRepository,
+  interfaceCaseRepository,
+  interfaceCatRepository,
+  groupRepository,
+  logRepository,
+  followRepository,
+  tokenRepository,
+} = require("../repositories");
 const {getToken} = require("../utils/token")
 const sha = require("sha.js");
 const axios = require("axios").default;
@@ -19,12 +21,12 @@ const axios = require("axios").default;
 class projectController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(projectModel);
-    this.groupModel = yapi.getInst(groupModel);
-    this.logModel = yapi.getInst(logModel);
-    this.followModel = yapi.getInst(followModel);
-    this.tokenModel = yapi.getInst(tokenModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
+    this.Model = projectRepository;
+    this.groupModel = groupRepository;
+    this.logModel = logRepository;
+    this.followModel = followRepository;
+    this.tokenModel = tokenRepository;
+    this.interfaceModel = interfaceRepository;
 
     const id = "number";
     const member_uid = ["number"];
@@ -223,8 +225,8 @@ class projectController extends baseController {
     };
 
     let result = await this.Model.save(data);
-    let colInst = yapi.getInst(interfaceColModel);
-    let catInst = yapi.getInst(interfaceCatModel);
+    let colInst = interfaceColRepository;
+    let catInst = interfaceCatRepository;
     if (result._id) {
       await colInst.save({
         name: "公共测试集",
@@ -300,8 +302,8 @@ class projectController extends baseController {
 
       delete data._id;
       let result = await this.Model.save(data);
-      let colInst = yapi.getInst(interfaceColModel);
-      let catInst = yapi.getInst(interfaceCatModel);
+      let colInst = interfaceColRepository;
+      let catInst = interfaceCatRepository;
 
       // 增加集合
       if (result._id) {
@@ -463,7 +465,6 @@ class projectController extends baseController {
       let result = await this.Model.delMember(params.id, params.member_uid);
       let username = this.getUsername();
       yapi
-        .getInst(userModel)
         .findById(params.member_uid)
         .then((member) => {
           yapi.commons.saveLog({
@@ -528,7 +529,7 @@ class projectController extends baseController {
       }
     }
     result = result.toObject();
-    let catInst = yapi.getInst(interfaceCatModel);
+    let catInst = interfaceCatRepository;
     let cat = await catInst.list(params.id);
     result.cat = cat;
     if (result.env.length === 0) {
@@ -616,9 +617,9 @@ class projectController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
     }
 
-    let interfaceInst = yapi.getInst(interfaceModel);
-    let interfaceColInst = yapi.getInst(interfaceColModel);
-    let interfaceCaseInst = yapi.getInst(interfaceCaseModel);
+    let interfaceInst = interfaceRepository;
+    let interfaceColInst = interfaceColRepository;
+    let interfaceCaseInst = interfaceCaseRepository;
     await interfaceInst.delByProjectId(id);
     await interfaceCaseInst.delByProjectId(id);
     await interfaceColInst.delByProjectId(id);
@@ -642,7 +643,7 @@ class projectController extends baseController {
    */
   async changeMemberRole(ctx) {
     let params = ctx.request.body;
-    let projectInst = yapi.getInst(projectModel);
+    let projectInst = projectRepository;
 
     let check = await projectInst.checkMemberRepeat(params.id, params.member_uid);
     if (check === 0) {
@@ -662,9 +663,8 @@ class projectController extends baseController {
     let result = await projectInst.changeMemberRole(params.id, params.member_uid, params.role);
 
     let username = this.getUsername();
-    yapi
-      .getInst(userModel)
-      .findById(params.member_uid)
+      userRepository
+        .findById(params.member_uid)
       .then((member) => {
         yapi.commons.saveLog({
           content: `<a href="/user/profile/${this.getUid()}">${username}</a> 修改了项目中的成员 <a href="/user/profile/${
@@ -694,7 +694,7 @@ class projectController extends baseController {
   async changeMemberEmailNotice(ctx) {
     try {
       let params = ctx.request.body;
-      let projectInst = yapi.getInst(projectModel);
+      let projectInst = projectRepository;
       let check = await projectInst.checkMemberRepeat(params.id, params.member_uid);
       if (check === 0) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "项目成员不存在"));

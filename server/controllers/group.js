@@ -1,11 +1,13 @@
-const groupModel = require("../models/group.js");
 const yapi = require("../yapi.js");
 const baseController = require("./base.js");
-const projectModel = require("../models/project.js");
-const userModel = require("../models/user.js");
-const interfaceModel = require("../models/interface.js");
-const interfaceColModel = require("../models/interfaceCol.js");
-const interfaceCaseModel = require("../models/interfaceCase.js");
+const {
+  groupRepository,
+  projectRepository,
+  userRepository,
+  interfaceRepository,
+  interfaceColRepository,
+  interfaceCaseRepository,
+} = require("../repositories");
 const _ = require("underscore")
 
 const rolename = {
@@ -98,7 +100,7 @@ class groupController extends baseController {
   async get(ctx) {
     let params = ctx.params;
 
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
     let result = await groupInst.getGroupById(params.id);
     if (result) {
       result = result.toObject();
@@ -150,7 +152,7 @@ class groupController extends baseController {
       }
     }
 
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
 
     let checkRepeat = await groupInst.checkRepeat(params.group_name);
 
@@ -198,7 +200,7 @@ class groupController extends baseController {
 
   async getUserdata(uid, role) {
     role = role || "dev";
-    let userInst = yapi.getInst(userModel);
+    let userInst = userRepository;
     let userData = await userInst.findById(uid);
     if (!userData) {
       return null;
@@ -213,7 +215,7 @@ class groupController extends baseController {
   }
 
   async getMyGroup(ctx) {
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
     let privateGroup = await groupInst.getByPrivateUid(this.getUid());
     if (!privateGroup) {
       privateGroup = await groupInst.save({
@@ -245,7 +247,7 @@ class groupController extends baseController {
    */
   async addMember(ctx) {
     let params = ctx.params;
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
 
     params.role = ["owner", "dev", "guest"].find((v) => v === params.role) || "dev";
     let add_members = [];
@@ -302,7 +304,7 @@ class groupController extends baseController {
    */
   async changeMemberRole(ctx) {
     let params = ctx.request.body;
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
 
     let check = await groupInst.checkMemberRepeat(params.id, params.member_uid);
     if (check === 0) {
@@ -343,7 +345,7 @@ class groupController extends baseController {
 
   async getMemberList(ctx) {
     let params = ctx.params;
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
     let group = await groupInst.get(params.id);
     ctx.body = yapi.commons.resReturn(group.members);
   }
@@ -362,7 +364,7 @@ class groupController extends baseController {
 
   async delMember(ctx) {
     let params = ctx.params;
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
     let check = await groupInst.checkMemberRepeat(params.id, params.member_uid);
     if (check === 0) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "分组成员不存在"));
@@ -397,8 +399,8 @@ class groupController extends baseController {
    * @example ./api/group/list.json
    */
   async list(ctx) {
-    let groupInst = yapi.getInst(groupModel);
-    let projectInst = yapi.getInst(projectModel);
+    let groupInst = groupRepository;
+    let projectInst = projectRepository;
 
     let privateGroup = await groupInst.getByPrivateUid(this.getUid());
     let newResult = [];
@@ -473,11 +475,11 @@ class groupController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 401, "没有权限"));
     }
 
-    let groupInst = yapi.getInst(groupModel);
-    let projectInst = yapi.getInst(projectModel);
-    let interfaceInst = yapi.getInst(interfaceModel);
-    let interfaceColInst = yapi.getInst(interfaceColModel);
-    let interfaceCaseInst = yapi.getInst(interfaceCaseModel);
+    let groupInst = groupRepository;
+    let projectInst = projectRepository;
+    let interfaceInst = interfaceRepository;
+    let interfaceColInst = interfaceColRepository;
+    let interfaceCaseInst = interfaceCaseRepository;
     let id = ctx.params.id;
 
     let projectList = await projectInst.list(id, true);
@@ -507,7 +509,7 @@ class groupController extends baseController {
    * @example ./api/group/up.json
    */
   async up(ctx) {
-    let groupInst = yapi.getInst(groupModel);
+    let groupInst = groupRepository;
     let params = ctx.params;
 
     if ((await this.checkAuth(params.id, "group", "danger")) !== true) {

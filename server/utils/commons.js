@@ -2,13 +2,15 @@ const fs = require("fs-extra");
 const path = require("path");
 const yapi = require("../yapi.js");
 const sha1 = require("sha1");
-const logModel = require("../models/log.js");
-const projectModel = require("../models/project.js");
-const interfaceColModel = require("../models/interfaceCol.js");
-const interfaceCaseModel = require("../models/interfaceCase.js");
-const interfaceModel = require("../models/interface.js");
-const userModel = require("../models/user.js");
-const followModel = require("../models/follow.js");
+const {
+  logRepository,
+  projectRepository,
+  interfaceColRepository,
+  interfaceCaseRepository,
+  interfaceRepository,
+  userRepository,
+  followRepository,
+} = require("../repositories");
 const json5 = require("json5");
 const _ = require("underscore");
 const Ajv = require("ajv");
@@ -380,7 +382,7 @@ exports.validateParams = (schema2, params) => {
 
 exports.saveLog = (logData) => {
   try {
-    let logInst = yapi.getInst(logModel);
+    let logInst = logRepository;
     let data = {
       content: logData.content,
       type: logData.type,
@@ -485,10 +487,10 @@ function handleParamsValue(params, val) {
 exports.handleParamsValue = handleParamsValue;
 
 exports.getCaseList = async function getCaseList(id) {
-  const caseInst = yapi.getInst(interfaceCaseModel);
-  const colInst = yapi.getInst(interfaceColModel);
-  const projectInst = yapi.getInst(projectModel);
-  const interfaceInst = yapi.getInst(interfaceModel);
+  const caseInst = interfaceCaseRepository;
+  const colInst = interfaceColRepository;
+  const projectInst = projectRepository;
+  const interfaceInst = interfaceRepository;
 
   let resultList = await caseInst.list(id, "all");
   let colData = await colInst.get(id);
@@ -533,7 +535,7 @@ function convertString(variable) {
 
 
 exports.runCaseScript = async function runCaseScript(params, colId, interfaceId) {
-  const colInst = yapi.getInst(interfaceColModel);
+  const colInst = interfaceColRepository;
   let colData = await colInst.get(colId);
   const logs = [];
   const context = {
@@ -565,7 +567,7 @@ exports.runCaseScript = async function runCaseScript(params, colId, interfaceId)
     }
 
     if (colData.checkResponseSchema) {
-      const interfaceInst = yapi.getInst(interfaceModel);
+      const interfaceInst = interfaceRepository;
       let interfaceData = await interfaceInst.get(interfaceId);
       if (interfaceData.res_body_is_json_schema && interfaceData.res_body) {
         let schema = JSON.parse(interfaceData.res_body);
@@ -605,7 +607,7 @@ ${JSON.stringify(schema, null, 2)}`)
 
 exports.getUserdata = async function getUserdata(uid, role) {
   role = role || "dev";
-  let userInst = yapi.getInst(userModel);
+  let userInst = userRepository;
   let userData = await userInst.findById(uid);
   if (!userData) {
     return null;

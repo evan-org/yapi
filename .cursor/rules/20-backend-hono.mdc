@@ -7,6 +7,7 @@ globs: server/**/*
 
 - 入口：`server/app.js`
 - 配置：`server/config.json`
+- 数据访问：`server/repositories/*.repo.ts`（编译为 `.js`），controllers 通过 `require('../repositories')` 引用，勿在 controller 直接 `yapi.getInst(model)`
 - `WEBROOT` = `server/` 目录（`__dirname` of yapi.js）
 - 新路由：`server/router.js` + `server/controllers/`
 - 测试：`npm run test:server`（在仓库根目录）

@@ -1,17 +1,19 @@
-const logModel = require("../models/log.js");
 const yapi = require("../yapi.js");
 const baseController = require("./base.js");
-const groupModel = require("../models/group");
-const projectModel = require("../models/project");
-const interfaceModel = require("../models/interface");
+const {
+  logRepository,
+  groupRepository,
+  projectRepository,
+  interfaceRepository,
+} = require("../repositories");
 
 class logController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(logModel);
-    this.groupModel = yapi.getInst(groupModel);
-    this.projectModel = yapi.getInst(projectModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
+    this.Model = logRepository;
+    this.groupModel = groupRepository;
+    this.projectModel = projectRepository;
+    this.interfaceModel = interfaceRepository;
     this.schemaMap = {
       listByUpdate: {
         "*type": "string",
