@@ -25,6 +25,15 @@ import {
   applyStatusTagFilter,
   mergeSaveResBody,
 } from "./interface.util.js";
+import {
+  validateAddCategoryParams,
+  validateCategoryId,
+  validateInterfaceProjectId,
+  validateCustomFieldQuery,
+  validateIndexBatchItems,
+  validateBatchUploadInput,
+  validateInterfaceId,
+} from "./interface.validation.js";
 
 export {
   handleHeaders,
@@ -154,12 +163,12 @@ class InterfaceService extends BaseService {
    * 自定义字段查询
    */
   async queryByCustomField(queryParams) {
-    const keys = Object.keys(queryParams || {});
-    if (keys.length !== 1) {
-      return fail(400, "参数数量错误");
+    const fieldValidated = validateCustomFieldQuery(queryParams);
+    if (!fieldValidated.ok) {
+      return fieldValidated;
     }
-    const customFieldName = keys[0];
-    const customFieldValue = queryParams[customFieldName];
+    const { fieldName: customFieldName, fieldValue: customFieldValue } =
+      fieldValidated.data;
 
     const groups = await this.groupModel.getcustomFieldName(customFieldName);
     if (groups.length === 0) {
@@ -277,13 +286,12 @@ class InterfaceService extends BaseService {
   /**
    * 新增接口分类
    */
-  async addCategory({ name, project_id, desc, uid, username }) {
-    if (!project_id) {
-      return fail(400, "项目id不能为空");
+  async addCategory(params) {
+    const validated = validateAddCategoryParams(params);
+    if (!validated.ok) {
+      return validated;
     }
-    if (!name) {
-      return fail(400, "名称不能为空");
-    }
+    const { name, project_id, desc, uid, username } = validated.data;
     const result = await this.catModel.save({
       name,
       project_id,
@@ -306,9 +314,11 @@ class InterfaceService extends BaseService {
    * 项目接口分页列表
    */
   async listByProject({ project_id, page, limit, status, tag }) {
-    if (!project_id) {
-      return fail(400, "项目id不能为空");
+    const projectValidated = validateInterfaceProjectId(project_id);
+    if (!projectValidated.ok) {
+      return projectValidated;
     }
+    project_id = projectValidated.data;
     const project = await this.projectModel.getBaseInfo(project_id);
     if (!project) {
       return fail(407, "不存在的项目");
@@ -337,9 +347,11 @@ class InterfaceService extends BaseService {
    * 分类下接口分页列表
    */
   async listByCategory({ catid, page, limit, status, tag }) {
-    if (!catid) {
-      return fail(400, "catid不能为空");
+    const catValidated = validateCategoryId(catid);
+    if (!catValidated.ok) {
+      return catValidated;
     }
+    catid = catValidated.data;
     const catdata = await this.catModel.get(catid);
     if (!catdata) {
       return fail(400, "分类不存在");
@@ -364,10 +376,11 @@ class InterfaceService extends BaseService {
    * 批量更新接口排序 index
    */
   updateIndexBatch(items) {
-    if (!items || !Array.isArray(items)) {
-      return fail(400, "请求参数必须是数组");
+    const validated = validateIndexBatchItems(items);
+    if (!validated.ok) {
+      return validated;
     }
-    items.forEach((item) => {
+    validated.data.forEach((item) => {
       if (item.id) {
         this.interfaceModel.upIndex(item.id, item.index).then(
           () => {},
@@ -384,10 +397,11 @@ class InterfaceService extends BaseService {
    * 批量更新分类排序 index
    */
   updateCatIndexBatch(items) {
-    if (!items || !Array.isArray(items)) {
-      return fail(400, "请求参数必须是数组");
+    const validated = validateIndexBatchItems(items);
+    if (!validated.ok) {
+      return validated;
     }
-    items.forEach((item) => {
+    validated.data.forEach((item) => {
       if (item.id) {
         this.catModel.upCatIndex(item.id, item.index).then(
           () => {},
@@ -755,12 +769,12 @@ class InterfaceService extends BaseService {
    * Chrome 插件 / 批量上传接口 JSON
    */
   async batchUploadInterfaces({ project_id, catid, raw }, { uid, username, role }) {
-    if (!project_id) {
-      return fail(400, "project_id 不能为空");
+    const inputValidated = validateBatchUploadInput({ project_id, raw });
+    if (!inputValidated.ok) {
+      return inputValidated;
     }
-    if (!raw) {
-      return fail(400, "data 不能为空");
-    }
+    project_id = inputValidated.data.project_id;
+    raw = inputValidated.data.raw;
 
     let parsed = raw;
     if (typeof parsed === "string") {
@@ -813,9 +827,11 @@ class InterfaceService extends BaseService {
    * 接口编辑冲突检测（WebSocket）
    */
   async checkEditConflict(id, uid) {
-    if (!id) {
-      return fail(400, "id 参数有误");
+    const idValidated = validateInterfaceId(id);
+    if (!idValidated.ok) {
+      return idValidated;
     }
+    id = idValidated.data;
     const result = await this.interfaceModel.get(id);
     if (!result) {
       return fail(400, "接口不存在");

@@ -34,6 +34,15 @@ export {
   applyStatusTagFilter,
   mergeSaveResBody,
 } from "./interface.util.js";
+export {
+  validateAddCategoryParams,
+  validateCategoryId,
+  validateInterfaceProjectId,
+  validateCustomFieldQuery,
+  validateIndexBatchItems,
+  validateBatchUploadInput,
+  validateInterfaceId,
+} from "./interface.validation.js";
 export { default as interfaceColService } from "./interfaceCol.service.js";
 export { default as exportDataService, stripExportIds } from "./exportData.service.js";
 export { default as swaggerSyncService } from "./swaggerSync.service.js";
