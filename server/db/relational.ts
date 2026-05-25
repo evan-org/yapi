@@ -221,3 +221,17 @@ export function tokenFromRow(row: DocRecord): DocRecord {
 }
 
 export const TOKEN_SELECT = "_id, project_id, token";
+
+/** follow 表行 → 业务对象（字段名与历史 JSONB 文档一致） */
+export function followFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    uid: row.uid,
+    projectid: row.projectid,
+    projectname: row.projectname,
+    icon: row.icon,
+    color: row.color,
+  };
+}
+
+export const FOLLOW_SELECT = "_id, uid, projectid, projectname, icon, color";
