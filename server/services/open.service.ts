@@ -20,6 +20,11 @@ import {
 import { handleParamsValue, ArrayToObject } from "../common/utils.js";
 import createContex from "../common/createContext.js";
 import { trim } from "../utils/commons.js";
+import HanldeImportData from "../common/HandleImportData.js";
+import {
+  importDataModule,
+  ensureImportDataRegistry,
+} from "./open-import.registry.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
 
@@ -174,6 +179,69 @@ class OpenService extends BaseService {
       menuList.push(menu);
     }
     return { menuList, selectCatid: menuList[0]._id };
+  }
+
+  /**
+   * 开放 API：导入接口数据（postman/swagger 等）
+   */
+  async importData({ type, json, url, project_id, merge, dataSync, uid, token }) {
+    ensureImportDataRegistry();
+    let warnMessage = "";
+    let dataSyncValue = merge;
+    try {
+      if (!dataSyncValue && dataSync) {
+        warnMessage =
+          "importData Api 已废弃 dataSync 传参，请联系管理员将 dataSync 改为 merge.";
+        dataSyncValue = dataSync;
+      }
+    } catch (e) {}
+
+    if (!type || !importDataModule[type]) {
+      return fail(40022, "不存在的导入方式");
+    }
+
+    if (!json && !url) {
+      return fail(40022, "json 或者 url 参数，不能都为空");
+    }
+
+    const resolved = await this.resolveImportJson({ json, url });
+    if (!resolved.ok) {
+      return resolved;
+    }
+    let content = resolved.data.parsed;
+    if (resolved.data.warnMessage) {
+      warnMessage = resolved.data.warnMessage;
+    }
+
+    const { menuList, selectCatid } = await this.ensureDefaultCat(project_id, uid);
+    const projectData = await this.projectModel.get(project_id);
+    const parsed = await importDataModule[type](content);
+
+    let successMessage;
+    const errorMessage = [];
+    await HanldeImportData(
+      parsed,
+      project_id,
+      selectCatid,
+      menuList,
+      projectData.basePath,
+      dataSyncValue,
+      (err) => {
+        errorMessage.push(err);
+      },
+      (msg) => {
+        successMessage = msg;
+      },
+      () => {},
+      token,
+      yapi.WEBCONFIG.port
+    );
+
+    if (errorMessage.length > 0) {
+      return fail(404, errorMessage.join("\n"));
+    }
+    const message = successMessage + warnMessage;
+    return ok({ message, errcode: 0, errmsg: message });
   }
 
   /**

@@ -4,8 +4,10 @@
  */
 import axios from "axios";
 import _ from "underscore";
+import sha from "sha.js";
 import yapi from "../runtime.js";
 import commons, { validateSearchKeyword } from "../utils/commons.js";
+import { getToken } from "../utils/token.js";
 import {
   projectRepository,
   groupRepository,
@@ -15,6 +17,7 @@ import {
   followRepository,
   interfaceCatRepository,
   userRepository,
+  tokenRepository,
 } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
@@ -64,6 +67,7 @@ class ProjectService extends BaseService {
     this.interfaceCaseModel = interfaceCaseRepository;
     this.followModel = followRepository;
     this.catModel = interfaceCatRepository;
+    this.tokenModel = tokenRepository;
   }
 
   /**
@@ -573,6 +577,51 @@ class ProjectService extends BaseService {
       typeid: id,
     });
     return ok(result);
+  }
+
+  /** 获取或创建项目 token（开放 API / 自动同步鉴权用） */
+  async getOrCreateProjectToken(projectId, uid) {
+    try {
+      let data = await this.tokenModel.get(projectId);
+      let token;
+      if (!data) {
+        const passsalt = yapi.commons.randStr();
+        token = sha("sha1").update(passsalt).digest("hex").substr(0, 20);
+        await this.tokenModel.save({ project_id: projectId, token });
+      } else {
+        token = data.token;
+      }
+      return ok(getToken(token, uid));
+    } catch (err) {
+      return fail(402, err.message);
+    }
+  }
+
+  /** 刷新项目 token */
+  async refreshProjectToken(projectId) {
+    try {
+      const data = await this.tokenModel.get(projectId);
+      if (!data || !data.token) {
+        return fail(402, "没有查到token信息");
+      }
+      const passsalt = yapi.commons.randStr();
+      let token = sha("sha1").update(passsalt).digest("hex").substr(0, 20);
+      const result = await this.tokenModel.up(projectId, token);
+      token = getToken(token);
+      result.token = token;
+      return ok(result);
+    } catch (err) {
+      return fail(402, err.message);
+    }
+  }
+
+  /** 获取项目环境变量 */
+  async getProjectEnv(projectId) {
+    if (!projectId) {
+      return fail(405, "项目id不能为空");
+    }
+    const env = await this.projectModel.getByEnv(projectId);
+    return ok(env);
   }
 }
 

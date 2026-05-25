@@ -17,11 +17,7 @@ import {
   groupRepository,
   logRepository,
   followRepository,
-  tokenRepository,
 } from '../repositories/index.js';
-
-import { getToken } from '../utils/token.js'
-import sha from 'sha.js';
 
 import { projectService } from "../services/index.js";
 import { normalizeBasepath } from "../services/project.service.js";
@@ -46,7 +42,6 @@ class projectController extends baseController {
     this.groupModel = groupRepository;
     this.logModel = logRepository;
     this.followModel = followRepository;
-    this.tokenModel = tokenRepository;
     this.interfaceModel = interfaceRepository;
 
     const id = "number";
@@ -610,21 +605,9 @@ class projectController extends baseController {
    */
   async getEnv(ctx) {
     try {
-      // console.log(ctx.request.query.project_id)
       let project_id = ctx.request.query.project_id;
-      // let params = ctx.request.body;
-      if (!project_id) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "项目id不能为空"));
-      }
-
-      // 去掉权限判断
-      // if ((await this.checkAuth(project_id, 'project', 'edit')) !== true) {
-      //   return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
-      // }
-
-      let env = await this.Model.getByEnv(project_id);
-
-      ctx.body = yapi.commons.resReturn(env);
+      const result = await projectService.getProjectEnv(project_id);
+      this._reply(ctx, result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
@@ -649,23 +632,11 @@ class projectController extends baseController {
   async token(ctx) {
     try {
       let project_id = ctx.params.project_id;
-      let data = await this.tokenModel.get(project_id);
-      let token;
-      if (!data) {
-        let passsalt = yapi.commons.randStr();
-        token = sha("sha1")
-          .update(passsalt)
-          .digest("hex")
-          .substr(0, 20);
-
-        await this.tokenModel.save({ project_id, token });
-      } else {
-        token = data.token;
-      }
-
-      token = getToken(token, this.getUid())
-
-      ctx.body = yapi.commons.resReturn(token);
+      const result = await projectService.getOrCreateProjectToken(
+        project_id,
+        this.getUid()
+      );
+      this._reply(ctx, result);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }
@@ -684,22 +655,8 @@ class projectController extends baseController {
   async updateToken(ctx) {
     try {
       let project_id = ctx.params.project_id;
-      let data = await this.tokenModel.get(project_id);
-      let token, result;
-      if (data && data.token) {
-        let passsalt = yapi.commons.randStr();
-        token = sha("sha1")
-          .update(passsalt)
-          .digest("hex")
-          .substr(0, 20);
-        result = await this.tokenModel.up(project_id, token);
-        token = getToken(token);
-        result.token = token;
-      } else {
-        ctx.body = yapi.commons.resReturn(null, 402, "没有查到token信息");
-      }
-
-      ctx.body = yapi.commons.resReturn(result);
+      const result = await projectService.refreshProjectToken(project_id);
+      this._reply(ctx, result);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }

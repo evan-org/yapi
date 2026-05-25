@@ -1,13 +1,10 @@
 // @ts-nocheck
 import controller from './controller/syncController.js';
-
-import yapi from 'runtime.js';
-
-import interfaceSyncUtils from './interfaceSyncUtils.js';
-
+import syncUtils from './interfaceSyncUtils.js';
 
 export default function() {
-  yapi.getInst(interfaceSyncUtils);
+  // 单例已在模块加载时初始化定时任务
+  void syncUtils;
 
   this.bindHook("add_router", function(addRouter) {
     addRouter({
@@ -23,5 +20,4 @@ export default function() {
       action: "upSync"
     });
   });
-
 };

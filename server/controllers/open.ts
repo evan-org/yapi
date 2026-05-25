@@ -3,40 +3,13 @@ import yapi from '../runtime.js';
 
 import baseController from './base.js';
 
-import {
-  projectRepository,
-  interfaceColRepository,
-  interfaceCaseRepository,
-  interfaceRepository,
-  interfaceCatRepository,
-  followRepository,
-  userRepository,
-} from '../repositories/index.js';
-
 import renderToHtml from '../utils/reportHtml.js';
 
 import { openService } from "../services/index.js";
 
-import HanldeImportData from '../common/HandleImportData.js';
-
-/**
- * {
- *    postman: require('./m')
- * }
- */
-const importDataModule = {};
-yapi.emitHook("import_data", importDataModule);
-
 class openController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.projectModel = projectRepository;
-    this.interfaceColModel = interfaceColRepository;
-    this.interfaceCaseModel = interfaceCaseRepository;
-    this.interfaceModel = interfaceRepository;
-    this.interfaceCatModel = interfaceCatRepository;
-    this.followModel = followRepository;
-    this.userModel = userRepository;
     this.schemaMap = {
       runAutoTest: {
         "*id": "number",
@@ -71,74 +44,20 @@ class openController extends baseController {
   }
 
   async importData(ctx) {
-    let type = ctx.params.type;
-    let content = ctx.params.json;
-    let project_id = ctx.params.project_id;
-    let dataSync = ctx.params.merge;
-
-    let warnMessage = ""
-
-    /**
-     * 因为以前接口文档写错了，做下兼容
-     */
-    try {
-      if (!dataSync && ctx.params.dataSync) {
-        warnMessage = "importData Api 已废弃 dataSync 传参，请联系管理员将 dataSync 改为 merge."
-        dataSync = ctx.params.dataSync
-      }
-    } catch (e) {}
-
-    let token = ctx.params.token;
-    if (!type || !importDataModule[type]) {
-      return (ctx.body = yapi.commons.resReturn(null, 40022, "不存在的导入方式"));
-    }
-
-    if (!content && !ctx.params.url) {
-      return (ctx.body = yapi.commons.resReturn(null, 40022, "json 或者 url 参数，不能都为空"));
-    }
-    const resolved = await openService.resolveImportJson({
-      json: content,
+    const result = await openService.importData({
+      type: ctx.params.type,
+      json: ctx.params.json,
       url: ctx.params.url,
+      project_id: ctx.params.project_id,
+      merge: ctx.params.merge,
+      dataSync: ctx.params.dataSync,
+      uid: this.getUid(),
+      token: ctx.params.token,
     });
-    if (!resolved.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, resolved.code, resolved.message));
+    if (!result.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
     }
-    content = resolved.data.parsed;
-    if (resolved.data.warnMessage) {
-      warnMessage = resolved.data.warnMessage;
-    }
-
-    const { menuList, selectCatid } = await openService.ensureDefaultCat(
-      project_id,
-      this.getUid()
-    );
-    let projectData = await this.projectModel.get(project_id);
-    let res = await importDataModule[type](content);
-
-    let successMessage;
-    let errorMessage = [];
-    await HanldeImportData(
-      res,
-      project_id,
-      selectCatid,
-      menuList,
-      projectData.basePath,
-      dataSync,
-      (err) => {
-        errorMessage.push(err);
-      },
-      (msg) => {
-        successMessage = msg;
-      },
-      () => {},
-      token,
-      yapi.WEBCONFIG.port
-    );
-
-    if (errorMessage.length > 0) {
-      return (ctx.body = yapi.commons.resReturn(null, 404, errorMessage.join("\n")));
-    }
-    ctx.body = yapi.commons.resReturn(null, 0, successMessage + warnMessage);
+    ctx.body = yapi.commons.resReturn(null, 0, result.data.message);
   }
 
   /**

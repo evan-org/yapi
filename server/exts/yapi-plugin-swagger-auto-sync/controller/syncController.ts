@@ -1,21 +1,22 @@
 // @ts-nocheck
 import baseController from "../../../controllers/base.js";
 import yapi from "runtime.js";
-import syncModel from "../syncModel.js";
-import projectModel from "../../../models/project.js";
-import interfaceSyncUtils from "../interfaceSyncUtils.js";
+import {
+  projectRepository,
+} from "../../../repositories/index.js";
+import { swaggerSyncRepository } from "../../../repositories/swaggerSync.repo.js";
+import swaggerSyncService from "../../../services/swaggerSync.service.js";
+import syncUtils from "../interfaceSyncUtils.js";
 
 class syncController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.syncModel = yapi.getInst(syncModel);
-    this.projectModel = yapi.getInst(projectModel);
-    this.interfaceSyncUtils = yapi.getInst(interfaceSyncUtils);
+    this.syncModel = swaggerSyncRepository;
+    this.projectModel = projectRepository;
   }
 
   /**
    * 保存定时任务
-   * @param {*} ctx
    */
   async upSync(ctx) {
     let requestBody = ctx.request.body;
@@ -28,36 +29,36 @@ class syncController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
     }
 
-    let result;
-    if (requestBody.id) {
-      result = await this.syncModel.up(requestBody);
-    } else {
-      result = await this.syncModel.save(requestBody);
+    const saved = await swaggerSyncService.saveOrUpdate(requestBody);
+    if (!saved.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, saved.code, saved.message));
     }
 
-    // 操作定时任务
     if (requestBody.is_sync_open) {
-      this.interfaceSyncUtils.addSyncJob(projectId, requestBody.sync_cron, requestBody.sync_json_url, requestBody.sync_mode, requestBody.uid);
+      syncUtils.addSyncJob(
+        projectId,
+        requestBody.sync_cron,
+        requestBody.sync_json_url,
+        requestBody.sync_mode,
+        requestBody.uid
+      );
     } else {
-      this.interfaceSyncUtils.deleteSyncJob(projectId);
+      syncUtils.deleteSyncJob(projectId);
     }
-    return (ctx.body = yapi.commons.resReturn(result));
+    return (ctx.body = yapi.commons.resReturn(saved.data));
   }
 
   /**
    * 查询定时任务
-   * @param {*} ctx
    */
   async getSync(ctx) {
     let projectId = ctx.query.project_id;
-    if (!projectId) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, "缺少项目Id"));
+    const result = await swaggerSyncService.getByProjectId(projectId);
+    if (!result.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
     }
-    let result = await this.syncModel.getByProjectId(projectId);
-    return (ctx.body = yapi.commons.resReturn(result));
+    return (ctx.body = yapi.commons.resReturn(result.data));
   }
-
 }
-
 
 export default syncController;
