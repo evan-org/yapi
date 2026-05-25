@@ -32,7 +32,8 @@ export type SessionUser = {
 };
 
 export type ProjectRoleType = "interface" | "project" | "group";
-export type AuthAction = "danger" | "edit" | "view";
+/** site 为历史调用保留，base.checkAuth 未单独处理 */
+export type AuthAction = "danger" | "edit" | "view" | "site";
 export type ProjectRole = "admin" | "owner" | "dev" | "guest" | "member" | false;
 
 class baseController {
