@@ -14,6 +14,7 @@ import {
 } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+import { validateLoginCredentials } from "./user.validation.js";
 
 class UserService extends BaseService {
   constructor() {
@@ -30,14 +31,11 @@ class UserService extends BaseService {
    * @param {{ email: string, password: string }} credentials
    */
   async login(credentials) {
-    const email = (credentials.email || "").trim();
-    const password = credentials.password;
-    if (!email) {
-      return fail(400, "email不能为空");
+    const validated = validateLoginCredentials(credentials);
+    if (!validated.ok) {
+      return validated;
     }
-    if (!password) {
-      return fail(400, "密码不能为空");
-    }
+    const { email, password } = validated.data;
     const user = await this.userModel.findByEmail(email);
     if (!user) {
       return fail(404, "该用户不存在");
