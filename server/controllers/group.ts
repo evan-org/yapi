@@ -1,13 +1,17 @@
-// @ts-nocheck
 /**
  * 项目分组 HTTP 控制器（薄层：权限校验 → Service）
  */
-import yapi from "../runtime.js";
+import type { AppContext } from "../types/app-context.js";
+import commons from "../utils/commons.js";
 import baseController from "./base.js";
 import { groupService } from "../services/index.js";
+import type { ServiceResult } from "../services/service-result.js";
+import { replyServiceResult } from "./controller.util.js";
 
 class groupController extends baseController {
-  constructor(ctx) {
+  declare schemaMap: Record<string, unknown>;
+
+  constructor(ctx: AppContext) {
     super(ctx);
 
     const id = "number";
@@ -54,83 +58,113 @@ class groupController extends baseController {
     };
   }
 
-  _reply(ctx, result) {
-    if (!result.ok) {
-      ctx.body = yapi.commons.resReturn(null, result.code, result.message);
-      return;
-    }
-    ctx.body = yapi.commons.resReturn(result.data);
+  _reply(ctx: AppContext, result: ServiceResult<unknown>) {
+    replyServiceResult(ctx, result);
   }
 
-  async get(ctx) {
-    const result = await groupService.getById(ctx.params.id);
-    if (!result.ok) {
+  async get(ctx: AppContext) {
+    const params = ctx.params as unknown as { id: number | string };
+    const result = await groupService.getById(params.id);
+    if (result.ok === false) {
       return this._reply(ctx, result);
     }
-    const role = await this.getProjectRole(ctx.params.id, "group");
-    result.data.role = role;
-    ctx.body = yapi.commons.resReturn(result.data);
+    const role = await this.getProjectRole(params.id, "group");
+    const data = result.data as Record<string, unknown>;
+    data.role = role;
+    ctx.body = commons.resReturn(data, 0, undefined);
   }
 
-  async add(ctx) {
-    this._reply(ctx, await groupService.create(ctx.params, this._operator()));
+  async add(ctx: AppContext) {
+    const params = ctx.params as unknown as {
+      group_name: string;
+      group_desc?: string;
+      owner_uids?: Array<number | string>;
+    };
+    this._reply(ctx, await groupService.create(params, this._operator()));
   }
 
-  async getMyGroup(ctx) {
+  async getMyGroup(ctx: AppContext) {
     const privateGroup = await groupService.getOrCreatePrivateGroup(this.getUid());
-    ctx.body = yapi.commons.resReturn(privateGroup || null);
+    ctx.body = commons.resReturn(privateGroup || null, 0, undefined);
   }
 
-  async addMember(ctx) {
-    this._reply(
-      ctx,
-      await groupService.addMembers(ctx.params, this._operator())
-    );
+  async addMember(ctx: AppContext) {
+    const params = ctx.params as unknown as {
+      id: number | string;
+      role?: string;
+      member_uids: Array<number | string>;
+    };
+    this._reply(ctx, await groupService.addMembers(params, this._operator()));
   }
 
-  async changeMemberRole(ctx) {
-    if ((await this.checkAuth(ctx.request.body.id, "group", "danger")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+  async changeMemberRole(ctx: AppContext) {
+    const body = ctx.request.body as { id?: number | string };
+    if ((await this.checkAuth(body.id, "group", "danger")) !== true) {
+      ctx.body = commons.resReturn(null, 405, "没有权限");
+      return;
+    }
+    const params = ctx.request.body as unknown as {
+      id: number | string;
+      member_uid: number | string;
+      role?: string;
+    };
+    this._reply(ctx, await groupService.changeMemberRole(params, this._operator()));
+  }
+
+  async getMemberList(ctx: AppContext) {
+    const params = ctx.params as unknown as { id: number | string };
+    this._reply(ctx, await groupService.getMemberList(params.id));
+  }
+
+  async delMember(ctx: AppContext) {
+    const params = ctx.params as unknown as { id: number | string };
+    if ((await this.checkAuth(params.id, "group", "danger")) !== true) {
+      ctx.body = commons.resReturn(null, 405, "没有权限");
+      return;
     }
     this._reply(
       ctx,
-      await groupService.changeMemberRole(ctx.request.body, this._operator())
+      await groupService.removeMember(
+        params as unknown as {
+          id: number | string;
+          member_uid: number | string;
+          role?: string;
+        },
+        this._operator()
+      )
     );
   }
 
-  async getMemberList(ctx) {
-    this._reply(ctx, await groupService.getMemberList(ctx.params.id));
+  async list(ctx: AppContext) {
+    this._reply(ctx, await groupService.listForUser(this.getUid(), this.getRole()));
   }
 
-  async delMember(ctx) {
-    if ((await this.checkAuth(ctx.params.id, "group", "danger")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
-    }
-    this._reply(
-      ctx,
-      await groupService.removeMember(ctx.params, this._operator())
-    );
-  }
-
-  async list(ctx) {
-    this._reply(
-      ctx,
-      await groupService.listForUser(this.getUid(), this.getRole())
-    );
-  }
-
-  async del(ctx) {
+  async del(ctx: AppContext) {
     if (this.getRole() !== "admin") {
-      return (ctx.body = yapi.commons.resReturn(null, 401, "没有权限"));
+      ctx.body = commons.resReturn(null, 401, "没有权限");
+      return;
     }
-    this._reply(ctx, await groupService.removeGroup(ctx.params.id));
+    const params = ctx.params as unknown as { id: number | string };
+    this._reply(ctx, await groupService.removeGroup(params.id));
   }
 
-  async up(ctx) {
-    if ((await this.checkAuth(ctx.params.id, "group", "danger")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+  async up(ctx: AppContext) {
+    const params = ctx.params as unknown as { id: number | string };
+    if ((await this.checkAuth(params.id, "group", "danger")) !== true) {
+      ctx.body = commons.resReturn(null, 405, "没有权限");
+      return;
     }
-    this._reply(ctx, await groupService.updateGroup(ctx.params, this._operator()));
+    this._reply(
+      ctx,
+      await groupService.updateGroup(
+        params as unknown as {
+          id: number | string;
+          group_name: string;
+          [key: string]: unknown;
+        },
+        this._operator()
+      )
+    );
   }
 }
 
