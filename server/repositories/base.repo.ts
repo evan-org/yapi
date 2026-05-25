@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 仓储基类：封装 yapi.getInst 单例，统一数据访问入口（懒加载，避免模块循环初始化问题）
  */
@@ -24,7 +23,7 @@ export function createModelRepository<T extends LegacyModelInstance>(
     return inst;
   };
 
-  return new Proxy({} as T, {
+  return new Proxy({} as object, {
     get(_target, prop) {
       const target = resolveInst();
       const val = (target as Record<string | symbol, unknown>)[prop as string];
@@ -33,5 +32,5 @@ export function createModelRepository<T extends LegacyModelInstance>(
       }
       return val;
     },
-  });
+  }) as T;
 }

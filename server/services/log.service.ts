@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 动态日志业务逻辑
  */
@@ -9,36 +8,47 @@ import {
   interfaceRepository,
 } from "../repositories/index.js";
 import BaseService from "./base.service.js";
+import { ok, fail } from "./service-result.js";
+
+type LogPagedQuery = {
+  typeid?: string | number;
+  type?: string;
+  page?: number;
+  limit?: number;
+  selectValue?: string;
+};
+
+type InterfaceUpdateQuery = {
+  typeid: number;
+  type: string;
+  apis: Array<{ method: string; path: string }>;
+};
 
 class LogService extends BaseService {
-  constructor() {
-    super();
-    this.logModel = logRepository;
-    this.groupModel = groupRepository;
-    this.projectModel = projectRepository;
-    this.interfaceModel = interfaceRepository;
-  }
+  logModel = logRepository;
+  groupModel = groupRepository;
+  projectModel = projectRepository;
+  interfaceModel = interfaceRepository;
 
   /**
    * 分页动态列表
-   * @param {{ typeid: string|number, type: string, page?: number, limit?: number, selectValue?: string }} query
    */
-  async listPaged(query) {
+  async listPaged(query: LogPagedQuery) {
     const { typeid, type, selectValue } = query;
     const page = query.page || 1;
     const limit = query.limit || 10;
 
     if (!typeid) {
-      return { ok: false, code: 400, message: "typeid不能为空" };
+      return fail(400, "typeid不能为空");
     }
     if (!type) {
-      return { ok: false, code: 400, message: "type不能为空" };
+      return fail(400, "type不能为空");
     }
 
     if (type === "group") {
       const projectList = await this.projectModel.list(typeid);
-      const projectIds = [];
-      const projectDatas = {};
+      const projectIds: unknown[] = [];
+      const projectDatas: Record<string | number, { name: string }> = {};
       for (const i in projectList) {
         projectDatas[projectList[i]._id] = projectList[i];
         projectIds[i] = projectList[i]._id;
@@ -49,23 +59,20 @@ class LogService extends BaseService {
         page,
         limit
       );
-      projectLogList = projectLogList.map((item) => {
+      projectLogList = projectLogList.map((item: { toObject: () => Record<string, unknown> }) => {
         const row = item.toObject();
         if (row.type === "project") {
           row.content =
-            `在 <a href="/project/${row.typeid}">${projectDatas[row.typeid].name}</a> 项目: ` +
+            `在 <a href="/project/${row.typeid}">${projectDatas[row.typeid as number].name}</a> 项目: ` +
             row.content;
         }
         return row;
       });
       const total = await this.logModel.listCountByGroup(typeid, projectIds);
-      return {
-        ok: true,
-        data: {
-          list: projectLogList,
-          total: Math.ceil(total / limit),
-        },
-      };
+      return ok({
+        list: projectLogList,
+        total: Math.ceil(total / limit),
+      });
     }
 
     if (type === "project") {
@@ -77,25 +84,21 @@ class LogService extends BaseService {
         selectValue
       );
       const count = await this.logModel.listCount(typeid, type, selectValue);
-      return {
-        ok: true,
-        data: {
-          total: Math.ceil(count / limit),
-          list,
-        },
-      };
+      return ok({
+        total: Math.ceil(count / limit),
+        list,
+      });
     }
 
-    return { ok: false, code: 400, message: "type不支持" };
+    return fail(400, "type不支持");
   }
 
   /**
    * 按接口更新记录查询动态
-   * @param {{ typeid: number, type: string, apis: Array<{ method: string, path: string }> }} params
    */
-  async listByInterfaceUpdates(params) {
+  async listByInterfaceUpdates(params: InterfaceUpdateQuery) {
     const { typeid, type, apis } = params;
-    let list = [];
+    let list: unknown[] = [];
     const projectDatas = await this.projectModel.getBaseInfo(typeid, "basepath");
     const basePath = projectDatas.toObject().basepath;
 
@@ -122,7 +125,7 @@ class LogService extends BaseService {
         list = list.concat(result);
       }
     }
-    return { ok: true, data: list };
+    return ok(list);
   }
 }
 
