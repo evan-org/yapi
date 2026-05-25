@@ -2,6 +2,7 @@
 import userModel from '../models/user.js';
 
 import yapi from '../runtime.js';
+import { clientPublicFile } from "../utils/client-public.js";
 
 import baseController from './base.js';
 
@@ -612,7 +613,7 @@ class userController extends baseController {
       let data = await avatarInst.get(uid);
       let dataBuffer, type;
       if (!data || !data.basecode) {
-        dataBuffer = yapi.fs.readFileSync(yapi.path.join(yapi.WEBROOT, "static/image/avatar.png"));
+        dataBuffer = yapi.fs.readFileSync(clientPublicFile("image", "avatar.png"));
         type = "image/png";
       } else {
         type = data.type;

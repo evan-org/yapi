@@ -16,6 +16,7 @@ import url from 'url';
 import baseController from './base.js';
 
 import yapi from '../runtime.js';
+import { clientPublicFile } from "../utils/client-public.js";
 
 import userModel from '../models/user.js';
 
@@ -563,7 +564,7 @@ class interfaceController extends baseController {
   async downloadCrx(ctx) {
     let filename = "crossRequest.zip";
     let dataBuffer = yapi.fs.readFileSync(
-      yapi.path.join(yapi.WEBROOT, "static/attachment/cross-request.zip")
+      clientPublicFile("attachment", "cross-request.zip")
     );
     ctx.set("Content-disposition", "attachment; filename=" + filename);
     ctx.set("Content-Type", "application/zip");

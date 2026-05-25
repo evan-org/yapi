@@ -8,7 +8,6 @@ import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-import { serveStatic } from "@hono/node-server/serve-static";
 import { createNodeWebSocket } from "@hono/node-ws";
 import yapi from "./runtime.js";
 import commons from "./utils/commons.js";
@@ -32,30 +31,11 @@ import "./utils/notice.js";
 
 globalThis.storageCreator = storageCreator;
 
-const publicRoot = path.join(yapi.WEBROOT, "public");
 const isDev = process.argv[2] === "dev";
 const nextPort = process.env.YAPI_DEV_CLIENT_PORT || "4000";
 
 /**
- * 挂载 public 下静态目录（iconfont、图片、附件等）
- */
-function registerPublicAssets(app) {
-  const dirs = ["iconfont", "image", "attachment"];
-  dirs.forEach((dir) => {
-    const root = path.join(publicRoot, dir);
-    if (commons.fileExist(root)) {
-      app.use(
-        `/${dir}/*`,
-        serveStatic({
-          root,
-        })
-      );
-    }
-  });
-}
-
-/**
- * 创建并启动 Hono 应用（API 专用）
+ * 创建并启动 Hono 应用（仅 API / WebSocket；静态资源由 Next.js client/public 提供）
  */
 async function startServer() {
   assertRuntimeConfig();
@@ -77,8 +57,6 @@ async function startServer() {
 
   apiRouter.registerToHono(app, koaCtx);
   registerWebSocket(app, upgradeWebSocket);
-
-  registerPublicAssets(app);
 
   /** 非 API 请求：开发模式提示使用 Next；生产由反向代理或进程管理器转发到 Next */
   app.all("*", async (c) => {

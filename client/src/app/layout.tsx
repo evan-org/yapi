@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "YApi",
   description: "高效易用的 API 管理平台",
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({
