@@ -25,7 +25,6 @@ export function JsonCodeEditor({
   height = 240,
   language = "json",
   className,
-  placeholder,
 }: JsonCodeEditorProps) {
   const handleMount: OnMount = useCallback((_editor, monaco) => {
     if (language === "json") {
