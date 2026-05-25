@@ -18,6 +18,7 @@ import {
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 

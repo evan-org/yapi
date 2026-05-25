@@ -1,8 +1,10 @@
 // @ts-nocheck
 import yapi from "../runtime.js";
-import projectModel from "../models/project.js";
-import userModel from "../models/user.js";
-import followModel from "../models/follow.js";
+import {
+  projectRepository,
+  userRepository,
+  followRepository,
+} from "../repositories/index.js";
 
 
 function arrUnique(arr1, arr2) {
@@ -29,9 +31,9 @@ const noticeObj = {
 yapi.emitHook("addNotice", noticeObj)
 
 yapi.commons.sendNotice = async function (projectId, data) {
-  const followInst = yapi.getInst(followModel);
-  const userInst = yapi.getInst(userModel);
-  const projectInst = yapi.getInst(projectModel);
+  const followInst = followRepository;
+  const userInst = userRepository;
+  const projectInst = projectRepository;
   const list = await followInst.listByProjectId(projectId);
   const starUsers = list.map((item) => item.uid);
 

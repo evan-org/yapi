@@ -3,12 +3,14 @@
  * 项目分组业务逻辑
  */
 import yapi from "../runtime.js";
-import groupModel from "../models/group.js";
-import projectModel from "../models/project.js";
-import interfaceModel from "../models/interface.js";
-import interfaceColModel from "../models/interfaceCol.js";
-import interfaceCaseModel from "../models/interfaceCase.js";
 import _ from "underscore";
+import {
+  groupRepository,
+  projectRepository,
+  interfaceRepository,
+  interfaceColRepository,
+  interfaceCaseRepository,
+} from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import userService from "./user.service.js";
 import { ok, fail } from "./service-result.js";
@@ -22,11 +24,11 @@ const ROLE_LABEL = {
 class GroupService extends BaseService {
   constructor() {
     super();
-    this.groupModel = this.getModel(groupModel);
-    this.projectModel = this.getModel(projectModel);
-    this.interfaceModel = this.getModel(interfaceModel);
-    this.interfaceColModel = this.getModel(interfaceColModel);
-    this.interfaceCaseModel = this.getModel(interfaceCaseModel);
+    this.groupModel = groupRepository;
+    this.projectModel = projectRepository;
+    this.interfaceModel = interfaceRepository;
+    this.interfaceColModel = interfaceColRepository;
+    this.interfaceCaseModel = interfaceCaseRepository;
   }
 
   /**

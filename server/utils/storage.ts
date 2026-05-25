@@ -1,12 +1,11 @@
 // @ts-nocheck
-import storageModel from "../models/storage.js";
-import yapi from "../runtime.js";
+import { storageRepository } from "../repositories/index.js";
 
 export default function storageCreator(id) {
   const defaultData = {};
   return {
     getItem: async (name = "") => {
-      const inst = yapi.getInst(storageModel);
+      const inst = storageRepository;
       let data = await inst.get(id);
       data = data || defaultData;
       if (name) {
@@ -15,7 +14,7 @@ export default function storageCreator(id) {
       return data;
     },
     setItem: async (name, value) => {
-      const inst = yapi.getInst(storageModel);
+      const inst = storageRepository;
       let data = await inst.get(id);
       data = data || defaultData;
       data[name] = value;

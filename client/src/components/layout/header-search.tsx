@@ -1,12 +1,13 @@
 "use client";
 
 /**
- * 顶栏全局搜索：用户 / 接口 / 项目 / 分组
+ * 顶栏全局搜索：数字 ID 解析、项目/接口/分组关键词搜索、用户搜索
  */
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { ApiCode } from "../../lib/api/types";
+import { projectApi } from "../../lib/api/project";
 import { userApi } from "../../lib/api/user";
 import { Input } from "../ui/input";
 
@@ -54,6 +55,25 @@ export function HeaderSearch() {
         }
       }
 
+      const projSearch = await projectApi.search(keyword);
+      if (projSearch.errcode === ApiCode.SUCCESS && projSearch.data) {
+        const { project, group, interface: ifaceList } = projSearch.data;
+        if (ifaceList?.length) {
+          router.push(
+            `/project/${ifaceList[0].projectId}/interface/api/${ifaceList[0]._id}`
+          );
+          return;
+        }
+        if (project?.length) {
+          router.push(`/project/${project[0]._id}/interface/api`);
+          return;
+        }
+        if (group?.length) {
+          router.push(`/group/${group[0]._id}`);
+          return;
+        }
+      }
+
       const res = await userApi.search(keyword);
       const hits = (res.data as { uid?: number; _id?: number; username: string }[]) || [];
       if (hits.length === 1) {
@@ -74,7 +94,7 @@ export function HeaderSearch() {
       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-white/50" />
       <Input
         className="h-9 border-white/20 bg-white/10 pl-8 text-white placeholder:text-white/50"
-        placeholder="ID / 用户名 / 邮箱…"
+        placeholder="ID / 项目 / 接口 / 用户…"
         value={q}
         onChange={(e) => setQ(e.target.value)}
         disabled={loading}

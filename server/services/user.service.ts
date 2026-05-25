@@ -3,24 +3,26 @@
  * 用户模块业务逻辑
  */
 import yapi from "../runtime.js";
-import userModel from "../models/user.js";
-import groupModel from "../models/group.js";
-import projectModel from "../models/project.js";
-import interfaceModel from "../models/interface.js";
-import avatarModel from "../models/avatar.js";
 import ldap from "../utils/ldap.js";
 import { clientPublicFile } from "../utils/client-public.js";
+import {
+  userRepository,
+  groupRepository,
+  projectRepository,
+  interfaceRepository,
+  avatarRepository,
+} from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
 
 class UserService extends BaseService {
   constructor() {
     super();
-    this.userModel = this.getModel(userModel);
-    this.groupModel = this.getModel(groupModel);
-    this.projectModel = this.getModel(projectModel);
-    this.interfaceModel = this.getModel(interfaceModel);
-    this.avatarModel = this.getModel(avatarModel);
+    this.userModel = userRepository;
+    this.groupModel = groupRepository;
+    this.projectModel = projectRepository;
+    this.interfaceModel = interfaceRepository;
+    this.avatarModel = avatarRepository;
   }
 
   /**

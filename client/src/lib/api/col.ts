@@ -78,4 +78,15 @@ export const colApi = {
       method: "POST",
       body: JSON.stringify(payload),
     }),
+
+  upColIndex: (items: { id: number; index: number }[]) =>
+    apiRequest("/col/up_col_index", {
+      method: "POST",
+      body: JSON.stringify(items),
+    }),
+
+  caseListByVarParams: (col_id: number, params: string) =>
+    apiRequest(
+      `/col/case_list_by_var_params?col_id=${col_id}&params=${encodeURIComponent(params)}`
+    ),
 };

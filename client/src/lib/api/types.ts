@@ -52,6 +52,26 @@ export interface ProjectItem {
   [key: string]: unknown;
 }
 
+/** 全局搜索：项目 / 分组 / 接口 聚合结果 */
+export interface ProjectSearchResult {
+  project: {
+    _id: number;
+    name: string;
+    groupId?: number;
+    basepath?: string;
+  }[];
+  group: {
+    _id: number;
+    groupName: string;
+    groupDesc?: string;
+  }[];
+  interface: {
+    _id: number;
+    title: string;
+    projectId: number;
+  }[];
+}
+
 /** 接口分类 */
 export interface InterfaceCatItem {
   _id: number;

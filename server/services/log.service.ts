@@ -2,19 +2,21 @@
 /**
  * 动态日志业务逻辑
  */
-import logModel from "../models/log.js";
-import groupModel from "../models/group.js";
-import projectModel from "../models/project.js";
-import interfaceModel from "../models/interface.js";
+import {
+  logRepository,
+  groupRepository,
+  projectRepository,
+  interfaceRepository,
+} from "../repositories/index.js";
 import BaseService from "./base.service.js";
 
 class LogService extends BaseService {
   constructor() {
     super();
-    this.logModel = this.getModel(logModel);
-    this.groupModel = this.getModel(groupModel);
-    this.projectModel = this.getModel(projectModel);
-    this.interfaceModel = this.getModel(interfaceModel);
+    this.logModel = logRepository;
+    this.groupModel = groupRepository;
+    this.projectModel = projectRepository;
+    this.interfaceModel = interfaceRepository;
   }
 
   /**

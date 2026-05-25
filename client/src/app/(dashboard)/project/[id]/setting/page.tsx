@@ -4,7 +4,7 @@
  * 项目设置：基础信息、环境、Token、数据导入导出
  */
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { projectApi } from "@/lib/api/project";
 import type { ProjectItem, ProjectTagItem } from "@/lib/api/types";
 import { ProjectDataPanel } from "@/components/project/project-data-panel";
@@ -19,9 +19,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProjectSettingPage() {
   const params = useParams();
+  const router = useRouter();
   const projectId = Number(params.id);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [dangerLoading, setDangerLoading] = useState(false);
+  const [groupId, setGroupId] = useState<number | null>(null);
   const [form, setForm] = useState({
     name: "",
     basepath: "",
@@ -42,6 +45,7 @@ export default function ProjectSettingPage() {
       });
       setTags(p.tag || []);
       setTagText((p.tag || []).map((t) => t.name).join(", "));
+      setGroupId(p.group_id);
     } catch (err) {
       console.error("加载项目失败", err);
       setError(err instanceof Error ? err.message : "加载失败");
@@ -76,6 +80,59 @@ export default function ProjectSettingPage() {
       setError(err instanceof Error ? err.message : "保存失败");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleCopyProject() {
+    const newName = window.prompt("复制后的项目名称", `${form.name} 副本`);
+    if (!newName?.trim()) return;
+    setDangerLoading(true);
+    setError("");
+    try {
+      const detail = await projectApi.get(projectId);
+      const payload = detail.data as Record<string, unknown>;
+      await projectApi.copy({
+        ...payload,
+        _id: projectId,
+        name: newName.trim(),
+      });
+      console.log("项目已复制", projectId, newName);
+      if (groupId) {
+        router.push(`/group/${groupId}`);
+      } else {
+        router.push("/group");
+      }
+    } catch (err) {
+      console.error("复制项目失败", err);
+      setError(err instanceof Error ? err.message : "复制失败");
+    } finally {
+      setDangerLoading(false);
+    }
+  }
+
+  async function handleDeleteProject() {
+    if (
+      !window.confirm(
+        `确定删除项目「${form.name}」？将同时删除其下所有接口与测试集，且不可恢复。`
+      )
+    ) {
+      return;
+    }
+    setDangerLoading(true);
+    setError("");
+    try {
+      await projectApi.del(projectId);
+      console.log("项目已删除", projectId);
+      if (groupId) {
+        router.push(`/group/${groupId}`);
+      } else {
+        router.push("/group");
+      }
+    } catch (err) {
+      console.error("删除项目失败", err);
+      setError(err instanceof Error ? err.message : "删除失败");
+    } finally {
+      setDangerLoading(false);
     }
   }
 
@@ -167,6 +224,31 @@ export default function ProjectSettingPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Card className="border-destructive/40">
+        <CardHeader>
+          <CardTitle className="text-destructive">危险操作</CardTitle>
+          <CardDescription>复制或删除当前项目，删除后数据无法恢复</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={dangerLoading}
+            onClick={handleCopyProject}
+          >
+            复制项目
+          </Button>
+          <Button
+            type="button"
+            variant="destructive"
+            disabled={dangerLoading}
+            onClick={handleDeleteProject}
+          >
+            删除项目
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -2,7 +2,12 @@
  * 项目相关 API
  */
 import { apiRequest } from "./client";
-import type { ProjectEnvItem, ProjectItem, ProjectScriptsPayload } from "./types";
+import type {
+  ProjectEnvItem,
+  ProjectItem,
+  ProjectScriptsPayload,
+  ProjectSearchResult,
+} from "./types";
 
 export const projectApi = {
   listByGroup: (group_id: number) =>
@@ -80,4 +85,28 @@ export const projectApi = {
       method: "POST",
       body: JSON.stringify({ id, tag }),
     }),
+
+  /** 模糊搜索项目 / 分组 / 接口 */
+  search: (q: string) =>
+    apiRequest<ProjectSearchResult>(`/project/search?q=${encodeURIComponent(q)}`),
+
+  /** 删除项目（级联接口与测试集） */
+  del: (id: number) =>
+    apiRequest("/project/del", {
+      method: "POST",
+      body: JSON.stringify({ id }),
+    }),
+
+  /**
+   * 复制项目（需传入 get 返回的完整数据，含 cat 分类树）
+   */
+  copy: (payload: Record<string, unknown>) =>
+    apiRequest<ProjectItem>("/project/copy", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  /** 服务端拉取 Swagger JSON（代理，避免浏览器跨域） */
+  swaggerUrl: (url: string) =>
+    apiRequest<unknown>(`/project/swagger_url?url=${encodeURIComponent(url)}`),
 };

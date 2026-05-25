@@ -43,21 +43,34 @@ class interfaceColController extends baseController {
       let result = await this.colModel.list(id);
       result = result.sort((a, b) => a.index - b.index);
 
-      for (let i = 0; i < result.length; i++) {
-        result[i] = result[i].toObject();
-        let caseList = await this.caseModel.list(result[i]._id);
-
-        for (let j = 0; j < caseList.length; j++) {
-          let item = caseList[j].toObject();
-          let interfaceData = await this.interfaceModel.getBaseinfo(item.interface_id);
-          item.path = interfaceData.path;
-          caseList[j] = item;
-        }
-
-        caseList = caseList.sort((a, b) => a.index - b.index);
-        result[i].caseList = caseList;
-
-      }
+      // 并行加载各集合用例，并批量解析接口 path，避免逐条串行查询
+      result = await Promise.all(
+        result.map(async (colRow) => {
+          const col = colRow.toObject();
+          let caseList = await this.caseModel.list(col._id);
+          const interfaceIds = [
+            ...new Set(caseList.map((c) => c.interface_id).filter(Boolean)),
+          ];
+          const pathByInterfaceId = {};
+          await Promise.all(
+            interfaceIds.map(async (interfaceId) => {
+              const iface = await this.interfaceModel.getBaseinfo(interfaceId);
+              if (iface) {
+                pathByInterfaceId[interfaceId] = iface.path;
+              }
+            })
+          );
+          caseList = caseList
+            .map((c) => {
+              const item = c.toObject();
+              item.path = pathByInterfaceId[item.interface_id];
+              return item;
+            })
+            .sort((a, b) => a.index - b.index);
+          col.caseList = caseList;
+          return col;
+        })
+      );
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
@@ -784,7 +797,7 @@ class interfaceColController extends baseController {
       let id = ctx.query.col_id;
       let colData = await this.colModel.get(id);
       if (!colData) {
-        ctx.body = yapi.commons.resReturn(null, 400, "不存在的id");
+        return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的id"));
       }
 
       if (colData.uid !== this.getUid()) {
@@ -807,7 +820,7 @@ class interfaceColController extends baseController {
       });
       return (ctx.body = yapi.commons.resReturn(result));
     } catch (e) {
-      yapi.commons.resReturn(null, 400, e.message);
+      return (ctx.body = yapi.commons.resReturn(null, 400, e.message));
     }
   }
 
@@ -821,7 +834,7 @@ class interfaceColController extends baseController {
       let caseid = ctx.query.caseid;
       let caseData = await this.caseModel.get(caseid);
       if (!caseData) {
-        ctx.body = yapi.commons.resReturn(null, 400, "不存在的caseid");
+        return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的caseid"));
       }
 
       if (caseData.uid !== this.getUid()) {
@@ -849,7 +862,7 @@ class interfaceColController extends baseController {
       this.projectModel.up(caseData.project_id, { up_time: new Date().getTime() }).then();
       return (ctx.body = yapi.commons.resReturn(result));
     } catch (e) {
-      yapi.commons.resReturn(null, 400, e.message);
+      return (ctx.body = yapi.commons.resReturn(null, 400, e.message));
     }
   }
 

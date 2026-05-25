@@ -3,15 +3,14 @@
  * 关注项目业务逻辑
  */
 import yapi from "../runtime.js";
-import followModel from "../models/follow.js";
-import projectModel from "../models/project.js";
+import { followRepository, projectRepository } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 
 class FollowService extends BaseService {
   constructor() {
     super();
-    this.followModel = this.getModel(followModel);
-    this.projectModel = this.getModel(projectModel);
+    this.followModel = followRepository;
+    this.projectModel = projectRepository;
   }
 
   /**

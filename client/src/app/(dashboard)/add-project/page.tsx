@@ -26,6 +26,9 @@ export default function AddProjectPage() {
     group_id: "",
     basepath: "",
     desc: "",
+    project_type: "private" as "public" | "private",
+    icon: "",
+    color: "",
   });
 
   const loadGroups = useCallback(async () => {
@@ -55,6 +58,9 @@ export default function AddProjectPage() {
         group_id: Number(form.group_id),
         basepath: form.basepath.trim() || undefined,
         desc: form.desc.trim() || undefined,
+        project_type: form.project_type,
+        ...(form.icon.trim() ? { icon: form.icon.trim() } : {}),
+        ...(form.color.trim() ? { color: form.color.trim() } : {}),
       });
       const data = res.data as { _id?: number };
       const id = data?._id;
@@ -129,6 +135,43 @@ export default function AddProjectPage() {
               onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))}
               rows={3}
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="project_type">可见性</Label>
+            <select
+              id="project_type"
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+              value={form.project_type}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  project_type: e.target.value as "public" | "private",
+                }))
+              }
+            >
+              <option value="private">私有（仅成员可见）</option>
+              <option value="public">公开</option>
+            </select>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="icon">图标（可选）</Label>
+              <Input
+                id="icon"
+                placeholder="如 code"
+                value={form.icon}
+                onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="color">主题色（可选）</Label>
+              <Input
+                id="color"
+                placeholder="#2395f1"
+                value={form.color}
+                onChange={(e) => setForm((f) => ({ ...f, color: e.target.value }))}
+              />
+            </div>
           </div>
           <Button type="submit" disabled={loading} className="bg-[#2395f1] hover:bg-[#2395f1]/90">
             {loading ? "创建中…" : "创建项目"}
