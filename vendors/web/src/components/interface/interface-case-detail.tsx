@@ -1,0 +1,205 @@
+"use client";
+
+/**
+ * 测试用例详情：加载用例、编辑名称与请求参数、调试
+ */
+import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { Loader2, Save } from "lucide-react";
+import { colApi, projectApi } from "../../lib/api/client";
+import type { InterfaceDetail, ProjectEnvItem } from "../../lib/api/types";
+import { MethodBadge } from "./method-badge";
+import { InterfaceRunPanel } from "./interface-run-panel";
+import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Alert, AlertDescription } from "../ui/alert";
+
+/** 用例详情（合并接口默认字段后的结构） */
+interface CaseDetail {
+  _id: number;
+  casename: string;
+  col_id: number;
+  project_id: number;
+  interface_id: number;
+  path?: string;
+  method?: string;
+  req_body_type?: string;
+  req_body_other?: string;
+  req_query?: ParamRow[];
+  req_headers?: ParamRow[];
+  res_body?: string;
+}
+
+interface InterfaceCaseDetailProps {
+  projectId: number;
+  caseId: number;
+}
+
+export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailProps) {
+  const [data, setData] = useState<CaseDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [envs, setEnvs] = useState<ProjectEnvItem[]>([]);
+  const [form, setForm] = useState({
+    casename: "",
+    req_body_other: "",
+    req_query: [] as ParamRow[],
+    req_headers: [] as ParamRow[],
+  });
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await colApi.getCase(caseId);
+      const d = res.data as CaseDetail;
+      setData(d);
+      setForm({
+        casename: d.casename || "",
+        req_body_other: d.req_body_other || "",
+        req_query: (d.req_query as ParamRow[]) || [],
+        req_headers: (d.req_headers as ParamRow[]) || [],
+      });
+      if (d.project_id) {
+        const envRes = await projectApi.getEnv(d.project_id);
+        const envData = envRes.data as { env?: ProjectEnvItem[] };
+        setEnvs(envData?.env || []);
+      }
+    } catch (err) {
+      console.error("加载用例失败", err);
+      setError(err instanceof Error ? err.message : "加载失败");
+    } finally {
+      setLoading(false);
+    }
+  }, [caseId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  async function handleSave() {
+    if (!data) return;
+    setSaving(true);
+    setError("");
+    try {
+      await colApi.upCase({
+        id: data._id,
+        casename: form.casename,
+        req_body_other: form.req_body_other,
+        req_query: form.req_query,
+        req_headers: form.req_headers,
+      });
+      await load();
+      console.log("用例已保存", data._id);
+    } catch (err) {
+      console.error("保存用例失败", err);
+      setError(err instanceof Error ? err.message : "保存失败");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16 text-muted-foreground">
+        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+        加载用例…
+      </div>
+    );
+  }
+
+  if (!data) {
+    return <p className="py-12 text-center text-sm text-muted-foreground">用例不存在</p>;
+  }
+
+  const runData = {
+    ...data,
+    ...form,
+    title: form.casename,
+    _id: data.interface_id,
+    catid: 0,
+    path: data.path || "",
+    method: data.method || "GET",
+  } as InterfaceDetail;
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-start justify-between gap-4">
+        <div>
+          <div className="mb-2 text-sm text-muted-foreground">
+            <Link href={`/project/${projectId}/interface/col`} className="hover:text-[#2395f1]">
+              测试集合
+            </Link>
+            <span className="mx-2">/</span>
+            <span>用例</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <MethodBadge method={data.method || "GET"} />
+            <CardTitle>{form.casename || data.casename}</CardTitle>
+          </div>
+          <p className="font-mono text-sm text-muted-foreground">{data.path}</p>
+        </div>
+        <Button size="sm" onClick={handleSave} disabled={saving}>
+          <Save className="mr-1 h-4 w-4" />
+          {saving ? "保存中…" : "保存"}
+        </Button>
+      </CardHeader>
+      <CardContent>
+        {error ? (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        ) : null}
+
+        <Tabs defaultValue="edit">
+          <TabsList>
+            <TabsTrigger value="edit">编辑</TabsTrigger>
+            <TabsTrigger value="run">调试</TabsTrigger>
+          </TabsList>
+          <TabsContent value="edit" className="mt-4 space-y-4">
+            <div className="space-y-2">
+              <Label>用例名称</Label>
+              <Input
+                value={form.casename}
+                onChange={(e) => setForm((f) => ({ ...f, casename: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label className="mb-2 block">Query</Label>
+              <ParamTableEditor
+                rows={form.req_query}
+                onChange={(req_query) => setForm((f) => ({ ...f, req_query }))}
+                showRequired
+              />
+            </div>
+            <div>
+              <Label className="mb-2 block">Headers</Label>
+              <ParamTableEditor
+                rows={form.req_headers}
+                onChange={(req_headers) => setForm((f) => ({ ...f, req_headers }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Body</Label>
+              <Textarea
+                className="font-mono text-xs"
+                rows={8}
+                value={form.req_body_other}
+                onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
+              />
+            </div>
+          </TabsContent>
+          <TabsContent value="run" className="mt-4">
+            <InterfaceRunPanel data={runData} envs={envs} />
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+}

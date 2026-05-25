@@ -39,4 +39,16 @@ export const interfaceApi = {
       method: "POST",
       body: JSON.stringify({ id }),
     }),
+
+  delCat: (catid: number) =>
+    apiRequest("/interface/del_cat", {
+      method: "POST",
+      body: JSON.stringify({ catid }),
+    }),
+
+  upCat: (payload: { catid: number; name: string; desc?: string }) =>
+    apiRequest("/interface/up_cat", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 };

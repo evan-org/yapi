@@ -4,7 +4,10 @@
  * 测试集合工作区
  */
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { Trash2 } from "lucide-react";
 import { colApi, interfaceApi } from "../../lib/api/client";
+import { InterfaceModuleTabs } from "./interface-module-tabs";
 import type { InterfaceCatItem, InterfaceColItem } from "../../lib/api/types";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -62,6 +65,18 @@ export function ColWorkspace({ projectId }: ColWorkspaceProps) {
     }
   }
 
+  async function handleDelCol(colId: number, name: string) {
+    if (!confirm(`确定删除测试集合「${name}」？`)) return;
+    try {
+      await colApi.delCol(colId);
+      setActiveColId(null);
+      await load();
+    } catch (err) {
+      console.error("删除集合失败", err);
+      setError(err instanceof Error ? err.message : "删除失败");
+    }
+  }
+
   async function handleImportAllInterfaces() {
     if (!activeColId) return;
     const ids: number[] = [];
@@ -85,7 +100,9 @@ export function ColWorkspace({ projectId }: ColWorkspaceProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row">
+    <div>
+      <InterfaceModuleTabs />
+      <div className="flex flex-col gap-4 lg:flex-row">
       <aside className="w-full rounded-lg border bg-card lg:w-56">
         <div className="border-b p-3">
           <p className="text-sm font-medium">测试集合</p>
@@ -130,24 +147,36 @@ export function ColWorkspace({ projectId }: ColWorkspaceProps) {
 
         {activeCol ? (
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
               <CardTitle>{activeCol.name}</CardTitle>
-              <Button size="sm" variant="outline" onClick={handleImportAllInterfaces}>
-                导入全部接口为用例
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={handleImportAllInterfaces}>
+                  导入全部接口为用例
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => handleDelCol(activeCol._id, activeCol.name)}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  删除集合
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
                 {(activeCol.caseList || []).map((c) => (
-                  <li
-                    key={c._id}
-                    className="flex items-center gap-2 rounded border px-3 py-2 text-sm"
-                  >
-                    {c.method ? <MethodBadge method={c.method} /> : null}
-                    <span className="font-medium">{c.casename}</span>
-                    {c.path ? (
-                      <span className="font-mono text-xs text-muted-foreground">{c.path}</span>
-                    ) : null}
+                  <li key={c._id}>
+                    <Link
+                      href={`/project/${projectId}/interface/case/${c._id}`}
+                      className="flex items-center gap-2 rounded border px-3 py-2 text-sm transition hover:border-[#2395f1]/50 hover:bg-accent/50"
+                    >
+                      {c.method ? <MethodBadge method={c.method} /> : null}
+                      <span className="font-medium">{c.casename}</span>
+                      {c.path ? (
+                        <span className="font-mono text-xs text-muted-foreground">{c.path}</span>
+                      ) : null}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -165,6 +194,7 @@ export function ColWorkspace({ projectId }: ColWorkspaceProps) {
             </CardContent>
           </Card>
         )}
+      </div>
       </div>
     </div>
   );

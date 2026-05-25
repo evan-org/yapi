@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import { interfaceApi } from "../../lib/api/interface";
 import type { InterfaceCatItem } from "../../lib/api/types";
 import { InterfaceSidebar } from "./interface-sidebar";
-import { InterfaceDetailPanel } from "./interface-detail-panel";
+import { InterfaceFullEditor } from "./interface-full-editor";
+import { InterfaceModuleTabs } from "./interface-module-tabs";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
@@ -88,13 +89,30 @@ export function InterfaceApiWorkspace({ projectId, interfaceId }: InterfaceApiWo
     }
   }
 
+  async function handleDelCat(catid: number, name: string) {
+    if (!confirm(`确定删除分类「${name}」及其下接口？`)) return;
+    try {
+      await interfaceApi.delCat(catid);
+      await loadMenu();
+      if (interfaceId) {
+        router.push(`/project/${projectId}/interface/api`);
+      }
+    } catch (err) {
+      console.error("删除分类失败", err);
+      setError(err instanceof Error ? err.message : "删除分类失败");
+    }
+  }
+
   return (
-    <div className="flex flex-col gap-4 lg:flex-row">
+    <div>
+      <InterfaceModuleTabs />
+      <div className="flex flex-col gap-4 lg:flex-row">
       <InterfaceSidebar
         projectId={projectId}
         menu={menu}
         activeId={interfaceId}
         onAddCat={() => setShowAddCat(true)}
+        onDelCat={handleDelCat}
       />
 
       <div className="min-w-0 flex-1">
@@ -187,7 +205,7 @@ export function InterfaceApiWorkspace({ projectId, interfaceId }: InterfaceApiWo
         ) : null}
 
         {interfaceId ? (
-          <InterfaceDetailPanel
+          <InterfaceFullEditor
             interfaceId={interfaceId}
             onDeleted={() => {
               loadMenu();
@@ -202,6 +220,7 @@ export function InterfaceApiWorkspace({ projectId, interfaceId }: InterfaceApiWo
             </CardContent>
           </Card>
         )}
+      </div>
       </div>
     </div>
   );

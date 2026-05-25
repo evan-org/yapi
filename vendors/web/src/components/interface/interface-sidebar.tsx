@@ -4,7 +4,7 @@
  * 接口分类与列表侧栏
  */
 import Link from "next/link";
-import { ChevronRight, FolderOpen, Plus } from "lucide-react";
+import { ChevronRight, FolderOpen, Plus, Trash2 } from "lucide-react";
 import type { InterfaceCatItem } from "../../lib/api/types";
 import { MethodBadge } from "./method-badge";
 import { cn } from "../../lib/utils";
@@ -16,6 +16,8 @@ interface InterfaceSidebarProps {
   menu: InterfaceCatItem[];
   activeId?: number;
   onAddCat?: () => void;
+  /** 删除分类 */
+  onDelCat?: (catid: number, name: string) => void;
 }
 
 export function InterfaceSidebar({
@@ -23,6 +25,7 @@ export function InterfaceSidebar({
   menu,
   activeId,
   onAddCat,
+  onDelCat,
 }: InterfaceSidebarProps) {
   return (
     <aside className="flex w-full flex-col rounded-lg border bg-card md:w-64 md:shrink-0">
@@ -39,9 +42,20 @@ export function InterfaceSidebar({
           {menu.map((cat) => (
             <div key={cat._id} className="mb-3">
               <div className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-muted-foreground">
-                <FolderOpen className="h-3.5 w-3.5" />
-                {cat.name}
+                <FolderOpen className="h-3.5 w-3.5 shrink-0" />
+                <span className="min-w-0 flex-1 truncate">{cat.name}</span>
                 <span className="text-[10px]">({cat.list?.length || 0})</span>
+                {onDelCat ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 shrink-0"
+                    title="删除分类"
+                    onClick={() => onDelCat(cat._id, cat.name)}
+                  >
+                    <Trash2 className="h-3 w-3 text-destructive" />
+                  </Button>
+                ) : null}
               </div>
               <ul className="mt-0.5 space-y-0.5">
                 {(cat.list || []).map((item) => {

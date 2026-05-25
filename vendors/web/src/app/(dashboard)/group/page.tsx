@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 分组默认页：重定向到第一个分组
+ * 分组默认页：优先进入「我的分组」，否则第一个可见分组
  */
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,11 +16,28 @@ export default function GroupIndexPage() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await groupApi.list();
-        const list = (res.data as GroupItem[]) || [];
-        if (!cancelled) {
+        let targetId: number | null = null;
+        try {
+          const myRes = await groupApi.myPrivate();
+          const my = myRes.data as GroupItem;
+          if (my?._id) {
+            targetId = my._id;
+          }
+        } catch (err) {
+          console.error("加载我的分组失败，回退到列表", err);
+        }
+
+        if (!targetId) {
+          const res = await groupApi.list();
+          const list = (res.data as GroupItem[]) || [];
           if (list.length > 0) {
-            router.replace(`/group/${list[0]._id}`);
+            targetId = list[0]._id;
+          }
+        }
+
+        if (!cancelled) {
+          if (targetId) {
+            router.replace(`/group/${targetId}`);
           } else {
             setError("暂无分组，请联系管理员创建");
           }

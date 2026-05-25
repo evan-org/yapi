@@ -28,4 +28,18 @@ export const colApi = {
 
   getCaseList: (col_id: number) =>
     apiRequest(`/col/case_list?col_id=${col_id}`),
+
+  getCase: (caseid: number) => apiRequest(`/col/case?caseid=${caseid}`),
+
+  upCase: (payload: Record<string, unknown>) =>
+    apiRequest("/col/up_case", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  upCol: (payload: { col_id: number; name?: string; desc?: string }) =>
+    apiRequest("/col/up_col", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 };

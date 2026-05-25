@@ -6,7 +6,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { FolderKanban, Settings, Star, Users } from "lucide-react";
+import { Activity, FolderKanban, Settings, Star, Users } from "lucide-react";
+import { ActivityLogPanel } from "../../../../components/shared/activity-log-panel";
 import { groupApi, projectApi } from "../../../../lib/api/client";
 import { followApi } from "../../../../lib/api/follow";
 import type { GroupItem, MemberItem, ProjectItem } from "../../../../lib/api/types";
@@ -92,6 +93,10 @@ export default function GroupDetailPage() {
                 成员列表
               </TabsTrigger>
             ) : null}
+            <TabsTrigger value="activity">
+              <Activity className="mr-2 h-4 w-4" />
+              动态
+            </TabsTrigger>
             <TabsTrigger value="settings">
               <Settings className="mr-2 h-4 w-4" />
               分组设置
@@ -180,6 +185,17 @@ export default function GroupDetailPage() {
                     await groupApi.changeMemberRole(groupId, uid, role);
                   }}
                 />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="activity" className="mt-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>分组动态</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ActivityLogPanel type="group" typeid={groupId} />
               </CardContent>
             </Card>
           </TabsContent>
