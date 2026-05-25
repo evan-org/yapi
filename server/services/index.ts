@@ -8,5 +8,8 @@
  * - 新功能优先写 Service，Controller 保持薄层
  */
 export { default as BaseService } from "./base.service.js";
+export { ok, fail } from "./service-result.js";
 export { default as followService } from "./follow.service.js";
 export { default as logService } from "./log.service.js";
+export { default as userService } from "./user.service.js";
+export { default as groupService } from "./group.service.js";
