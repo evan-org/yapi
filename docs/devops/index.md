@@ -11,7 +11,7 @@ proxy_set_header Connection "upgrade";
 
 ## 环境要求
 * nodejs（7.6+)
-* mongodb（2.6+）
+* PostgreSQL（12+，推荐 16）
 
 
 ## 安装
@@ -166,21 +166,11 @@ node server/app.js //启动服务器后，请访问 127.0.0.1:{config.json配置
 ```
 
 
-### 如何配置mongodb集群
+### 如何配置 PostgreSQL
 
-请升级到 yapi >= **1.4.0**以上版本，然后在 config.json db项，配置 connectString:
+在 `server/.env` 或 `config.json` 的 `db` 段配置连接，二选一：
 
-```json
+- 连接串：`YAPI_DATABASE_URL=postgresql://user:pass@127.0.0.1:5432/yapi`
+- 分项：`YAPI_DB_HOST`、`YAPI_DB_PORT`（默认 5432）、`YAPI_DB_NAME`、`YAPI_DB_USER`、`YAPI_DB_PASS`
 
-{
-  "port": "***",
-  "db": {
-    "connectString": "mongodb://127.0.0.100:8418,127.0.0.101:8418,127.0.0.102:8418/yapidb?slaveOk=true",
-    "user": "******",
-    "pass": "******"
-  },
-}
-
-```
-
-详细配置参考： [wiki](https://mongoosejs.com/docs/connections.html#multiple_connections)
+首次部署前可执行 `npm run db:init` 初始化表结构（应用启动时也会自动建表）。Docker 见仓库 `deploy/docker-compose.yml`。
