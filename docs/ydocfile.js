@@ -158,39 +158,15 @@ module.exports = {
       "content": "./doc/page/manage/build.md"
     },
     {
-      "name": "plugin",
-      "title": "插件 Wiki",
+      "name": "redev",
+      "title": "二次开发",
       "banner": {
-        "title": "插件",
-        "description": "可根据业务需求，定制化功能"
+        "title": "二次开发",
+        "description": "内置扩展已并入 server/controllers 与 services，详见仓库 docs/documents/redev.md"
       },
-      "content": {
-        "sidebar": true,
-        "multi": true,
-        "index": "./doc/page/plugin/redev.md",
-        "pages": [{
-          "name": "二次开发",
-          "index": "redev",
-          "content": "./doc/page/plugin/redev.md"
-        }, {
-          "name": "插件管理",
-          "index": "plugin-index",
-          "content": "./doc/page/plugin/index.md"
-        }, {
-          "name": "插件开发",
-          "index": "plugin-dev",
-          "content": "./doc/page/plugin/dev.md"
-        }, {
-          "name": "钩子列表",
-          "index": "plugin-hooks",
-          "content": "./doc/page/plugin/hooks.md"
-        }, {
-          "name": "插件列表",
-          "index": "plugin-list",
-          "content": "./doc/page/plugin/list.md"
-        }
-        ]
-      }
+      "compile": "markdown",
+      "menuLevel": 2,
+      "content": "./doc/page/redev.md"
     },
     {
       "name": "qa",

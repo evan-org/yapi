@@ -30,7 +30,7 @@ function pick<T>(envKey: string, fallback: T | undefined): T | undefined {
 }
 
 /**
- * 解析 plugins 配置（JSON 字符串）
+ * 解析扩展配置 plugins（JSON，如 qsso 第三方登录）
  */
 function parsePlugins(raw: string | undefined, filePlugins: unknown): unknown[] {
   if (raw) {

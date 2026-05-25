@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * LDAP 登录查询（plugin 配置 WEBCONFIG.ldapLogin）
+ * LDAP 登录查询（WEBCONFIG.ldapLogin 配置）
  */
 import ldap from "ldapjs";
 import yapi from "../runtime.js";
