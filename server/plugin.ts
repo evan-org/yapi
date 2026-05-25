@@ -1,6 +1,6 @@
 // @ts-nocheck
 import path from "node:path";
-import yapi from "./yapi.js";
+import yapi from "./runtime.js";
 import { initPlugins } from "./common/plugin.js";
 import configModule from "./common/config.js";
 import { createMetaRequire } from "./utils/esm-path.js";
@@ -82,7 +82,7 @@ function resolvePluginServerEntry(baseDir, pluginName) {
     }
   }
   throw new Error(
-    `config.json 配置了插件 ${pluginName}，但未找到 server 入口（${stem}.ts/.js）`
+    `插件 ${pluginName} 已启用，但未找到 server 入口（${stem}.ts/.js）`
   );
 }
 

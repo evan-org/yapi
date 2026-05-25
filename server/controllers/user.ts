@@ -1,7 +1,7 @@
 // @ts-nocheck
 import userModel from '../models/user.js';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import baseController from './base.js';
 

@@ -21,7 +21,7 @@
     "moduleDetection": "force",
     "baseUrl": ".",
     "paths": {
-      "yapi.js": ["./yapi.ts"],
+      "runtime.js": ["./runtime.ts"],
       "models/*": ["./models/*"],
       "controllers/*": ["./controllers/*"],
       "utils/*": ["./utils/*"],

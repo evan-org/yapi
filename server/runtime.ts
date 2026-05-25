@@ -1,9 +1,13 @@
 // @ts-nocheck
+/**
+ * 应用运行时单例（路径、配置、Model 实例池、邮件等）
+ * 配置来自环境变量，见 config/load-config.ts 与 server/.env.example
+ */
 import path from "node:path";
-import { readFileSync } from "node:fs";
 import fs from "fs-extra";
 import nodemailer from "nodemailer";
 import { dirnameFromMeta } from "./utils/esm-path.js";
+import { loadWebConfig } from "./config/load-config.js";
 
 const __dirname = dirnameFromMeta(import.meta);
 
@@ -11,6 +15,10 @@ const __dirname = dirnameFromMeta(import.meta);
  * 解析 server 根目录：支持 tsx 直跑（server/）与 tsc 编译后（server/dist/）
  */
 function resolveWebrootServer() {
+  const fromEnv = process.env.YAPI_WEBROOT;
+  if (fromEnv && fs.existsSync(fromEnv)) {
+    return path.resolve(fromEnv);
+  }
   if (fs.existsSync(path.join(__dirname, "config.json"))) {
     return __dirname;
   }
@@ -18,22 +26,24 @@ function resolveWebrootServer() {
   if (fs.existsSync(path.join(parent, "config.json"))) {
     return parent;
   }
+  if (fs.existsSync(path.join(__dirname, ".env"))) {
+    return __dirname;
+  }
+  if (fs.existsSync(path.join(parent, ".env"))) {
+    return parent;
+  }
   return __dirname;
 }
 
 const WEBROOT_SERVER = resolveWebrootServer();
-const config = JSON.parse(
-  readFileSync(path.join(WEBROOT_SERVER, "config.json"), "utf8")
-);
+const WEBCONFIG = loadWebConfig(WEBROOT_SERVER);
 
 const insts = new Map();
 let mail;
 
-/** 后端工作区根目录（config、exts、common、node_modules 均在 server/ 内） */
 const WEBROOT = path.resolve(WEBROOT_SERVER, ".");
 const WEBROOT_RUNTIME = WEBROOT;
 const WEBROOT_LOG = path.join(WEBROOT, "log");
-const WEBCONFIG = config;
 
 fs.ensureDirSync(WEBROOT_LOG);
 

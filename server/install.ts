@@ -1,7 +1,7 @@
 // @ts-nocheck
 import fs from 'fs-extra';
 
-import yapi from './yapi.js';
+import yapi from './runtime.js';
 
 import commons from './utils/commons.js';
 

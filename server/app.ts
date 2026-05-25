@@ -10,7 +10,7 @@ import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { createNodeWebSocket } from "@hono/node-ws";
-import yapi from "./yapi.js";
+import yapi from "./runtime.js";
 import commons from "./utils/commons.js";
 import dbModule from "./utils/db.js";
 import mockServerHono from "./middleware/mockServerHono.js";

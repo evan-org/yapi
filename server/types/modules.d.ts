@@ -1,10 +1,10 @@
 /**
  * 无官方类型或 CJS 遗留模块声明（ESM default export）
  */
-declare module "yapi.js" {
+declare module "runtime.js" {
   import type { YapiRuntime } from "./global.js";
-  const yapi: YapiRuntime;
-  export default yapi;
+  const runtime: YapiRuntime;
+  export default runtime;
 }
 
 declare module "mockjs";

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import baseController from './base.js';
 

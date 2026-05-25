@@ -21,7 +21,7 @@ import jsrsasign from 'jsrsasign';
 
 import https from "https";
 import vm from "node:vm";
-import yapi from "../yapi.js";
+import yapi from "../runtime.js";
 
 
 const isNode = typeof global == "object" && global.global === global;

@@ -15,7 +15,7 @@ import url from 'url';
 
 import baseController from './base.js';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import userModel from '../models/user.js';
 

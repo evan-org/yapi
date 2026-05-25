@@ -1,7 +1,7 @@
 // @ts-nocheck
 import HttpRouter from './utils/httpRouter.js';
 import controllerMap from './controllers/index.js';
-import yapi from './yapi.js';
+import yapi from './runtime.js';
 import { createAction } from './utils/commons.js';
 
 const router = new HttpRouter();

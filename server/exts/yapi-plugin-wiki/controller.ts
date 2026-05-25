@@ -10,7 +10,7 @@ import userModel from 'models/user';
 import jsondiffpatch from 'jsondiffpatch';
 
 const formattersHtml = jsondiffpatch.formatters.html;
-import yapi from 'yapi.js';
+import yapi from 'runtime.js';
 
 // import util from './util.js';
 

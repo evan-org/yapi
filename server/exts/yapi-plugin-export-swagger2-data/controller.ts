@@ -7,7 +7,7 @@ import projectModel from 'models/project';
 
 import interfaceCatModel from 'models/interfaceCat';
 
-import yapi from 'yapi.js';
+import yapi from 'runtime.js';
 
 
 

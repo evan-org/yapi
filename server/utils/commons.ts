@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 
 import path from 'path';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import apiResponse from '../common/apiResponse.js';
 

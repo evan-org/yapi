@@ -2,7 +2,7 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-import yapi from 'yapi.js';
+import yapi from 'runtime.js';
 
 import mongoose from 'mongoose';
 

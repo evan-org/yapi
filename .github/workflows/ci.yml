@@ -20,9 +20,6 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Prepare server config
-        run: cp server/config.example.json server/config.json
-
       - name: Install workspaces
         run: npm install --legacy-peer-deps
 
@@ -31,6 +28,13 @@ jobs:
 
       - name: Run server tests
         run: npm run test:server
+        env:
+          YAPI_PORT: "3001"
+          YAPI_ADMIN_ACCOUNT: admin@admin.com
+          YAPI_DB_HOST: "127.0.0.1"
+          YAPI_DB_PORT: "27017"
+          YAPI_DB_NAME: yapi
+          YAPI_MAIL_ENABLE: "false"
 
   build-client:
     runs-on: ubuntu-latest
@@ -44,9 +48,6 @@ jobs:
           node-version: "18"
           cache: npm
           cache-dependency-path: package-lock.json
-
-      - name: Prepare server config
-        run: cp server/config.example.json server/config.json
 
       - name: Install workspaces
         run: npm install --legacy-peer-deps

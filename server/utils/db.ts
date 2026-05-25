@@ -1,7 +1,7 @@
 // @ts-nocheck
 import mongoose from 'mongoose';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import autoIncrement from './mongoose-auto-increment.js';
 

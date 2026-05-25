@@ -5,7 +5,7 @@ import advModel from './advMockModel.js';
 
 import caseModel from './caseModel.js';
 
-import yapi from 'yapi.js';
+import yapi from 'runtime.js';
 
 import mongoose from 'mongoose';
 

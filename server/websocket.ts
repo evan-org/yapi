@@ -1,7 +1,7 @@
 // @ts-nocheck
 import HttpRouter from "./utils/httpRouter.js";
 import interfaceController from "./controllers/interface.js";
-import yapi from "./yapi.js";
+import yapi from "./runtime.js";
 import { createAction } from "./utils/commons.js";
 import koaCtx from "./adapter/koa-context.js";
 

@@ -6,7 +6,7 @@
   "type": "module",
   "main": "app.ts",
   "imports": {
-    "#yapi": "./yapi.ts"
+    "#runtime": "./runtime.ts"
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon",
@@ -29,6 +29,7 @@
     "compare-versions": "^3.4.0",
     "cpu-load": "~1.0.0",
     "crypto-js": "^3.1.9-1",
+    "dotenv": "^16.4.7",
     "easy-json-schema": "0.0.2-beta",
     "fs-extra": "^3.0.1",
     "generate-schema": "^2.6.0",

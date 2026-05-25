@@ -3,7 +3,7 @@
  * 数据模型基类（models/ 目录）
  * 子类需实现 getSchema()、getName()；实例化后由 yapi.db 注册到 Mongoose
  */
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 import mongoose from 'mongoose';
 import autoIncrement from '../utils/mongoose-auto-increment.js';
 

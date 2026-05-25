@@ -1,6 +1,6 @@
 // @ts-nocheck
 import baseController from "../../../controllers/base.js";
-import yapi from "yapi.js";
+import yapi from "runtime.js";
 import syncModel from "../syncModel.js";
 import projectModel from "../../../models/project.js";
 import interfaceSyncUtils from "../interfaceSyncUtils.js";

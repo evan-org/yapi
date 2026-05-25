@@ -5,7 +5,7 @@ import openController from "../../controllers/open.js";
 import projectModel from "../../models/project.js";
 import syncModel from "./syncModel.js";
 import tokenModel from "../../models/token.js";
-import yapi from "yapi.js";
+import yapi from "runtime.js";
 import sha from "sha.js";
 import md5 from "md5";
 import { getToken } from "../../utils/token.js";

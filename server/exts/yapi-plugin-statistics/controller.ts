@@ -15,7 +15,7 @@ import interfaceModel from 'models/interface';
 import interfaceCaseModel from 'models/interfaceCase';
 
 
-import yapi from 'yapi.js';
+import yapi from 'runtime.js';
 
 import config from './index.js';
 

@@ -1,36 +1,23 @@
 // @ts-nocheck
-import fs from 'fs';
-
-import path from 'path';
-
-import yapi from '../yapi.js';
-
+import runtime from '../runtime.js';
 
 /**
- * 启动前校验 config.json 是否存在且包含必要字段
+ * 启动前校验环境变量 / 配置是否包含必要字段
  */
 function assertRuntimeConfig() {
-  const configPath = path.join(yapi.WEBROOT_RUNTIME, "config.json");
-
-  if (!fs.existsSync(configPath)) {
-    throw new Error(
-      `未找到配置文件: ${configPath}\n请复制 server/config.example.json 为 server/config.json 并修改数据库等配置。`
-    );
-  }
-
-  const config = yapi.WEBCONFIG;
+  const config = runtime.WEBCONFIG;
 
   if (!config.port) {
-    throw new Error("config.json 缺少 port 配置");
+    throw new Error("缺少 YAPI_PORT 或服务端口配置");
   }
   if (!config.db) {
-    throw new Error("config.json 缺少 db 配置");
+    throw new Error("缺少数据库配置（YAPI_MONGODB_URI 或 YAPI_DB_HOST + YAPI_DB_NAME）");
   }
   if (!config.db.connectString && (!config.db.servername || !config.db.DATABASE)) {
-    throw new Error("config.json 的 db 需配置 connectString 或 servername + DATABASE");
+    throw new Error("数据库需配置 YAPI_MONGODB_URI 或 YAPI_DB_HOST + YAPI_DB_NAME");
   }
   if (!config.adminAccount) {
-    throw new Error("config.json 缺少 adminAccount（安装后管理员邮箱）");
+    throw new Error("缺少 YAPI_ADMIN_ACCOUNT（安装后管理员邮箱）");
   }
 }
 

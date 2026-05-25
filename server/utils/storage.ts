@@ -1,6 +1,6 @@
 // @ts-nocheck
 import storageModel from "../models/storage.js";
-import yapi from "../yapi.js";
+import yapi from "../runtime.js";
 
 export default function storageCreator(id) {
   const defaultData = {};

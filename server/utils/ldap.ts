@@ -1,7 +1,7 @@
 // @ts-nocheck
 import ldap from 'ldapjs';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import util from 'util';
 

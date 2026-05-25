@@ -1,7 +1,7 @@
 // @ts-nocheck
 import groupModel from '../models/group.js';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import baseController from './base.js';
 

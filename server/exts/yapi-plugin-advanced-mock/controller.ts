@@ -3,7 +3,7 @@ import baseController from 'controllers/base';
 
 import advModel from './advMockModel.js';
 
-import yapi from 'yapi.js';
+import yapi from 'runtime.js';
 
 import caseModel from './caseModel.js';
 

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import controller from './controller/syncController.js';
 
-import yapi from 'yapi.js';
+import yapi from 'runtime.js';
 
 import interfaceSyncUtils from './interfaceSyncUtils.js';
 

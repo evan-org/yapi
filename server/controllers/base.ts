@@ -3,7 +3,7 @@
  * 控制器基类（controllers/ 目录）
  * 负责登录态、权限与通用 model 实例；业务控制器继承此类
  */
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 import {
   projectModel,
   userModel,

@@ -9,7 +9,7 @@ import projectModel from '../models/project.js';
 
 import baseController from './base.js';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import _ from 'underscore';
 

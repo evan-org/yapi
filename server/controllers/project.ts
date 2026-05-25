@@ -1,7 +1,7 @@
 // @ts-nocheck
 import projectModel from '../models/project.js';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import _ from 'underscore';
 

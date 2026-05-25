@@ -1,5 +1,5 @@
 // @ts-nocheck
-import yapi from "../yapi.js";
+import yapi from "../runtime.js";
 
 /**
  * 兼容 koa-router API 的路由收集器，最终通过 registerToHono 挂载到 Hono。

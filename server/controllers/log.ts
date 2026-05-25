@@ -1,7 +1,7 @@
 // @ts-nocheck
 import logModel from '../models/log.js';
 
-import yapi from '../yapi.js';
+import yapi from '../runtime.js';
 
 import baseController from './base.js';
 
