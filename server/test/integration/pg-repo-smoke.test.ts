@@ -1,9 +1,9 @@
 // @ts-nocheck
 /**
- * Repository 层 PostgreSQL 冒烟（CI 有 PG 时验证 group 写入/查询/删除）
+ * Repository 层 PostgreSQL 冒烟（CI 有 PG 时验证 group/project 写入/查询/删除）
  */
 import test from "ava";
-import { groupRepository } from "../../repositories/index.js";
+import { groupRepository, projectRepository } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
   shouldRunPgCi,
@@ -37,6 +37,55 @@ test("groupRepository 可写入、查询并删除", async (t) => {
     t.truthy(found);
     t.is(found.group_name, groupName);
   } finally {
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("projectRepository 可写入、查询并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  const projectName = `ci-project-${Date.now()}`;
+  let projectId;
+  let groupId;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-for-proj-${Date.now()}`,
+      group_desc: "ci",
+      uid: 999998,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const saved = await projectRepository.save({
+      name: projectName,
+      group_id: groupId,
+      uid: 999998,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = saved._id;
+    t.truthy(projectId);
+
+    const found = await projectRepository.getBaseInfo(projectId, "name _id group_id");
+    t.truthy(found);
+    t.is(found.name, projectName);
+    t.is(found.group_id, groupId);
+  } finally {
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
     if (groupId) {
       await groupRepository.del(groupId);
     }

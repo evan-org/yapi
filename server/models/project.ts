@@ -1,6 +1,9 @@
 // @ts-nocheck
-import yapi from "../runtime.js";
+/**
+ * 项目模型：委托关系型 projectRepository（供 yapi.getInst 与插件使用）
+ */
 import baseModel from "./base.js";
+import { projectRepository } from "../repositories/project.repo.js";
 
 class projectModel extends baseModel {
   getName() {
@@ -10,37 +13,6 @@ class projectModel extends baseModel {
   constructor() {
     super();
     this.handleEnvNullData = this.handleEnvNullData.bind(this);
-  }
-
-  getAuthList(uid) {
-    return this.store.findMany(
-      {
-        $or: [
-          { "members.uid": uid, project_type: "private" },
-          { uid, project_type: "private" },
-          { project_type: "public" },
-        ],
-      },
-      { fields: ["group_id"] }
-    );
-  }
-
-  updateMember(data) {
-    return this.store.mutateWhere({ "members.uid": data.uid }, (doc) => {
-      const members = doc.members || [];
-      for (const m of members) {
-        if (m && m.uid == data.uid) {
-          m.username = data.username;
-          m.email = data.email;
-        }
-      }
-      doc.members = members;
-      return doc;
-    });
-  }
-
-  save(data) {
-    return this.store.insert(data);
   }
 
   handleEnvNullData(data) {
@@ -61,142 +33,111 @@ class projectModel extends baseModel {
       });
     }
     if (isFix) {
-      this.store.updateById(data._id, { env: data.env });
+      projectRepository.update(data._id, { env: data.env });
     }
     return data;
   }
 
+  getAuthList(uid) {
+    return projectRepository.getAuthList(uid);
+  }
+
+  updateMember(data) {
+    return projectRepository.updateMember(data);
+  }
+
+  save(data) {
+    return projectRepository.save(data);
+  }
+
   get(id) {
-    return this.store.findById(id).then(this.handleEnvNullData);
+    return projectRepository.get(id).then(this.handleEnvNullData);
   }
 
   getByEnv(id) {
-    return this.store
-      .findById(id, { fields: ["env", "_id"] })
-      .then(this.handleEnvNullData);
+    return projectRepository.getByEnv(id).then(this.handleEnvNullData);
   }
 
   getProjectWithAuth(group_id, uid) {
-    return this.store.count({ group_id, "members.uid": uid });
+    return projectRepository.getProjectWithAuth(group_id, uid);
   }
 
   getBaseInfo(id, select) {
-    const fields = this._fields(
-      select ||
-        "_id uid name basepath switch_notice desc group_id project_type env icon color add_time up_time pre_script after_script project_mock_script is_mock_open strice is_json5 tag"
-    );
-    return this.store.findById(id, { fields }).then(this.handleEnvNullData);
+    return projectRepository.getBaseInfo(id, select).then(this.handleEnvNullData);
   }
 
   getByDomain(domain) {
-    return this.store.findMany({ prd_host: domain }).then((rows) => {
-      if (!rows.length) {
-        return null;
-      }
-      return this.handleEnvNullData(rows[0]);
-    });
+    return projectRepository.getByDomain(domain).then((row) =>
+      row ? this.handleEnvNullData(row) : null
+    );
   }
 
   checkNameRepeat(name, groupid) {
-    return this.store.count({ name, group_id: groupid });
+    return projectRepository.checkNameRepeat(name, groupid);
   }
 
   checkDomainRepeat(domain, basepath) {
-    return this.store.count({ prd_host: domain, basepath });
+    return projectRepository.checkDomainRepeat(domain, basepath);
   }
 
   list(group_id) {
-    return this.store.findMany(
-      { group_id },
-      {
-        fields: this._fields(
-          "_id uid name basepath switch_notice desc group_id project_type color icon env add_time up_time"
-        ),
-        sort: { _id: -1 },
-      }
-    );
+    return projectRepository.list(group_id);
   }
 
   getProjectListCount() {
-    return this.store.count();
+    return projectRepository.getProjectListCount();
   }
 
   countWithPublic(group_id) {
-    return this.store.count({ group_id, project_type: "public" });
+    return projectRepository.countWithPublic(group_id);
   }
 
   listWithPaging(group_id, page, limit) {
-    page = parseInt(page);
-    limit = parseInt(limit);
-    return this.store.findMany(
-      { group_id },
-      { sort: { _id: -1 }, skip: (page - 1) * limit, limit }
-    );
+    return projectRepository.listWithPaging(group_id, page, limit);
   }
 
   listCount(group_id) {
-    return this.store.count({ group_id });
+    return projectRepository.listCount(group_id);
   }
 
   countByGroupId(group_id) {
-    return this.store.count({ group_id });
+    return projectRepository.countByGroupId(group_id);
   }
 
   del(id) {
-    return this.store.delete({ _id: id });
+    return projectRepository.del(id);
   }
 
   delByGroupid(groupId) {
-    return this.store.delete({ group_id: groupId });
+    return projectRepository.delByGroupid(groupId);
   }
 
   up(id, data) {
-    data.up_time = yapi.commons.time();
-    return this.store.updateById(id, data);
+    return projectRepository.up(id, data);
   }
 
   addMember(id, data) {
-    const items = Array.isArray(data) ? data : [data];
-    return this.store.mutateById(id, (doc) => {
-      doc.members = doc.members || [];
-      doc.members.push(...items);
-      return doc;
-    });
+    return projectRepository.addMember(id, data);
   }
 
   delMember(id, uid) {
-    return this.store.mutateById(id, (doc) => {
-      doc.members = (doc.members || []).filter((m) => m && m.uid != uid);
-      return doc;
-    });
+    return projectRepository.delMember(id, uid);
   }
 
   checkMemberRepeat(id, uid) {
-    return this.store.count({ _id: id, "members.uid": uid });
+    return projectRepository.checkMemberRepeat(id, uid);
   }
 
   changeMemberRole(id, uid, role) {
-    return this.store.mutateById(id, (doc) => {
-      const m = (doc.members || []).find((x) => x && x.uid == uid);
-      if (m) {
-        m.role = role;
-      }
-      return doc;
-    });
+    return projectRepository.changeMemberRole(id, uid, role);
   }
 
   changeMemberEmailNotice(id, uid, notice) {
-    return this.store.mutateById(id, (doc) => {
-      const m = (doc.members || []).find((x) => x && x.uid == uid);
-      if (m) {
-        m.email_notice = notice;
-      }
-      return doc;
-    });
+    return projectRepository.changeMemberEmailNotice(id, uid, notice);
   }
 
   search(keyword) {
-    return this.store.findMany({ name: new RegExp(keyword, "ig") }, { limit: 10 });
+    return projectRepository.search(keyword);
   }
 }
 
