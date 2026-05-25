@@ -170,6 +170,14 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       color TEXT NOT NULL DEFAULT ''
     )
   `,
+  avatar: `
+    CREATE TABLE IF NOT EXISTS ${tableName("avatar")} (
+      _id SERIAL PRIMARY KEY,
+      uid BIGINT NOT NULL DEFAULT 0,
+      type TEXT NOT NULL DEFAULT '',
+      basecode TEXT NOT NULL DEFAULT ''
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -219,7 +227,7 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_pid ON ${tableName("interface")} (project_id)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_catid ON ${tableName("interface")} (catid)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_query_path ON ${tableName("interface")} ((query_path->>'path'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_avatar_uid ON ${tableName("avatar")} ((doc->>'uid'))`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_avatar_uid ON ${tableName("avatar")} (uid)`,
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_token_pid ON ${tableName("token")} (project_id)`,
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_token_token ON ${tableName("token")} (token)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON ${tableName("follow")} (uid)`,

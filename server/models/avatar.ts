@@ -1,23 +1,21 @@
 // @ts-nocheck
+/**
+ * 用户头像模型：委托关系型 avatarRepository
+ */
 import baseModel from "./base.js";
+import { avatarRepository } from "../repositories/avatar.repo.js";
 
 class avatarModel extends baseModel {
   getName() {
     return "avatar";
   }
 
-  get(uid) {
-    return this.store.findOne({ uid });
+  get(uid: number | string) {
+    return avatarRepository.get(uid);
   }
 
-  async up(uid, basecode, type) {
-    const existing = await this.store.findOne({ uid });
-    if (existing) {
-      await this.store.updateById(existing._id, { type, basecode });
-      return existing._id;
-    }
-    const row = await this.store.insert({ uid, type, basecode });
-    return row._id;
+  async up(uid: number | string, basecode: string, type: string) {
+    return avatarRepository.up(uid, basecode, type);
   }
 }
 
