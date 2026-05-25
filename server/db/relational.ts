@@ -146,3 +146,24 @@ export function interfaceCatFromRow(row: DocRecord): DocRecord {
 
 export const INTERFACE_CAT_SELECT =
   '_id, name, project_id, uid, desc, "index", add_time, up_time';
+
+/** interface_col 表行 → 业务对象 */
+export function interfaceColFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    name: row.name,
+    project_id: row.project_id,
+    uid: row.uid,
+    desc: row.desc,
+    index: row.index,
+    add_time: row.add_time,
+    up_time: row.up_time,
+    checkHttpCodeIs200: row.checkHttpCodeIs200,
+    checkResponseSchema: row.checkResponseSchema,
+    checkResponseField: readJsonCol(row.checkResponseField, {}),
+    checkScript: readJsonCol(row.checkScript, {}),
+  };
+}
+
+export const INTERFACE_COL_SELECT =
+  '_id, name, project_id, uid, desc, "index", add_time, up_time, checkHttpCodeIs200, checkResponseSchema, checkResponseField, checkScript';
