@@ -3,12 +3,11 @@
   "adminAccount": "admin@admin.com",
   "timeout": 120000,
   "db": {
-    "servername": "mongo",
+    "servername": "postgres",
     "DATABASE": "yapi",
-    "port": 27017,
-    "user": "",
-    "pass": "",
-    "authSource": ""
+    "port": 5432,
+    "user": "yapi",
+    "pass": "yapi"
   },
   "mail": {
     "enable": false

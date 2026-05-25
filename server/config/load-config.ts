@@ -45,19 +45,19 @@ function parsePlugins(raw: string | undefined, filePlugins: unknown): unknown[] 
 }
 
 /**
- * 合并 db 段：支持 YAPI_MONGODB_URI 或分项变量
+ * 合并 db 段：支持 YAPI_DATABASE_URL 或分项变量（PostgreSQL）
  */
 function buildDb(fileDb: Record<string, unknown> = {}): Record<string, unknown> {
-  const uri = envStr("YAPI_MONGODB_URI");
+  const uri = envStr("YAPI_DATABASE_URL") || envStr("YAPI_POSTGRES_URI");
   if (uri) {
     return { ...fileDb, connectString: uri };
   }
   const servername = pick("YAPI_DB_HOST", fileDb.servername as string);
   const DATABASE = pick("YAPI_DB_NAME", fileDb.DATABASE as string);
-  const portRaw = pick("YAPI_DB_PORT", fileDb.port != null ? String(fileDb.port) : undefined);
+  const portRaw =
+    pick("YAPI_DB_PORT", fileDb.port != null ? String(fileDb.port) : undefined) || "5432";
   const user = pick("YAPI_DB_USER", fileDb.user as string);
   const pass = pick("YAPI_DB_PASS", fileDb.pass as string);
-  const authSource = pick("YAPI_DB_AUTH_SOURCE", fileDb.authSource as string);
 
   const db: Record<string, unknown> = { ...fileDb };
   if (servername) {
@@ -74,9 +74,6 @@ function buildDb(fileDb: Record<string, unknown> = {}): Record<string, unknown> 
   }
   if (pass) {
     db.pass = pass;
-  }
-  if (authSource !== undefined) {
-    db.authSource = authSource;
   }
   return db;
 }

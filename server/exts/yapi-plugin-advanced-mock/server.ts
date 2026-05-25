@@ -7,8 +7,6 @@ import caseModel from './caseModel.js';
 
 import yapi from 'runtime.js';
 
-import mongoose from 'mongoose';
-
 import _ from 'underscore';
 
 import path from 'path';
@@ -26,22 +24,6 @@ function arrToObj(arr) {
   return obj;
 }
 export default function() {
-  yapi.connect.then(function() {
-    let Col = mongoose.connection.db.collection("adv_mock");
-    Col.createIndex({
-      interface_id: 1
-    });
-    Col.createIndex({
-      project_id: 1
-    });
-    let caseCol = mongoose.connection.db.collection("adv_mock_case");
-    caseCol.createIndex({
-      interface_id: 1
-    });
-    caseCol.createIndex({
-      project_id: 1
-    });
-  });
   async function checkCase(ctx, interfaceId) {
     let reqParams = Object.assign({}, ctx.query, ctx.request.body);
     let caseInst = yapi.getInst(caseModel);

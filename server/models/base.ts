@@ -1,47 +1,26 @@
 // @ts-nocheck
 /**
- * 数据模型基类（models/ 目录）
- * 子类需实现 getSchema()、getName()；实例化后由 yapi.db 注册到 Mongoose
+ * 数据模型基类：通过 yapi.db 注册 PostgreSQL JSONB 集合
  */
-import yapi from '../runtime.js';
-import mongoose from 'mongoose';
-import autoIncrement from '../utils/mongoose-auto-increment.js';
+import yapi from "../runtime.js";
 
 /**
- * 所有的 model 都需要继承 baseModel，且需要 getSchema 和 getName 方法，不然会报错
+ * 子类需实现 getSchema()、getName()；schema 仅作文档结构参考，不入库校验
  */
-
 class baseModel {
   constructor() {
-    this.schema = new mongoose.Schema(this.getSchema());
     this.name = this.getName();
-
-    if (this.isNeedAutoIncrement() === true) {
-      this.schema.plugin(autoIncrement.plugin, {
-        model: this.name,
-        field: this.getPrimaryKey(),
-        startAt: 11,
-        incrementBy: yapi.commons.rand(1, 10)
-      });
-    }
-
-    this.model = yapi.db(this.name, this.schema);
+    this.model = yapi.db(this.name, this.getSchema());
   }
 
   isNeedAutoIncrement() {
     return true;
   }
 
-  /**
-   * 可通过覆盖此方法生成其他自增字段
-   */
   getPrimaryKey() {
     return "_id";
   }
 
-  /**
-   * 获取collection的schema结构
-   */
   getSchema() {
     yapi.commons.log("Model Class need getSchema function", "error");
   }

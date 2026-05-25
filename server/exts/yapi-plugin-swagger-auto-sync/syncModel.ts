@@ -3,9 +3,6 @@ import yapi from 'runtime.js';
 
 import baseModel from 'models/base';
 
-import mongoose from 'mongoose';
-
-
 class syncModel extends baseModel {
   getName() {
     return "interface_auto_sync";

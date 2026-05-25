@@ -3,10 +3,6 @@ import yapi from '../runtime.js';
 
 import baseModel from './base.js';
 
-import mongoose from 'mongoose';
-
-let Schema = mongoose.Schema;
-
 class logModel extends baseModel {
   getName() {
     return "log";
@@ -24,7 +20,7 @@ class logModel extends baseModel {
       content: { type: String, required: true },
       username: { type: String, required: true },
       add_time: Number,
-      data: Schema.Types.Mixed // 用于原始数据存储
+      data: Object // 用于原始数据存储
     };
   }
 

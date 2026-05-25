@@ -3,9 +3,6 @@ import yapi from 'runtime.js';
 
 import baseModel from 'models/base';
 
-import mongoose from 'mongoose';
-
-
 class caseModel extends baseModel {
   getName() {
     return "adv_mock_case";
@@ -24,7 +21,7 @@ class caseModel extends baseModel {
         name: {type: String, required: true},
         value: {type: String}
       }],
-      params: mongoose.Schema.Types.Mixed,
+      params: Object,
       uid: String,
       up_time: Number,
       res_body: {type: String, required: true},

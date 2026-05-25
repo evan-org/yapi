@@ -3,10 +3,6 @@ import yapi from '../runtime.js';
 
 import baseModel from './base.js';
 
-import mongoose from 'mongoose';
-
-let Schema = mongoose.Schema;
-
 class interfaceCase extends baseModel {
   getName() {
     return "interface_case";
@@ -53,7 +49,7 @@ class interfaceCase extends baseModel {
       req_body_other: String,
       test_res_body: String,
       test_status: { type: String, enum: ["ok", "invalid", "error", ""] },
-      test_res_header: Schema.Types.Mixed,
+      test_res_header: Object,
       mock_verify: { type: Boolean, default: false },
       enable_script: { type: Boolean, default: false },
       test_script: String

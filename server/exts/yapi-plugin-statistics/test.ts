@@ -9,8 +9,8 @@ import dbModule from '../../server/utils/db.js';
 
 import userModel from '../../server/models/user.js';
 
-import mongoose from 'mongoose';
-
+import { getPool } from "../../db/pg-pool.js";
+import { tableName } from "../../db/table.js";
 
 yapi.commons = commons;
 yapi.connect = dbModule.connect();
@@ -44,15 +44,20 @@ function run() {
   };
 
   yapi.connect
-    .then(function() {
-      let logCol = mongoose.connection.db.collection("statis_mock");
-      let arr = [];
+    .then(async function() {
+      const pool = getPool();
+      const tbl = tableName("statis_mock");
+      let batch: ReturnType<typeof data>[] = [];
       for (let i = 0; i < 11; i++) {
-        if (arr.length >= 5) {
-          logCol.insert(arr);
-          arr = [];
+        batch.push(data(i));
+        if (batch.length >= 5) {
+          for (const row of batch) {
+            await pool.query(`INSERT INTO ${tbl} (doc) VALUES ($1::jsonb)`, [
+              JSON.stringify(row),
+            ]);
+          }
+          batch = [];
         }
-        arr.push(data(i));
       }
     })
     .catch(function(err) {
