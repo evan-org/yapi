@@ -141,6 +141,18 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       req_body_form JSONB NOT NULL DEFAULT '[]'::jsonb
     )
   `,
+  log: `
+    CREATE TABLE IF NOT EXISTS ${tableName("log")} (
+      _id SERIAL PRIMARY KEY,
+      content TEXT NOT NULL DEFAULT '',
+      type TEXT NOT NULL DEFAULT '',
+      uid BIGINT NOT NULL DEFAULT 0,
+      username TEXT NOT NULL DEFAULT '',
+      typeid BIGINT NOT NULL DEFAULT 0,
+      add_time BIGINT NOT NULL DEFAULT 0,
+      data JSONB NOT NULL DEFAULT '{}'::jsonb
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -172,8 +184,9 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_project_name ON ${tableName("project")} (name)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_project_group ON ${tableName("project")} (group_id)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_project_prd_host ON ${tableName("project")} (prd_host)`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_log_uid ON ${tableName("log")} ((doc->>'uid'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_log_typeid ON ${tableName("log")} ((doc->>'typeid'), (doc->>'type'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_log_uid ON ${tableName("log")} (uid)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_log_typeid ON ${tableName("log")} (typeid, type)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_log_add_time ON ${tableName("log")} (add_time DESC)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_uid ON ${tableName("interface_col")} (uid)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_pid ON ${tableName("interface_col")} (project_id)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_name ON ${tableName("interface_col")} (name)`,
