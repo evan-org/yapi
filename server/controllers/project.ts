@@ -23,9 +23,22 @@ import {
 import { getToken } from '../utils/token.js'
 import sha from 'sha.js';
 
-import axios from "axios";
+import { projectService } from "../services/index.js";
 
 class projectController extends baseController {
+  /** Service 结果 → HTTP 响应 */
+  _reply(ctx, result, successMsg) {
+    if (!result.ok) {
+      ctx.body = yapi.commons.resReturn(null, result.code, result.message);
+      return;
+    }
+    ctx.body = yapi.commons.resReturn(
+      result.data,
+      0,
+      successMsg !== undefined ? successMsg : undefined
+    );
+  }
+
   constructor(ctx) {
     super(ctx);
     this.Model = projectRepository;
@@ -524,26 +537,18 @@ class projectController extends baseController {
 
   async get(ctx) {
     let params = ctx.params;
-    let projectId = params.id || params.project_id; // 通过 token 访问
-    let result = await this.Model.getBaseInfo(projectId);
-
-    if (!result) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的项目"));
+    let projectId = params.id || params.project_id;
+    const loaded = await projectService.getDetail(projectId);
+    if (!loaded.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, loaded.code, loaded.message));
     }
+    const result = loaded.data;
     if (result.project_type === "private") {
       if ((await this.checkAuth(result._id, "project", "view")) !== true) {
         return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
       }
     }
-    result = result.toObject();
-    let catInst = interfaceCatRepository;
-    let cat = await catInst.list(params.id);
-    result.cat = cat;
-    if (result.env.length === 0) {
-      result.env.push({ name: "local", domain: "http://127.0.0.1" });
-    }
-    result.role = await this.getProjectRole(params.id, "project");
-
+    result.role = await this.getProjectRole(projectId, "project");
     yapi.emitHook("project_get", result).then();
     ctx.body = yapi.commons.resReturn(result);
   }
@@ -624,16 +629,7 @@ class projectController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
     }
 
-    let interfaceInst = interfaceRepository;
-    let interfaceColInst = interfaceColRepository;
-    let interfaceCaseInst = interfaceCaseRepository;
-    await interfaceInst.delByProjectId(id);
-    await interfaceCaseInst.delByProjectId(id);
-    await interfaceColInst.delByProjectId(id);
-    await this.followModel.delByProjectId(id);
-    yapi.emitHook("project_del", id).then();
-    let result = await this.Model.del(id);
-    ctx.body = yapi.commons.resReturn(result);
+    this._reply(ctx, await projectService.deleteById(id));
   }
 
   /**
@@ -1071,71 +1067,21 @@ class projectController extends baseController {
    */
   async search(ctx) {
     const { q } = ctx.request.query;
-
-    if (!q) {
-      return (ctx.body = yapi.commons.resReturn(void 0, 400, "No keyword."));
+    const result = await projectService.search(q);
+    if (!result.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
     }
-
-    if (!yapi.commons.validateSearchKeyword(q)) {
-      return (ctx.body = yapi.commons.resReturn(void 0, 400, "Bad query."));
-    }
-
-    let projectList = await this.Model.search(q);
-    let groupList = await this.groupModel.search(q);
-    let interfaceList = await this.interfaceModel.search(q);
-
-    let projectRules = [
-      "_id",
-      "name",
-      "basepath",
-      "uid",
-      "env",
-      "members",
-      { key: "group_id", alias: "groupId" },
-      { key: "up_time", alias: "upTime" },
-      { key: "add_time", alias: "addTime" }
-    ];
-    let groupRules = [
-      "_id",
-      "uid",
-      { key: "group_name", alias: "groupName" },
-      { key: "group_desc", alias: "groupDesc" },
-      { key: "add_time", alias: "addTime" },
-      { key: "up_time", alias: "upTime" }
-    ];
-    let interfaceRules = [
-      "_id",
-      "uid",
-      { key: "title", alias: "title" },
-      { key: "project_id", alias: "projectId" },
-      { key: "add_time", alias: "addTime" },
-      { key: "up_time", alias: "upTime" }
-    ];
-
-    projectList = commons.filterRes(projectList, projectRules);
-    groupList = commons.filterRes(groupList, groupRules);
-    interfaceList = commons.filterRes(interfaceList, interfaceRules);
-    let queryList = {
-      project: projectList,
-      group: groupList,
-      interface: interfaceList
-    };
-
-    return (ctx.body = yapi.commons.resReturn(queryList, 0, "ok"));
+    return (ctx.body = yapi.commons.resReturn(result.data, 0, "ok"));
   }
 
   // 输入 swagger url 的时候 node 端请求数据
   async swaggerUrl(ctx) {
-    try {
-      const { url } = ctx.request.query;
-      const { data } = await axios.get(url);
-      if (data == null || typeof data !== "object") {
-        throw new Error("返回数据格式不是 JSON");
-      }
-      ctx.body = yapi.commons.resReturn(data);
-    } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 402, String(err));
+    const { url } = ctx.request.query;
+    const result = await projectService.fetchSwaggerJson(url);
+    if (!result.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
     }
+    ctx.body = yapi.commons.resReturn(result.data);
   }
 }
 

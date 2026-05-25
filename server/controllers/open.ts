@@ -23,7 +23,7 @@ import { handleParamsValue, ArrayToObject } from '../common/utils.js';
 import renderToHtml from '../utils/reportHtml.js';
 
 import axios from "axios";
-import request from "request";
+import { openService } from "../services/index.js";
 
 import HanldeImportData from '../common/HandleImportData.js';
 
@@ -109,46 +109,22 @@ class openController extends baseController {
     if (!content && !ctx.params.url) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, "json 或者 url 参数，不能都为空"));
     }
-    try {
-      const syncGet = function (url) {
-        return new Promise(function(resolve, reject) {
-          request.get({url: url}, function(error, response, body) {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(body);
-            }
-          });
-        });
-      }
-      if (ctx.params.url) {
-        content = await syncGet(ctx.params.url);
-      } else if (content.indexOf("http://") === 0 || content.indexOf("https://") === 0) {
-        content = await syncGet(content);
-      }
-      content = JSON.parse(content);
-    } catch (e) {
-      return (ctx.body = yapi.commons.resReturn(null, 40022, "json 格式有误:" + e));
+    const resolved = await openService.resolveImportJson({
+      json: content,
+      url: ctx.params.url,
+    });
+    if (!resolved.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, resolved.code, resolved.message));
+    }
+    content = resolved.data.parsed;
+    if (resolved.data.warnMessage) {
+      warnMessage = resolved.data.warnMessage;
     }
 
-    let menuList = await this.interfaceCatModel.list(project_id);
-    /**
-     * 防止分类被都被删除时取不到 selectCatid
-     * 如果没有分类,增加一个默认分类
-     */
-    if (menuList.length === 0) {
-      const catInst = interfaceCatRepository;
-      const menu = await catInst.save({
-        name: "默认分类",
-        project_id: project_id,
-        desc: "默认分类",
-        uid: this.getUid(),
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time()
-      });
-      menuList.push(menu);
-    }
-    let selectCatid = menuList[0]._id;
+    const { menuList, selectCatid } = await openService.ensureDefaultCat(
+      project_id,
+      this.getUid()
+    );
     let projectData = await this.projectModel.get(project_id);
     let res = await importDataModule[type](content);
 
@@ -193,37 +169,12 @@ class openController extends baseController {
     }
 
     try {
-      const project = await this.projectModel.get(projectId);
-      if (!project) {
-        return (ctx.body = yapi.commons.resReturn(null, 404, "项目不存在"));
+      const result = await openService.exportProjectInterfaces(projectId);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
       }
-
-      const cats = await this.interfaceCatModel.list(projectId);
-      const exportList = [];
-
-      for (let i = 0; i < cats.length; i++) {
-        const cat = cats[i].toObject();
-        let list = await this.interfaceModel.listByCatid(cat._id);
-        list = list.sort((a, b) => (a.index || 0) - (b.index || 0));
-        cat.list = list.map((item) => {
-          const api = item.toObject();
-          delete api.__v;
-          return api;
-        });
-        if (cat.list.length > 0) {
-          exportList.push(cat);
-        }
-      }
-
-      const payload = {
-        project_id: project._id,
-        project_name: project.name,
-        basepath: project.basepath || "",
-        list: exportList
-      };
-
       ctx.set("Content-Type", "application/json; charset=utf-8");
-      ctx.body = JSON.stringify(payload, null, 2);
+      ctx.body = JSON.stringify(result.data, null, 2);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }

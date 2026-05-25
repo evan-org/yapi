@@ -29,7 +29,7 @@ import fs from 'fs-extra';
 
 import path from 'path';
 
-
+import { interfaceService } from '../services/index.js';
 
 function handleHeaders(values) {
   let isfile = false,
@@ -1103,49 +1103,14 @@ class interfaceController extends baseController {
    *
    */
   async getCustomField(ctx) {
-    let params = ctx.request.query;
-
-    if (Object.keys(params).length !== 1) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "参数数量错误"));
-    }
-    let customFieldName = Object.keys(params)[0];
-    let customFieldValue = params[customFieldName];
-
     try {
-      //  查找有customFieldName的分组（group）
-      let groups = await this.groupModel.getcustomFieldName(customFieldName);
-      if (groups.length === 0) {
-        return (ctx.body = yapi.commons.resReturn(null, 404, "没有找到对应自定义接口"));
+      const result = await interfaceService.queryByCustomField(ctx.request.query);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
       }
-
-      // 在每个分组（group）下查找对应project的id值
-      let interfaces = [];
-      for (let i = 0; i < groups.length; i++) {
-        let projects = await this.projectModel.list(groups[i]._id);
-
-        // 在每个项目（project）中查找interface下的custom_field_value
-        for (let j = 0; j < projects.length; j++) {
-          let data = {};
-          let inter = await this.Model.getcustomFieldValue(projects[j]._id, customFieldValue);
-          if (inter.length > 0) {
-            data.project_name = projects[j].name;
-            data.project_id = projects[j]._id;
-            inter = inter.map((item, i) => {
-              item = inter[i] = inter[i].toObject();
-              item.res_body = yapi.commons.json_parse(item.res_body);
-              item.req_body_other = yapi.commons.json_parse(item.req_body_other);
-
-              return item;
-            });
-
-            data.list = inter;
-            interfaces.push(data);
-          }
-        }
-      }
-      return (ctx.body = yapi.commons.resReturn(interfaces));
+      return (ctx.body = yapi.commons.resReturn(result.data));
     } catch (e) {
-      yapi.commons.resReturn(null, 400, e.message);
+      return (ctx.body = yapi.commons.resReturn(null, 400, e.message));
     }
   }
 
@@ -1220,14 +1185,9 @@ class interfaceController extends baseController {
   }
 
   async schema2json(ctx) {
-    let schema = ctx.request.body.schema;
-    let required = ctx.request.body.required;
-
-    let res = yapi.commons.schemaToJson(schema, {
-      alwaysFakeOptionals: _.isUndefined(required) ? true : required
-    });
-    // console.log('res',res)
-    return (ctx.body = res);
+    const schema = ctx.request.body.schema;
+    const required = ctx.request.body.required;
+    return (ctx.body = interfaceService.schemaToJson(schema, required));
   }
 
   /**
@@ -1321,33 +1281,18 @@ class interfaceController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
     }
 
-    let project = await this.projectModel.getBaseInfo(project_id);
-    if (!project) {
-      return (ctx.body = yapi.commons.resReturn(null, 406, "不存在的项目"));
-    }
-    if (project.project_type === "private") {
-      if ((await this.checkAuth(project._id, "project", "view")) !== true) {
-        return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
-      }
-    }
-
-    let basepath = project.basepath;
     try {
-      let result = await this.catModel.list(project_id),
-        newResult = [];
-
-      for (let i = 0, item, list; i < result.length; i++) {
-        item = result[i].toObject();
-        list = await this.Model.listByInterStatus(item._id, "open");
-        for (let j = 0; j < list.length; j++) {
-          list[j] = list[j].toObject();
-          list[j].basepath = basepath;
-        }
-
-        newResult = [].concat(newResult, list);
+      const loaded = await interfaceService.listOpenByProject(project_id);
+      if (!loaded.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, loaded.code, loaded.message));
       }
-
-      ctx.body = yapi.commons.resReturn(newResult);
+      const project = loaded.data.project;
+      if (project.project_type === "private") {
+        if ((await this.checkAuth(project._id, "project", "view")) !== true) {
+          return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
+        }
+      }
+      ctx.body = yapi.commons.resReturn(loaded.data.list);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }

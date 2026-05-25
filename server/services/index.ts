@@ -13,3 +13,6 @@ export { default as followService } from "./follow.service.js";
 export { default as logService } from "./log.service.js";
 export { default as userService } from "./user.service.js";
 export { default as groupService } from "./group.service.js";
+export { default as projectService } from "./project.service.js";
+export { default as openService } from "./open.service.js";
+export { default as interfaceService } from "./interface.service.js";

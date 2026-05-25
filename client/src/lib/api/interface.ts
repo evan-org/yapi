@@ -82,6 +82,25 @@ export const interfaceApi = {
     return apiRequest<PaginatedList<InterfaceListItem>>(`/interface/list_cat?${q.toString()}`);
   },
 
+  /** Chrome 插件保存接口 */
+  save: (payload: Record<string, unknown>) =>
+    apiRequest("/interface/save", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  /** 开放状态接口列表 */
+  listOpen: (project_id: number) =>
+    apiRequest<InterfaceListItem[]>(
+      `/interface/list_open?project_id=${project_id}`
+    ),
+
+  /** 按自定义字段查询接口 */
+  getCustomField: (fieldName: string, fieldValue: string) =>
+    apiRequest(
+      `/interface/get_custom_field?${encodeURIComponent(fieldName)}=${encodeURIComponent(fieldValue)}`
+    ),
+
   /** Chrome 插件 / 批量上传接口 JSON */
   interUpload: (payload: { project_id: number; catid?: number; data: unknown }) =>
     apiRequest("/interface/interUpload", {

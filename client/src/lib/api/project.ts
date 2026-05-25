@@ -109,4 +109,15 @@ export const projectApi = {
   /** 服务端拉取 Swagger JSON（代理，避免浏览器跨域） */
   swaggerUrl: (url: string) =>
     apiRequest<unknown>(`/project/swagger_url?url=${encodeURIComponent(url)}`),
+
+  /** 成员邮件通知开关 */
+  changeMemberEmailNotice: (
+    id: number,
+    member_uid: number,
+    email_notice: boolean
+  ) =>
+    apiRequest("/project/change_member_email_notice", {
+      method: "POST",
+      body: JSON.stringify({ id, member_uid, email_notice }),
+    }),
 };
