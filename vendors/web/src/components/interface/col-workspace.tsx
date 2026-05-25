@@ -5,9 +5,10 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import { colApi, interfaceApi } from "../../lib/api/client";
 import { InterfaceModuleTabs } from "./interface-module-tabs";
+import { ColBatchTestPanel } from "./col-batch-test-panel";
 import type { InterfaceCatItem, InterfaceColItem } from "../../lib/api/types";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -73,6 +74,38 @@ export function ColWorkspace({ projectId }: ColWorkspaceProps) {
       await load();
     } catch (err) {
       console.error("删除集合失败", err);
+      setError(err instanceof Error ? err.message : "删除失败");
+    }
+  }
+
+  async function handleMoveCase(caseId: number, direction: "up" | "down") {
+    if (!activeCol?.caseList) return;
+    const list = [...activeCol.caseList];
+    const idx = list.findIndex((c) => c._id === caseId);
+    if (idx < 0) return;
+    const swap = direction === "up" ? idx - 1 : idx + 1;
+    if (swap < 0 || swap >= list.length) return;
+    const items = list.map((c, i) => {
+      if (i === idx) return { id: c._id, index: swap };
+      if (i === swap) return { id: c._id, index: idx };
+      return { id: c._id, index: i };
+    });
+    try {
+      await colApi.upCaseIndex(items);
+      await load();
+    } catch (err) {
+      console.error("调整用例顺序失败", err);
+      setError(err instanceof Error ? err.message : "排序失败");
+    }
+  }
+
+  async function handleDelCase(caseId: number, name: string) {
+    if (!confirm(`确定删除用例「${name}」？`)) return;
+    try {
+      await colApi.delCase(caseId);
+      await load();
+    } catch (err) {
+      console.error("删除用例失败", err);
       setError(err instanceof Error ? err.message : "删除失败");
     }
   }
@@ -163,20 +196,60 @@ export function ColWorkspace({ projectId }: ColWorkspaceProps) {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <ColBatchTestPanel
+                projectId={projectId}
+                col={activeCol}
+                cases={activeCol.caseList || []}
+                onReload={load}
+              />
               <ul className="space-y-2">
-                {(activeCol.caseList || []).map((c) => (
-                  <li key={c._id}>
+                {(activeCol.caseList || []).map((c, idx) => (
+                  <li key={c._id} className="flex items-center gap-1 rounded border pr-1">
                     <Link
                       href={`/project/${projectId}/interface/case/${c._id}`}
-                      className="flex items-center gap-2 rounded border px-3 py-2 text-sm transition hover:border-[#2395f1]/50 hover:bg-accent/50"
+                      className="flex min-w-0 flex-1 items-center gap-2 px-3 py-2 text-sm transition hover:bg-accent/50"
                     >
                       {c.method ? <MethodBadge method={c.method} /> : null}
                       <span className="font-medium">{c.casename}</span>
                       {c.path ? (
-                        <span className="font-mono text-xs text-muted-foreground">{c.path}</span>
+                        <span className="truncate font-mono text-xs text-muted-foreground">
+                          {c.path}
+                        </span>
                       ) : null}
                     </Link>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0"
+                      disabled={idx === 0}
+                      title="上移"
+                      onClick={() => handleMoveCase(c._id, "up")}
+                    >
+                      <ArrowUp className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0"
+                      disabled={idx === (activeCol.caseList?.length || 0) - 1}
+                      title="下移"
+                      onClick={() => handleMoveCase(c._id, "down")}
+                    >
+                      <ArrowDown className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0"
+                      title="删除用例"
+                      onClick={() => handleDelCase(c._id, c.casename)}
+                    >
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
                   </li>
                 ))}
               </ul>

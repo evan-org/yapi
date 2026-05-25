@@ -72,6 +72,9 @@ export interface InterfaceListItem {
 export interface InterfaceDetail extends InterfaceListItem {
   desc?: string;
   markdown?: string;
+  api_opened?: boolean;
+  req_body_is_json_schema?: boolean;
+  res_body_is_json_schema?: boolean;
   req_params?: { name: string; example?: string; desc?: string }[];
   req_query?: { name: string; value?: string; example?: string; desc?: string; required?: string }[];
   req_headers?: { name: string; value?: string; example?: string; desc?: string; required?: string }[];
@@ -127,6 +130,16 @@ export interface InterfaceCaseItem {
   col_id: number;
   path?: string;
   method?: string;
+  test_script?: string;
+  test_status?: string;
+}
+
+/** 测试集合（含通用规则字段） */
+export interface InterfaceColDetail extends InterfaceColItem {
+  checkHttpCodeIs200?: boolean;
+  checkResponseSchema?: boolean;
+  checkResponseField?: unknown;
+  checkScriptIsOpen?: boolean;
 }
 
 /** 成员 */

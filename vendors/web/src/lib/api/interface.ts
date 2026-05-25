@@ -1,8 +1,8 @@
 /**
  * 接口管理相关 API
  */
-import { apiRequest } from "./client";
-import type { InterfaceCatItem, InterfaceDetail } from "./types";
+import { apiRequest, apiRequestRaw } from "./client";
+import type { InterfaceCatItem, InterfaceDetail, InterfaceListItem, PaginatedList } from "./types";
 
 export const interfaceApi = {
   /** 分类 + 接口树（侧栏菜单） */
@@ -50,5 +50,41 @@ export const interfaceApi = {
     apiRequest("/interface/up_cat", {
       method: "POST",
       body: JSON.stringify(payload),
+    }),
+
+  /** 分页接口列表（表格模式） */
+  list: (
+    project_id: number,
+    opts?: { page?: number; limit?: number; status?: string; tag?: string }
+  ) => {
+    const q = new URLSearchParams({
+      project_id: String(project_id),
+      page: String(opts?.page ?? 1),
+      limit: String(opts?.limit ?? 20),
+    });
+    if (opts?.status) q.set("status", opts.status);
+    if (opts?.tag) q.set("tag", opts.tag);
+    return apiRequest<PaginatedList<InterfaceListItem>>(`/interface/list?${q.toString()}`);
+  },
+
+  /** 按分类分页列表 */
+  listByCat: (
+    catid: number,
+    opts?: { page?: number; limit?: number; status?: string }
+  ) => {
+    const q = new URLSearchParams({
+      catid: String(catid),
+      page: String(opts?.page ?? 1),
+      limit: String(opts?.limit ?? 20),
+    });
+    if (opts?.status) q.set("status", opts.status);
+    return apiRequest<PaginatedList<InterfaceListItem>>(`/interface/list_cat?${q.toString()}`);
+  },
+
+  /** JSON Schema 转示例 JSON（原始响应，非信封） */
+  schema2json: (schema: unknown, required?: boolean) =>
+    apiRequestRaw<Record<string, unknown>>("/interface/schema2json", {
+      method: "POST",
+      body: JSON.stringify({ schema, required }),
     }),
 };

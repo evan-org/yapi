@@ -43,7 +43,13 @@ export function InterfaceSidebar({
             <div key={cat._id} className="mb-3">
               <div className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-muted-foreground">
                 <FolderOpen className="h-3.5 w-3.5 shrink-0" />
-                <span className="min-w-0 flex-1 truncate">{cat.name}</span>
+                <Link
+                  href={`/project/${projectId}/interface/api/cat/${cat._id}`}
+                  className="min-w-0 flex-1 truncate hover:text-[#2395f1]"
+                  title="表格查看此分类"
+                >
+                  {cat.name}
+                </Link>
                 <span className="text-[10px]">({cat.list?.length || 0})</span>
                 {onDelCat ? (
                   <Button

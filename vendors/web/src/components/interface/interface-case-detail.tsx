@@ -5,11 +5,12 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Loader2, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Loader2, Play, Save, Trash2 } from "lucide-react";
 import { colApi, projectApi } from "../../lib/api/client";
 import type { InterfaceDetail, ProjectEnvItem } from "../../lib/api/types";
 import { MethodBadge } from "./method-badge";
-import { InterfaceRunPanel } from "./interface-run-panel";
+import { InterfaceRunPanel, type RunResponsePayload } from "./interface-run-panel";
 import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -33,6 +34,7 @@ interface CaseDetail {
   req_query?: ParamRow[];
   req_headers?: ParamRow[];
   res_body?: string;
+  test_script?: string;
 }
 
 interface InterfaceCaseDetailProps {
@@ -41,7 +43,10 @@ interface InterfaceCaseDetailProps {
 }
 
 export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailProps) {
+  const router = useRouter();
   const [data, setData] = useState<CaseDetail | null>(null);
+  const [lastResponse, setLastResponse] = useState<RunResponsePayload | null>(null);
+  const [assertMsg, setAssertMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -51,6 +56,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
     req_body_other: "",
     req_query: [] as ParamRow[],
     req_headers: [] as ParamRow[],
+    test_script: "",
   });
 
   const load = useCallback(async () => {
@@ -65,6 +71,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
         req_body_other: d.req_body_other || "",
         req_query: (d.req_query as ParamRow[]) || [],
         req_headers: (d.req_headers as ParamRow[]) || [],
+        test_script: d.test_script || "",
       });
       if (d.project_id) {
         const envRes = await projectApi.getEnv(d.project_id);
@@ -94,6 +101,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
         req_body_other: form.req_body_other,
         req_query: form.req_query,
         req_headers: form.req_headers,
+        test_script: form.test_script,
       });
       await load();
       console.log("用例已保存", data._id);
@@ -112,6 +120,48 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
         加载用例…
       </div>
     );
+  }
+
+  async function handleDelete() {
+    if (!data || !confirm(`确定删除用例「${data.casename}」？`)) return;
+    try {
+      await colApi.delCase(data._id);
+      router.push(`/project/${projectId}/interface/col`);
+    } catch (err) {
+      console.error("删除用例失败", err);
+      setError(err instanceof Error ? err.message : "删除失败");
+    }
+  }
+
+  async function handleRunAssert() {
+    if (!data || !lastResponse) {
+      setAssertMsg("请先在「调试」Tab 发送请求");
+      return;
+    }
+    if (!form.test_script.trim()) {
+      setAssertMsg("请先编写断言脚本");
+      return;
+    }
+    setAssertMsg("");
+    try {
+      const res = await colApi.runScript({
+        col_id: data.col_id,
+        interface_id: data.interface_id,
+        script: form.test_script,
+        response: {
+          status: lastResponse.status,
+          body: lastResponse.body,
+          header: lastResponse.header,
+        },
+        records: {},
+        params: {},
+      });
+      setAssertMsg(res.errcode === 0 ? "断言通过" : res.errmsg || "断言失败");
+      console.log("断言执行完成", caseId, res.errcode);
+    } catch (err) {
+      console.error("断言执行失败", err);
+      setAssertMsg(err instanceof Error ? err.message : "断言失败");
+    }
   }
 
   if (!data) {
@@ -145,10 +195,16 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
           </div>
           <p className="font-mono text-sm text-muted-foreground">{data.path}</p>
         </div>
-        <Button size="sm" onClick={handleSave} disabled={saving}>
-          <Save className="mr-1 h-4 w-4" />
-          {saving ? "保存中…" : "保存"}
-        </Button>
+        <div className="flex gap-2">
+          <Button size="sm" onClick={handleSave} disabled={saving}>
+            <Save className="mr-1 h-4 w-4" />
+            {saving ? "保存中…" : "保存"}
+          </Button>
+          <Button size="sm" variant="destructive" onClick={handleDelete}>
+            <Trash2 className="mr-1 h-4 w-4" />
+            删除
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         {error ? (
@@ -161,6 +217,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
           <TabsList>
             <TabsTrigger value="edit">编辑</TabsTrigger>
             <TabsTrigger value="run">调试</TabsTrigger>
+            <TabsTrigger value="test">断言</TabsTrigger>
           </TabsList>
           <TabsContent value="edit" className="mt-4 space-y-4">
             <div className="space-y-2">
@@ -196,7 +253,30 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
             </div>
           </TabsContent>
           <TabsContent value="run" className="mt-4">
-            <InterfaceRunPanel data={runData} envs={envs} />
+            <InterfaceRunPanel
+              data={runData}
+              envs={envs}
+              onResult={(payload) => setLastResponse(payload)}
+            />
+          </TabsContent>
+          <TabsContent value="test" className="mt-4 space-y-4">
+            <div className="space-y-2">
+              <Label>断言脚本（JavaScript）</Label>
+              <Textarea
+                className="font-mono text-xs"
+                rows={10}
+                placeholder="assert.equal(status, 200)"
+                value={form.test_script}
+                onChange={(e) => setForm((f) => ({ ...f, test_script: e.target.value }))}
+              />
+            </div>
+            <Button size="sm" onClick={handleRunAssert}>
+              <Play className="mr-1 h-4 w-4" />
+              运行断言（需先调试请求）
+            </Button>
+            {assertMsg ? (
+              <p className="text-sm text-muted-foreground">{assertMsg}</p>
+            ) : null}
           </TabsContent>
         </Tabs>
       </CardContent>

@@ -11,12 +11,21 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Alert, AlertDescription } from "../ui/alert";
 
+export interface RunResponsePayload {
+  status: number;
+  body: unknown;
+  header: Record<string, string>;
+  text: string;
+}
+
 interface InterfaceRunPanelProps {
   data: InterfaceDetail;
   envs: ProjectEnvItem[];
+  /** 请求完成后回调（用于断言脚本） */
+  onResult?: (payload: RunResponsePayload) => void;
 }
 
-export function InterfaceRunPanel({ data, envs }: InterfaceRunPanelProps) {
+export function InterfaceRunPanel({ data, envs, onResult }: InterfaceRunPanelProps) {
   const [envIndex, setEnvIndex] = useState(0);
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,6 +63,18 @@ export function InterfaceRunPanel({ data, envs }: InterfaceRunPanelProps) {
 
       const text = await res.text();
       setResult(`HTTP ${res.status} ${res.statusText}\n\n${text}`);
+      let parsedBody: unknown = text;
+      try {
+        parsedBody = JSON.parse(text);
+      } catch {
+        /* 保持文本 */
+      }
+      onResult?.({
+        status: res.status,
+        body: parsedBody,
+        header: Object.fromEntries(res.headers.entries()),
+        text,
+      });
       console.log("接口调试完成", url, res.status);
     } catch (err) {
       console.error("接口调试失败", err);

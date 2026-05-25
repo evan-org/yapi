@@ -37,9 +37,27 @@ export const colApi = {
       body: JSON.stringify(payload),
     }),
 
-  upCol: (payload: { col_id: number; name?: string; desc?: string }) =>
+  upCol: (payload: Record<string, unknown>) =>
     apiRequest("/col/up_col", {
       method: "POST",
       body: JSON.stringify(payload),
     }),
+
+  delCase: (caseid: number) => apiRequest(`/col/del_case?caseid=${caseid}`),
+
+  upCaseIndex: (items: { id: number; index: number }[]) =>
+    apiRequest("/col/up_case_index", {
+      method: "POST",
+      body: JSON.stringify(items),
+    }),
+
+  /** 执行用例断言脚本 */
+  runScript: (payload: Record<string, unknown>) =>
+    apiRequest("/col/run_script", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getCaseEnvList: (col_id: number) =>
+    apiRequest(`/col/case_env_list?col_id=${col_id}`),
 };

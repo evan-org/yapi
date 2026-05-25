@@ -67,6 +67,34 @@ export async function apiRequest<T>(
   return body;
 }
 
+/**
+ * 原始 JSON 接口（如 schema2json，不经标准信封包装）
+ */
+export async function apiRequestRaw<T>(
+  path: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const url = path.startsWith("/api") ? path : `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
+  const headers: HeadersInit = {
+    Accept: "application/json",
+    ...(options.body ? { "Content-Type": "application/json" } : {}),
+    ...(options.headers || {}),
+  };
+
+  const res = await fetch(url, {
+    ...options,
+    headers,
+    credentials: "include",
+  });
+
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    throw new ApiError(`非 JSON 响应: ${url}`, -1);
+  }
+
+  return (await res.json()) as T;
+}
+
 export { interfaceApi } from "./interface";
 export { followApi } from "./follow";
 export { logApi } from "./log";

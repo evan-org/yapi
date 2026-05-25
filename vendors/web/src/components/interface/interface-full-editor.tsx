@@ -11,6 +11,7 @@ import { MethodBadge } from "./method-badge";
 import { InterfaceAdvMockPanel } from "./interface-adv-mock-panel";
 import { InterfaceRunPanel } from "./interface-run-panel";
 import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
+import { JsonSchemaField } from "../shared/json-schema-field";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
@@ -51,6 +52,10 @@ export function InterfaceFullEditor({
     res_body: "",
     req_query: [] as ParamRow[],
     req_headers: [] as ParamRow[],
+    req_params: [] as ParamRow[],
+    req_body_is_json_schema: false,
+    res_body_is_json_schema: false,
+    api_opened: false,
   });
 
   const load = useCallback(async () => {
@@ -73,6 +78,10 @@ export function InterfaceFullEditor({
         res_body: d.res_body || "",
         req_query: (d.req_query as ParamRow[]) || [],
         req_headers: (d.req_headers as ParamRow[]) || [],
+        req_params: (d.req_params as ParamRow[]) || [],
+        req_body_is_json_schema: !!d.req_body_is_json_schema,
+        res_body_is_json_schema: !!d.res_body_is_json_schema,
+        api_opened: !!d.api_opened,
       });
       if (d.project_id) {
         const envRes = await projectApi.getEnv(d.project_id);
@@ -111,6 +120,10 @@ export function InterfaceFullEditor({
         res_body: form.res_body,
         req_query: form.req_query,
         req_headers: form.req_headers,
+        req_params: form.req_params,
+        req_body_is_json_schema: form.req_body_is_json_schema,
+        res_body_is_json_schema: form.res_body_is_json_schema,
+        api_opened: form.api_opened,
       });
       setEditing(false);
       await load();
@@ -206,6 +219,27 @@ export function InterfaceFullEditor({
               <>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
+                    <Label>完成状态</Label>
+                    <select
+                      className="flex h-9 w-full rounded-md border px-3 text-sm"
+                      value={form.status}
+                      onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
+                    >
+                      <option value="done">已完成</option>
+                      <option value="undone">未完成</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2 flex items-end">
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={form.api_opened}
+                        onChange={(e) => setForm((f) => ({ ...f, api_opened: e.target.checked }))}
+                      />
+                      开放接口
+                    </label>
+                  </div>
+                  <div className="space-y-2">
                     <Label>名称</Label>
                     <Input
                       value={form.title}
@@ -267,6 +301,13 @@ export function InterfaceFullEditor({
 
           <TabsContent value="request" className="mt-4 space-y-4">
             <div>
+              <Label className="mb-2 block">Path 参数</Label>
+              <ParamTableEditor
+                rows={form.req_params}
+                onChange={(req_params) => setForm((f) => ({ ...f, req_params }))}
+              />
+            </div>
+            <div>
               <Label className="mb-2 block">Query</Label>
               <ParamTableEditor
                 rows={form.req_query}
@@ -281,26 +322,40 @@ export function InterfaceFullEditor({
                 onChange={(req_headers) => setForm((f) => ({ ...f, req_headers }))}
               />
             </div>
-            <div className="space-y-2">
-              <Label>Body 类型</Label>
-              <select
-                className="h-9 rounded-md border px-2 text-sm"
-                value={form.req_body_type}
-                disabled={!editing}
-                onChange={(e) => setForm((f) => ({ ...f, req_body_type: e.target.value }))}
-              >
-                <option value="json">json</option>
-                <option value="form">form</option>
-                <option value="raw">raw</option>
-              </select>
-              <Textarea
-                className="font-mono text-xs"
-                rows={8}
-                readOnly={!editing}
-                value={form.req_body_other}
-                onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
-              />
-            </div>
+            <JsonSchemaField
+              label="请求 Body（JSON Schema）"
+              enabled={form.req_body_is_json_schema}
+              onEnabledChange={(req_body_is_json_schema) =>
+                setForm((f) => ({ ...f, req_body_is_json_schema }))
+              }
+              schemaText={form.req_body_other}
+              onSchemaTextChange={(req_body_other) =>
+                setForm((f) => ({ ...f, req_body_other }))
+              }
+              disabled={!editing}
+            />
+            {!form.req_body_is_json_schema ? (
+              <div className="space-y-2">
+                <Label>Body 类型</Label>
+                <select
+                  className="h-9 rounded-md border px-2 text-sm"
+                  value={form.req_body_type}
+                  disabled={!editing}
+                  onChange={(e) => setForm((f) => ({ ...f, req_body_type: e.target.value }))}
+                >
+                  <option value="json">json</option>
+                  <option value="form">form</option>
+                  <option value="raw">raw</option>
+                </select>
+                <Textarea
+                  className="font-mono text-xs"
+                  rows={8}
+                  readOnly={!editing}
+                  value={form.req_body_other}
+                  onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
+                />
+              </div>
+            ) : null}
             {editing ? (
               <Button size="sm" onClick={handleSave} disabled={saving}>
                 保存请求配置
@@ -313,13 +368,25 @@ export function InterfaceFullEditor({
           </TabsContent>
 
           <TabsContent value="response" className="mt-4 space-y-4">
-            <Textarea
-              className="font-mono text-xs"
-              rows={12}
-              readOnly={!editing}
-              value={form.res_body}
-              onChange={(e) => setForm((f) => ({ ...f, res_body: e.target.value }))}
+            <JsonSchemaField
+              label="响应 Body（JSON Schema）"
+              enabled={form.res_body_is_json_schema}
+              onEnabledChange={(res_body_is_json_schema) =>
+                setForm((f) => ({ ...f, res_body_is_json_schema }))
+              }
+              schemaText={form.res_body}
+              onSchemaTextChange={(res_body) => setForm((f) => ({ ...f, res_body }))}
+              disabled={!editing}
             />
+            {!form.res_body_is_json_schema ? (
+              <Textarea
+                className="font-mono text-xs"
+                rows={12}
+                readOnly={!editing}
+                value={form.res_body}
+                onChange={(e) => setForm((f) => ({ ...f, res_body: e.target.value }))}
+              />
+            ) : null}
             {editing ? (
               <Button size="sm" onClick={handleSave} disabled={saving}>
                 保存响应

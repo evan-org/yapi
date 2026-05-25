@@ -10,6 +10,7 @@ import type { InterfaceCatItem } from "../../lib/api/types";
 import { InterfaceSidebar } from "./interface-sidebar";
 import { InterfaceFullEditor } from "./interface-full-editor";
 import { InterfaceModuleTabs } from "./interface-module-tabs";
+import { InterfaceListTable } from "./interface-list-table";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
@@ -28,6 +29,7 @@ export function InterfaceApiWorkspace({ projectId, interfaceId }: InterfaceApiWo
   const [showAddCat, setShowAddCat] = useState(false);
   const [newCatName, setNewCatName] = useState("");
   const [showAddApi, setShowAddApi] = useState(false);
+  const [viewMode, setViewMode] = useState<"tree" | "table">("tree");
   const [newApi, setNewApi] = useState({
     catid: "",
     title: "",
@@ -106,7 +108,28 @@ export function InterfaceApiWorkspace({ projectId, interfaceId }: InterfaceApiWo
   return (
     <div>
       <InterfaceModuleTabs />
-      <div className="flex flex-col gap-4 lg:flex-row">
+      <div className="mb-3 flex gap-2">
+        <Button
+          size="sm"
+          variant={viewMode === "tree" ? "default" : "outline"}
+          onClick={() => setViewMode("tree")}
+        >
+          树形
+        </Button>
+        <Button
+          size="sm"
+          variant={viewMode === "table" ? "default" : "outline"}
+          onClick={() => setViewMode("table")}
+        >
+          表格
+        </Button>
+      </div>
+
+      {viewMode === "table" && !interfaceId ? (
+        <InterfaceListTable projectId={projectId} />
+      ) : null}
+
+      <div className={`flex flex-col gap-4 lg:flex-row ${viewMode === "table" && !interfaceId ? "hidden" : ""}`}>
       <InterfaceSidebar
         projectId={projectId}
         menu={menu}
