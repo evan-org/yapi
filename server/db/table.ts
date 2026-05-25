@@ -7,11 +7,12 @@ export function tableName(collection: string): string {
   return `${TABLE_PREFIX}${collection}`;
 }
 
-/** 所有业务表（含插件 collection） */
-export const ALL_COLLECTIONS = [
-  "user",
+/** 关系型列存储（全新开发核心表） */
+export const RELATIONAL_COLLECTIONS = ["user", "group"] as const;
+
+/** JSONB 文档存储（结构复杂或插件表） */
+export const JSONB_COLLECTIONS = [
   "project",
-  "group",
   "interface",
   "interface_cat",
   "interface_case",
@@ -26,4 +27,10 @@ export const ALL_COLLECTIONS = [
   "adv_mock_case",
   "statis_mock",
   "interface_auto_sync",
+] as const;
+
+/** 全部逻辑集合名 */
+export const ALL_COLLECTIONS = [
+  ...RELATIONAL_COLLECTIONS,
+  ...JSONB_COLLECTIONS,
 ] as const;

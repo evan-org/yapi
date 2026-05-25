@@ -3,11 +3,15 @@
  * 数据模型基类：绑定 PostgreSQL JSONB 表 store
  */
 import { getTable, parseFieldList } from "../db/store.js";
+import { RELATIONAL_COLLECTIONS } from "../db/table.js";
 
 class baseModel {
   constructor() {
     this.table = this.getName();
-    this.store = getTable(this.table);
+    // 关系型核心表不走 JSONB store
+    if (!(RELATIONAL_COLLECTIONS as readonly string[]).includes(this.table)) {
+      this.store = getTable(this.table);
+    }
   }
 
   getName() {
