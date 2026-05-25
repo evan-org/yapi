@@ -1,5 +1,5 @@
 /**
- * 使用 Craco 构建前端并输出到 static/prd，供 Fastify 静态服务使用
+ * 使用 Vite 构建前端并输出到 static/prd，供 Hono 静态服务使用
  */
 const fs = require("fs-extra");
 const path = require("path");
@@ -11,25 +11,15 @@ const prdRoot = path.join(staticRoot, "prd");
 const publicRoot = path.join(vendorsRoot, "public");
 
 require("./ensure-config.js");
+require("./generate-plugin-module.js");
 
-const nodeOptions = [
-  process.env.NODE_OPTIONS,
-  "--openssl-legacy-provider",
-  "--max-old-space-size=4096"
-]
-  .filter(Boolean)
-  .join(" ");
-
-console.log("开始构建前端（craco build）...");
-execSync("npx craco build", {
+console.log("开始构建前端（vite build）...");
+execSync("npx vite build", {
   cwd: vendorsRoot,
   stdio: "inherit",
   env: Object.assign({}, process.env, {
     NODE_ENV: "production",
-    GENERATE_SOURCEMAP: "false",
-    DISABLE_ESLINT_PLUGIN: process.env.CI ? "true" : process.env.DISABLE_ESLINT_PLUGIN || "false",
-    NODE_OPTIONS: nodeOptions
-  })
+  }),
 });
 
 const prdIndex = path.join(prdRoot, "index.html");
@@ -42,7 +32,14 @@ fs.mkdirSync(staticRoot, { recursive: true });
 fs.copySync(prdIndex, path.join(staticRoot, "index.html"));
 fs.copySync(prdIndex, path.join(staticRoot, "dev.html"));
 if (fs.existsSync(publicRoot)) {
-  fs.copySync(publicRoot, staticRoot, { overwrite: true });
+  const copyOpts = {
+    overwrite: true,
+    filter(src) {
+      const base = path.basename(src);
+      return base !== "index.html";
+    },
+  };
+  fs.copySync(publicRoot, staticRoot, copyOpts);
 }
 
 console.log("前端构建完成，输出目录: vendors/static/prd");
