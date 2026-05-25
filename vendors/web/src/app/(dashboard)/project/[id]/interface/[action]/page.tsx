@@ -5,45 +5,39 @@
  */
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { ColWorkspace } from "@/components/interface/col-workspace";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default function ProjectInterfaceActionPage() {
   const params = useParams();
   const router = useRouter();
   const action = String(params.action || "");
-  const projectId = params.id;
+  const projectId = Number(params.id);
 
   useEffect(() => {
     if (action === "api") {
-      router.replace(`/project/${projectId}/interface/api`);
+      router.replace(`/project/${params.id}/interface/api`);
     }
-  }, [action, projectId, router]);
+    if (action === "case") {
+      router.replace(`/project/${params.id}/interface/col`);
+    }
+  }, [action, params.id, router]);
 
-  if (action === "api") {
+  if (action === "api" || action === "case") {
     return null;
   }
 
-  const titles: Record<string, string> = {
-    col: "测试集合",
-    case: "测试用例",
-  };
+  if (action === "col") {
+    return <ColWorkspace projectId={projectId} />;
+  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{titles[action] || action}</CardTitle>
-        <CardDescription>项目 {projectId} · 模块迁移中</CardDescription>
+        <CardTitle>{action}</CardTitle>
+        <CardDescription>项目 {projectId}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          测试集合与自动化用例将在后续迭代迁移；接口管理请使用「接口」页签。
-        </p>
-        <Button variant="outline" asChild>
-          <Link href={`/project/${projectId}/interface/api`}>前往接口管理</Link>
-        </Button>
-      </CardContent>
+      <CardContent className="text-sm text-muted-foreground">未知模块</CardContent>
     </Card>
   );
 }

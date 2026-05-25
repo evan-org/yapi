@@ -1,18 +1,20 @@
 "use client";
 
 /**
- * 项目基础设置
+ * 项目设置：基础信息、环境、Token、数据导入导出
  */
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { projectApi } from "@/lib/api/project";
 import type { ProjectItem } from "@/lib/api/types";
+import { ProjectDataPanel } from "@/components/project/project-data-panel";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProjectSettingPage() {
   const params = useParams();
@@ -66,46 +68,68 @@ export default function ProjectSettingPage() {
   }
 
   return (
-    <Card className="max-w-xl">
-      <CardHeader>
-        <CardTitle>项目设置</CardTitle>
-        <CardDescription>基础信息（环境、Token、Mock 等高级设置后续接入）</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSave} className="space-y-4">
-          {error ? (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          ) : null}
-          <div className="space-y-2">
-            <Label>项目名称</Label>
-            <Input
-              value={form.name}
-              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Base Path</Label>
-            <Input
-              value={form.basepath}
-              onChange={(e) => setForm((f) => ({ ...f, basepath: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>描述</Label>
-            <Textarea
-              value={form.desc}
-              onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))}
-              rows={4}
-            />
-          </div>
-          <Button type="submit" disabled={saving}>
-            {saving ? "保存中…" : "保存"}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <div className="max-w-3xl space-y-4">
+      <h1 className="text-xl font-semibold">项目设置</h1>
+      <Tabs defaultValue="basic">
+        <TabsList>
+          <TabsTrigger value="basic">基础信息</TabsTrigger>
+          <TabsTrigger value="data">环境与数据</TabsTrigger>
+        </TabsList>
+        <TabsContent value="basic" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>基础信息</CardTitle>
+              <CardDescription>名称、Base Path、描述</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSave} className="space-y-4">
+                {error ? (
+                  <Alert variant="destructive">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                ) : null}
+                <div className="space-y-2">
+                  <Label>项目名称</Label>
+                  <Input
+                    value={form.name}
+                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Base Path</Label>
+                  <Input
+                    value={form.basepath}
+                    onChange={(e) => setForm((f) => ({ ...f, basepath: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>描述</Label>
+                  <Textarea
+                    value={form.desc}
+                    onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))}
+                    rows={4}
+                  />
+                </div>
+                <Button type="submit" disabled={saving}>
+                  {saving ? "保存中…" : "保存"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="data" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>环境与数据</CardTitle>
+              <CardDescription>环境变量、Token、导入导出</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ProjectDataPanel projectId={projectId} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

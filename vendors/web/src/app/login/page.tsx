@@ -25,6 +25,10 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loginType, setLoginType] = useState<"ldap" | "normal">("ldap");
+  const [regUsername, setRegUsername] = useState("");
+  const [regEmail, setRegEmail] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regLoading, setRegLoading] = useState(false);
 
   const redirect = searchParams.get("redirect") || "/group";
 
@@ -124,13 +128,74 @@ export default function LoginPage() {
                 {loading ? "登录中…" : "登录"}
               </Button>
             </TabsContent>
-            <TabsContent value="register" className="mt-4">
-              <p className="text-sm text-muted-foreground">
-                {canRegister
-                  ? "注册功能将在后续迭代中接入；当前请使用旧版客户端或联系管理员开通账号。"
-                  : "管理员已禁止注册，请联系管理员。"}
-              </p>
-              <Button variant="link" className="mt-2 px-0" asChild>
+            <TabsContent value="register" className="mt-4 space-y-4">
+              {!canRegister ? (
+                <p className="text-sm text-muted-foreground">管理员已禁止注册，请联系管理员。</p>
+              ) : (
+                <>
+                  {error ? (
+                    <Alert variant="destructive">
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  ) : null}
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-username">用户名</Label>
+                    <Input
+                      id="reg-username"
+                      value={regUsername}
+                      onChange={(e) => setRegUsername(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-email">邮箱</Label>
+                    <Input
+                      id="reg-email"
+                      type="email"
+                      value={regEmail}
+                      onChange={(e) => setRegEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-password">密码</Label>
+                    <Input
+                      id="reg-password"
+                      type="password"
+                      value={regPassword}
+                      onChange={(e) => setRegPassword(e.target.value)}
+                    />
+                  </div>
+                  <Button
+                    className="w-full bg-[#2395f1] hover:bg-[#2395f1]/90"
+                    disabled={regLoading}
+                    onClick={async () => {
+                      setError("");
+                      setRegLoading(true);
+                      try {
+                        const res = await userApi.register({
+                          email: regEmail,
+                          password: regPassword,
+                          username: regUsername,
+                        });
+                        if (res.errcode === ApiCode.SUCCESS) {
+                          await refresh();
+                          router.replace(redirect);
+                          console.log("注册成功");
+                        } else {
+                          setError(res.errmsg || "注册失败");
+                        }
+                      } catch (err) {
+                        setError(err instanceof Error ? err.message : "注册失败");
+                        console.error("注册失败", err);
+                      } finally {
+                        setRegLoading(false);
+                      }
+                    }}
+                  >
+                    {regLoading ? "注册中…" : "注册"}
+                  </Button>
+                </>
+              )}
+              <Button variant="link" className="px-0" asChild>
                 <Link href="/">返回首页</Link>
               </Button>
             </TabsContent>

@@ -5,12 +5,13 @@
  */
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { Activity, Database, FileCode, Settings, Users } from "lucide-react";
+import { Activity, BookOpen, Database, FileCode, Settings, Users } from "lucide-react";
 import { cn } from "../../../../lib/utils";
 
 const nav = [
   { segment: "interface/api", label: "接口", icon: FileCode },
   { segment: "interface/col", label: "测试集合", icon: Database },
+  { segment: "wiki", label: "Wiki", icon: BookOpen },
   { segment: "activity", label: "动态", icon: Activity },
   { segment: "members", label: "成员", icon: Users },
   { segment: "setting", label: "设置", icon: Settings },

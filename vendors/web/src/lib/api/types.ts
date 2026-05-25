@@ -109,3 +109,38 @@ export interface PaginatedList<T> {
   total: number;
   list: T[];
 }
+
+/** 测试集合 */
+export interface InterfaceColItem {
+  _id: number;
+  name: string;
+  project_id: number;
+  desc?: string;
+  caseList?: InterfaceCaseItem[];
+}
+
+/** 测试用例 */
+export interface InterfaceCaseItem {
+  _id: number;
+  casename: string;
+  interface_id: number;
+  col_id: number;
+  path?: string;
+  method?: string;
+}
+
+/** 成员 */
+export interface MemberItem {
+  uid: number;
+  username: string;
+  email?: string;
+  role: string;
+}
+
+/** 项目环境 */
+export interface ProjectEnvItem {
+  name: string;
+  domain: string;
+  header?: unknown[];
+  global?: unknown[];
+}

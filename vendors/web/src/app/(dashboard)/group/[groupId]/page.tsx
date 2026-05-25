@@ -9,7 +9,8 @@ import Link from "next/link";
 import { FolderKanban, Settings, Star, Users } from "lucide-react";
 import { groupApi, projectApi } from "../../../../lib/api/client";
 import { followApi } from "../../../../lib/api/follow";
-import type { GroupItem, ProjectItem } from "../../../../lib/api/types";
+import type { GroupItem, MemberItem, ProjectItem } from "../../../../lib/api/types";
+import { MemberPanel } from "../../../../components/shared/member-panel";
 import { GroupSidebar } from "../../../../components/group/group-sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../components/ui/card";
@@ -24,6 +25,9 @@ export default function GroupDetailPage() {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [current, setCurrent] = useState<GroupItem | null>(null);
   const [error, setError] = useState("");
+  const [members, setMembers] = useState<MemberItem[]>([]);
+  const [settingsForm, setSettingsForm] = useState({ group_name: "", group_desc: "" });
+  const [savingSettings, setSavingSettings] = useState(false);
 
   const load = useCallback(async () => {
     setError("");
@@ -37,6 +41,17 @@ export default function GroupDetailPage() {
       setCurrent(list.find((g) => g._id === groupId) || null);
       const projData = projectRes.data;
       setProjects(Array.isArray(projData) ? (projData as ProjectItem[]) : []);
+      const g = list.find((item) => item._id === groupId);
+      if (g) {
+        setSettingsForm({
+          group_name: g.group_name || "",
+          group_desc: g.group_desc || "",
+        });
+      }
+      if (g?.type === "public") {
+        const memberRes = await groupApi.getMemberList(groupId);
+        setMembers((memberRes.data as MemberItem[]) || []);
+      }
     } catch (err) {
       console.error("分组页加载失败", err);
       setError(err instanceof Error ? err.message : "加载失败");
@@ -150,16 +165,78 @@ export default function GroupDetailPage() {
 
           <TabsContent value="members" className="mt-4">
             <Card>
-              <CardContent className="py-8 text-center text-sm text-muted-foreground">
-                成员管理将在后续迭代迁移；当前可使用旧版客户端完整功能。
+              <CardContent className="pt-6">
+                <MemberPanel
+                  title="分组成员"
+                  members={members}
+                  onReload={load}
+                  onAdd={async (uids, role) => {
+                    await groupApi.addMember(groupId, uids, role);
+                  }}
+                  onRemove={async (uid) => {
+                    await groupApi.delMember(groupId, uid);
+                  }}
+                  onChangeRole={async (uid, role) => {
+                    await groupApi.changeMemberRole(groupId, uid, role);
+                  }}
+                />
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="settings" className="mt-4">
             <Card>
-              <CardContent className="py-8 text-center text-sm text-muted-foreground">
-                分组设置迁移中。分组 ID：{groupId}
+              <CardHeader>
+                <CardTitle>分组设置</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form
+                  className="max-w-md space-y-4"
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setSavingSettings(true);
+                    try {
+                      await groupApi.update({
+                        id: groupId,
+                        group_name: settingsForm.group_name,
+                        group_desc: settingsForm.group_desc,
+                      });
+                      await load();
+                      console.log("分组设置已保存", groupId);
+                    } catch (err) {
+                      console.error("保存分组失败", err);
+                      setError(err instanceof Error ? err.message : "保存失败");
+                    } finally {
+                      setSavingSettings(false);
+                    }
+                  }}
+                >
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">分组名称</label>
+                    <input
+                      className="flex h-9 w-full rounded-md border px-3 text-sm"
+                      value={settingsForm.group_name}
+                      onChange={(e) =>
+                        setSettingsForm((f) => ({ ...f, group_name: e.target.value }))
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">分组描述</label>
+                    <textarea
+                      className="flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm"
+                      value={settingsForm.group_desc}
+                      onChange={(e) =>
+                        setSettingsForm((f) => ({ ...f, group_desc: e.target.value }))
+                      }
+                      rows={3}
+                    />
+                  </div>
+                  <Button type="submit" disabled={savingSettings}>
+                    {savingSettings ? "保存中…" : "保存"}
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           </TabsContent>

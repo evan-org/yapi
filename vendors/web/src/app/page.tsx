@@ -67,7 +67,7 @@ export default function HomePage() {
               <span className="text-[#2395f1]">API 管理平台</span>
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
-              为研发团队提供接口文档、Mock、测试与协作能力。前端已迁移至 Next.js + shadcn/ui。
+              为研发团队提供接口文档、Mock、测试与协作能力。
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" asChild>

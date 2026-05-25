@@ -1,11 +1,12 @@
 "use client";
 
 /**
- * 顶栏：导航、搜索占位、用户菜单（shadcn/ui）
+ * 顶栏：导航、全局搜索、用户菜单（shadcn/ui）
  */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, LogOut, PlusCircle, Star, User } from "lucide-react";
+import { BarChart3, BookOpen, LogOut, PlusCircle, Star, User } from "lucide-react";
+import { HeaderSearch } from "./header-search";
 import { useAuth } from "../../lib/auth/auth-context";
 import { Button } from "../ui/button";
 import {
@@ -54,7 +55,17 @@ export function SiteHeader() {
           ))}
         </nav>
 
+        <HeaderSearch />
+
         <div className="ml-auto flex items-center gap-2">
+          {user?.role === "admin" ? (
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10" asChild>
+              <Link href="/statistic">
+                <BarChart3 className="mr-1 h-4 w-4" />
+                系统信息
+              </Link>
+            </Button>
+          ) : null}
           <Button variant="ghost" size="sm" className="text-white hover:bg-white/10" asChild>
             <a
               href="https://hellosean1025.github.io/yapi/"

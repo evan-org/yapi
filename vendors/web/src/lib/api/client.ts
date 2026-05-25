@@ -72,24 +72,9 @@ export { followApi } from "./follow";
 export { logApi } from "./log";
 export { projectApi } from "./project";
 export { groupApi } from "./group";
+export { colApi } from "./col";
+export { userApi } from "./user";
+export { pluginApi } from "./plugin";
+export { openApi } from "./open";
 
-export const userApi = {
-  status: () => apiRequest("/user/status"),
-  login: (email: string, password: string) =>
-    apiRequest("/user/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    }),
-  loginLdap: (email: string, password: string) =>
-    apiRequest("/user/login_by_ldap", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    }),
-  logout: () => apiRequest("/user/logout"),
-  register: (payload: Record<string, string>) =>
-    apiRequest("/user/reg", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
-};
 

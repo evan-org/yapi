@@ -29,5 +29,42 @@ export const projectApi = {
     }),
 
   getEnv: (project_id: number) =>
-    apiRequest(`/project/get_env?project_id=${project_id}`),
+    apiRequest<{ env: { name: string; domain: string }[] }>(
+      `/project/get_env?project_id=${project_id}`
+    ),
+
+  upEnv: (id: number, env: { name: string; domain: string }[]) =>
+    apiRequest("/project/up_env", {
+      method: "POST",
+      body: JSON.stringify({ id, env }),
+    }),
+
+  getToken: (project_id: number) =>
+    apiRequest<string>(`/project/token?project_id=${project_id}`),
+
+  updateToken: (project_id: number) =>
+    apiRequest<string>(`/project/update_token?project_id=${project_id}`),
+
+  getMemberList: (id: number) =>
+    apiRequest<{ uid: number; username: string; email?: string; role: string }[]>(
+      `/project/get_member_list?id=${id}`
+    ),
+
+  addMember: (id: number, member_uids: number[], role = "dev") =>
+    apiRequest("/project/add_member", {
+      method: "POST",
+      body: JSON.stringify({ id, member_uids, role }),
+    }),
+
+  delMember: (id: number, member_uid: number) =>
+    apiRequest("/project/del_member", {
+      method: "POST",
+      body: JSON.stringify({ id, member_uid }),
+    }),
+
+  changeMemberRole: (id: number, member_uid: number, role: string) =>
+    apiRequest("/project/change_member_role", {
+      method: "POST",
+      body: JSON.stringify({ id, member_uid, role }),
+    }),
 };
