@@ -9,6 +9,7 @@ import {
   interfaceRepository,
   interfaceCatRepository,
   interfaceColRepository,
+  interfaceCaseRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -279,6 +280,103 @@ test("interfaceColRepository 可写入、查询并删除", async (t) => {
   } finally {
     if (colId) {
       await interfaceColRepository.del(colId);
+    }
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("interfaceCaseRepository 可写入、查询并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  const path = `/ci-case-api-${Date.now()}`;
+  let caseId;
+  let colId;
+  let interfaceId;
+  let projectId;
+  let groupId;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-case-${Date.now()}`,
+      group_desc: "ci",
+      uid: 999994,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const project = await projectRepository.save({
+      name: `ci-proj-case-${Date.now()}`,
+      group_id: groupId,
+      uid: 999994,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = project._id;
+
+    const iface = await interfaceRepository.save({
+      title: "ci iface for case",
+      path,
+      method: "GET",
+      project_id: projectId,
+      catid: 1,
+      uid: 999994,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      query_path: { path, params: [] },
+    });
+    interfaceId = iface._id;
+
+    const col = await interfaceColRepository.save({
+      name: `ci-col-case-${Date.now()}`,
+      project_id: projectId,
+      uid: 999994,
+      desc: "",
+      add_time: commons.time(),
+      up_time: commons.time(),
+    });
+    colId = col._id;
+
+    const saved = await interfaceCaseRepository.save({
+      casename: "ci case",
+      col_id: colId,
+      interface_id: interfaceId,
+      project_id: projectId,
+      uid: 999994,
+      add_time: commons.time(),
+      up_time: commons.time(),
+    });
+    caseId = saved._id;
+    t.truthy(caseId);
+
+    const found = await interfaceCaseRepository.get(caseId);
+    t.truthy(found);
+    t.is(found.casename, "ci case");
+
+    const list = await interfaceCaseRepository.list(colId);
+    t.true(list.some((c) => c._id === caseId));
+  } finally {
+    if (caseId) {
+      await interfaceCaseRepository.del(caseId);
+    }
+    if (colId) {
+      await interfaceColRepository.del(colId);
+    }
+    if (interfaceId) {
+      await interfaceRepository.del(interfaceId);
     }
     if (projectId) {
       await projectRepository.del(projectId);
