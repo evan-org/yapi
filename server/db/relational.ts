@@ -276,3 +276,42 @@ export function wikiFromRow(row: DocRecord): DocRecord {
 
 export const WIKI_SELECT =
   "_id, project_id, desc, markdown, username, uid, add_time, up_time, edit_uid";
+
+/** adv_mock 表行 → 业务对象 */
+export function advMockFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    interface_id: row.interface_id,
+    project_id: row.project_id,
+    uid: row.uid,
+    up_time: row.up_time,
+    mock_script: row.mock_script,
+    enable: row.enable,
+  };
+}
+
+export const ADV_MOCK_SELECT =
+  "_id, interface_id, project_id, uid, up_time, mock_script, enable";
+
+/** adv_mock_case 表行 → 业务对象 */
+export function advMockCaseFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    interface_id: row.interface_id,
+    project_id: row.project_id,
+    ip_enable: row.ip_enable,
+    name: row.name,
+    params: readJsonCol(row.params, {}),
+    uid: row.uid,
+    code: row.code,
+    delay: row.delay,
+    headers: readJsonCol(row.headers, []),
+    up_time: row.up_time,
+    res_body: row.res_body,
+    ip: row.ip,
+    case_enable: row.case_enable,
+  };
+}
+
+export const ADV_MOCK_CASE_SELECT =
+  "_id, interface_id, project_id, ip_enable, name, params, uid, code, delay, headers, up_time, res_body, ip, case_enable";

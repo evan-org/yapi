@@ -1,6 +1,9 @@
 // @ts-nocheck
-import yapi from "runtime.js";
+/**
+ * 高级 Mock 期望模型：委托关系型 advMockCaseRepository
+ */
 import baseModel from "models/base";
+import { advMockCaseRepository } from "../../repositories/advMockCase.repo.js";
 
 class caseModel extends baseModel {
   getName() {
@@ -8,35 +11,35 @@ class caseModel extends baseModel {
   }
 
   get(data) {
-    return this.store.findOne(data);
+    return advMockCaseRepository.get(data);
   }
 
   list(id) {
-    return this.store.findMany({ interface_id: id });
+    return advMockCaseRepository.list(id);
+  }
+
+  listForMock(interface_id, filter) {
+    return advMockCaseRepository.listForMock(interface_id, filter);
   }
 
   delByInterfaceId(interface_id) {
-    return this.store.delete({ interface_id });
+    return advMockCaseRepository.delByInterfaceId(interface_id);
   }
 
   delByProjectId(project_id) {
-    return this.store.delete({ project_id });
+    return advMockCaseRepository.delByProjectId(project_id);
   }
 
   save(data) {
-    data.up_time = yapi.commons.time();
-    return this.store.insert(data);
+    return advMockCaseRepository.save(data);
   }
 
   up(data) {
-    const id = data.id;
-    delete data.id;
-    data.up_time = yapi.commons.time();
-    return this.store.updateById(id, data);
+    return advMockCaseRepository.up(data);
   }
 
   del(id) {
-    return this.store.delete({ _id: id });
+    return advMockCaseRepository.del(id);
   }
 }
 

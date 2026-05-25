@@ -32,13 +32,10 @@ export default function() {
     let ip = yapi.commons.getIp(ctx);
     //   数据库信息查询
     // 过滤 开启IP
-    let listWithIp = await caseInst.model
-      .find({
-        interface_id: interfaceId,
-        ip_enable: true,
-        ip: ip
-      })
-      .select("_id params case_enable");
+    let listWithIp = await caseInst.listForMock(interfaceId, {
+      ip_enable: true,
+      ip,
+    });
     let matchList = [];
     listWithIp.forEach((item) => {
       let params = item.params;
@@ -48,12 +45,7 @@ export default function() {
     });
     // 其他数据
     if (matchList.length === 0) {
-      let list = await caseInst.model
-        .find({
-          interface_id: interfaceId,
-          ip_enable: false
-        })
-        .select("_id params case_enable");
+      let list = await caseInst.listForMock(interfaceId, { ip_enable: false });
       list.forEach((item) => {
         let params = item.params;
         if (item.case_enable && lib.isDeepMatch(reqParams, params)) {

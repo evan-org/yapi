@@ -22,12 +22,12 @@ export const RELATIONAL_COLLECTIONS = [
   "avatar",
   "storage",
   "wiki",
+  "adv_mock",
+  "adv_mock_case",
 ] as const;
 
 /** JSONB 文档存储（结构复杂或插件表） */
 export const JSONB_COLLECTIONS = [
-  "adv_mock",
-  "adv_mock_case",
   "statis_mock",
   "interface_auto_sync",
 ] as const;

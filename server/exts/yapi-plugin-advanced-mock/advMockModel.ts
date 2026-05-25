@@ -1,6 +1,9 @@
 // @ts-nocheck
-import yapi from "runtime.js";
+/**
+ * 高级 Mock 脚本模型：委托关系型 advMockRepository
+ */
 import baseModel from "models/base";
+import { advMockRepository } from "../../repositories/advMock.repo.js";
 
 class advMockModel extends baseModel {
   getName() {
@@ -8,40 +11,23 @@ class advMockModel extends baseModel {
   }
 
   get(interface_id) {
-    return this.store.findOne({ interface_id });
+    return advMockRepository.get(interface_id);
   }
 
   delByInterfaceId(interface_id) {
-    return this.store.delete({ interface_id });
+    return advMockRepository.delByInterfaceId(interface_id);
   }
 
   delByProjectId(project_id) {
-    return this.store.delete({ project_id });
+    return advMockRepository.delByProjectId(project_id);
   }
 
   save(data) {
-    data.up_time = yapi.commons.time();
-    return this.store.insert(data);
+    return advMockRepository.save(data);
   }
 
-  async up(data) {
-    data.up_time = yapi.commons.time();
-    const existing = await this.store.findOne({ interface_id: data.interface_id });
-    const patch = {
-      uid: data.uid,
-      up_time: data.up_time,
-      mock_script: data.mock_script,
-      enable: data.enable,
-    };
-    if (existing) {
-      await this.store.updateById(existing._id, patch);
-      return existing;
-    }
-    return this.store.insert({
-      interface_id: data.interface_id,
-      project_id: data.project_id,
-      ...patch,
-    });
+  up(data) {
+    return advMockRepository.up(data);
   }
 }
 
