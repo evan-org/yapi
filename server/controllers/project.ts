@@ -1,42 +1,59 @@
-// @ts-nocheck
-import yapi from '../runtime.js';
-
-import _ from 'underscore';
-
-import baseController from './base.js';
-
-import commons from '../utils/commons.js';
-
+/**
+ * 项目 HTTP 控制器（薄层：权限校验 → projectService）
+ */
+import yapi from "../runtime.js";
+import type { YapiRuntime } from "../types/global.js";
+import type { AppContext } from "../types/app-context.js";
+import baseController from "./base.js";
+import commons from "../utils/commons.js";
 import {
   projectRepository,
-  userRepository,
-  interfaceRepository,
-  interfaceColRepository,
-  interfaceCaseRepository,
-  interfaceCatRepository,
   groupRepository,
   logRepository,
   followRepository,
-} from '../repositories/index.js';
-
+  interfaceRepository,
+} from "../repositories/index.js";
 import { projectService } from "../services/index.js";
 import { normalizeBasepath } from "../services/project.service.js";
+import type { ServiceResult } from "../services/service-result.js";
+import { replyServiceResult, replyException } from "./controller.util.js";
+
+/** action-runner 合并 query/body 后的参数 */
+type RouteParams = Record<string, unknown>;
+
+function queryScalar(value: string | string[] | undefined): string {
+  if (Array.isArray(value)) {
+    return value[0] ?? "";
+  }
+  return value ?? "";
+}
+
+function routeId(value: unknown): number | string {
+  return value as number | string;
+}
 
 class projectController extends baseController {
   /** Service 结果 → HTTP 响应 */
-  _reply(ctx, result, successMsg) {
-    if (!result.ok) {
-      ctx.body = yapi.commons.resReturn(null, result.code, result.message);
-      return;
-    }
-    ctx.body = yapi.commons.resReturn(
-      result.data,
-      0,
-      successMsg !== undefined ? successMsg : undefined
-    );
+  declare schemaMap: Record<string, unknown>;
+  Model: typeof projectRepository;
+  groupModel: typeof groupRepository;
+  logModel: typeof logRepository;
+  followModel: typeof followRepository;
+  interfaceModel: typeof interfaceRepository;
+
+  _reply(ctx: AppContext, result: ServiceResult<unknown>, successMsg?: string) {
+    replyServiceResult(ctx, result, successMsg);
   }
 
-  constructor(ctx) {
+  _operator() {
+    return {
+      uid: this.getUid(),
+      username: this.getUsername(),
+      role: this.getRole() || "",
+    };
+  }
+
+  constructor(ctx: AppContext) {
     super(ctx);
     this.Model = projectRepository;
     this.groupModel = groupRepository;
@@ -134,11 +151,11 @@ class projectController extends baseController {
     };
   }
 
-  handleBasepath(basepath) {
+  handleBasepath(basepath: string) {
     return normalizeBasepath(basepath);
   }
 
-  verifyDomain(domain) {
+  verifyDomain(domain: string) {
     if (!domain) {
       return false;
     }
@@ -154,14 +171,14 @@ class projectController extends baseController {
    * @method get
    */
 
-  async checkProjectName(ctx) {
+  async checkProjectName(ctx: AppContext) {
     try {
-      let name = ctx.request.query.name;
-      let group_id = ctx.request.query.group_id;
+      const name = queryScalar(ctx.request.query.name);
+      const group_id = queryScalar(ctx.request.query.group_id);
       const result = await projectService.checkNameAvailable(name, group_id);
       this._reply(ctx, result);
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 402, err.message);
+      replyException(ctx, err);
     }
   }
 
@@ -180,11 +197,11 @@ class projectController extends baseController {
    * @returns {Object}
    * @example ./api/project/add.json
    */
-  async add(ctx) {
-    let params = ctx.params;
+  async add(ctx: AppContext) {
+    const params = ctx.params as unknown as RouteParams;
 
-    if ((await this.checkAuth(params.group_id, "group", "edit")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+    if ((await this.checkAuth(routeId(params.group_id), "group", "edit")) !== true) {
+      return (ctx.body = commons.resReturn(null, 405, "没有权限"));
     }
 
     const result = await projectService.createProject(params, {
@@ -210,10 +227,10 @@ class projectController extends baseController {
    * @returns {Object}
    * @example ./api/project/add.json
    */
-  async copy(ctx) {
-    let params = ctx.params;
-    if ((await this.checkAuth(params.group_id, "group", "edit")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+  async copy(ctx: AppContext) {
+    const params = ctx.params as unknown as RouteParams;
+    if ((await this.checkAuth(routeId(params.group_id), "group", "edit")) !== true) {
+      return (ctx.body = commons.resReturn(null, 405, "没有权限"));
     }
     const result = await projectService.copyProject(params, {
       uid: this.getUid(),
@@ -234,22 +251,19 @@ class projectController extends baseController {
    * @returns {Object}
    * @example ./api/project/add_member.json
    */
-  async addMember(ctx) {
-    let params = ctx.params;
-    if ((await this.checkAuth(params.id, "project", "edit")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+  async addMember(ctx: AppContext) {
+    const params = ctx.params as unknown as RouteParams;
+    if ((await this.checkAuth(routeId(params.id), "project", "edit")) !== true) {
+      return (ctx.body = commons.resReturn(null, 405, "没有权限"));
     }
 
     const result = await projectService.addMembers({
-      id: params.id,
-      member_uids: params.member_uids,
-      role: params.role,
+      id: routeId(params.id),
+      member_uids: params.member_uids as Array<number | string>,
+      role: params.role as string | undefined,
       operator: { uid: this.getUid(), username: this.getUsername() },
     });
-    if (!result.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
-    }
-    ctx.body = yapi.commons.resReturn(result.data);
+    this._reply(ctx, result as ServiceResult<unknown>);
   }
   /**
    * 删除项目成员
@@ -263,25 +277,22 @@ class projectController extends baseController {
    * @example ./api/project/del_member.json
    */
 
-  async delMember(ctx) {
+  async delMember(ctx: AppContext) {
     try {
-      let params = ctx.params;
+      const params = ctx.params as unknown as RouteParams;
 
-      if ((await this.checkAuth(params.id, "project", "danger")) !== true) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+      if ((await this.checkAuth(routeId(params.id), "project", "danger")) !== true) {
+        return (ctx.body = commons.resReturn(null, 405, "没有权限"));
       }
 
       const result = await projectService.delMember({
-        id: params.id,
-        member_uid: params.member_uid,
+        id: routeId(params.id),
+        member_uid: routeId(params.member_uid),
         operator: { uid: this.getUid(), username: this.getUsername() },
       });
-      if (!result.ok) {
-        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
-      }
-      ctx.body = yapi.commons.resReturn(result.data);
+      this._reply(ctx, result as ServiceResult<unknown>);
     } catch (e) {
-      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+      replyException(ctx, e);
     }
   }
 
@@ -296,17 +307,14 @@ class projectController extends baseController {
    * @example ./api/project/get_member_list.json
    */
 
-  async getMemberList(ctx) {
-    let params = ctx.params;
+  async getMemberList(ctx: AppContext) {
+    const params = ctx.params as unknown as RouteParams;
     if (!params.id) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
+      return (ctx.body = commons.resReturn(null, 400, "项目id不能为空"));
     }
 
-    const result = await projectService.getMemberList(params.id);
-    if (!result.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
-    }
-    ctx.body = yapi.commons.resReturn(result.data);
+    const result = await projectService.getMemberList(routeId(params.id));
+    this._reply(ctx, result as ServiceResult<unknown>);
   }
 
   /**
@@ -320,22 +328,22 @@ class projectController extends baseController {
    * @example ./api/project/get.json
    */
 
-  async get(ctx) {
-    let params = ctx.params;
-    let projectId = params.id || params.project_id;
+  async get(ctx: AppContext) {
+    const params = ctx.params as unknown as RouteParams;
+    const projectId = routeId(params.id || params.project_id);
     const loaded = await projectService.getDetail(projectId);
-    if (!loaded.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, loaded.code, loaded.message));
+    if (loaded.ok === false) {
+      return (ctx.body = commons.resReturn(null, loaded.code, loaded.message));
     }
     const result = loaded.data;
     if (result.project_type === "private") {
       if ((await this.checkAuth(result._id, "project", "view")) !== true) {
-        return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
+        return (ctx.body = commons.resReturn(null, 406, "没有权限"));
       }
     }
     result.role = await this.getProjectRole(projectId, "project");
-    yapi.emitHook("project_get", result).then();
-    ctx.body = yapi.commons.resReturn(result);
+    (yapi as YapiRuntime).emitHook("project_get", result).then();
+    ctx.body = commons.resReturn(result, 0, undefined);
   }
 
   /**
@@ -349,19 +357,16 @@ class projectController extends baseController {
    * @example ./api/project/list.json
    */
 
-  async list(ctx) {
-    let group_id = ctx.params.group_id;
+  async list(ctx: AppContext) {
+    const group_id = (ctx.params as unknown as RouteParams).group_id as number | string;
     let groupData = await this.groupModel.get(group_id);
-    let auth = await this.checkAuth(group_id, "group", "view");
-    const result = await projectService.listByGroup(group_id, {
+    const auth = await this.checkAuth(routeId(group_id), "group", "view");
+    const result = await projectService.listByGroup(routeId(group_id), {
       uid: this.getUid(),
       groupData,
       auth,
     });
-    if (!result.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
-    }
-    ctx.body = yapi.commons.resReturn(result.data);
+    this._reply(ctx, result as ServiceResult<unknown>);
   }
 
   /**
@@ -375,11 +380,11 @@ class projectController extends baseController {
    * @example ./api/project/del.json
    */
 
-  async del(ctx) {
-    let id = ctx.params.id;
+  async del(ctx: AppContext) {
+    const id = (ctx.params as unknown as RouteParams).id as number | string;
 
     if ((await this.checkAuth(id, "project", "danger")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+      return (ctx.body = commons.resReturn(null, 405, "没有权限"));
     }
 
     this._reply(ctx, await projectService.deleteById(id));
@@ -397,15 +402,15 @@ class projectController extends baseController {
    * @returns {Object}
    * @example
    */
-  async changeMemberRole(ctx) {
-    let params = ctx.request.body;
-    if ((await this.checkAuth(params.id, "project", "danger")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+  async changeMemberRole(ctx: AppContext) {
+    const params = ctx.request.body as RouteParams;
+    if ((await this.checkAuth(routeId(params.id), "project", "danger")) !== true) {
+      return (ctx.body = commons.resReturn(null, 405, "没有权限"));
     }
     const result = await projectService.changeMemberRole({
-      id: params.id,
-      member_uid: params.member_uid,
-      role: params.role,
+      id: routeId(params.id),
+      member_uid: routeId(params.member_uid),
+      role: params.role as string,
       operator: { uid: this.getUid(), username: this.getUsername() },
     });
     this._reply(ctx, result);
@@ -423,23 +428,20 @@ class projectController extends baseController {
    * @returns {Object}
    * @example
    */
-  async changeMemberEmailNotice(ctx) {
+  async changeMemberEmailNotice(ctx: AppContext) {
     try {
-      let params = ctx.request.body;
-      if ((await this.checkAuth(params.id, "project", "edit")) !== true) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+      const params = ctx.request.body as RouteParams;
+      if ((await this.checkAuth(routeId(params.id), "project", "edit")) !== true) {
+        return (ctx.body = commons.resReturn(null, 405, "没有权限"));
       }
       const result = await projectService.changeMemberEmailNotice({
-        id: params.id,
-        member_uid: params.member_uid,
+        id: routeId(params.id),
+        member_uid: routeId(params.member_uid),
         notice: params.notice,
       });
-      if (!result.ok) {
-        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
-      }
-      ctx.body = yapi.commons.resReturn(result.data);
+      this._reply(ctx, result as ServiceResult<unknown>);
     } catch (e) {
-      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+      replyException(ctx, e);
     }
   }
 
@@ -455,13 +457,13 @@ class projectController extends baseController {
    * @returns {Object}
    * @example ./api/project/upset
    */
-  async upSet(ctx) {
-    let id = ctx.request.body.id;
+  async upSet(ctx: AppContext) {
+    const id = routeId(ctx.request.body.id);
     if (!id) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "项目id不能为空"));
+      return (ctx.body = commons.resReturn(null, 405, "项目id不能为空"));
     }
     if ((await this.checkAuth(id, "project", "danger")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+      return (ctx.body = commons.resReturn(null, 405, "没有权限"));
     }
     try {
       const result = await projectService.updateAppearance(
@@ -471,7 +473,7 @@ class projectController extends baseController {
       );
       this._reply(ctx, result);
     } catch (e) {
-      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+      replyException(ctx, e);
     }
   }
 
@@ -488,27 +490,25 @@ class projectController extends baseController {
    * @returns {Object}
    * @example ./api/project/up.json
    */
-  async up(ctx) {
+  async up(ctx: AppContext) {
     try {
-      let id = ctx.request.body.id;
-      let params = ctx.request.body;
-
-      params = yapi.commons.handleParams(params, {
+      const id = routeId(ctx.request.body.id);
+      const params = commons.handleParams(ctx.request.body as RouteParams, {
         name: "string",
         basepath: "string",
         group_id: "number",
         desc: "string",
         pre_script: "string",
         after_script: "string",
-        project_mock_script: "string"
-      });
+        project_mock_script: "string",
+      }) as RouteParams;
 
       if (!id) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "项目id不能为空"));
+        return (ctx.body = commons.resReturn(null, 405, "项目id不能为空"));
       }
 
       if ((await this.checkAuth(id, "project", "danger")) !== true) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+        return (ctx.body = commons.resReturn(null, 405, "没有权限"));
       }
 
       const result = await projectService.updateProject(id, params, {
@@ -517,7 +517,7 @@ class projectController extends baseController {
       });
       this._reply(ctx, result);
     } catch (e) {
-      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+      replyException(ctx, e);
     }
   }
 
@@ -535,16 +535,16 @@ class projectController extends baseController {
    * @returns {Object}
    * @example
    */
-  async upEnv(ctx) {
+  async upEnv(ctx: AppContext) {
     try {
-      let id = ctx.request.body.id;
-      let params = ctx.request.body;
+      const id = routeId(ctx.request.body.id);
+      const params = ctx.request.body as RouteParams;
       if (!id) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "项目id不能为空"));
+        return (ctx.body = commons.resReturn(null, 405, "项目id不能为空"));
       }
 
       if ((await this.checkAuth(id, "project", "edit")) !== true) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+        return (ctx.body = commons.resReturn(null, 405, "没有权限"));
       }
 
       const result = await projectService.updateEnv(id, params.env, {
@@ -553,7 +553,7 @@ class projectController extends baseController {
       });
       this._reply(ctx, result);
     } catch (e) {
-      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+      replyException(ctx, e);
     }
   }
 
@@ -570,16 +570,16 @@ class projectController extends baseController {
    * @returns {Object}
    * @example
    */
-  async upTag(ctx) {
+  async upTag(ctx: AppContext) {
     try {
-      let id = ctx.request.body.id;
-      let params = ctx.request.body;
+      const id = routeId(ctx.request.body.id);
+      const params = ctx.request.body as RouteParams;
       if (!id) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "项目id不能为空"));
+        return (ctx.body = commons.resReturn(null, 405, "项目id不能为空"));
       }
 
       if ((await this.checkAuth(id, "project", "edit")) !== true) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+        return (ctx.body = commons.resReturn(null, 405, "没有权限"));
       }
 
       const result = await projectService.updateTag(id, params.tag, {
@@ -588,7 +588,7 @@ class projectController extends baseController {
       });
       this._reply(ctx, result);
     } catch (e) {
-      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+      replyException(ctx, e);
     }
   }
 
@@ -603,17 +603,17 @@ class projectController extends baseController {
    * @returns {Object}
    * @example
    */
-  async getEnv(ctx) {
+  async getEnv(ctx: AppContext) {
     try {
-      let project_id = ctx.request.query.project_id;
+      const project_id = queryScalar(ctx.request.query.project_id);
       const result = await projectService.getProjectEnv(project_id);
       this._reply(ctx, result);
     } catch (e) {
-      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+      replyException(ctx, e);
     }
   }
 
-  arrRepeat(arr, key) {
+  arrRepeat(arr: Array<Record<string, unknown>>, key: string) {
     const s = new Set();
     arr.forEach((item) => s.add(item[key]));
     return s.size !== arr.length;
@@ -629,16 +629,16 @@ class projectController extends baseController {
    * @param {String} q
    * @return {Object}
    */
-  async token(ctx) {
+  async token(ctx: AppContext) {
     try {
-      let project_id = ctx.params.project_id;
+      const project_id = (ctx.params as unknown as RouteParams).project_id as number | string;
       const result = await projectService.getOrCreateProjectToken(
         project_id,
         this.getUid()
       );
       this._reply(ctx, result);
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 402, err.message);
+      replyException(ctx, err);
     }
   }
 
@@ -652,16 +652,16 @@ class projectController extends baseController {
    * @param {String} q
    * @return {Object}
    */
-  async updateToken(ctx) {
+  async updateToken(ctx: AppContext) {
     try {
-      let project_id = ctx.params.project_id;
+      const project_id = (ctx.params as unknown as RouteParams).project_id as number | string;
       const result = await projectService.refreshProjectToken(
         project_id,
         this.getUid()
       );
       this._reply(ctx, result);
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 402, err.message);
+      replyException(ctx, err);
     }
   }
 
@@ -675,23 +675,23 @@ class projectController extends baseController {
    * @return {Object}
    * @example ./api/project/search.json
    */
-  async search(ctx) {
-    const { q } = ctx.request.query;
+  async search(ctx: AppContext) {
+    const q = queryScalar(ctx.request.query.q);
     const result = await projectService.search(q);
-    if (!result.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+    if (result.ok === false) {
+      return (ctx.body = commons.resReturn(null, result.code, result.message));
     }
-    return (ctx.body = yapi.commons.resReturn(result.data, 0, "ok"));
+    return (ctx.body = commons.resReturn(result.data, 0, "ok"));
   }
 
   // 输入 swagger url 的时候 node 端请求数据
-  async swaggerUrl(ctx) {
-    const { url } = ctx.request.query;
+  async swaggerUrl(ctx: AppContext) {
+    const url = queryScalar(ctx.request.query.url);
     const result = await projectService.fetchSwaggerJson(url);
-    if (!result.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+    if (result.ok === false) {
+      return (ctx.body = commons.resReturn(null, result.code, result.message));
     }
-    ctx.body = yapi.commons.resReturn(result.data);
+    ctx.body = commons.resReturn(result.data, 0, undefined);
   }
 }
 
