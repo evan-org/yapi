@@ -6,7 +6,7 @@ import type { ModelInstance } from "./base.repo.js";
 import yapi from "../runtime.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
-import { advMockFromRow, ADV_MOCK_SELECT } from "../db/relational.js";
+import { advancedMockFromRow, ADV_MOCK_SELECT } from "../db/relational.js";
 import type { DocRecord } from "../db/where.js";
 
 const TBL = tableName("adv_mock");
@@ -20,12 +20,12 @@ async function fetchOneByInterfaceId(interface_id: number | string) {
   if (!res.rows.length) {
     return null;
   }
-  return advMockFromRow(res.rows[0]);
+  return advancedMockFromRow(res.rows[0]);
 }
 
-export type AdvMockRepository = ModelInstance;
+export type AdvancedMockRepository = ModelInstance;
 
-export const advMockRepository: AdvMockRepository = {
+export const advancedMockRepository: AdvancedMockRepository = {
   async get(interface_id: number | string) {
     return fetchOneByInterfaceId(interface_id);
   },
@@ -61,7 +61,7 @@ export const advMockRepository: AdvMockRepository = {
         data.enable === true,
       ]
     );
-    return advMockFromRow(res.rows[0]);
+    return advancedMockFromRow(res.rows[0]);
   },
 
   async up(data: DocRecord) {
@@ -96,6 +96,6 @@ export const advMockRepository: AdvMockRepository = {
         patch.enable === true,
       ]
     );
-    return advMockFromRow(res.rows[0]);
+    return advancedMockFromRow(res.rows[0]);
   },
 };

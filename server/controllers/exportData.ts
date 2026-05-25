@@ -16,7 +16,7 @@ import md from "../utils/markdown.js";
 
 // import htmlToPdf from 'html-pdf';
 
-class exportController extends baseController {
+class exportDataController extends baseController {
   constructor(ctx) {
     super(ctx);
     this.catModel = interfaceCatRepository;
@@ -146,4 +146,4 @@ class exportController extends baseController {
   }
 }
 
-export default exportController;
+export default exportDataController;

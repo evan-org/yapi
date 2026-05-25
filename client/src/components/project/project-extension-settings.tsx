@@ -29,7 +29,7 @@ export function ProjectExtensionSettings({ projectId }: ProjectExtensionSettings
   const load = useCallback(async () => {
     setError("");
     try {
-      const res = await extensionsApi.autoSyncGet(projectId);
+      const res = await extensionsApi.swaggerSyncGet(projectId);
       const data = res.data as {
         _id?: number;
         sync_json_url?: string;
@@ -59,7 +59,7 @@ export function ProjectExtensionSettings({ projectId }: ProjectExtensionSettings
     setSaving(true);
     setError("");
     try {
-      await extensionsApi.autoSyncSave({
+      await extensionsApi.swaggerSyncSave({
         id: sync.id,
         project_id: projectId,
         sync_json_url: sync.sync_json_url,

@@ -43,8 +43,8 @@ export function InterfaceAdvMockPanel({
     setError("");
     try {
       const [mockRes, caseRes] = await Promise.all([
-        extensionsApi.advMockGet(interfaceId),
-        extensionsApi.advMockCaseList(interfaceId),
+        extensionsApi.advancedMockGet(interfaceId),
+        extensionsApi.advancedMockCaseList(interfaceId),
       ]);
       const mock = mockRes.data as { mock_script?: string; enable?: boolean };
       setScript(mock?.mock_script || "");
@@ -63,7 +63,7 @@ export function InterfaceAdvMockPanel({
     setSaving(true);
     setError("");
     try {
-      await extensionsApi.advMockSave({
+      await extensionsApi.advancedMockSave({
         project_id: projectId,
         interface_id: interfaceId,
         mock_script: script,
@@ -93,7 +93,7 @@ export function InterfaceAdvMockPanel({
     if (!editingCase) return;
     setError("");
     try {
-      await extensionsApi.advMockCaseSave({
+      await extensionsApi.advancedMockCaseSave({
         project_id: projectId,
         interface_id: interfaceId,
         id: editingCase._id,
@@ -116,7 +116,7 @@ export function InterfaceAdvMockPanel({
   async function handleDelCase(id: number) {
     if (!confirm("确定删除该期望？")) return;
     try {
-      await extensionsApi.advMockCaseDel(id);
+      await extensionsApi.advancedMockCaseDel(id);
       await load();
     } catch (err) {
       console.error("删除期望失败", err);
@@ -126,7 +126,7 @@ export function InterfaceAdvMockPanel({
 
   async function handleEditCase(id: number) {
     try {
-      const res = await extensionsApi.advMockCaseGet(id);
+      const res = await extensionsApi.advancedMockCaseGet(id);
       setEditingCase((res.data as AdvMockCase) || null);
     } catch (err) {
       console.error("加载期望失败", err);

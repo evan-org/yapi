@@ -6,7 +6,7 @@ import baseController from "./base.js";
 
 import yapi from "../runtime.js";
 import {
-  statisMockRepository,
+  mockStatisticsRepository,
   groupRepository,
   projectRepository,
   interfaceRepository,
@@ -19,10 +19,10 @@ import os from 'os';
 import cpu from 'cpu-load';
 
 
-class statisMockController extends baseController {
+class statisticsController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = statisMockRepository;
+    this.Model = mockStatisticsRepository;
     this.groupModel = groupRepository;
     this.projectModel = projectRepository;
     this.interfaceModel = interfaceRepository;
@@ -37,7 +37,7 @@ class statisMockController extends baseController {
    * @foldnumber 10
    * @returns {Object}
    */
-  async getStatisCount(ctx) {
+  async getSummary(ctx) {
     try {
       let groupCount = await this.groupModel.getGroupListCount();
       let projectCount = await this.projectModel.getProjectListCount();
@@ -63,7 +63,7 @@ class statisMockController extends baseController {
    * @foldnumber 10
    * @returns {Object}
    */
-  async getMockDateList(ctx) {
+  async getMockLog(ctx) {
     try {
       let mockCount = await this.Model.getTotalCount();
       let mockDateList = [];
@@ -88,7 +88,7 @@ class statisMockController extends baseController {
    * @foldnumber 10
    * @returns {Object}
    */
-  async getSystemStatus(ctx) {
+  async getSystem(ctx) {
     try {
       let mail = "";
       if (yapi.WEBCONFIG.mail && yapi.WEBCONFIG.mail.enable) {
@@ -134,7 +134,7 @@ class statisMockController extends baseController {
     });
   }
 
-  async groupDataStatis(ctx) {
+  async getGroups(ctx) {
     try {
       let groupData = await this.groupModel.list();
       let result = [];
@@ -178,4 +178,4 @@ class statisMockController extends baseController {
   }
 }
 
-export default statisMockController;
+export default statisticsController;

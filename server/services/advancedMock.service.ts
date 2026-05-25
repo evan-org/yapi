@@ -7,7 +7,7 @@ import Mock from "mockjs";
 import yapi from "../runtime.js";
 import { isDeepMatch } from "../utils/deep-match.js";
 import mockExtra from "../utils/mock-extra.js";
-import { advMockRepository, advMockCaseRepository } from "../repositories/index.js";
+import { advancedMockRepository, advancedMockCaseRepository } from "../repositories/index.js";
 
 /** 将期望 headers 数组转为响应头对象 */
 function arrToObj(arr) {
@@ -25,7 +25,7 @@ function arrToObj(arr) {
 async function checkCase(ctx, interfaceId) {
   const reqParams = Object.assign({}, ctx.query, ctx.request.body);
   const ip = yapi.commons.getIp(ctx);
-  const listWithIp = await advMockCaseRepository.listForMock(interfaceId, {
+  const listWithIp = await advancedMockCaseRepository.listForMock(interfaceId, {
     ip_enable: true,
     ip,
   });
@@ -37,7 +37,7 @@ async function checkCase(ctx, interfaceId) {
     }
   });
   if (matchList.length === 0) {
-    const list = await advMockCaseRepository.listForMock(interfaceId, { ip_enable: false });
+    const list = await advancedMockCaseRepository.listForMock(interfaceId, { ip_enable: false });
     list.forEach((item) => {
       const params = item.params;
       if (item.case_enable && isDeepMatch(reqParams, params)) {
@@ -52,17 +52,17 @@ async function checkCase(ctx, interfaceId) {
 }
 
 async function handleByCase(caseData) {
-  return advMockCaseRepository.get({ _id: caseData._id });
+  return advancedMockCaseRepository.get({ _id: caseData._id });
 }
 
 /** 接口删除时清理高级 Mock 数据 */
 export async function onInterfaceDeleted(interfaceId) {
-  await advMockRepository.delByInterfaceId(interfaceId);
+  await advancedMockRepository.delByInterfaceId(interfaceId);
 }
 
 /** 项目删除时清理高级 Mock 数据 */
 export async function onProjectDeleted(projectId) {
-  await advMockRepository.delByProjectId(projectId);
+  await advancedMockRepository.delByProjectId(projectId);
 }
 
 /**
@@ -91,7 +91,7 @@ export async function applyAdvancedMockAfter(context) {
     context.delay = data.delay;
     return true;
   }
-  const data = await advMockRepository.get(interfaceId);
+  const data = await advancedMockRepository.get(interfaceId);
   if (!data || !data.enable || !data.mock_script) {
     return context;
   }

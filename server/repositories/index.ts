@@ -28,12 +28,18 @@ export { tokenRepository, type TokenRepository } from "./token.repo.js";
 export { avatarRepository, type AvatarRepository } from "./avatar.repo.js";
 export { storageRepository, type StorageRepository } from "./storage.repo.js";
 export { wikiRepository, type WikiRepository } from "./wiki.repo.js";
-export { advMockRepository, type AdvMockRepository } from "./advMock.repo.js";
 export {
-  advMockCaseRepository,
-  type AdvMockCaseRepository,
-} from "./advMockCase.repo.js";
-export { statisMockRepository, type StatisMockRepository } from "./statisMock.repo.js";
+  advancedMockRepository,
+  type AdvancedMockRepository,
+} from "./advancedMock.repo.js";
+export {
+  advancedMockCaseRepository,
+  type AdvancedMockCaseRepository,
+} from "./advancedMockCase.repo.js";
+export {
+  mockStatisticsRepository,
+  type MockStatisticsRepository,
+} from "./mockStatistics.repo.js";
 export {
   swaggerSyncRepository,
   type SwaggerSyncRepository,

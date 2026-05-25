@@ -33,7 +33,7 @@ class wikiController extends baseController {
    * @foldnumber 10
    * @returns {Object}
    */
-  async getWikiDesc(ctx) {
+  async get(ctx) {
     try {
       let project_id = ctx.request.query.project_id;
       if (!project_id) {
@@ -55,7 +55,7 @@ class wikiController extends baseController {
    * @returns {Object}
    */
 
-  async uplodaWikiDesc(ctx) {
+  async save(ctx) {
     try {
       let params = ctx.request.body;
       params = yapi.commons.handleParams(params, {

@@ -6,14 +6,14 @@ import type { ModelInstance } from "./base.repo.js";
 import yapi from "../runtime.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
-import { statisMockFromRow, STATIS_MOCK_SELECT } from "../db/relational.js";
+import { mockStatisticsFromRow, STATIS_MOCK_SELECT } from "../db/relational.js";
 import type { DocRecord } from "../db/where.js";
 
 const TBL = tableName("statis_mock");
 
-export type StatisMockRepository = ModelInstance;
+export type MockStatisticsRepository = ModelInstance;
 
-export const statisMockRepository: StatisMockRepository = {
+export const mockStatisticsRepository: MockStatisticsRepository = {
   async countByGroupId(id: number | string) {
     const pool = getPool();
     const res = await pool.query(
@@ -40,7 +40,7 @@ export const statisMockRepository: StatisMockRepository = {
         data.up_time ?? 0,
       ]
     );
-    return statisMockFromRow(res.rows[0]);
+    return mockStatisticsFromRow(res.rows[0]);
   },
 
   async getTotalCount() {
