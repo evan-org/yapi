@@ -1,14 +1,15 @@
 config.json
 init.lock
-log/2023-3.log
-.idea
 log/
 
-# 旧 Vite 前端构建产物（已迁移至 vendors/web/.next）
-vendors/static/prd/
-vendors/example/
+.idea
+
+# 旧 Vite 前端构建产物
+static/prd/
+example/
 
 # Next 构建缓存（本地）
-vendors/web/.next/
-vendors/web/node_modules/
-vendors/node_modules/
+client/.next/
+client/out/
+client/node_modules/
+node_modules/

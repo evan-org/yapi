@@ -10,7 +10,7 @@ function assertRuntimeConfig() {
 
   if (!fs.existsSync(configPath)) {
     throw new Error(
-      `未找到配置文件: ${configPath}\n请复制 vendors/config_example.json 为 config.json 并修改数据库等配置。`
+      `未找到配置文件: ${configPath}\n请复制 config_example.json 为 config.json 并修改数据库等配置。`
     );
   }
 

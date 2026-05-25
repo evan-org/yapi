@@ -22,4 +22,4 @@ fi
 
 # Hono API（内网 3001），Next.js 对外 4000（/api 由 next.config 反代）
 node server/app.js "$@" &
-exec npm run start:web -- -p 4000 -H 0.0.0.0
+exec npm run start:client -- -p 4000 -H 0.0.0.0

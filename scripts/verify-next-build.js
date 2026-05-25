@@ -4,12 +4,12 @@
 const fs = require("fs");
 const path = require("path");
 
-const nextDir = path.join(__dirname, "../web/.next");
+const nextDir = path.join(__dirname, "../client/.next");
 const required = ["BUILD_ID", "server"];
 
 let ok = true;
 if (!fs.existsSync(nextDir)) {
-  console.error("未找到 web/.next 目录");
+  console.error("未找到 client/.next 目录");
   process.exit(1);
 }
 

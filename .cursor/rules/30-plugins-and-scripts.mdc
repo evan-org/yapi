@@ -1,23 +1,17 @@
 ---
-description: 插件扩展与构建脚本，防止破坏 registry 与构建链
-globs: vendors/exts/**/*,vendors/scripts/**/*,vendors/web/src/lib/plugins/**/*
-alwaysApply: false
+description: 插件与构建脚本
+globs: exts/**/*,scripts/**/*,client/src/lib/plugins/**/*
 ---
 
-# 插件与构建脚本
+# 插件与脚本
 
-## 插件目录 `vendors/exts/`
+## 插件目录 `exts/`
 
-- 仅扩展**服务端**或注册钩子；`client.js` 为旧版 React 插件，**不要**在 Next 中引用。
-- 新功能在 Next 侧实现最小可用 UI（设置页、Wiki、统计等），API 走 `pluginApi` / `openApi`。
-
-## 生成脚本
-
-- `scripts/generate-plugin-module.js`：`predev` / `prebuild` 会重写 `web/src/lib/plugins/registry.ts`。
-- 若需增加 `pluginNextRoutes` 或说明字段，**修改生成脚本**，不要只改生成产物。
+- 业务能力在 `server.js`；`import_data` 等钩子在此注册。
+- 勿在 Next 中加载 `client.js`。
 
 ## 构建
 
-- 前端构建：`npm run build` → `scripts/build-next-client.js` + `verify-next-build.js`。
-- 产物：`vendors/web/.next/`（不是 `static/prd`）。
-- Next 反代：`vendors/web/next.config.ts` 中 `/api` → `YAPI_API_URL`（默认 `http://127.0.0.1:3001`）。
+- `scripts/generate-plugin-module.js` → `client/src/lib/plugins/registry.ts`
+- `scripts/build-next-client.js` → 产物 `client/.next/`
+- Next 反代：`client/next.config.ts` 中 `/api` → `YAPI_API_URL`

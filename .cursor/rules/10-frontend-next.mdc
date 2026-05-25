@@ -1,35 +1,21 @@
 ---
-description: Next.js 前端页面、组件、API 客户端约定
-globs: vendors/web/**/*
-alwaysApply: false
+description: Next.js 前端约定与路径
+globs: client/**/*
 ---
 
-# 前端（vendors/web）
+# 前端（client）
 
-## 路径与结构
+## 路径与别名
 
-- 使用 `@/` 别名指向 `src/`（禁止在业务代码里写 `@/` 以外的混乱相对路径层级）。
-- 需登录页面：`src/app/(dashboard)/`；登录：`src/app/login/`。
-- 新 API：在 `src/lib/api/*.ts` 定义，并从 `src/lib/api/client.ts` 导出。
-
-## API 调用
-
-- 统一 `apiRequest` + `credentials: "include"`。
-- 响应信封：`{ errcode, errmsg, data }`，`errcode === 0` 为成功；`40011` 为未登录。
-- `/api/user/status` 的 `ladp`、`canRegister` 在**顶层**，不在 `data` 内。
+- `@/` → `client/src/`（见 `client/tsconfig.json`）。
+- 页面：`src/app/`，工作台路由在 `(dashboard)/`。
+- API 封装：`src/lib/api/*.ts`，统一 `apiRequest`，`credentials: "include"`。
 
 ## UI
 
-- 组件库：shadcn/ui（`src/components/ui/`），图标 Lucide，样式 Tailwind。
-- 主色参考 `#2395f1`，顶栏深色 `#32363a`（与现有 `site-header` 一致）。
-- 复用：`MemberPanel`、`ColWorkspace`、`ProjectDataPanel`、`ProjectWikiPanel` 等，避免复制粘贴成员/导入逻辑。
+- 使用 shadcn/ui + Tailwind；不要引入 Ant Design。
+- 中文注释说明非显而易见业务逻辑。
 
-## 插件 UI
+## 插件
 
-- 旧插件 React 页已移除；能力通过 Next 路由 + `/api/plugin/*`、`/api/open/*` 对接。
-- `src/lib/plugins/registry.ts` 的 `enabledPluginNames` 由 `vendors/scripts/generate-plugin-module.js` 生成；扩展 Next 映射请改脚本，勿长期手改生成文件。
-
-## 页面完整性
-
-- 不要新增「迁移中」「占位」文案；新功能应接真实 API。
-- 客户端组件文件顶部用中文注释说明页面/组件职责。
+- `src/lib/plugins/registry.ts` 的 `enabledPluginNames` 由 `scripts/generate-plugin-module.js` 生成。

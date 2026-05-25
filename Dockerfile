@@ -4,22 +4,21 @@ FROM node:18-bookworm-slim AS builder
 WORKDIR /yapi
 
 COPY config.docker.example.json ./config.json
-COPY vendors/package.json vendors/package-lock.json ./vendors/
-COPY vendors/web/package.json vendors/web/package-lock.json ./vendors/web/
+COPY package.json package-lock.json ./
+COPY client/package.json client/package-lock.json ./client/
 
-WORKDIR /yapi/vendors
 RUN npm ci --legacy-peer-deps
-WORKDIR /yapi/vendors/web
+WORKDIR /yapi/client
 RUN npm ci --legacy-peer-deps
 
 WORKDIR /yapi
-COPY vendors/ ./vendors/
+COPY . .
 
-WORKDIR /yapi/vendors
+WORKDIR /yapi
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV YAPI_API_URL="http://127.0.0.1:3001"
 RUN npm run build && npm prune --production
-WORKDIR /yapi/vendors/web
+WORKDIR /yapi/client
 RUN npm prune --production
 
 # 阶段二：生产运行
@@ -28,9 +27,8 @@ FROM node:18-bookworm-slim
 WORKDIR /yapi
 
 COPY --from=builder /yapi/config.json /yapi/config.json
-COPY --from=builder /yapi/vendors /yapi/vendors
+COPY --from=builder /yapi /yapi
 
-WORKDIR /yapi/vendors
 RUN chmod +x docker-entrypoint.sh
 
 ENV NODE_ENV=production

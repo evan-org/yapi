@@ -1,5 +1,5 @@
 {
-  "name": "yapi-vendor",
+  "name": "yapi",
   "homepage": "/",
   "version": "1.11.0",
   "description": "YAPI",
@@ -8,20 +8,19 @@
     "predev": "node scripts/generate-plugin-module.js",
     "prebuild": "node scripts/generate-plugin-module.js",
     "dev": "npm run dev-server & npm run dev-client",
-    "dev-web": "npm run dev --prefix web -- -p 4000",
-    "dev-client": "npm run dev-web",
+    "dev-client": "npm run dev --prefix client -- -p 4000",
     "dev-server": "cross-env NODE_ENV=development nodemon server/app.js dev -L",
     "build-web": "node scripts/build-next-client.js",
     "verify-build": "node scripts/verify-next-build.js",
     "build": "npm run build-web && npm run verify-build",
-    "start": "npm run start:web & cross-env NODE_ENV=production node server/app.js",
+    "start": "npm run start:client & cross-env NODE_ENV=production node server/app.js",
     "start:api": "cross-env NODE_ENV=production node server/app.js",
-    "start:web": "npm run start --prefix web -- -p 4000 -H 0.0.0.0",
+    "start:client": "npm run start --prefix client -- -p 4000 -H 0.0.0.0",
     "install-server": "node server/install.js",
     "test": "ava",
     "test:server": "ava test/server/**/*.test.js",
     "npm-publish": "node ./npm-publish.js",
-    "lint:web": "npm run lint --prefix web"
+    "lint:client": "npm run lint --prefix client"
   },
   "scripts-info": {
     "start": "启动 API + Next.js 前端",

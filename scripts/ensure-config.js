@@ -4,9 +4,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const vendorsRoot = path.join(__dirname, "..");
-const configPath = path.join(vendorsRoot, "..", "config.json");
-const examplePath = path.join(vendorsRoot, "config_example.json");
+const projectRoot = path.join(__dirname, "..");
+const configPath = path.join(projectRoot, "config.json");
+const examplePath = path.join(projectRoot, "config_example.json");
 
 if (!fs.existsSync(configPath)) {
   if (!fs.existsSync(examplePath)) {

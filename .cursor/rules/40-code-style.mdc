@@ -23,7 +23,7 @@ alwaysApply: true
 ## 测试
 
 - 仅在有真实行为价值时加测试；不写只断言常量的无意义测试。
-- 服务端改动后运行 `npm run test:server`（在 `vendors/`）。
+- 服务端改动后运行 `npm run test:server`（仓库根目录）。
 
 ## 与用户沟通（简体中文）
 

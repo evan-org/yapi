@@ -1,6 +1,6 @@
 /**
  * YApi 服务入口（Hono + Node）
- * 仅提供 API / WebSocket / 公共资源；页面由 Next.js（vendors/web）承载
+ * 仅提供 API / WebSocket / 公共资源；页面由 Next.js（client）承载
  */
 process.env.NODE_PATH = __dirname;
 require("module").Module._initPaths();

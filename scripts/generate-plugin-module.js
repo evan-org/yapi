@@ -1,15 +1,15 @@
 /**
- * 根据 config.json 生成 Next 前端插件注册表（web/src/lib/plugins/registry.ts）
+ * 根据 config.json 生成 Next 前端插件注册表（client/src/lib/plugins/registry.ts）
  * 服务端插件仍由 server/plugin.js 加载，与此脚本无关
  */
 const fs = require("fs");
 const path = require("path");
 
-const vendorsRoot = path.join(__dirname, "..");
-const outputFile = path.join(vendorsRoot, "web", "src", "lib", "plugins", "registry.ts");
+const projectRoot = path.join(__dirname, "..");
+const outputFile = path.join(projectRoot, "client", "src", "lib", "plugins", "registry.ts");
 
-const commonLib = require(path.join(vendorsRoot, "common/plugin.js"));
-const { exts: systemConfigPlugin } = require(path.join(vendorsRoot, "common/config"));
+const commonLib = require(path.join(projectRoot, "common/plugin.js"));
+const { exts: systemConfigPlugin } = require(path.join(projectRoot, "common/config"));
 
 /**
  * 收集已启用的插件名（含 server 或历史 client 标记）
@@ -30,7 +30,7 @@ function collectEnabledPluginNames(configPlugin, type) {
 
 function generate() {
   let configPlugins = [];
-  const configPath = path.join(vendorsRoot, "..", "config.json");
+  const configPath = path.join(projectRoot, "config.json");
   if (fs.existsSync(configPath)) {
     configPlugins = require(configPath).plugins || [];
   }
@@ -38,12 +38,13 @@ function generate() {
   const fromConfig = collectEnabledPluginNames(configPlugins, "plugin");
   const fromExts = collectEnabledPluginNames(systemConfigPlugin, "ext");
   const allNames = [...fromConfig, ...fromExts];
+  const unique = [...new Set(allNames)];
 
-  const body = `/**
+  const content = `/**
  * 自动生成：npm run predev / prebuild 会重新生成 enabledPluginNames
  * 插件业务能力由服务端 exts 提供，Next 通过路由与项目设置页接入
  */
-export const enabledPluginNames: string[] = ${JSON.stringify(allNames, null, 2)};
+export const enabledPluginNames: string[] = ${JSON.stringify(unique, null, 2)};
 
 /** Next 端插件入口映射（与 enabledPluginNames 对应） */
 export const pluginNextRoutes: Record<
@@ -73,12 +74,8 @@ export const pluginRegistry: PluginRegistry = {};
 `;
 
   fs.mkdirSync(path.dirname(outputFile), { recursive: true });
-  fs.writeFileSync(outputFile, body, "utf8");
-  console.log(
-    "[generate-plugin-registry] 已写入",
-    outputFile,
-    `(${allNames.length} 个插件)`
-  );
+  fs.writeFileSync(outputFile, content, "utf8");
+  console.log(`[generate-plugin-registry] 已写入 ${outputFile} (${unique.length} 个插件)`);
 }
 
 generate();
