@@ -1,19 +1,10 @@
 // @ts-nocheck
 import yapi from 'runtime.js';
 
-import mongoose from 'mongoose';
-
 import controller from './controller.js';
 
 
 export default function() {
-  yapi.connect.then(function() {
-    let Col = mongoose.connection.db.collection("wiki");
-    Col.createIndex({
-      project_id: 1
-    });
-  });
-
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       // 获取wiki信息

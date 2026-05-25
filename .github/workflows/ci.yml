@@ -12,12 +12,16 @@ jobs:
     timeout-minutes: 15
 
     services:
-      mongo:
-        image: mongo:6.0
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: yapi_ci
         ports:
-          - 27017:27017
+          - 5432:5432
         options: >-
-          --health-cmd "mongosh --eval \"db.adminCommand('ping')\""
+          --health-cmd "pg_isready -U postgres -d yapi_ci"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -44,8 +48,10 @@ jobs:
           YAPI_PORT: "3001"
           YAPI_ADMIN_ACCOUNT: admin@admin.com
           YAPI_DB_HOST: "127.0.0.1"
-          YAPI_DB_PORT: "27017"
+          YAPI_DB_PORT: "5432"
           YAPI_DB_NAME: yapi_ci
+          YAPI_DB_USER: postgres
+          YAPI_DB_PASS: postgres
           YAPI_MAIL_ENABLE: "false"
 
   build-client:

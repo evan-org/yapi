@@ -426,7 +426,7 @@ export const createAction = bindControllerAction;
 export function handleParamsValue(params, val) {
   let value = {};
   try {
-    params = params.toObject();
+    params = params;
   } catch (e) { }
   if (params.length === 0 || val.length === 0) {
     return params;
@@ -453,7 +453,7 @@ export async function getCaseList(id) {
   let resultList = await caseInst.list(id, "all");
   let colData = await colInst.get(id);
   for (let index = 0; index < resultList.length; index++) {
-    let result = resultList[index].toObject();
+    let result = resultList[index];
     let data = await interfaceInst.get(result.interface_id);
     if (!data) {
       await caseInst.del(result._id);

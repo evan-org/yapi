@@ -17,4 +17,4 @@ alwaysApply: true
 
 ## 配置
 
-复制 `server/config.example.json` → `server/config.json`。根目录仅保留 workspaces 编排；Docker 见 `deploy/`。
+复制 `server/config.example.json` → `server/config.json`（数据库为 **PostgreSQL**，见 `server/.env.example`）。根目录仅保留 workspaces 编排；Docker 见 `deploy/`。

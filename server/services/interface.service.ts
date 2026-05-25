@@ -94,9 +94,9 @@ class InterfaceService extends BaseService {
     const categories = await this.catModel.list(projectId);
     const newResult = await Promise.all(
       categories.map(async (catRow) => {
-        const item = catRow.toObject();
+        const item = catRow;
         let list = await this.interfaceModel.listByCatid(item._id);
-        item.list = list.map((row) => row.toObject());
+        item.list = list.map((row) => row);
         return item;
       })
     );
@@ -142,7 +142,7 @@ class InterfaceService extends BaseService {
     if (!result) {
       return fail(490, "不存在的");
     }
-    const data = result.toObject();
+    const data = result;
     const userinfo = await this.userModel.findById(result.uid);
     if (userinfo) {
       data.username = userinfo.username;
@@ -185,7 +185,7 @@ class InterfaceService extends BaseService {
         );
         if (inter.length > 0) {
           inter = inter.map((item) => {
-            const row = item.toObject();
+            const row = item;
             row.res_body = commons.json_parse(row.res_body);
             row.req_body_other = commons.json_parse(row.req_body_other);
             return row;
@@ -214,10 +214,10 @@ class InterfaceService extends BaseService {
     const categories = await this.catModel.list(projectId);
     const chunks = await Promise.all(
       categories.map(async (catRow) => {
-        const cat = catRow.toObject();
+        const cat = catRow;
         let list = await this.interfaceModel.listByInterStatus(cat._id, "open");
         return list.map((row) => {
-          const item = row.toObject();
+          const item = row;
           item.basepath = basepath;
           return item;
         });
@@ -665,7 +665,7 @@ class InterfaceService extends BaseService {
     const result = await this.interfaceModel.up(id, data);
     const CurrentInterfaceData = await this.interfaceModel.get(id);
     const toObj = (doc) =>
-      doc && typeof doc.toObject === "function" ? doc.toObject() : doc;
+      doc;
     const logData = {
       interface_id: id,
       cat_id: data.catid,

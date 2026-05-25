@@ -10,7 +10,6 @@ declare module "runtime.js" {
 declare module "mockjs";
 declare module "easy-json-schema";
 declare module "json-schema-faker";
-declare module "mongoose-auto-increment";
 declare module "cpu-load";
 declare module "safeify";
 declare module "compare-versions";

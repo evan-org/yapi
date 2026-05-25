@@ -2,8 +2,6 @@
 import controller from './controller.js';
 
 
-// import mongoose from 'mongoose';
-
 // import _ from 'underscore';
 
 

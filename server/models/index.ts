@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 数据模型层（Mongoose）
+ * 数据模型层（PostgreSQL JSONB store）
  * 所有业务 Model 继承 baseModel，通过 yapi.getInst(ModelClass) 获取单例实例
  */
 import baseModel from "./base.js";

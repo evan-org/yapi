@@ -1,88 +1,43 @@
 // @ts-nocheck
-import yapi from '../runtime.js';
+import yapi from "../runtime.js";
+import baseModel from "./base.js";
 
-import baseModel from './base.js';
-
-
-/**
- * 接口分类
- */
 class interfaceCat extends baseModel {
   getName() {
     return "interface_cat";
   }
 
-  getSchema() {
-    return {
-      name: { type: String, required: true },
-      uid: { type: Number, required: true },
-      project_id: { type: Number, required: true },
-      desc: String,
-      add_time: Number,
-      up_time: Number,
-      index: { type: Number, default: 0 }
-    };
-  }
-
   save(data) {
-    let m = new this.model(data);
-    return m.save();
+    return this.store.insert(data);
   }
 
   get(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .exec();
+    return this.store.findById(id);
   }
 
   checkRepeat(name) {
-    return this.model.countDocuments({
-      name: name
-    });
+    return this.store.count({ name });
   }
 
   list(project_id) {
-    return this.model
-      .find({
-        project_id: project_id
-      })
-      .sort({ index: 1 })
-      .exec();
+    return this.store.findMany({ project_id }, { sort: { index: 1 } });
   }
 
   del(id) {
-    return this.model.remove({
-      _id: id
-    });
+    return this.store.delete({ _id: id });
   }
 
   delByProjectId(id) {
-    return this.model.remove({
-      project_id: id
-    });
+    return this.store.delete({ project_id: id });
   }
 
   up(id, data) {
     data.up_time = yapi.commons.time();
-    return this.model.update(
-      {
-        _id: id
-      },
-      data
-    );
+    return this.store.updateById(id, data);
   }
 
   upCatIndex(id, index) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      {
-        index: index
-      }
-    );
+    return this.store.updateById(id, { index });
   }
 }
 

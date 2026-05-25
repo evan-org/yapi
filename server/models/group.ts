@@ -1,213 +1,128 @@
 // @ts-nocheck
-import yapi from '../runtime.js';
-
-import baseModel from './base.js';
-
+import yapi from "../runtime.js";
+import baseModel from "./base.js";
 
 class groupModel extends baseModel {
   getName() {
     return "group";
   }
 
-  getSchema() {
-    return {
-      uid: Number,
-      group_name: String,
-      group_desc: String,
-      add_time: Number,
-      up_time: Number,
-      type: { type: String, default: "public", enum: ["public", "private"] },
-      members: [
-        {
-          uid: Number,
-          role: { type: String, enum: ["owner", "dev"] },
-          username: String,
-          email: String
-        }
-      ],
-
-      custom_field1: {
-        name: String,
-        enable: { type: Boolean, default: false }
-      }
-      // custom_field2: {
-      //   name: String,
-      //   enable: { type: Boolean, default: false }
-      // },
-      // custom_field3: {
-      //   name: String,
-      //   enable: { type: Boolean, default: false }
-      // }
-    };
-  }
-
   save(data) {
-    let m = new this.model(data);
-    return m.save();
+    return this.store.insert(data);
   }
 
   get(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .exec();
+    return this.store.findById(id);
   }
 
   updateMember(data) {
-    return this.model.update(
-      {
-        "members.uid": data.uid
-      },
-      {
-        $set: {
-          "members.$.username": data.username,
-          "members.$.email": data.email
+    return this.store.mutateWhere({ "members.uid": data.uid }, (doc) => {
+      const members = doc.members || [];
+      for (const m of members) {
+        if (m && m.uid == data.uid) {
+          m.username = data.username;
+          m.email = data.email;
         }
-      },
-      { multi: true }
-    );
+      }
+      doc.members = members;
+      return doc;
+    });
   }
 
   getByPrivateUid(uid) {
-    return this.model
-      .findOne({
-        uid: uid,
-        type: "private"
-      })
-      .select("group_name _id group_desc add_time up_time type custom_field1")
-      .exec();
+    return this.store.findOne(
+      { uid, type: "private" },
+      { fields: this._fields("group_name _id group_desc add_time up_time type custom_field1") }
+    );
   }
 
   getGroupById(id) {
-    return this.model
-      .findOne({
-        _id: id
-      })
-      .select("uid group_name group_desc add_time up_time type custom_field1")
-      .exec();
+    return this.store.findOne(
+      { _id: id },
+      { fields: this._fields("uid group_name group_desc add_time up_time type custom_field1") }
+    );
   }
 
   checkRepeat(name) {
-    return this.model.countDocuments({
-      group_name: name
-    });
+    return this.store.count({ group_name: name });
   }
-  //  分组数量统计
+
   getGroupListCount() {
-    return this.model.countDocuments({ type: "public" });
+    return this.store.count({ type: "public" });
   }
 
   addMember(id, data) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      {
-        // $push: { members: data },
-        $push: { members: { $each: data } }
-      }
-    );
+    const items = Array.isArray(data) ? data : [data];
+    return this.store.mutateById(id, (doc) => {
+      doc.members = doc.members || [];
+      doc.members.push(...items);
+      return doc;
+    });
   }
 
   delMember(id, uid) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      {
-        $pull: { members: { uid: uid } }
-      }
-    );
+    return this.store.mutateById(id, (doc) => {
+      doc.members = (doc.members || []).filter((m) => m && m.uid != uid);
+      return doc;
+    });
   }
 
   changeMemberRole(id, uid, role) {
-    return this.model.update(
-      {
-        _id: id,
-        "members.uid": uid
-      },
-      {
-        $set: { "members.$.role": role }
+    return this.store.mutateById(id, (doc) => {
+      const m = (doc.members || []).find((x) => x && x.uid == uid);
+      if (m) {
+        m.role = role;
       }
-    );
+      return doc;
+    });
   }
 
   checkMemberRepeat(id, uid) {
-    return this.model.countDocuments({
-      _id: id,
-      "members.uid": uid
-    });
+    return this.store.count({ _id: id, "members.uid": uid });
   }
 
   list() {
-    return this.model
-      .find({
-        type: "public"
-      })
-      .select("group_name _id group_desc add_time up_time type uid custom_field1")
-      .exec();
-  }
-
-  getAuthList(uid) {
-    return this.model.find({
-      $or: [{
-        "members.uid": uid,
-        "type": "public"
-      }, {
-        "type": "public",
-        uid
-      }]
-    }).select(" _id group_name group_desc add_time up_time type uid custom_field1")
-      .exec();
-
-  }
-
-  findByGroups(ids = []) {
-    return this.model.find({
-      _id: {
-        $in: ids
-      },
-      type: "public"
-    })
-  }
-
-  del(id) {
-    return this.model.remove({
-      _id: id
-    });
-  }
-
-  up(id, data) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      {
-        custom_field1: data.custom_field1,
-        group_name: data.group_name,
-        group_desc: data.group_desc,
-        up_time: yapi.commons.time()
-      }
+    return this.store.findMany(
+      { type: "public" },
+      { fields: this._fields("group_name _id group_desc add_time up_time type uid custom_field1") }
     );
   }
 
+  getAuthList(uid) {
+    return this.store.findMany(
+      {
+        $or: [{ "members.uid": uid, type: "public" }, { type: "public", uid }],
+      },
+      { fields: this._fields("_id group_name group_desc add_time up_time type uid custom_field1") }
+    );
+  }
+
+  findByGroups(ids = []) {
+    return this.store.findMany({ _id: { $in: ids }, type: "public" });
+  }
+
+  del(id) {
+    return this.store.delete({ _id: id });
+  }
+
+  up(id, data) {
+    return this.store.updateById(id, {
+      custom_field1: data.custom_field1,
+      group_name: data.group_name,
+      group_desc: data.group_desc,
+      up_time: yapi.commons.time(),
+    });
+  }
+
   getcustomFieldName(name) {
-    return this.model
-      .find({
-        "custom_field1.name": name,
-        "custom_field1.enable": true
-      })
-      .select("_id")
-      .exec();
+    return this.store.findMany(
+      { "custom_field1.name": name, "custom_field1.enable": true },
+      { fields: ["_id"] }
+    );
   }
 
   search(keyword) {
-    return this.model
-      .find({
-        group_name: new RegExp(keyword, "i")
-      })
-      .limit(10);
+    return this.store.findMany({ group_name: new RegExp(keyword, "i") }, { limit: 10 });
   }
 }
 

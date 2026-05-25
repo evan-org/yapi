@@ -117,7 +117,7 @@ class ProjectService extends BaseService {
     if (!result) {
       return fail(400, "不存在的项目");
     }
-    const data = result.toObject();
+    const data = result;
     data.cat = await this.catModel.list(projectId);
     if (!data.env || data.env.length === 0) {
       data.env = [{ name: "local", domain: "http://127.0.0.1" }];
@@ -202,7 +202,7 @@ class ProjectService extends BaseService {
         });
         const interfaceData = await this.interfaceModel.listByInterStatus(item._id);
         for (let key = 0; key < interfaceData.length; key++) {
-          const interfaceItem = interfaceData[key].toObject();
+          const interfaceItem = interfaceData[key];
           const ifacePayload = Object.assign({}, interfaceItem, {
             uid: actor.uid,
             catid: catResult._id,
@@ -252,7 +252,7 @@ class ProjectService extends BaseService {
 
     if (!isPrivateGroup) {
       for (let index = 0; index < result.length; index++) {
-        let item = result[index].toObject();
+        let item = result[index];
         if (item.project_type === "private" && auth === false) {
           const r = await this.projectModel.checkMemberRepeat(item._id, uid);
           if (r === 0) {
@@ -269,7 +269,7 @@ class ProjectService extends BaseService {
       }
     } else {
       const merged = follow.map((item) => {
-        const row = item.toObject();
+        const row = item;
         row._id = row.projectid;
         row.follow = true;
         return row;

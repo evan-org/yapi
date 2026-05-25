@@ -1,50 +1,25 @@
 // @ts-nocheck
-import yapi from '../runtime.js';
-
-import baseModel from './base.js';
-
+import baseModel from "./base.js";
 
 class tokenModel extends baseModel {
   getName() {
     return "token";
   }
 
-  getSchema() {
-    return {
-      project_id: { type: Number, required: true },
-      token: String
-    };
-  }
-
   save(data) {
-    let m = new this.model(data);
-    return m.save();
+    return this.store.insert(data);
   }
 
   get(project_id) {
-    return this.model.findOne({
-      project_id: project_id
-    });
+    return this.store.findOne({ project_id });
   }
 
   findId(token) {
-    return this.model
-      .findOne({
-        token: token
-      })
-      .select("project_id")
-      .exec();
+    return this.store.findOne({ token }, { fields: ["project_id"] });
   }
 
   up(project_id, token) {
-    return this.model.update(
-      {
-        project_id: project_id
-      },
-      {
-        token: token
-      }
-    );
+    return this.store.updateWhere({ project_id }, { token });
   }
 }
 

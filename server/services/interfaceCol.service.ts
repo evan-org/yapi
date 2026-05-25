@@ -46,7 +46,7 @@ class InterfaceColService extends BaseService {
 
     result = await Promise.all(
       result.map(async (colRow) => {
-        const col = colRow.toObject();
+        const col = colRow;
         let caseList = await this.caseModel.list(col._id);
         const interfaceIds = [
           ...new Set(caseList.map((c) => c.interface_id).filter(Boolean)),
@@ -62,7 +62,7 @@ class InterfaceColService extends BaseService {
         );
         caseList = caseList
           .map((c) => {
-            const item = c.toObject();
+            const item = c;
             item.path = pathByInterfaceId[item.interface_id];
             return item;
           })
@@ -241,12 +241,12 @@ class InterfaceColService extends BaseService {
     if (!result) {
       return fail(400, "不存在的case");
     }
-    result = result.toObject();
+    result = result;
     let data = await this.interfaceModel.get(result.interface_id);
     if (!data) {
       return fail(400, "找不到对应的接口，请联系管理员");
     }
-    data = data.toObject();
+    data = data;
 
     const projectData = await this.projectModel.getBaseInfo(data.project_id);
     result.path = projectData.basepath + data.path;
@@ -397,7 +397,7 @@ class InterfaceColService extends BaseService {
     };
 
     for (let i = 0; i < oldColCaselistData.length; i++) {
-      const obj = oldColCaselistData[i].toObject();
+      const obj = oldColCaselistData[i];
       oldCaseObj[obj._id] = i;
       const caseData = handleParams(obj);
       const newCase = await this.caseModel.save(caseData);
@@ -448,7 +448,7 @@ class InterfaceColService extends BaseService {
     }
 
     for (let index = 0; index < resultList.length; index++) {
-      const result = resultList[index].toObject();
+      const result = resultList[index];
       const item: Record<string, any> = {};
       let body;
       let query;

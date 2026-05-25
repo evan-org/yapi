@@ -1,59 +1,26 @@
 // @ts-nocheck
-import yapi from 'runtime.js';
+import baseModel from "models/base";
 
-import baseModel from 'models/base';
-
-
-class statisMockModel extends baseModel {
+class wikiModel extends baseModel {
   getName() {
     return "wiki";
   }
 
-  getSchema() {
-    return {
-      project_id: { type: Number, required: true },
-      username: String,
-      uid: { type: Number, required: true },
-      edit_uid: { type: Number, default: 0 },
-      desc: String,
-      markdown: String,
-      add_time: Number,
-      up_time: Number
-    };
-  }
-
   save(data) {
-    let m = new this.model(data);
-    return m.save();
+    return this.store.insert(data);
   }
 
   get(project_id) {
-    return this.model
-      .findOne({
-        project_id: project_id
-      })
-      .exec();
+    return this.store.findOne({ project_id });
   }
 
   up(id, data) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      data,
-      { runValidators: true }
-    );
+    return this.store.updateById(id, data);
   }
 
   upEditUid(id, uid) {
-    return this.model.update(
-      {
-        _id: id
-      },
-      { edit_uid: uid },
-      { runValidators: true }
-    );
+    return this.store.updateById(id, { edit_uid: uid });
   }
 }
 
-export default statisMockModel;
+export default wikiModel;

@@ -59,8 +59,8 @@ class LogService extends BaseService {
         page,
         limit
       );
-      projectLogList = projectLogList.map((item: { toObject: () => Record<string, unknown> }) => {
-        const row = item.toObject();
+      projectLogList = projectLogList.map((item: Record<string, unknown>) => {
+        const row = item;
         if (row.type === "project") {
           row.content =
             `在 <a href="/project/${row.typeid}">${projectDatas[row.typeid as number].name}</a> 项目: ` +
@@ -100,7 +100,7 @@ class LogService extends BaseService {
     const { typeid, type, apis } = params;
     let list: unknown[] = [];
     const projectDatas = await this.projectModel.getBaseInfo(typeid, "basepath");
-    const basePath = projectDatas.toObject().basepath;
+    const basePath = projectDatas.basepath;
 
     for (let i = 0; i < apis.length; i++) {
       let api = apis[i];

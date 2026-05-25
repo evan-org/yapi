@@ -18,6 +18,7 @@
 
 ```bash
 cp server/config.example.json server/config.json
+cp server/.env.example server/.env   # PostgreSQL，默认 127.0.0.1:5432
 npm install --legacy-peer-deps
 npm run install-server
 npm run dev

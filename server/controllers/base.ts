@@ -153,7 +153,7 @@ class baseController {
   async getProjectIdByToken(token: string) {
     const projectId = await this.tokenModel.findId(token);
     if (projectId) {
-      return projectId.toObject().project_id as number | string;
+      return projectId.project_id as number | string;
     }
   }
 

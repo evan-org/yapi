@@ -1,18 +1,18 @@
 // @ts-nocheck
 /**
- * Repository 层 Mongo 冒烟（CI 有 Mongo 时验证 group 写入/查询/删除）
+ * Repository 层 PostgreSQL 冒烟（CI 有 PG 时验证 group 写入/查询/删除）
  */
 import test from "ava";
 import { groupRepository } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
-  shouldRunMongoCi,
+  shouldRunPgCi,
   connectYapiDatabase,
-  disconnectMongo,
-} from "../helpers/mongo-ci.js";
+  disconnectPg,
+} from "../helpers/pg-ci.js";
 
 test("groupRepository 可写入、查询并删除", async (t) => {
-  if (!shouldRunMongoCi()) {
+  if (!shouldRunPgCi()) {
     t.pass();
     return;
   }
@@ -40,6 +40,6 @@ test("groupRepository 可写入、查询并删除", async (t) => {
     if (groupId) {
       await groupRepository.del(groupId);
     }
-    await disconnectMongo();
+    await disconnectPg();
   }
 });

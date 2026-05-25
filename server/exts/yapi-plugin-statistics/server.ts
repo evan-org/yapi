@@ -4,8 +4,6 @@
  */
 import yapi from 'runtime.js';
 
-import mongoose from 'mongoose';
-
 import controller from './controller.js';
 
 import statisModel from './statisMockModel.js';
@@ -14,25 +12,6 @@ import commons from './util.js';
 
 
 export default function() {
-  yapi.connect.then(function() {
-    let Col = mongoose.connection.db.collection("statis_mock");
-    Col.createIndex({
-      interface_id: 1
-    });
-    Col.createIndex({
-      project_id: 1
-    });
-    Col.createIndex({
-      group_id: 1
-    });
-    Col.createIndex({
-      time: 1
-    });
-    Col.createIndex({
-      date: 1
-    });
-  });
-
   this.bindHook("add_router", function(addRouter) {
     addRouter({
       controller: controller,

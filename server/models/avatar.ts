@@ -1,41 +1,23 @@
 // @ts-nocheck
-import yapi from '../runtime.js';
-
-import baseModel from './base.js';
-
+import baseModel from "./base.js";
 
 class avatarModel extends baseModel {
   getName() {
     return "avatar";
   }
 
-  getSchema() {
-    return {
-      uid: { type: Number, required: true },
-      basecode: String,
-      type: String
-    };
-  }
-
   get(uid) {
-    return this.model.findOne({
-      uid: uid
-    });
+    return this.store.findOne({ uid });
   }
 
-  up(uid, basecode, type) {
-    return this.model.update(
-      {
-        uid: uid
-      },
-      {
-        type: type,
-        basecode: basecode
-      },
-      {
-        upsert: true
-      }
-    );
+  async up(uid, basecode, type) {
+    const existing = await this.store.findOne({ uid });
+    if (existing) {
+      await this.store.updateById(existing._id, { type, basecode });
+      return existing._id;
+    }
+    const row = await this.store.insert({ uid, type, basecode });
+    return row._id;
   }
 }
 

@@ -3,7 +3,7 @@
  */
 import yapi from "../runtime.js";
 
-/** 旧版 Model 类实例类型（与 Mongoose Model 方法兼容） */
+/** Model 类实例类型（JSONB store 数据访问） */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type LegacyModelInstance = any;
 
