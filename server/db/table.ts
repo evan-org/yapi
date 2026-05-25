@@ -8,11 +8,10 @@ export function tableName(collection: string): string {
 }
 
 /** 关系型列存储（全新开发核心表） */
-export const RELATIONAL_COLLECTIONS = ["user", "group", "project"] as const;
+export const RELATIONAL_COLLECTIONS = ["user", "group", "project", "interface"] as const;
 
 /** JSONB 文档存储（结构复杂或插件表） */
 export const JSONB_COLLECTIONS = [
-  "interface",
   "interface_cat",
   "interface_case",
   "interface_col",

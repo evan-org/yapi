@@ -59,6 +59,39 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       tag JSONB NOT NULL DEFAULT '[]'::jsonb
     )
   `,
+  interface: `
+    CREATE TABLE IF NOT EXISTS ${tableName("interface")} (
+      _id SERIAL PRIMARY KEY,
+      uid BIGINT NOT NULL DEFAULT 0,
+      title TEXT NOT NULL DEFAULT '',
+      path TEXT NOT NULL DEFAULT '',
+      method TEXT NOT NULL DEFAULT 'GET',
+      project_id BIGINT NOT NULL DEFAULT 0,
+      catid BIGINT NOT NULL DEFAULT 0,
+      edit_uid BIGINT NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT '',
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      type TEXT NOT NULL DEFAULT 'static',
+      "index" INTEGER NOT NULL DEFAULT 0,
+      api_opened BOOLEAN NOT NULL DEFAULT FALSE,
+      desc TEXT NOT NULL DEFAULT '',
+      req_body_type TEXT NOT NULL DEFAULT '',
+      res_body_type TEXT NOT NULL DEFAULT '',
+      req_body_is_json_schema BOOLEAN NOT NULL DEFAULT FALSE,
+      res_body_is_json_schema BOOLEAN NOT NULL DEFAULT FALSE,
+      custom_field_value TEXT NOT NULL DEFAULT '',
+      markdown TEXT NOT NULL DEFAULT '',
+      res_body TEXT NOT NULL DEFAULT '',
+      req_body_other TEXT NOT NULL DEFAULT '',
+      query_path JSONB NOT NULL DEFAULT '{}'::jsonb,
+      req_query JSONB NOT NULL DEFAULT '[]'::jsonb,
+      req_headers JSONB NOT NULL DEFAULT '[]'::jsonb,
+      req_params JSONB NOT NULL DEFAULT '[]'::jsonb,
+      req_body_form JSONB NOT NULL DEFAULT '[]'::jsonb,
+      tag JSONB NOT NULL DEFAULT '[]'::jsonb
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -99,9 +132,11 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_uid ON ${tableName("interface_case")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_col ON ${tableName("interface_case")} ((doc->>'col_id'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_pid ON ${tableName("interface_case")} ((doc->>'project_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_uid ON ${tableName("interface")} ((doc->>'uid'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_path ON ${tableName("interface")} ((doc->>'path'), (doc->>'method'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_pid ON ${tableName("interface")} ((doc->>'project_id'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_uid ON ${tableName("interface")} (uid)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_path ON ${tableName("interface")} (path, method)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_pid ON ${tableName("interface")} (project_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_catid ON ${tableName("interface")} (catid)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_query_path ON ${tableName("interface")} ((query_path->>'path'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_avatar_uid ON ${tableName("avatar")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_token_pid ON ${tableName("token")} ((doc->>'project_id'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON ${tableName("follow")} ((doc->>'uid'))`,
