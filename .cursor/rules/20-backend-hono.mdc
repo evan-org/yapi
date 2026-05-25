@@ -21,7 +21,8 @@ routes/modules/*.routes.ts  →  controllers/*.ts  →  services/*.ts  →  repo
 - **services/**：业务逻辑，不依赖 Hono Context
 - **repositories/**：`*.repo.ts` 封装 Model 单例
 - **models/**：数据访问（`db/store` + 继承 `base.ts`）
-- **lib/**：`context.ts`（AppContext）、`bind-routes.ts`（RouteBinder）
+- **lib/**：`context.ts`（AppContext）、`bind-routes.ts`、`api-response.ts`（统一响应契约）
+- **utils/**：`commons.ts`、Mock/Schema 工具、差异对比等（无 `common/` 目录）
 - Mock：`middleware/mock.ts` + `mock-handler.ts`
 - 新接口：在 `routes/modules/` 加路由 → `services/` 写逻辑 → `controllers/` 薄封装
 - 测试：`npm run test:server`（在仓库根目录）

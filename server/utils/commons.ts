@@ -5,7 +5,7 @@ import path from 'path';
 
 import yapi from '../runtime.js';
 
-import apiResponse from '../common/apiResponse.js';
+import apiResponse from '../lib/api-response.js';
 
 import { createAction as bindControllerAction } from "../lib/action-runner.js";
 
@@ -37,7 +37,7 @@ import ejs from 'easy-json-schema';
 
 import jsf from 'json-schema-faker';
 
-import { schemaValidator } from '../common/utils.js';
+import { schemaValidator } from '../utils/schema-utils.js';
 
 import http from "http";
 import assert from "node:assert";

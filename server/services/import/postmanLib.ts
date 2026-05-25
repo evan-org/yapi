@@ -1,13 +1,13 @@
 // @ts-nocheck
-import { isJson5, json_parse, handleJson, joinPath, safeArray } from './utils.js';
+import { isJson5, json_parse, handleJson, joinPath, safeArray } from "../../utils/schema-utils.js";
 
-import constants from './variable.js';
+import constants from "../../utils/mock-variable.js";
 
-import _ from 'underscore';
+import _ from "underscore";
 
-import URL from 'url';
+import URL from "url";
 
-import powerString from "./power-string.js";
+import powerString from "../../utils/power-string.js";
 
 const utils = powerString.utils;
 const HTTP_METHOD = constants.HTTP_METHOD;
@@ -21,7 +21,7 @@ import jsrsasign from 'jsrsasign';
 
 import https from "https";
 import vm from "node:vm";
-import yapi from "../runtime.js";
+import yapi from "../../runtime.js";
 
 
 const isNode = typeof global == "object" && global.global === global;

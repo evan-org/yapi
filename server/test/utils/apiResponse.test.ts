@@ -9,7 +9,7 @@ import {
   normalizeEnvelope,
   finalizeResponse,
   isRawResponsePath,
-} from "../../common/apiResponse.js";
+} from "../../lib/api-response.js";
 import { resReturn } from "../../utils/commons.js";
 
 

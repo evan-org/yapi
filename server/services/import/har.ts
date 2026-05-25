@@ -4,7 +4,7 @@ import URL from 'url';
 
 import GenerateSchema from 'generate-schema/src/schemas/json.js';
 
-import { json_parse, unbase64 } from "../../common/utils.js";
+import { json_parse, unbase64 } from "../../utils/schema-utils.js";
 
 
 const transformJsonToSchema = (json) => {

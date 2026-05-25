@@ -1,5 +1,5 @@
 /**
- * YApi 标准 API 响应类型（与 common/apiResponse 对齐）
+ * YApi 标准 API 响应类型（与 server/lib/api-response 对齐）
  */
 
 /** 业务状态码 */

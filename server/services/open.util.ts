@@ -4,7 +4,7 @@
 import {
   handleCurrDomain,
   checkNameIsExistInArray,
-} from "../common/postmanLib.js";
+} from "../services/import/postmanLib.js";
 import { trim } from "../utils/commons.js";
 
 /**

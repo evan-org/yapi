@@ -16,7 +16,7 @@ import fs from 'fs-extra';
 
 import path from 'path';
 
-import showDiffMsg from '../../common/diff-view.js';
+import showDiffMsg from "../utils/diff-view.js";
 
 class wikiController extends baseController {
   constructor(ctx) {

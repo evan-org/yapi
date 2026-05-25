@@ -6,7 +6,7 @@ import _ from 'underscore';
 
 import GenerateSchema from 'generate-schema/src/schemas/json.js';
 
-import { json_parse } from "../../common/utils.js";
+import { json_parse } from "../../utils/schema-utils.js";
 
 
 function postman(importDataModule) {

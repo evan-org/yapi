@@ -4,7 +4,7 @@
  * 负责：实例化控制器 → init 鉴权 → 参数校验 → 调用 action → 响应信封
  */
 import yapi from "../runtime.js";
-import apiResponse from "../common/apiResponse.js";
+import apiResponse from "../lib/api-response.js";
 
 /**
  * 将控制器方法注册为 HTTP 或 WebSocket 路由

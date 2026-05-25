@@ -5,8 +5,8 @@
 import _ from "underscore";
 import Mock from "mockjs";
 import yapi from "../runtime.js";
-import { isDeepMatch } from "../common/lib.js";
-import mockExtra from "../common/mock-extra.js";
+import { isDeepMatch } from "../utils/deep-match.js";
+import mockExtra from "../utils/mock-extra.js";
 import { advMockRepository, advMockCaseRepository } from "../repositories/index.js";
 
 /** 将期望 headers 数组转为响应头对象 */

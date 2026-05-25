@@ -11,7 +11,7 @@ import markdownIt from "markdown-it";
 import markdownItAnchor from 'markdown-it-anchor';
 import markdownItTableOfContents from 'markdown-it-table-of-contents';
 import defaultTheme from "../assets/export/defaultTheme.js";
-import md from "../common/markdown.js";
+import md from "../utils/markdown.js";
 
 
 // import htmlToPdf from 'html-pdf';

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import test from "ava";
-import mergeJsonSchema from "../../common/mergeJsonSchema";
+import mergeJsonSchema from "../../utils/mergeJsonSchema.js";
 
 test("base", (t) => {
   let schema1 = {

@@ -9,15 +9,15 @@ import yapi from "../runtime.js";
 
 import { projectRepository, interfaceRepository } from '../repositories/index.js';
 
-import mockExtra from '../common/mock-extra.js';
+import mockExtra from '../utils/mock-extra.js';
 
-import { schemaValidator } from '../common/utils.js';
+import { schemaValidator } from '../utils/schema-utils.js';
 
 import _ from 'underscore';
 
 import Mock from 'mockjs';
 
-import variable from '../common/variable.js';
+import variable from '../utils/mock-variable.js';
 /**
  *
  * @param {*} apiPath /user/tom

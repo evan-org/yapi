@@ -25,7 +25,6 @@
       "models/*": ["./models/*"],
       "controllers/*": ["./controllers/*"],
       "utils/*": ["./utils/*"],
-      "common/*": ["./common/*"],
       "middleware/*": ["./middleware/*"],
       "lib/*": ["./lib/*"],
       "routes/*": ["./routes/*"],

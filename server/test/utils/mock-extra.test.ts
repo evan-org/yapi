@@ -1,6 +1,6 @@
 // @ts-nocheck
 import test from "ava";
-import mockExtra from '../common/mock-extra.js';
+import mockExtra from "../../utils/mock-extra.js";
 
 
 
