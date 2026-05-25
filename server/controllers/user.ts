@@ -14,7 +14,7 @@ class userController extends baseController {
 
   /** 写入登录 Cookie */
   setLoginCookie(uid, passsalt) {
-    const token = jwt.sign({ uid }, passsalt, { expiresIn: "7 days" });
+    const token = jwt.sign({ uid }, passsalt, { expiresIn: "7 days", algorithm: "HS256" });
     this.ctx.cookies.set("_yapi_token", token, {
       expires: yapi.commons.expireDate(7),
       httpOnly: true,
