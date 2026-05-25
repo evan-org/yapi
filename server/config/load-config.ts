@@ -1,9 +1,7 @@
 // @ts-nocheck
 /**
  * 运行时配置：仅通过环境变量 + server/.env 加载（12-Factor）
- * 不再读取或合并 config.json
  */
-import { existsSync } from "node:fs";
 import path from "node:path";
 import { config as loadDotenv } from "dotenv";
 import type { YapiWebConfig } from "../types/global.js";
@@ -124,24 +122,11 @@ function buildMailFromEnv(): Record<string, unknown> {
 }
 
 /**
- * 若仍存在废弃的 config.json，仅提示迁移
- */
-function warnDeprecatedConfigFile(serverRoot: string) {
-  const legacy = path.join(serverRoot, "config.json");
-  if (existsSync(legacy)) {
-    console.warn(
-      "[yapi] 已忽略 server/config.json，请改用 server/.env（见 server/.env.example）"
-    );
-  }
-}
-
-/**
  * 加载 WEBCONFIG：dotenv + process.env
  * @param serverRoot server 工作区根目录（含 .env）
  */
 export function loadWebConfig(serverRoot: string): YapiWebConfig {
   loadDotenv({ path: path.join(serverRoot, ".env") });
-  warnDeprecatedConfigFile(serverRoot);
 
   return {
     port: Number(envStr("YAPI_PORT") || "3001"),

@@ -39,6 +39,6 @@ npm run build
 
 ## 不要做的事
 
-- 不要使用 `server/config.json`；勿恢复 `common/`、`exts/` 目录
+- 勿恢复 `common/`、`exts/` 目录；配置仅 `server/.env` / `YAPI_*`
 - 不要恢复 `vendors/` 中间层
 - 不要引入 MongoDB / Mongoose，不要编写旧库数据迁移或 ETL 脚本

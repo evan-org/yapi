@@ -4,10 +4,6 @@ server/init.lock
 server/log/
 server/dist/
 
-# 废弃配置（勿提交）
-server/config.json
-config.json
-
 # Docker 本地 env
 deploy/.env
 log/
