@@ -4,7 +4,7 @@
  * 项目数据：环境、Token、导入导出
  */
 import { useCallback, useEffect, useState } from "react";
-import { openApi, pluginApi, projectApi } from "../../lib/api/client";
+import { interfaceApi, openApi, pluginApi, projectApi } from "../../lib/api/client";
 import type { ProjectEnvItem } from "../../lib/api/types";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -75,6 +75,26 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
       console.log("Token 已更新", projectId);
     } catch (err) {
       setError(err instanceof Error ? err.message : "更新 Token 失败");
+    }
+  }
+
+  /** 从 JSON 文件批量上传接口（Chrome 插件同款接口） */
+  async function handleFileUpload(file: File) {
+    setImporting(true);
+    setError("");
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      await interfaceApi.interUpload({
+        project_id: projectId,
+        data,
+      });
+      console.log("文件导入成功", projectId, file.name);
+    } catch (err) {
+      console.error("文件导入失败", err);
+      setError(err instanceof Error ? err.message : "文件导入失败");
+    } finally {
+      setImporting(false);
     }
   }
 
@@ -176,6 +196,17 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
               全量 JSON
             </a>
           </Button>
+          {token ? (
+            <Button variant="outline" size="sm" asChild>
+              <a
+                href={openApi.projectInterfaceDataUrl(projectId, token)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open API 导出
+              </a>
+            </Button>
+          ) : null}
         </div>
       </section>
 
@@ -212,9 +243,26 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
           onChange={(e) => setImportJson(e.target.value)}
           className="font-mono text-xs"
         />
-        <Button type="button" disabled={importing} onClick={handleImport}>
-          {importing ? "导入中…" : "开始导入"}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" disabled={importing} onClick={handleImport}>
+            {importing ? "导入中…" : "开始导入"}
+          </Button>
+          <label className="inline-flex cursor-pointer items-center">
+            <input
+              type="file"
+              accept=".json,application/json"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handleFileUpload(f);
+                e.target.value = "";
+              }}
+            />
+            <Button type="button" variant="outline" disabled={importing} asChild>
+              <span>上传 JSON 文件</span>
+            </Button>
+          </label>
+        </div>
       </section>
     </div>
   );

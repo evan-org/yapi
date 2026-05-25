@@ -5,7 +5,16 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { colApi, openApi, projectApi } from "../../lib/api/client";
-import type { InterfaceCaseItem, InterfaceColItem, ProjectEnvItem } from "../../lib/api/types";
+import type {
+  ColCheckScriptRule,
+  InterfaceCaseItem,
+  InterfaceColDetail,
+  ProjectEnvItem,
+} from "../../lib/api/types";
+import {
+  buildInterfaceFetchInit,
+  buildInterfaceUrl,
+} from "../../lib/http/build-interface-request";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
@@ -14,8 +23,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 interface ColBatchTestPanelProps {
   projectId: number;
-  col: InterfaceColItem;
+  col: InterfaceColDetail;
   cases: InterfaceCaseItem[];
+  basepath?: string;
   onReload: () => void;
 }
 
@@ -26,7 +36,13 @@ interface CaseRunResult {
   message: string;
 }
 
-export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchTestPanelProps) {
+export function ColBatchTestPanel({
+  projectId,
+  col,
+  cases,
+  basepath,
+  onReload,
+}: ColBatchTestPanelProps) {
   const [token, setToken] = useState("");
   const [envs, setEnvs] = useState<ProjectEnvItem[]>([]);
   const [envIndex, setEnvIndex] = useState(0);
@@ -36,7 +52,8 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
   const [rules, setRules] = useState({
     checkHttpCodeIs200: false,
     checkResponseSchema: false,
-    checkScriptIsOpen: true,
+    checkScriptEnable: true,
+    globalScript: "",
   });
 
   const loadMeta = useCallback(async () => {
@@ -48,10 +65,12 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
       setToken((tokenRes.data as string) || "");
       const envData = envRes.data as { env?: ProjectEnvItem[] };
       setEnvs(envData?.env || []);
+      const checkScript = col.checkScript as ColCheckScriptRule | undefined;
       setRules({
-        checkHttpCodeIs200: !!(col as { checkHttpCodeIs200?: boolean }).checkHttpCodeIs200,
-        checkResponseSchema: !!(col as { checkResponseSchema?: boolean }).checkResponseSchema,
-        checkScriptIsOpen: (col as { checkScriptIsOpen?: boolean }).checkScriptIsOpen !== false,
+        checkHttpCodeIs200: !!col.checkHttpCodeIs200,
+        checkResponseSchema: !!col.checkResponseSchema,
+        checkScriptEnable: checkScript?.enable !== false,
+        globalScript: checkScript?.content || "",
       });
     } catch (err) {
       console.error("加载测试元数据失败", err);
@@ -68,7 +87,10 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
         col_id: col._id,
         checkHttpCodeIs200: rules.checkHttpCodeIs200,
         checkResponseSchema: rules.checkResponseSchema,
-        checkScriptIsOpen: rules.checkScriptIsOpen,
+        checkScript: {
+          enable: rules.checkScriptEnable,
+          content: rules.globalScript,
+        },
       });
       console.log("通用规则已保存", col._id);
       onReload();
@@ -78,7 +100,16 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
     }
   }
 
-  /** 浏览器内顺序执行：请求 + 断言脚本 */
+  function applyColRules(status: number, hasCaseScript: boolean): string | null {
+    if (rules.checkHttpCodeIs200 && status !== 200) {
+      return `HTTP 状态码应为 200，实际 ${status}`;
+    }
+    if (rules.checkScriptEnable && rules.globalScript && !hasCaseScript) {
+      return "已启用集合全局断言，请通过服务端测试执行";
+    }
+    return null;
+  }
+
   async function handleBatchRun() {
     if (cases.length === 0) {
       setError("没有可执行的用例");
@@ -93,7 +124,6 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
     setRunning(true);
     setError("");
     setResults([]);
-    const base = env.domain.replace(/\/$/, "");
     const records: Record<number, { params: unknown; body: unknown }> = {};
     const out: CaseRunResult[] = [];
 
@@ -103,24 +133,33 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
         const detail = detailRes.data as InterfaceCaseItem & {
           path?: string;
           method?: string;
+          req_query?: { name: string; value?: string; example?: string }[];
+          req_params?: { name: string; value?: string; example?: string }[];
           req_headers?: { name: string; value?: string; example?: string }[];
           req_body_other?: string;
           req_body_type?: string;
+          req_body_form?: { name: string; type?: string; value?: string; example?: string }[];
           test_script?: string;
         };
 
-        const path = detail.path?.startsWith("/") ? detail.path : `/${detail.path || ""}`;
-        const url = `${base}${path}`;
-        const headers: Record<string, string> = {};
-        (detail.req_headers || []).forEach((h) => {
-          if (h.name) headers[h.name] = h.value || h.example || "";
+        const url = buildInterfaceUrl({
+          baseUrl: env.domain,
+          basepath,
+          path: detail.path || "/",
+          method: detail.method,
+          req_query: detail.req_query,
+          req_params: detail.req_params,
         });
 
-        let body: string | undefined;
-        if (detail.req_body_type === "json" && detail.req_body_other) {
-          headers["Content-Type"] = headers["Content-Type"] || "application/json";
-          body = detail.req_body_other;
-        }
+        const { headers, body } = buildInterfaceFetchInit({
+          baseUrl: env.domain,
+          path: detail.path || "/",
+          method: detail.method,
+          req_headers: detail.req_headers,
+          req_body_type: detail.req_body_type,
+          req_body_other: detail.req_body_other,
+          req_body_form: detail.req_body_form,
+        });
 
         const res = await fetch(url, {
           method: detail.method || "GET",
@@ -134,7 +173,7 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
         try {
           parsedBody = JSON.parse(text);
         } catch {
-          /* 非 JSON 保持文本 */
+          /* 非 JSON */
         }
 
         const response = {
@@ -144,6 +183,12 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
         };
 
         records[c._id] = { params: {}, body: parsedBody };
+
+        const ruleErr = applyColRules(res.status, !!detail.test_script);
+        if (ruleErr) {
+          out.push({ caseId: c._id, name: c.casename, ok: false, message: ruleErr });
+          continue;
+        }
 
         if (detail.test_script) {
           const scriptRes = await colApi.runScript({
@@ -206,7 +251,9 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
             <input
               type="checkbox"
               checked={rules.checkHttpCodeIs200}
-              onChange={(e) => setRules((r) => ({ ...r, checkHttpCodeIs200: e.target.checked }))}
+              onChange={(e) =>
+                setRules((r) => ({ ...r, checkHttpCodeIs200: e.target.checked }))
+              }
             />
             HTTP 状态码必须为 200
           </label>
@@ -214,18 +261,29 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
             <input
               type="checkbox"
               checked={rules.checkResponseSchema}
-              onChange={(e) => setRules((r) => ({ ...r, checkResponseSchema: e.target.checked }))}
+              onChange={(e) =>
+                setRules((r) => ({ ...r, checkResponseSchema: e.target.checked }))
+              }
             />
-            校验返回 JSON Schema
+            校验返回 JSON Schema（服务端测试）
           </label>
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
-              checked={rules.checkScriptIsOpen}
-              onChange={(e) => setRules((r) => ({ ...r, checkScriptIsOpen: e.target.checked }))}
+              checked={rules.checkScriptEnable}
+              onChange={(e) =>
+                setRules((r) => ({ ...r, checkScriptEnable: e.target.checked }))
+              }
             />
-            启用用例断言脚本
+            启用集合全局断言脚本
           </label>
+          <Textarea
+            rows={3}
+            className="font-mono text-xs"
+            placeholder="集合级断言脚本（服务端 run_auto_test 时生效）"
+            value={rules.globalScript}
+            onChange={(e) => setRules((r) => ({ ...r, globalScript: e.target.value }))}
+          />
           <Button size="sm" variant="outline" onClick={saveRules}>
             保存规则
           </Button>

@@ -8,6 +8,9 @@ export const openApi = {
   runAutoTestUrl: (colId: number, token: string, mode = "json") =>
     `/api/open/run_auto_test?id=${colId}&token=${encodeURIComponent(token)}&mode=${mode}`,
 
+  projectInterfaceDataUrl: (project_id: number, token: string) =>
+    `/api/open/project_interface_data?project_id=${project_id}&token=${encodeURIComponent(token)}`,
+
   importData: (payload: {
     type: string;
     token: string;

@@ -70,7 +70,7 @@ export const interfaceApi = {
   /** 按分类分页列表 */
   listByCat: (
     catid: number,
-    opts?: { page?: number; limit?: number; status?: string }
+    opts?: { page?: number; limit?: number; status?: string; tag?: string }
   ) => {
     const q = new URLSearchParams({
       catid: String(catid),
@@ -78,10 +78,17 @@ export const interfaceApi = {
       limit: String(opts?.limit ?? 20),
     });
     if (opts?.status) q.set("status", opts.status);
+    if (opts?.tag) q.set("tag", opts.tag);
     return apiRequest<PaginatedList<InterfaceListItem>>(`/interface/list_cat?${q.toString()}`);
   },
 
-  /** JSON Schema 转示例 JSON（原始响应，非信封） */
+  /** Chrome 插件 / 批量上传接口 JSON */
+  interUpload: (payload: { project_id: number; catid?: number; data: unknown }) =>
+    apiRequest("/interface/interUpload", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
   schema2json: (schema: unknown, required?: boolean) =>
     apiRequestRaw<Record<string, unknown>>("/interface/schema2json", {
       method: "POST",

@@ -71,4 +71,25 @@ export const pluginApi = {
 
   advMockCaseList: (interface_id: number) =>
     apiRequest(`/plugin/advmock/case/list?interface_id=${interface_id}`),
+
+  advMockCaseGet: (id: number) =>
+    apiRequest(`/plugin/advmock/case/get?id=${id}`),
+
+  advMockCaseSave: (payload: Record<string, unknown>) =>
+    apiRequest("/plugin/advmock/case/save", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  advMockCaseDel: (id: number) =>
+    apiRequest("/plugin/advmock/case/del", {
+      method: "POST",
+      body: JSON.stringify({ id }),
+    }),
+
+  advMockCaseHide: (id: number) =>
+    apiRequest("/plugin/advmock/case/hide", {
+      method: "POST",
+      body: JSON.stringify({ id }),
+    }),
 };

@@ -1,11 +1,15 @@
 "use client";
 
 /**
- * 接口调试：根据当前接口与环境域名发起请求
+ * 接口调试：根据当前接口与环境域名发起请求（含 Query、路径参数、Form）
  */
 import { useState } from "react";
 import type { InterfaceDetail } from "../../lib/api/types";
 import type { ProjectEnvItem } from "../../lib/api/types";
+import {
+  buildInterfaceFetchInit,
+  buildInterfaceUrl,
+} from "../../lib/http/build-interface-request";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
@@ -21,11 +25,17 @@ export interface RunResponsePayload {
 interface InterfaceRunPanelProps {
   data: InterfaceDetail;
   envs: ProjectEnvItem[];
-  /** 请求完成后回调（用于断言脚本） */
+  /** 项目 basepath */
+  basepath?: string;
   onResult?: (payload: RunResponsePayload) => void;
 }
 
-export function InterfaceRunPanel({ data, envs, onResult }: InterfaceRunPanelProps) {
+export function InterfaceRunPanel({
+  data,
+  envs,
+  basepath,
+  onResult,
+}: InterfaceRunPanelProps) {
   const [envIndex, setEnvIndex] = useState(0);
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,28 +46,30 @@ export function InterfaceRunPanel({ data, envs, onResult }: InterfaceRunPanelPro
     setError("");
     setResult("");
     const env = envs[envIndex];
-    const base = (env?.domain || "").replace(/\/$/, "");
-    const path = data.path?.startsWith("/") ? data.path : `/${data.path || ""}`;
-    const url = base ? `${base}${path}` : path;
+    const url = buildInterfaceUrl({
+      baseUrl: env?.domain || "",
+      basepath,
+      path: data.path || "/",
+      method: data.method,
+      req_query: data.req_query as { name: string; value?: string; example?: string }[],
+      req_params: data.req_params as { name: string; value?: string; example?: string }[],
+    });
 
     try {
-      const headers: Record<string, string> = {};
-      (data.req_headers || []).forEach((h) => {
-        if (h.name) {
-          headers[h.name] = h.value || h.example || "";
-        }
+      const { headers, body } = buildInterfaceFetchInit({
+        baseUrl: env?.domain || "",
+        path: data.path || "/",
+        method: data.method,
+        req_headers: data.req_headers as { name: string; value?: string; example?: string }[],
+        req_body_type: data.req_body_type,
+        req_body_other: data.req_body_other,
+        req_body_form: data.req_body_form as { name: string; type?: string; value?: string; example?: string }[],
       });
-
-      let body: string | undefined;
-      if (data.req_body_type === "json" && data.req_body_other) {
-        headers["Content-Type"] = headers["Content-Type"] || "application/json";
-        body = data.req_body_other;
-      }
 
       const res = await fetch(url, {
         method: data.method || "GET",
         headers,
-        body: ["GET", "HEAD"].includes(data.method || "GET") ? undefined : body,
+        body,
         credentials: "omit",
       });
 
@@ -118,8 +130,8 @@ export function InterfaceRunPanel({ data, envs, onResult }: InterfaceRunPanelPro
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       ) : null}
-      <Button type="button" onClick={handleRun} disabled={loading || envs.length === 0}>
-        {loading ? "请求中…" : `发送 ${data.method || "GET"}`}
+      <Button type="button" size="sm" onClick={handleRun} disabled={loading}>
+        {loading ? "请求中…" : "发送请求"}
       </Button>
       {result ? (
         <Textarea readOnly rows={12} className="font-mono text-xs" value={result} />

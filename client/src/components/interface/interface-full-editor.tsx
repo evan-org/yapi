@@ -40,6 +40,7 @@ export function InterfaceFullEditor({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [envs, setEnvs] = useState<ProjectEnvItem[]>([]);
+  const [basepath, setBasepath] = useState("");
   const [projectTags, setProjectTags] = useState<ProjectTagItem[]>([]);
   const [form, setForm] = useState({
     title: "",
@@ -96,8 +97,9 @@ export function InterfaceFullEditor({
         ]);
         const envData = envRes.data as { env?: ProjectEnvItem[] };
         setEnvs(envData?.env || []);
-        const proj = projRes.data as { tag?: ProjectTagItem[] };
+        const proj = projRes.data as { tag?: ProjectTagItem[]; basepath?: string };
         setProjectTags(proj?.tag || []);
+        setBasepath(proj?.basepath || "");
       }
     } catch (err) {
       console.error("加载接口详情失败", err);
@@ -441,7 +443,11 @@ export function InterfaceFullEditor({
           </TabsContent>
 
           <TabsContent value="run" className="mt-4">
-            <InterfaceRunPanel data={{ ...data, ...form }} envs={envs} />
+            <InterfaceRunPanel
+              data={{ ...data, ...form }}
+              envs={envs}
+              basepath={basepath}
+            />
           </TabsContent>
 
           <TabsContent value="mock" className="mt-4">

@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { projectApi } from "@/lib/api/project";
-import type { ProjectItem } from "@/lib/api/types";
+import type { ProjectItem, ProjectTagItem } from "@/lib/api/types";
 import { ProjectDataPanel } from "@/components/project/project-data-panel";
 import { ProjectPluginSettings } from "@/components/project/project-plugin-settings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,8 @@ export default function ProjectSettingPage() {
     basepath: "",
     desc: "",
   });
+  const [tags, setTags] = useState<ProjectTagItem[]>([]);
+  const [tagText, setTagText] = useState("");
 
   const load = useCallback(async () => {
     setError("");
@@ -38,6 +40,8 @@ export default function ProjectSettingPage() {
         basepath: (p.basepath as string) || "",
         desc: (p.desc as string) || "",
       });
+      setTags(p.tag || []);
+      setTagText((p.tag || []).map((t) => t.name).join(", "));
     } catch (err) {
       console.error("加载项目失败", err);
       setError(err instanceof Error ? err.message : "加载失败");
@@ -59,6 +63,13 @@ export default function ProjectSettingPage() {
         basepath: form.basepath,
         desc: form.desc,
       });
+      const tagList = tagText
+        .split(/[,，]/)
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .map((name) => ({ name, desc: name }));
+      await projectApi.upTag(projectId, tagList);
+      setTags(tagList);
       console.log("项目设置已保存", projectId);
     } catch (err) {
       console.error("保存项目失败", err);
@@ -112,6 +123,19 @@ export default function ProjectSettingPage() {
                     onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))}
                     rows={4}
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label>接口标签（逗号分隔）</Label>
+                  <Input
+                    value={tagText}
+                    onChange={(e) => setTagText(e.target.value)}
+                    placeholder="例如：核心,内部,废弃"
+                  />
+                  {tags.length > 0 ? (
+                    <p className="text-xs text-muted-foreground">
+                      当前：{tags.map((t) => t.name).join("、")}
+                    </p>
+                  ) : null}
                 </div>
                 <Button type="submit" disabled={saving}>
                   {saving ? "保存中…" : "保存"}

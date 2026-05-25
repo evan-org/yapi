@@ -53,6 +53,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [envs, setEnvs] = useState<ProjectEnvItem[]>([]);
+  const [basepath, setBasepath] = useState("");
   const [form, setForm] = useState({
     casename: "",
     req_body_other: "",
@@ -76,9 +77,13 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
         test_script: d.test_script || "",
       });
       if (d.project_id) {
-        const envRes = await projectApi.getEnv(d.project_id);
+        const [envRes, projRes] = await Promise.all([
+          projectApi.getEnv(d.project_id),
+          projectApi.get(d.project_id),
+        ]);
         const envData = envRes.data as { env?: ProjectEnvItem[] };
         setEnvs(envData?.env || []);
+        setBasepath(((projRes.data as { basepath?: string })?.basepath) || "");
       }
     } catch (err) {
       console.error("加载用例失败", err);
@@ -297,6 +302,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
             <InterfaceRunPanel
               data={runData}
               envs={envs}
+              basepath={basepath}
               onResult={(payload) => setLastResponse(payload)}
             />
           </TabsContent>

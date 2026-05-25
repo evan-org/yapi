@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * 接口表格列表（分页），可筛选状态
+ * 接口表格列表（分页），可筛选状态与标签
  */
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { interfaceApi } from "../../lib/api/client";
-import type { InterfaceListItem } from "../../lib/api/types";
+import { interfaceApi, projectApi } from "../../lib/api/client";
+import type { InterfaceListItem, ProjectTagItem } from "../../lib/api/types";
 import { MethodBadge } from "./method-badge";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -22,13 +22,22 @@ export function InterfaceListTable({ projectId, catId }: InterfaceListTableProps
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [status, setStatus] = useState("");
+  const [tag, setTag] = useState("");
+  const [tags, setTags] = useState<ProjectTagItem[]>([]);
   const [error, setError] = useState("");
   const limit = 15;
+
+  useEffect(() => {
+    projectApi.get(projectId).then((res) => {
+      const p = res.data as { tag?: ProjectTagItem[] };
+      setTags(p?.tag || []);
+    });
+  }, [projectId]);
 
   const load = useCallback(async () => {
     setError("");
     try {
-      const opts = { page, limit, status: status || undefined };
+      const opts = { page, limit, status: status || undefined, tag: tag || undefined };
       const res = catId
         ? await interfaceApi.listByCat(catId, opts)
         : await interfaceApi.list(projectId, opts);
@@ -39,7 +48,7 @@ export function InterfaceListTable({ projectId, catId }: InterfaceListTableProps
       console.error("加载接口列表失败", err);
       setError(err instanceof Error ? err.message : "加载失败");
     }
-  }, [projectId, catId, page, status]);
+  }, [projectId, catId, page, status, tag]);
 
   useEffect(() => {
     load();
@@ -60,6 +69,21 @@ export function InterfaceListTable({ projectId, catId }: InterfaceListTableProps
           <option value="done">已完成</option>
           <option value="undone">未完成</option>
         </select>
+        <select
+          className="h-9 rounded-md border px-2 text-sm"
+          value={tag}
+          onChange={(e) => {
+            setTag(e.target.value);
+            setPage(1);
+          }}
+        >
+          <option value="">全部标签</option>
+          {tags.map((t) => (
+            <option key={t.name} value={t.name}>
+              {t.name}
+            </option>
+          ))}
+        </select>
         <Button size="sm" variant="outline" onClick={load}>
           刷新
         </Button>
@@ -78,56 +102,61 @@ export function InterfaceListTable({ projectId, catId }: InterfaceListTableProps
               <th className="px-3 py-2">方法</th>
               <th className="px-3 py-2">名称</th>
               <th className="px-3 py-2">路径</th>
+              <th className="px-3 py-2">标签</th>
               <th className="px-3 py-2">状态</th>
             </tr>
           </thead>
           <tbody>
-            {list.map((item) => (
-              <tr key={item._id} className="border-t hover:bg-accent/30">
+            {list.map((row) => (
+              <tr key={row._id} className="border-t hover:bg-accent/30">
                 <td className="px-3 py-2">
-                  <MethodBadge method={item.method} />
+                  <MethodBadge method={row.method} />
                 </td>
                 <td className="px-3 py-2">
                   <Link
-                    href={`/project/${projectId}/interface/api/${item._id}`}
-                    className="font-medium hover:text-[#2395f1]"
+                    href={`/project/${projectId}/interface/api/${row._id}`}
+                    className="text-[#2395f1] hover:underline"
                   >
-                    {item.title}
+                    {row.title}
                   </Link>
                 </td>
-                <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{item.path}</td>
+                <td className="px-3 py-2 font-mono text-xs">{row.path}</td>
                 <td className="px-3 py-2">
-                  <Badge variant={item.status === "done" ? "secondary" : "outline"}>
-                    {item.status === "done" ? "完成" : item.status || "—"}
-                  </Badge>
+                  <div className="flex flex-wrap gap-1">
+                    {(row.tag || []).map((t) => (
+                      <Badge key={t} variant="secondary" className="text-xs">
+                        {t}
+                      </Badge>
+                    ))}
+                  </div>
                 </td>
+                <td className="px-3 py-2 text-xs">{row.status || "—"}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {list.length === 0 ? (
-        <p className="py-8 text-center text-sm text-muted-foreground">暂无接口</p>
-      ) : null}
-
-      <div className="flex justify-between text-sm">
-        <span className="text-muted-foreground">
-          第 {page} / {totalPages} 页
+      <div className="flex items-center gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={page <= 1}
+          onClick={() => setPage((p) => p - 1)}
+        >
+          上一页
+        </Button>
+        <span className="text-xs text-muted-foreground">
+          {page} / {totalPages}
         </span>
-        <div className="flex gap-2">
-          <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
-            上一页
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={page >= totalPages}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            下一页
-          </Button>
-        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={page >= totalPages}
+          onClick={() => setPage((p) => p + 1)}
+        >
+          下一页
+        </Button>
       </div>
     </div>
   );
