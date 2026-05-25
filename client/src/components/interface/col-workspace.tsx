@@ -7,11 +7,13 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
-import { colApi, interfaceApi } from "../../lib/api/client";
+import { colApi, interfaceApi, projectApi } from "../../lib/api/client";
+import type { InterfaceColDetail, InterfaceListItem } from "../../lib/api/types";
 import { InterfaceModuleTabs } from "./interface-module-tabs";
 import { ColBatchTestPanel } from "./col-batch-test-panel";
-import type { InterfaceCatItem, InterfaceColItem } from "../../lib/api/types";
+import type { InterfaceCatItem } from "../../lib/api/types";
 import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Alert, AlertDescription } from "../ui/alert";
@@ -25,20 +27,25 @@ interface ColWorkspaceProps {
 
 export function ColWorkspace({ projectId, initialColId }: ColWorkspaceProps) {
   const router = useRouter();
-  const [cols, setCols] = useState<InterfaceColItem[]>([]);
+  const [cols, setCols] = useState<InterfaceColDetail[]>([]);
   const [menu, setMenu] = useState<InterfaceCatItem[]>([]);
   const [activeColId, setActiveColId] = useState<number | null>(null);
+  const [basepath, setBasepath] = useState("");
   const [error, setError] = useState("");
   const [newColName, setNewColName] = useState("");
+  const [pickOpen, setPickOpen] = useState(false);
+  const [pickId, setPickId] = useState<number | "">("");
 
   const load = useCallback(async () => {
     setError("");
     try {
-      const [colRes, menuRes] = await Promise.all([
+      const [colRes, menuRes, projRes] = await Promise.all([
         colApi.list(projectId),
         interfaceApi.listMenu(projectId),
+        projectApi.get(projectId),
       ]);
-      const list = (colRes.data as InterfaceColItem[]) || [];
+      const list = (colRes.data as InterfaceColDetail[]) || [];
+      setBasepath(((projRes.data as { basepath?: string })?.basepath) || "");
       setCols(list);
       setMenu((menuRes.data as InterfaceCatItem[]) || []);
     } catch (err) {
@@ -123,6 +130,32 @@ export function ColWorkspace({ projectId, initialColId }: ColWorkspaceProps) {
     }
   }
 
+  const flatInterfaces: (InterfaceListItem & { catName: string })[] = [];
+  menu.forEach((cat) => {
+    (cat.list || []).forEach((it) => {
+      flatInterfaces.push({ ...it, catName: cat.name });
+    });
+  });
+
+  async function handleAddSingleCase() {
+    if (!activeColId || !pickId) return;
+    const item = flatInterfaces.find((it) => it._id === Number(pickId));
+    if (!item) return;
+    try {
+      await colApi.addCase({
+        project_id: projectId,
+        col_id: activeColId,
+        interface_id: item._id,
+        casename: item.title,
+      });
+      setPickOpen(false);
+      setPickId("");
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "添加用例失败");
+    }
+  }
+
   async function handleImportAllInterfaces() {
     if (!activeColId) return;
     const ids: number[] = [];
@@ -196,6 +229,9 @@ export function ColWorkspace({ projectId, initialColId }: ColWorkspaceProps) {
             <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
               <CardTitle>{activeCol.name}</CardTitle>
               <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={() => setPickOpen(true)}>
+                  添加单个用例
+                </Button>
                 <Button size="sm" variant="outline" onClick={handleImportAllInterfaces}>
                   导入全部接口为用例
                 </Button>
@@ -210,10 +246,38 @@ export function ColWorkspace({ projectId, initialColId }: ColWorkspaceProps) {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {pickOpen ? (
+                <div className="flex flex-wrap items-end gap-2 rounded border p-3">
+                  <div className="min-w-[200px] flex-1">
+                    <Label className="text-xs">选择接口</Label>
+                    <select
+                      className="mt-1 h-9 w-full rounded-md border px-2 text-sm"
+                      value={pickId}
+                      onChange={(e) =>
+                        setPickId(e.target.value ? Number(e.target.value) : "")
+                      }
+                    >
+                      <option value="">请选择</option>
+                      {flatInterfaces.map((it) => (
+                        <option key={it._id} value={it._id}>
+                          [{it.method}] {it.title} ({it.catName})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <Button size="sm" onClick={handleAddSingleCase}>
+                    确认添加
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setPickOpen(false)}>
+                    取消
+                  </Button>
+                </div>
+              ) : null}
               <ColBatchTestPanel
                 projectId={projectId}
                 col={activeCol}
                 cases={activeCol.caseList || []}
+                basepath={basepath}
                 onReload={load}
               />
               <ul className="space-y-2">

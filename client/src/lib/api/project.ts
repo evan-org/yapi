@@ -74,4 +74,10 @@ export const projectApi = {
       method: "POST",
       body: JSON.stringify({ id, member_uid, role }),
     }),
+
+  upTag: (id: number, tag: { name: string; desc?: string }[]) =>
+    apiRequest("/project/up_tag", {
+      method: "POST",
+      body: JSON.stringify({ id, tag }),
+    }),
 };

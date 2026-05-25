@@ -60,4 +60,22 @@ export const colApi = {
 
   getCaseEnvList: (col_id: number) =>
     apiRequest(`/col/case_env_list?col_id=${col_id}`),
+
+  addCase: (payload: {
+    project_id: number;
+    col_id: number;
+    interface_id: number;
+    casename: string;
+    case_env?: string;
+  }) =>
+    apiRequest("/col/add_case", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  cloneCaseList: (payload: { col_id: number; project_id: number }) =>
+    apiRequest("/col/clone_case_list", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 };

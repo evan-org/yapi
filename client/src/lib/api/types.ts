@@ -140,12 +140,24 @@ export interface InterfaceCaseItem {
   test_status?: string;
 }
 
+/** 测试集合通用规则 */
+export interface ColCheckScriptRule {
+  enable?: boolean;
+  content?: string;
+}
+
+export interface ColCheckResponseFieldRule {
+  enable?: boolean;
+  name?: string;
+  value?: string;
+}
+
 /** 测试集合（含通用规则字段） */
 export interface InterfaceColDetail extends InterfaceColItem {
   checkHttpCodeIs200?: boolean;
   checkResponseSchema?: boolean;
-  checkResponseField?: unknown;
-  checkScriptIsOpen?: boolean;
+  checkResponseField?: ColCheckResponseFieldRule;
+  checkScript?: ColCheckScriptRule;
 }
 
 /** 成员 */

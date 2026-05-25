@@ -1230,6 +1230,89 @@ class interfaceController extends baseController {
     return (ctx.body = res);
   }
 
+  /**
+   * Chrome 插件 / 批量上传接口 JSON
+   * POST /api/interface/interUpload  body: { project_id, catid?, data }
+   */
+  async interUpload(ctx) {
+    try {
+      const params = ctx.request.body || {};
+      const project_id = params.project_id;
+      let catid = params.catid;
+      let raw = params.data || params.json;
+
+      if (!project_id) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "project_id 不能为空"));
+      }
+
+      const auth = await this.checkAuth(project_id, "project", "edit");
+      if (!auth) {
+        return (ctx.body = yapi.commons.resReturn(null, 40033, "没有权限"));
+      }
+
+      if (!raw) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "data 不能为空"));
+      }
+
+      if (typeof raw === "string") {
+        raw = JSON.parse(raw);
+      }
+
+      if (!catid) {
+        const cats = await this.catModel.list(project_id);
+        if (!cats.length) {
+          return (ctx.body = yapi.commons.resReturn(null, 400, "请先创建接口分类"));
+        }
+        catid = cats[0]._id;
+      }
+
+      let apis = [];
+      if (Array.isArray(raw)) {
+        if (raw[0] && raw[0].list) {
+          raw.forEach((c) => {
+            apis = apis.concat(c.list || []);
+          });
+        } else {
+          apis = raw;
+        }
+      } else if (raw && raw.list) {
+        raw.list.forEach((c) => {
+          apis = apis.concat(c.list || []);
+        });
+      } else {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "data 格式有误"));
+      }
+
+      let success = 0;
+      const errors = [];
+
+      for (const api of apis) {
+        const item = Object.assign({}, api, {
+          project_id: Number(project_id),
+          catid: api.catid || catid
+        });
+        delete item._id;
+        delete item.__v;
+
+        const subCtx = Object.assign({}, ctx, { params: item });
+        await this.add(subCtx);
+        if (subCtx.body && subCtx.body.errcode === 0) {
+          success++;
+        } else {
+          errors.push(subCtx.body?.errmsg || `${item.title || item.path}: 导入失败`);
+        }
+      }
+
+      ctx.body = yapi.commons.resReturn({
+        success,
+        failed: errors.length,
+        errors: errors.slice(0, 20)
+      });
+    } catch (e) {
+      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+    }
+  }
+
   // 获取开放接口数据
   async listByOpen(ctx) {
     let project_id = ctx.request.query.project_id;

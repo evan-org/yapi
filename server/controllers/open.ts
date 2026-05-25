@@ -178,8 +178,55 @@ class openController extends baseController {
     ctx.body = yapi.commons.resReturn(null, 0, successMessage + warnMessage);
   }
 
+  /**
+   * 开放接口：导出项目接口 JSON（需 token）
+   * GET /api/open/project_interface_data?token=&project_id=
+   */
   async projectInterfaceData(ctx) {
-    ctx.body = "projectInterfaceData";
+    if (!this.$tokenAuth) {
+      return (ctx.body = yapi.commons.resReturn(null, 40022, "token 验证失败"));
+    }
+
+    const projectId = ctx.params.project_id || ctx.query.project_id;
+    if (!projectId) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, "project_id 不能为空"));
+    }
+
+    try {
+      const project = await this.projectModel.get(projectId);
+      if (!project) {
+        return (ctx.body = yapi.commons.resReturn(null, 404, "项目不存在"));
+      }
+
+      const cats = await this.interfaceCatModel.list(projectId);
+      const exportList = [];
+
+      for (let i = 0; i < cats.length; i++) {
+        const cat = cats[i].toObject();
+        let list = await this.interfaceModel.listByCatid(cat._id);
+        list = list.sort((a, b) => (a.index || 0) - (b.index || 0));
+        cat.list = list.map((item) => {
+          const api = item.toObject();
+          delete api.__v;
+          return api;
+        });
+        if (cat.list.length > 0) {
+          exportList.push(cat);
+        }
+      }
+
+      const payload = {
+        project_id: project._id,
+        project_name: project.name,
+        basepath: project.basepath || "",
+        list: exportList
+      };
+
+      ctx.set("Content-Type", "application/json; charset=utf-8");
+      ctx.body = JSON.stringify(payload, null, 2);
+    } catch (e) {
+      ctx.body = yapi.commons.resReturn(null, 402, e.message);
+    }
   }
 
   handleValue(val, global) {
