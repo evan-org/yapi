@@ -9,7 +9,7 @@ test("db 配置缺失时应抛出错误", (t) => {
     port: 3000,
     adminAccount: "admin@admin.com",
   };
-  t.throws(() => assertRuntimeConfig(), /缺少数据库配置/);
+  t.throws(() => assertRuntimeConfig(), { message: /缺少数据库配置/ });
   runtime.WEBCONFIG = backup;
 });
 
@@ -19,6 +19,6 @@ test("adminAccount 缺失时应抛出错误", (t) => {
     port: 3000,
     db: { servername: "127.0.0.1", DATABASE: "yapi" },
   };
-  t.throws(() => assertRuntimeConfig(), /缺少 YAPI_ADMIN_ACCOUNT/);
+  t.throws(() => assertRuntimeConfig(), { message: /缺少 YAPI_ADMIN_ACCOUNT/ });
   runtime.WEBCONFIG = backup;
 });
