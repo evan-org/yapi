@@ -38,7 +38,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "common/tui-editor/dist",
     ".eslintrc.js",
     ".prettierrc.js"
   ]
