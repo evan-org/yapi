@@ -299,9 +299,14 @@ class interfaceColController extends baseController {
       if (!params.project_id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
       }
-
       if (!params.interface_id) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "接口id不能为空"));
+      }
+      if (!params.col_id) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "接口集id不能为空"));
+      }
+      if (!params.casename) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "用例名称不能为空"));
       }
 
       let auth = await this.checkAuth(params.project_id, "project", "edit");
@@ -309,37 +314,11 @@ class interfaceColController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
       }
 
-      if (!params.col_id) {
-        return (ctx.body = yapi.commons.resReturn(null, 400, "接口集id不能为空"));
-      }
-
-      if (!params.casename) {
-        return (ctx.body = yapi.commons.resReturn(null, 400, "用例名称不能为空"));
-      }
-
-      params.uid = this.getUid();
-      params.index = 0;
-      params.add_time = yapi.commons.time();
-      params.up_time = yapi.commons.time();
-      let result = await this.caseModel.save(params);
-      let username = this.getUsername();
-
-      this.colModel.get(params.col_id).then((col) => {
-        yapi.commons.saveLog({
-          content: `<a href="/user/profile/${this.getUid()}">${username}</a> 在接口集 <a href="/project/${
-            params.project_id
-          }/interface/col/${params.col_id}">${col.name}</a> 下添加了测试用例 <a href="/project/${
-            params.project_id
-          }/interface/case/${result._id}">${params.casename}</a>`,
-          type: "project",
-          uid: this.getUid(),
-          username: username,
-          typeid: params.project_id
-        });
+      const result = await interfaceColService.addCase(params, {
+        uid: this.getUid(),
+        username: this.getUsername(),
       });
-      this.projectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
-
-      ctx.body = yapi.commons.resReturn(result);
+      this._reply(ctx, result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
@@ -550,40 +529,20 @@ class interfaceColController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 400, "用例id不能为空"));
       }
 
-      // if (!params.casename) {
-      //   return (ctx.body = yapi.commons.resReturn(null, 400, '用例名称不能为空'));
-      // }
-
       let caseData = await this.caseModel.get(params.id);
+      if (!caseData) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的caseid"));
+      }
       let auth = await this.checkAuth(caseData.project_id, "project", "edit");
       if (!auth) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
       }
 
-      params.uid = this.getUid();
-
-      // 不允许修改接口id和项目id
-      delete params.interface_id;
-      delete params.project_id;
-      let result = await this.caseModel.up(params.id, params);
-      let username = this.getUsername();
-      this.colModel.get(caseData.col_id).then((col) => {
-        yapi.commons.saveLog({
-          content: `<a href="/user/profile/${this.getUid()}">${username}</a> 在接口集 <a href="/project/${
-            caseData.project_id
-          }/interface/col/${caseData.col_id}">${col.name}</a> 更新了测试用例 <a href="/project/${
-            caseData.project_id
-          }/interface/case/${params.id}">${params.casename || caseData.casename}</a>`,
-          type: "project",
-          uid: this.getUid(),
-          username: username,
-          typeid: caseData.project_id
-        });
+      const result = await interfaceColService.updateCase(params, {
+        uid: this.getUid(),
+        username: this.getUsername(),
       });
-
-      this.projectModel.up(caseData.project_id, { up_time: new Date().getTime() }).then();
-
-      ctx.body = yapi.commons.resReturn(result);
+      this._reply(ctx, result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }

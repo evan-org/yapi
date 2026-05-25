@@ -141,6 +141,74 @@ class InterfaceColService extends BaseService {
     });
     return ok({ result, caseData });
   }
+
+  /**
+   * 新增测试用例
+   */
+  async addCase(params, { uid, username }) {
+    if (!params.project_id) {
+      return fail(400, "项目id不能为空");
+    }
+    if (!params.interface_id) {
+      return fail(400, "接口id不能为空");
+    }
+    if (!params.col_id) {
+      return fail(400, "接口集id不能为空");
+    }
+    if (!params.casename) {
+      return fail(400, "用例名称不能为空");
+    }
+
+    const saveData = Object.assign({}, params, {
+      uid,
+      index: 0,
+      add_time: yapi.commons.time(),
+      up_time: yapi.commons.time(),
+    });
+    const result = await this.caseModel.save(saveData);
+
+    this.colModel.get(params.col_id).then((col) => {
+      yapi.commons.saveLog({
+        content: `<a href="/user/profile/${uid}">${username}</a> 在接口集 <a href="/project/${params.project_id}/interface/col/${params.col_id}">${col.name}</a> 下添加了测试用例 <a href="/project/${params.project_id}/interface/case/${result._id}">${params.casename}</a>`,
+        type: "project",
+        uid,
+        username,
+        typeid: params.project_id,
+      });
+    });
+    this.projectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
+    return ok(result);
+  }
+
+  /**
+   * 更新测试用例（不允许改 interface_id / project_id）
+   */
+  async updateCase(params, { uid, username }) {
+    if (!params.id) {
+      return fail(400, "用例id不能为空");
+    }
+    const caseData = await this.caseModel.get(params.id);
+    if (!caseData) {
+      return fail(400, "不存在的caseid");
+    }
+
+    const updateParams = Object.assign({}, params, { uid });
+    delete updateParams.interface_id;
+    delete updateParams.project_id;
+
+    const result = await this.caseModel.up(params.id, updateParams);
+    this.colModel.get(caseData.col_id).then((col) => {
+      yapi.commons.saveLog({
+        content: `<a href="/user/profile/${uid}">${username}</a> 在接口集 <a href="/project/${caseData.project_id}/interface/col/${caseData.col_id}">${col.name}</a> 更新了测试用例 <a href="/project/${caseData.project_id}/interface/case/${params.id}">${params.casename || caseData.casename}</a>`,
+        type: "project",
+        uid,
+        username,
+        typeid: caseData.project_id,
+      });
+    });
+    this.projectModel.up(caseData.project_id, { up_time: new Date().getTime() }).then();
+    return ok(result);
+  }
 }
 
 export default new InterfaceColService();

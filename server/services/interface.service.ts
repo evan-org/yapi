@@ -1,9 +1,78 @@
 // @ts-nocheck
 /**
- * 接口模块业务逻辑（查询、自定义字段、开放列表、Schema 转换等）
+ * 接口模块业务逻辑（查询、增删改、自定义字段、开放列表、Schema 转换等）
  */
 import _ from "underscore";
+import url from "url";
+import fs from "fs-extra";
+import path from "path";
+import jsondiffpatch from "jsondiffpatch";
+import showDiffMsg from "../common/diff-view.js";
 import yapi from "../runtime.js";
+
+const formattersHtml = jsondiffpatch.formatters.html;
+
+/**
+ * 根据请求体类型补全 Content-Type 请求头
+ */
+export function handleHeaders(values) {
+  let isfile = false,
+    isHaveContentType = false;
+  if (values.req_body_type === "form") {
+    values.req_body_form.forEach((item) => {
+      if (item.type === "file") {
+        isfile = true;
+      }
+    });
+
+    values.req_headers.map((item) => {
+      if (item.name === "Content-Type") {
+        item.value = isfile ? "multipart/form-data" : "application/x-www-form-urlencoded";
+        isHaveContentType = true;
+      }
+    });
+    if (isHaveContentType === false) {
+      values.req_headers.unshift({
+        name: "Content-Type",
+        value: isfile ? "multipart/form-data" : "application/x-www-form-urlencoded",
+      });
+    }
+  } else if (values.req_body_type === "json") {
+    values.req_headers
+      ? values.req_headers.map((item) => {
+          if (item.name === "Content-Type") {
+            item.value = "application/json";
+            isHaveContentType = true;
+          }
+        })
+      : [];
+    if (isHaveContentType === false) {
+      values.req_headers = values.req_headers || [];
+      values.req_headers.unshift({
+        name: "Content-Type",
+        value: "application/json",
+      });
+    }
+  }
+}
+
+/**
+ * 从 path 解析 query_path（pathname + query 参数列表）
+ */
+export function buildQueryPathFromUrl(pathStr) {
+  const http_path = url.parse(pathStr, true);
+  const query_path = {
+    path: http_path.pathname,
+    params: [],
+  };
+  Object.keys(http_path.query).forEach((item) => {
+    query_path.params.push({
+      name: item,
+      value: http_path.query[item],
+    });
+  });
+  return { http_path, query_path };
+}
 import {
   interfaceRepository,
   interfaceCatRepository,
@@ -258,6 +327,267 @@ class InterfaceService extends BaseService {
       username,
       typeid: project_id,
     });
+    return ok(result);
+  }
+
+  /**
+   * 将接口文档中的 tag 同步到项目 tag 列表
+   */
+  async autoAddTag(params) {
+    const tags = params.tag;
+    if (!tags || !Array.isArray(tags) || tags.length === 0) {
+      return;
+    }
+    const projectData = await this.projectModel.get(params.project_id);
+    let tagsInProject = projectData.tag;
+    let needUpdate = false;
+    if (tagsInProject && Array.isArray(tagsInProject) && tagsInProject.length > 0) {
+      tags.forEach((tag) => {
+        if (!_.find(tagsInProject, (item) => item.name === tag)) {
+          needUpdate = true;
+          tagsInProject.push({
+            name: tag,
+            desc: tag,
+          });
+        }
+      });
+    } else {
+      needUpdate = true;
+      tagsInProject = [];
+      tags.forEach((tag) => {
+        tagsInProject.push({
+          name: tag,
+          desc: tag,
+        });
+      });
+    }
+    if (needUpdate) {
+      await this.projectModel.up(params.project_id, {
+        tag: tagsInProject,
+        up_time: yapi.commons.time(),
+      });
+    }
+  }
+
+  /**
+   * 新增接口（不含权限校验；controller 负责鉴权）
+   */
+  async addInterface(params, { uid, username, role }) {
+    params.method = params.method || "GET";
+    params.res_body_is_json_schema = _.isUndefined(params.res_body_is_json_schema)
+      ? false
+      : params.res_body_is_json_schema;
+    params.req_body_is_json_schema = _.isUndefined(params.req_body_is_json_schema)
+      ? false
+      : params.req_body_is_json_schema;
+    params.method = params.method.toUpperCase();
+    params.req_params = params.req_params || [];
+    params.res_body_type = params.res_body_type ? params.res_body_type.toLowerCase() : "json";
+
+    const { http_path, query_path } = buildQueryPathFromUrl(params.path);
+    if (!yapi.commons.verifyPath(http_path.pathname)) {
+      return fail(400, "path第一位必需为 /, 只允许由 字母数字-/_:.! 组成");
+    }
+
+    handleHeaders(params);
+    params.query_path = query_path;
+
+    const checkRepeat = await this.interfaceModel.checkRepeat(
+      params.project_id,
+      params.path,
+      params.method
+    );
+    if (checkRepeat > 0) {
+      return fail(40022, "已存在的接口:" + params.path + "[" + params.method + "]");
+    }
+
+    const data = Object.assign(params, {
+      uid,
+      add_time: yapi.commons.time(),
+      up_time: yapi.commons.time(),
+    });
+
+    yapi.commons.handleVarPath(params.path, params.req_params);
+
+    if (params.req_params.length > 0) {
+      data.type = "var";
+      data.req_params = params.req_params;
+    } else {
+      data.type = "static";
+    }
+
+    if (role !== "admin" && uid !== 999999) {
+      const userdata = await yapi.commons.getUserdata(uid, "dev");
+      const check = await this.projectModel.checkMemberRepeat(params.project_id, uid);
+      if (check === 0 && userdata) {
+        await this.projectModel.addMember(params.project_id, [userdata]);
+      }
+    }
+
+    const result = await this.interfaceModel.save(data);
+    yapi.emitHook("interface_add", result).then();
+    this.catModel.get(params.catid).then((cate) => {
+      const title = `<a href="/user/profile/${uid}">${username}</a> 为分类 <a href="/project/${params.project_id}/interface/api/cat_${params.catid}">${cate.name}</a> 添加了接口 <a href="/project/${params.project_id}/interface/api/${result._id}">${data.title}</a> `;
+      yapi.commons.saveLog({
+        content: title,
+        type: "project",
+        uid,
+        username,
+        typeid: params.project_id,
+      });
+      this.projectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
+    });
+
+    await this.autoAddTag(params);
+    return ok(result);
+  }
+
+  /**
+   * diff 邮件 HTML 片段
+   */
+  diffNoticeHtml(html) {
+    if (html.length === 0) {
+      return '<span style="color: #555">没有改动，该操作未改动Api数据</span>';
+    }
+    return html
+      .map(
+        (item) => `<div>
+      <h4 class="title">${item.title}</h4>
+      <div>${item.content}</div>
+    </div>`
+      )
+      .join("");
+  }
+
+  /**
+   * 更新接口（不含权限校验；interfaceData 为更新前文档）
+   */
+  async updateInterface(params, interfaceData, { uid, username }, options = {}) {
+    const requestOrigin = options.requestOrigin || "";
+
+    if (!_.isUndefined(params.method)) {
+      params.method = params.method || "GET";
+      params.method = params.method.toUpperCase();
+    }
+
+    const id = params.id;
+    params.message = params.message || "";
+    params.message = params.message.replace(/\n/g, "<br>");
+
+    handleHeaders(params);
+
+    const data = Object.assign(
+      {
+        up_time: yapi.commons.time(),
+      },
+      params
+    );
+
+    if (params.path) {
+      const { http_path, query_path } = buildQueryPathFromUrl(params.path);
+      if (!yapi.commons.verifyPath(http_path.pathname)) {
+        return fail(400, "path第一位必需为 /, 只允许由 字母数字-/_:.! 组成");
+      }
+      data.query_path = query_path;
+    }
+
+    if (
+      params.path &&
+      (params.path !== interfaceData.path || params.method !== interfaceData.method)
+    ) {
+      const checkRepeat = await this.interfaceModel.checkRepeat(
+        interfaceData.project_id,
+        params.path,
+        params.method
+      );
+      if (checkRepeat > 0) {
+        return fail(401, "已存在的接口:" + params.path + "[" + params.method + "]");
+      }
+    }
+
+    if (!_.isUndefined(data.req_params)) {
+      if (Array.isArray(data.req_params) && data.req_params.length > 0) {
+        data.type = "var";
+      } else {
+        data.type = "static";
+        data.req_params = [];
+      }
+    }
+
+    const result = await this.interfaceModel.up(id, data);
+    const CurrentInterfaceData = await this.interfaceModel.get(id);
+    const toObj = (doc) =>
+      doc && typeof doc.toObject === "function" ? doc.toObject() : doc;
+    const logData = {
+      interface_id: id,
+      cat_id: data.catid,
+      current: toObj(CurrentInterfaceData),
+      old: toObj(interfaceData),
+    };
+
+    this.catModel.get(interfaceData.catid).then((cate) => {
+      const diffView2 = showDiffMsg(jsondiffpatch, formattersHtml, logData);
+      if (diffView2.length <= 0) {
+        return;
+      }
+      yapi.commons.saveLog({
+        content: `<a href="/user/profile/${uid}">${username}</a> 
+                    更新了分类 <a href="/project/${cate.project_id}/interface/api/cat_${
+          data.catid
+        }">${cate.name}</a> 
+                    下的接口 <a href="/project/${cate.project_id}/interface/api/${id}">${
+          interfaceData.title
+        }</a><p>${params.message}</p>`,
+        type: "project",
+        uid,
+        username,
+        typeid: cate.project_id,
+        data: logData,
+      });
+    });
+
+    this.projectModel.up(interfaceData.project_id, { up_time: new Date().getTime() }).then();
+
+    if (params.switch_notice === true) {
+      const diffView = showDiffMsg(jsondiffpatch, formattersHtml, logData);
+      const annotatedCss = fs.readFileSync(
+        path.resolve(
+          yapi.WEBROOT,
+          "node_modules/jsondiffpatch/dist/formatters-styles/annotated.css"
+        ),
+        "utf8"
+      );
+      const htmlCss = fs.readFileSync(
+        path.resolve(yapi.WEBROOT, "node_modules/jsondiffpatch/dist/formatters-styles/html.css"),
+        "utf8"
+      );
+
+      const project = await this.projectModel.getBaseInfo(interfaceData.project_id);
+      const interfaceUrl = `${requestOrigin}/project/${interfaceData.project_id}/interface/api/${id}`;
+
+      yapi.commons.sendNotice(interfaceData.project_id, {
+        title: `${username} 更新了接口`,
+        content: `<html>
+        <head>
+        <style>
+        ${annotatedCss}
+        ${htmlCss}
+        </style>
+        </head>
+        <body>
+        <div><h3>${username}更新了接口(${data.title})</h3>
+        <p>项目名：${project.name} </p>
+        <p>修改用户: ${username}</p>
+        <p>接口名: <a href="${interfaceUrl}">${data.title}</a></p>
+        <p>接口路径: [${data.method}]${data.path}</p>
+        <p>详细改动日志: ${this.diffNoticeHtml(diffView)}</p></div>
+        </body>
+        </html>`,
+      });
+    }
+
+    yapi.emitHook("interface_update", id).then();
+    await this.autoAddTag(params);
     return ok(result);
   }
 }
