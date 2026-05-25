@@ -1,5 +1,9 @@
 // @ts-nocheck
+/**
+ * 用户模型：委托关系型 userRepository（供 yapi.getInst 与 install 使用）
+ */
 import baseModel from "./base.js";
+import { userRepository } from "../repositories/user.repo.js";
 
 class userModel extends baseModel {
   getName() {
@@ -7,68 +11,47 @@ class userModel extends baseModel {
   }
 
   save(data) {
-    return this.store.insert(data);
+    return userRepository.save(data);
   }
 
   checkRepeat(email) {
-    return this.store.count({ email });
+    return userRepository.checkRepeat(email);
   }
 
   list() {
-    return this.store.findMany(
-      {},
-      { fields: this._fields("_id username email role type add_time up_time study") }
-    );
+    return userRepository.list();
   }
 
   findByUids(uids) {
-    return this.store.findMany(
-      { _id: { $in: uids } },
-      { fields: this._fields("_id username email role type add_time up_time study") }
-    );
+    return userRepository.findByUids(uids);
   }
 
   listWithPaging(page, limit) {
-    page = parseInt(page);
-    limit = parseInt(limit);
-    return this.store.findMany(
-      {},
-      {
-        sort: { _id: -1 },
-        skip: (page - 1) * limit,
-        limit,
-        fields: this._fields("_id username email role type add_time up_time study"),
-      }
-    );
+    return userRepository.listWithPaging(page, limit);
   }
 
   listCount() {
-    return this.store.count();
+    return userRepository.listCount();
   }
 
   findByEmail(email) {
-    return this.store.findOne({ email });
+    return userRepository.findByEmail(email);
   }
 
   findById(id) {
-    return this.store.findOne({ _id: id });
+    return userRepository.findById(id);
   }
 
   del(id) {
-    return this.store.delete({ _id: id });
+    return userRepository.del(id);
   }
 
   update(id, data) {
-    return this.store.updateById(id, data);
+    return userRepository.update(id, data);
   }
 
   search(keyword) {
-    return this.store.findMany(
-      {
-        $or: [{ email: new RegExp(keyword, "i") }, { username: new RegExp(keyword, "i") }],
-      },
-      { limit: 10, exclude: ["passsalt", "password"] }
-    );
+    return userRepository.search(keyword);
   }
 }
 

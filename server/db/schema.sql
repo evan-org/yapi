@@ -2,13 +2,28 @@
 
 CREATE TABLE IF NOT EXISTS yapi_user (
   _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
-);
-CREATE TABLE IF NOT EXISTS yapi_project (
-  _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
+  username TEXT NOT NULL DEFAULT '',
+  password TEXT NOT NULL DEFAULT '',
+  email TEXT NOT NULL DEFAULT '',
+  passsalt TEXT NOT NULL DEFAULT '',
+  study BOOLEAN NOT NULL DEFAULT FALSE,
+  role TEXT NOT NULL DEFAULT '',
+  type TEXT NOT NULL DEFAULT '',
+  add_time BIGINT NOT NULL DEFAULT 0,
+  up_time BIGINT NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS yapi_group (
+  _id SERIAL PRIMARY KEY,
+  uid BIGINT NOT NULL DEFAULT 0,
+  group_name TEXT NOT NULL DEFAULT '',
+  group_desc TEXT NOT NULL DEFAULT '',
+  add_time BIGINT NOT NULL DEFAULT 0,
+  up_time BIGINT NOT NULL DEFAULT 0,
+  type TEXT NOT NULL DEFAULT 'public',
+  members JSONB NOT NULL DEFAULT '[]'::jsonb,
+  custom_field1 JSONB NOT NULL DEFAULT '{}'::jsonb
+);
+CREATE TABLE IF NOT EXISTS yapi_project (
   _id SERIAL PRIMARY KEY,
   doc JSONB NOT NULL DEFAULT '{}'::jsonb
 );
@@ -69,8 +84,10 @@ CREATE TABLE IF NOT EXISTS yapi_interface_auto_sync (
   doc JSONB NOT NULL DEFAULT '{}'::jsonb
 );
 
-CREATE INDEX IF NOT EXISTS idx_yapi_user_username ON yapi_user ((doc->>'username'));
-CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_user_email ON yapi_user ((doc->>'email'));
+CREATE INDEX IF NOT EXISTS idx_yapi_user_username ON yapi_user (username);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_user_email ON yapi_user (email);
+CREATE INDEX IF NOT EXISTS idx_yapi_group_uid ON yapi_group (uid);
+CREATE INDEX IF NOT EXISTS idx_yapi_group_name ON yapi_group (group_name);
 CREATE INDEX IF NOT EXISTS idx_yapi_project_uid ON yapi_project ((doc->>'uid'));
 CREATE INDEX IF NOT EXISTS idx_yapi_project_name ON yapi_project ((doc->>'name'));
 CREATE INDEX IF NOT EXISTS idx_yapi_project_group ON yapi_project ((doc->>'group_id'));
@@ -86,8 +103,6 @@ CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_pid ON yapi_interface_case ((
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_uid ON yapi_interface ((doc->>'uid'));
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_path ON yapi_interface ((doc->>'path'), (doc->>'method'));
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_pid ON yapi_interface ((doc->>'project_id'));
-CREATE INDEX IF NOT EXISTS idx_yapi_group_uid ON yapi_group ((doc->>'uid'));
-CREATE INDEX IF NOT EXISTS idx_yapi_group_name ON yapi_group ((doc->>'group_name'));
 CREATE INDEX IF NOT EXISTS idx_yapi_avatar_uid ON yapi_avatar ((doc->>'uid'));
 CREATE INDEX IF NOT EXISTS idx_yapi_token_pid ON yapi_token ((doc->>'project_id'));
 CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON yapi_follow ((doc->>'uid'));

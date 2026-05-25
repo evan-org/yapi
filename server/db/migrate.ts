@@ -1,13 +1,47 @@
 /**
- * PostgreSQL 建表与 JSONB 表达式索引
+ * PostgreSQL 建表与索引（核心表关系型列，其余 JSONB）
  */
 import { getPool } from "./pg-pool.js";
-import { ALL_COLLECTIONS, tableName } from "./table.js";
+import { JSONB_COLLECTIONS, RELATIONAL_COLLECTIONS, tableName } from "./table.js";
 
-/** 创建所有业务表（_id SERIAL + doc JSONB） */
+/** 关系型核心表 DDL */
+const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = {
+  user: `
+    CREATE TABLE IF NOT EXISTS ${tableName("user")} (
+      _id SERIAL PRIMARY KEY,
+      username TEXT NOT NULL DEFAULT '',
+      password TEXT NOT NULL DEFAULT '',
+      email TEXT NOT NULL DEFAULT '',
+      passsalt TEXT NOT NULL DEFAULT '',
+      study BOOLEAN NOT NULL DEFAULT FALSE,
+      role TEXT NOT NULL DEFAULT '',
+      type TEXT NOT NULL DEFAULT '',
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0
+    )
+  `,
+  group: `
+    CREATE TABLE IF NOT EXISTS ${tableName("group")} (
+      _id SERIAL PRIMARY KEY,
+      uid BIGINT NOT NULL DEFAULT 0,
+      group_name TEXT NOT NULL DEFAULT '',
+      group_desc TEXT NOT NULL DEFAULT '',
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      type TEXT NOT NULL DEFAULT 'public',
+      members JSONB NOT NULL DEFAULT '[]'::jsonb,
+      custom_field1 JSONB NOT NULL DEFAULT '{}'::jsonb
+    )
+  `,
+};
+
+/** 创建所有业务表 */
 export async function ensureTables(): Promise<void> {
   const pool = getPool();
-  for (const col of ALL_COLLECTIONS) {
+  for (const col of RELATIONAL_COLLECTIONS) {
+    await pool.query(RELATIONAL_DDL[col]);
+  }
+  for (const col of JSONB_COLLECTIONS) {
     const tbl = tableName(col);
     await pool.query(`
       CREATE TABLE IF NOT EXISTS ${tbl} (
@@ -18,12 +52,14 @@ export async function ensureTables(): Promise<void> {
   }
 }
 
-/** 创建 JSONB 表达式索引 */
+/** 创建列索引与 JSONB 表达式索引 */
 export async function ensureIndexes(): Promise<void> {
   const pool = getPool();
   const statements: string[] = [
-    `CREATE INDEX IF NOT EXISTS idx_yapi_user_username ON ${tableName("user")} ((doc->>'username'))`,
-    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_user_email ON ${tableName("user")} ((doc->>'email'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_user_username ON ${tableName("user")} (username)`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_user_email ON ${tableName("user")} (email)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_group_uid ON ${tableName("group")} (uid)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_group_name ON ${tableName("group")} (group_name)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_project_uid ON ${tableName("project")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_project_name ON ${tableName("project")} ((doc->>'name'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_project_group ON ${tableName("project")} ((doc->>'group_id'))`,
@@ -39,8 +75,6 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_uid ON ${tableName("interface")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_path ON ${tableName("interface")} ((doc->>'path'), (doc->>'method'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_pid ON ${tableName("interface")} ((doc->>'project_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_group_uid ON ${tableName("group")} ((doc->>'uid'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_group_name ON ${tableName("group")} ((doc->>'group_name'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_avatar_uid ON ${tableName("avatar")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_token_pid ON ${tableName("token")} ((doc->>'project_id'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON ${tableName("follow")} ((doc->>'uid'))`,
