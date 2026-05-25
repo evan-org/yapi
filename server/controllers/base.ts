@@ -148,7 +148,7 @@ class baseController {
 
       let decoded;
       try {
-        decoded = jwt.verify(token, result.passsalt);
+        decoded = jwt.verify(token, result.passsalt, { algorithms: ["HS256"] });
       } catch (err) {
         return false;
       }
