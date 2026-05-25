@@ -46,7 +46,7 @@ web/out/
 web/node_modules/
 .tags
 .tags1
-tsconfig.json
+/tsconfig.json
 client/plugin-module.js
 .vscode
 /iconfont
