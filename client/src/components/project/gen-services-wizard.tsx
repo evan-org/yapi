@@ -7,7 +7,7 @@ import { useState } from "react";
 import { pluginApi } from "../../lib/api/plugin";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
+import { JsonCodeEditor } from "../shared/json-code-editor";
 import { Alert, AlertDescription } from "../ui/alert";
 
 interface GenServicesWizardProps {
@@ -115,12 +115,7 @@ export function GenServicesWizard({ projectId }: GenServicesWizardProps) {
           <p className="text-sm">
             已加载预览（约 {interfaceCount} 个接口，正文截断至 12KB）。
           </p>
-          <Textarea
-            readOnly
-            rows={12}
-            className="font-mono text-xs"
-            value={preview}
-          />
+          <JsonCodeEditor value={preview} readOnly height={360} language="json" />
           <div className="flex flex-wrap gap-2">
             <Button type="button" variant="outline" onClick={() => setStep(1)}>
               上一步

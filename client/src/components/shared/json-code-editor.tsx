@@ -27,16 +27,15 @@ export function JsonCodeEditor({
   className,
   placeholder,
 }: JsonCodeEditorProps) {
-  const handleMount: OnMount = useCallback((editor, monaco) => {
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      validate: language === "json",
-      allowComments: false,
-      schemas: [],
-    });
-    if (placeholder && !value) {
-      editor.setValue("");
+  const handleMount: OnMount = useCallback((_editor, monaco) => {
+    if (language === "json") {
+      monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+        validate: true,
+        allowComments: false,
+        schemas: [],
+      });
     }
-  }, [language, placeholder, value]);
+  }, [language]);
 
   return (
     <div

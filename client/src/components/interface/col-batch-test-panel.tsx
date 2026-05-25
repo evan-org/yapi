@@ -8,7 +8,7 @@ import { colApi, openApi, projectApi } from "../../lib/api/client";
 import type { InterfaceCaseItem, InterfaceColItem, ProjectEnvItem } from "../../lib/api/types";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
@@ -264,7 +264,7 @@ export function ColBatchTestPanel({ projectId, col, cases, onReload }: ColBatchT
         {autoTestUrl ? (
           <div className="space-y-1">
             <Label className="text-xs text-muted-foreground">服务端自动化 URL</Label>
-            <Textarea readOnly rows={2} className="font-mono text-xs" value={autoTestUrl} />
+            <Input readOnly className="font-mono text-xs" value={autoTestUrl} />
           </div>
         ) : null}
 

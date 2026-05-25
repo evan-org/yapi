@@ -17,7 +17,6 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
 import { JsonCodeEditor } from "../shared/json-code-editor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Alert, AlertDescription } from "../ui/alert";
@@ -339,14 +338,17 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
           <TabsContent value="test" className="mt-4 space-y-4">
             <div className="space-y-2">
               <Label>断言脚本（JavaScript）</Label>
-              <Textarea
-                className="font-mono text-xs"
-                rows={10}
-                placeholder="assert.equal(status, 200)"
-                value={form.test_script}
-                onFocus={() => setInsertField("script")}
-                onChange={(e) => setForm((f) => ({ ...f, test_script: e.target.value }))}
-              />
+              <div onFocus={() => setInsertField("script")}>
+                <JsonCodeEditor
+                  language="javascript"
+                  height={240}
+                  placeholder="assert.equal(status, 200)"
+                  value={form.test_script}
+                  onChange={(test_script) =>
+                    setForm((f) => ({ ...f, test_script }))
+                  }
+                />
+              </div>
             </div>
             <Button size="sm" onClick={handleRunAssert}>
               <Play className="mr-1 h-4 w-4" />

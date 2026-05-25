@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { pluginApi } from "@/lib/api/plugin";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
+import { JsonCodeEditor } from "../shared/json-code-editor";
 import { Alert, AlertDescription } from "../ui/alert";
 
 interface InterfaceAdvMockPanelProps {
@@ -86,11 +86,11 @@ export function InterfaceAdvMockPanel({
       </div>
       <div className="space-y-2">
         <Label>Mock 脚本</Label>
-        <Textarea
-          rows={6}
-          className="font-mono text-xs"
+        <JsonCodeEditor
+          language="javascript"
+          height={220}
           value={script}
-          onChange={(e) => setScript(e.target.value)}
+          onChange={setScript}
           placeholder="返回 mock 数据的 JS 脚本"
         />
       </div>

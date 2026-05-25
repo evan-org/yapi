@@ -423,9 +423,12 @@ export function InterfaceFullEditor({
                       onChange={(req_body_form) => setForm((f) => ({ ...f, req_body_form }))}
                     />
                   ) : (
-                    <pre className="rounded bg-muted p-3 text-xs overflow-auto">
-                      {JSON.stringify(form.req_body_form, null, 2)}
-                    </pre>
+                    <JsonCodeEditor
+                      value={JSON.stringify(form.req_body_form, null, 2)}
+                      readOnly
+                      height={200}
+                      language="json"
+                    />
                   )
                 ) : (
                   <JsonCodeEditor

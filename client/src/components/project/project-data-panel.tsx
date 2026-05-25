@@ -10,7 +10,6 @@ import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
 import { JsonCodeEditor } from "../shared/json-code-editor";
 import { Alert, AlertDescription } from "../ui/alert";
 
@@ -253,36 +252,36 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
         </p>
         <div className="space-y-2">
           <Label>Pre-request 脚本</Label>
-          <Textarea
-            className="font-mono text-xs"
-            rows={5}
+          <JsonCodeEditor
+            language="javascript"
+            height={180}
             value={scripts.pre_script}
-            onChange={(e) =>
-              setScripts((s) => ({ ...s, pre_script: e.target.value }))
+            onChange={(pre_script) =>
+              setScripts((s) => ({ ...s, pre_script }))
             }
             placeholder="// 请求前执行"
           />
         </div>
         <div className="space-y-2">
           <Label>After-request 脚本</Label>
-          <Textarea
-            className="font-mono text-xs"
-            rows={5}
+          <JsonCodeEditor
+            language="javascript"
+            height={180}
             value={scripts.after_script}
-            onChange={(e) =>
-              setScripts((s) => ({ ...s, after_script: e.target.value }))
+            onChange={(after_script) =>
+              setScripts((s) => ({ ...s, after_script }))
             }
             placeholder="// 请求后执行"
           />
         </div>
         <div className="space-y-2">
           <Label>项目 Mock 脚本</Label>
-          <Textarea
-            className="font-mono text-xs"
-            rows={4}
+          <JsonCodeEditor
+            language="javascript"
+            height={160}
             value={scripts.project_mock_script}
-            onChange={(e) =>
-              setScripts((s) => ({ ...s, project_mock_script: e.target.value }))
+            onChange={(project_mock_script) =>
+              setScripts((s) => ({ ...s, project_mock_script }))
             }
           />
         </div>
