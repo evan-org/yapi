@@ -20,11 +20,11 @@ export const RELATIONAL_COLLECTIONS = [
   "token",
   "follow",
   "avatar",
+  "storage",
 ] as const;
 
 /** JSONB 文档存储（结构复杂或插件表） */
 export const JSONB_COLLECTIONS = [
-  "storage",
   "wiki",
   "adv_mock",
   "adv_mock_case",
