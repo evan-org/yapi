@@ -1,92 +1,14 @@
-// @ts-nocheck
 /**
  * 接口模块业务逻辑（查询、增删改、自定义字段、开放列表、Schema 转换等）
  */
 import _ from "underscore";
-import url from "url";
 import fs from "fs-extra";
 import path from "path";
 import jsondiffpatch from "jsondiffpatch";
 import showDiffMsg from "../common/diff-view.js";
 import yapi from "../runtime.js";
-
-const formattersHtml = jsondiffpatch.formatters.html;
-
-/**
- * 根据请求体类型补全 Content-Type 请求头
- */
-export function handleHeaders(values) {
-  let isfile = false,
-    isHaveContentType = false;
-  if (values.req_body_type === "form") {
-    values.req_body_form.forEach((item) => {
-      if (item.type === "file") {
-        isfile = true;
-      }
-    });
-
-    values.req_headers.map((item) => {
-      if (item.name === "Content-Type") {
-        item.value = isfile ? "multipart/form-data" : "application/x-www-form-urlencoded";
-        isHaveContentType = true;
-      }
-    });
-    if (isHaveContentType === false) {
-      values.req_headers.unshift({
-        name: "Content-Type",
-        value: isfile ? "multipart/form-data" : "application/x-www-form-urlencoded",
-      });
-    }
-  } else if (values.req_body_type === "json") {
-    values.req_headers
-      ? values.req_headers.map((item) => {
-          if (item.name === "Content-Type") {
-            item.value = "application/json";
-            isHaveContentType = true;
-          }
-        })
-      : [];
-    if (isHaveContentType === false) {
-      values.req_headers = values.req_headers || [];
-      values.req_headers.unshift({
-        name: "Content-Type",
-        value: "application/json",
-      });
-    }
-  }
-}
-
-/**
- * 从 path 解析 query_path（pathname + query 参数列表）
- */
-export function buildQueryPathFromUrl(pathStr) {
-  const http_path = url.parse(pathStr, true);
-  const query_path = {
-    path: http_path.pathname,
-    params: [],
-  };
-  Object.keys(http_path.query).forEach((item) => {
-    query_path.params.push({
-      name: item,
-      value: http_path.query[item],
-    });
-  });
-  return { http_path, query_path };
-}
-
-/**
- * 列表查询 option 附加 status / tag 过滤
- */
-export function applyStatusTagFilter(option, status, tag) {
-  if (status) {
-    option.status = Array.isArray(status) ? { $in: status } : status;
-  }
-  if (tag) {
-    option.tag = Array.isArray(tag) ? { $in: tag } : tag;
-  }
-  return option;
-}
-import mergeJsonSchema from "../common/mergeJsonSchema.js";
+import type { YapiRuntime } from "../types/global.js";
+import commons from "../utils/commons.js";
 import {
   interfaceRepository,
   interfaceCatRepository,
@@ -97,33 +19,62 @@ import {
 } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+import {
+  handleHeaders,
+  buildQueryPathFromUrl,
+  applyStatusTagFilter,
+  mergeSaveResBody,
+} from "./interface.util.js";
+import {
+  validateAddCategoryParams,
+  validateCategoryId,
+  validateInterfaceProjectId,
+  validateCustomFieldQuery,
+  validateIndexBatchItems,
+  validateBatchUploadInput,
+  validateInterfaceId,
+} from "./interface.validation.js";
 
-/**
- * dataSync=good 时合并新旧 JSON Schema 响应体
- */
-export function mergeSaveResBody(params, existingItem) {
-  if (!params.res_body_is_json_schema || params.dataSync !== "good") {
-    return params.res_body;
-  }
-  try {
-    const newResBody = yapi.commons.json_parse(params.res_body);
-    const oldResBody = yapi.commons.json_parse(existingItem.res_body);
-    return JSON.stringify(mergeJsonSchema(oldResBody, newResBody), null, 2);
-  } catch (err) {
-    return params.res_body;
+export {
+  handleHeaders,
+  buildQueryPathFromUrl,
+  applyStatusTagFilter,
+  mergeSaveResBody,
+} from "./interface.util.js";
+
+const formattersHtml = jsondiffpatch.formatters.html;
+
+/** plugin 启动后挂载 emitHook */
+function emitInterfaceHook(name: string, ...args: unknown[]) {
+  const hook = (yapi as YapiRuntime).emitHook;
+  if (hook) {
+    hook(name, ...args).then();
   }
 }
 
+type InterfaceOperator = {
+  uid: number | string;
+  username: string;
+  role?: string;
+};
+
+type InterfaceSchemaMap = {
+  add: Record<string, unknown>;
+  up: Record<string, unknown>;
+};
+
+type InterfaceSaveOptions = {
+  schemas?: InterfaceSchemaMap;
+  requestOrigin?: string;
+};
+
 class InterfaceService extends BaseService {
-  constructor() {
-    super();
-    this.interfaceModel = interfaceRepository;
-    this.catModel = interfaceCatRepository;
-    this.caseModel = interfaceCaseRepository;
-    this.groupModel = groupRepository;
-    this.projectModel = projectRepository;
-    this.userModel = userRepository;
-  }
+  interfaceModel = interfaceRepository;
+  catModel = interfaceCatRepository;
+  caseModel = interfaceCaseRepository;
+  groupModel = groupRepository;
+  projectModel = projectRepository;
+  userModel = userRepository;
 
   /**
    * 项目基础信息（侧栏/列表鉴权）
@@ -171,9 +122,9 @@ class InterfaceService extends BaseService {
     const result = await this.catModel.up(catid, {
       name,
       desc,
-      up_time: yapi.commons.time(),
+      up_time: commons.time(),
     });
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 更新了分类 <a href="/project/${cate.project_id}/interface/api/cat_${catid}">${cate.name}</a>`,
       type: "project",
       uid,
@@ -203,7 +154,7 @@ class InterfaceService extends BaseService {
    * JSON Schema 转 mock JSON
    */
   schemaToJson(schema, required) {
-    return yapi.commons.schemaToJson(schema, {
+    return commons.schemaToJson(schema, {
       alwaysFakeOptionals: _.isUndefined(required) ? true : required,
     });
   }
@@ -212,12 +163,12 @@ class InterfaceService extends BaseService {
    * 自定义字段查询
    */
   async queryByCustomField(queryParams) {
-    const keys = Object.keys(queryParams || {});
-    if (keys.length !== 1) {
-      return fail(400, "参数数量错误");
+    const fieldValidated = validateCustomFieldQuery(queryParams);
+    if (!fieldValidated.ok) {
+      return fieldValidated;
     }
-    const customFieldName = keys[0];
-    const customFieldValue = queryParams[customFieldName];
+    const { fieldName: customFieldName, fieldValue: customFieldValue } =
+      fieldValidated.data;
 
     const groups = await this.groupModel.getcustomFieldName(customFieldName);
     if (groups.length === 0) {
@@ -235,8 +186,8 @@ class InterfaceService extends BaseService {
         if (inter.length > 0) {
           inter = inter.map((item) => {
             const row = item.toObject();
-            row.res_body = yapi.commons.json_parse(row.res_body);
-            row.req_body_other = yapi.commons.json_parse(row.req_body_other);
+            row.res_body = commons.json_parse(row.res_body);
+            row.req_body_other = commons.json_parse(row.req_body_other);
             return row;
           });
           interfaces.push({
@@ -285,11 +236,11 @@ class InterfaceService extends BaseService {
       return fail(400, "接口不存在");
     }
     const result = await this.interfaceModel.del(id);
-    yapi.emitHook("interface_del", id).then();
+    emitInterfaceHook("interface_del", id);
     await this.caseModel.delByInterfaceId(id);
     const cate = await this.catModel.get(data.catid);
     if (cate) {
-      yapi.commons.saveLog({
+      commons.saveLog({
         content: `<a href="/user/profile/${uid}">${username}</a> 删除了分类 <a href="/project/${cate.project_id}/interface/api/cat_${data.catid}">${cate.name}</a> 下的接口 "${data.title}"`,
         type: "project",
         uid,
@@ -311,7 +262,7 @@ class InterfaceService extends BaseService {
     if (!catData) {
       return fail(400, "不存在的分类");
     }
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 删除了分类 "${catData.name}" 及该分类下的接口`,
       type: "project",
       uid,
@@ -321,10 +272,10 @@ class InterfaceService extends BaseService {
     const interfaceData = await this.interfaceModel.listByCatid(catId);
     for (const item of interfaceData) {
       try {
-        yapi.emitHook("interface_del", item._id).then();
+        emitInterfaceHook("interface_del", item._id);
         await this.caseModel.delByInterfaceId(item._id);
       } catch (e) {
-        yapi.commons.log(e.message, "error");
+        commons.log(e.message, "error");
       }
     }
     await this.catModel.del(catId);
@@ -335,22 +286,21 @@ class InterfaceService extends BaseService {
   /**
    * 新增接口分类
    */
-  async addCategory({ name, project_id, desc, uid, username }) {
-    if (!project_id) {
-      return fail(400, "项目id不能为空");
+  async addCategory(params) {
+    const validated = validateAddCategoryParams(params);
+    if (!validated.ok) {
+      return validated;
     }
-    if (!name) {
-      return fail(400, "名称不能为空");
-    }
+    const { name, project_id, desc, uid, username } = validated.data;
     const result = await this.catModel.save({
       name,
       project_id,
       desc,
       uid,
-      add_time: yapi.commons.time(),
-      up_time: yapi.commons.time(),
+      add_time: commons.time(),
+      up_time: commons.time(),
     });
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 添加了分类  <a href="/project/${project_id}/interface/api/cat_${result._id}">${name}</a>`,
       type: "project",
       uid,
@@ -364,9 +314,11 @@ class InterfaceService extends BaseService {
    * 项目接口分页列表
    */
   async listByProject({ project_id, page, limit, status, tag }) {
-    if (!project_id) {
-      return fail(400, "项目id不能为空");
+    const projectValidated = validateInterfaceProjectId(project_id);
+    if (!projectValidated.ok) {
+      return projectValidated;
     }
+    project_id = projectValidated.data;
     const project = await this.projectModel.getBaseInfo(project_id);
     if (!project) {
       return fail(407, "不存在的项目");
@@ -383,7 +335,7 @@ class InterfaceService extends BaseService {
       count = await this.interfaceModel.listCount(option);
     }
 
-    yapi.emitHook("interface_list", result).then();
+    emitInterfaceHook("interface_list", result);
     return ok({
       count,
       total: Math.ceil(count / limit),
@@ -395,9 +347,11 @@ class InterfaceService extends BaseService {
    * 分类下接口分页列表
    */
   async listByCategory({ catid, page, limit, status, tag }) {
-    if (!catid) {
-      return fail(400, "catid不能为空");
+    const catValidated = validateCategoryId(catid);
+    if (!catValidated.ok) {
+      return catValidated;
     }
+    catid = catValidated.data;
     const catdata = await this.catModel.get(catid);
     if (!catdata) {
       return fail(400, "分类不存在");
@@ -422,15 +376,16 @@ class InterfaceService extends BaseService {
    * 批量更新接口排序 index
    */
   updateIndexBatch(items) {
-    if (!items || !Array.isArray(items)) {
-      return fail(400, "请求参数必须是数组");
+    const validated = validateIndexBatchItems(items);
+    if (!validated.ok) {
+      return validated;
     }
-    items.forEach((item) => {
+    validated.data.forEach((item) => {
       if (item.id) {
         this.interfaceModel.upIndex(item.id, item.index).then(
           () => {},
           (err) => {
-            yapi.commons.log(err.message, "error");
+            commons.log(err.message, "error");
           }
         );
       }
@@ -442,15 +397,16 @@ class InterfaceService extends BaseService {
    * 批量更新分类排序 index
    */
   updateCatIndexBatch(items) {
-    if (!items || !Array.isArray(items)) {
-      return fail(400, "请求参数必须是数组");
+    const validated = validateIndexBatchItems(items);
+    if (!validated.ok) {
+      return validated;
     }
-    items.forEach((item) => {
+    validated.data.forEach((item) => {
       if (item.id) {
         this.catModel.upCatIndex(item.id, item.index).then(
           () => {},
           (err) => {
-            yapi.commons.log(err.message, "error");
+            commons.log(err.message, "error");
           }
         );
       }
@@ -492,7 +448,7 @@ class InterfaceService extends BaseService {
     if (needUpdate) {
       await this.projectModel.up(params.project_id, {
         tag: tagsInProject,
-        up_time: yapi.commons.time(),
+        up_time: commons.time(),
       });
     }
   }
@@ -501,12 +457,20 @@ class InterfaceService extends BaseService {
    * 按 path+method 保存接口：已存在则更新（可多条），不存在则新增
    * 不含权限校验；controller 负责鉴权
    */
-  async saveInterface(params, { uid, username, role }, { schemas, requestOrigin } = {}) {
+  async saveInterface(
+    params: Record<string, any>,
+    { uid, username, role }: InterfaceOperator,
+    options: InterfaceSaveOptions = {}
+  ) {
+    const { schemas, requestOrigin } = options;
+    if (!schemas) {
+      return fail(400, "缺少参数校验 schema");
+    }
     const payload = Object.assign({}, params);
     payload.method = (payload.method || "GET").toUpperCase();
 
     const { http_path } = buildQueryPathFromUrl(payload.path);
-    if (!yapi.commons.verifyPath(http_path.pathname)) {
+    if (!commons.verifyPath(http_path.pathname)) {
       return fail(400, "path第一位必需为 /, 只允许由 字母数字-/_:.! 组成");
     }
 
@@ -521,7 +485,7 @@ class InterfaceService extends BaseService {
       let lastData = null;
       for (const item of existing) {
         const validParams = Object.assign({}, payload, { id: item._id });
-        const validResult = yapi.commons.validateParams(schemas.up, validParams);
+        const validResult = commons.validateParams(schemas.up, validParams);
         if (!validResult.valid) {
           return fail(400, validResult.message);
         }
@@ -543,7 +507,7 @@ class InterfaceService extends BaseService {
       return ok(lastData);
     }
 
-    const validResult = yapi.commons.validateParams(schemas.add, payload);
+    const validResult = commons.validateParams(schemas.add, payload);
     if (!validResult.valid) {
       return fail(400, validResult.message);
     }
@@ -566,7 +530,7 @@ class InterfaceService extends BaseService {
     params.res_body_type = params.res_body_type ? params.res_body_type.toLowerCase() : "json";
 
     const { http_path, query_path } = buildQueryPathFromUrl(params.path);
-    if (!yapi.commons.verifyPath(http_path.pathname)) {
+    if (!commons.verifyPath(http_path.pathname)) {
       return fail(400, "path第一位必需为 /, 只允许由 字母数字-/_:.! 组成");
     }
 
@@ -584,11 +548,11 @@ class InterfaceService extends BaseService {
 
     const data = Object.assign(params, {
       uid,
-      add_time: yapi.commons.time(),
-      up_time: yapi.commons.time(),
+      add_time: commons.time(),
+      up_time: commons.time(),
     });
 
-    yapi.commons.handleVarPath(params.path, params.req_params);
+    commons.handleVarPath(params.path, params.req_params);
 
     if (params.req_params.length > 0) {
       data.type = "var";
@@ -598,7 +562,7 @@ class InterfaceService extends BaseService {
     }
 
     if (role !== "admin" && uid !== 999999) {
-      const userdata = await yapi.commons.getUserdata(uid, "dev");
+      const userdata = await commons.getUserdata(uid, "dev");
       const check = await this.projectModel.checkMemberRepeat(params.project_id, uid);
       if (check === 0 && userdata) {
         await this.projectModel.addMember(params.project_id, [userdata]);
@@ -606,10 +570,10 @@ class InterfaceService extends BaseService {
     }
 
     const result = await this.interfaceModel.save(data);
-    yapi.emitHook("interface_add", result).then();
+    emitInterfaceHook("interface_add", result);
     this.catModel.get(params.catid).then((cate) => {
       const title = `<a href="/user/profile/${uid}">${username}</a> 为分类 <a href="/project/${params.project_id}/interface/api/cat_${params.catid}">${cate.name}</a> 添加了接口 <a href="/project/${params.project_id}/interface/api/${result._id}">${data.title}</a> `;
-      yapi.commons.saveLog({
+      commons.saveLog({
         content: title,
         type: "project",
         uid,
@@ -643,30 +607,33 @@ class InterfaceService extends BaseService {
   /**
    * 更新接口（不含权限校验；interfaceData 为更新前文档）
    */
-  async updateInterface(params, interfaceData, { uid, username }, options = {}) {
+  async updateInterface(
+    params: Record<string, any>,
+    interfaceData: Record<string, any>,
+    { uid, username }: InterfaceOperator,
+    options: { requestOrigin?: string } = {}
+  ) {
     const requestOrigin = options.requestOrigin || "";
 
     if (!_.isUndefined(params.method)) {
-      params.method = params.method || "GET";
-      params.method = params.method.toUpperCase();
+      params.method = String(params.method || "GET").toUpperCase();
     }
 
     const id = params.id;
-    params.message = params.message || "";
-    params.message = params.message.replace(/\n/g, "<br>");
+    params.message = String(params.message || "").replace(/\n/g, "<br>");
 
     handleHeaders(params);
 
     const data = Object.assign(
       {
-        up_time: yapi.commons.time(),
+        up_time: commons.time(),
       },
       params
     );
 
     if (params.path) {
-      const { http_path, query_path } = buildQueryPathFromUrl(params.path);
-      if (!yapi.commons.verifyPath(http_path.pathname)) {
+      const { http_path, query_path } = buildQueryPathFromUrl(String(params.path));
+      if (!commons.verifyPath(http_path.pathname)) {
         return fail(400, "path第一位必需为 /, 只允许由 字母数字-/_:.! 组成");
       }
       data.query_path = query_path;
@@ -711,7 +678,7 @@ class InterfaceService extends BaseService {
       if (diffView2.length <= 0) {
         return;
       }
-      yapi.commons.saveLog({
+      commons.saveLog({
         content: `<a href="/user/profile/${uid}">${username}</a> 
                     更新了分类 <a href="/project/${cate.project_id}/interface/api/cat_${
           data.catid
@@ -746,8 +713,10 @@ class InterfaceService extends BaseService {
       const project = await this.projectModel.getBaseInfo(interfaceData.project_id);
       const interfaceUrl = `${requestOrigin}/project/${interfaceData.project_id}/interface/api/${id}`;
 
-      yapi.commons.sendNotice(interfaceData.project_id, {
-        title: `${username} 更新了接口`,
+      (commons as unknown as { sendNotice: (pid: unknown, data: unknown) => void }).sendNotice(
+        interfaceData.project_id,
+        {
+          title: `${username} 更新了接口`,
         content: `<html>
         <head>
         <style>
@@ -764,10 +733,11 @@ class InterfaceService extends BaseService {
         <p>详细改动日志: ${this.diffNoticeHtml(diffView)}</p></div>
         </body>
         </html>`,
-      });
+        }
+      );
     }
 
-    yapi.emitHook("interface_update", id).then();
+    emitInterfaceHook("interface_update", id);
     await this.autoAddTag(params);
     return ok(result);
   }
@@ -799,12 +769,12 @@ class InterfaceService extends BaseService {
    * Chrome 插件 / 批量上传接口 JSON
    */
   async batchUploadInterfaces({ project_id, catid, raw }, { uid, username, role }) {
-    if (!project_id) {
-      return fail(400, "project_id 不能为空");
+    const inputValidated = validateBatchUploadInput({ project_id, raw });
+    if (!inputValidated.ok) {
+      return inputValidated;
     }
-    if (!raw) {
-      return fail(400, "data 不能为空");
-    }
+    project_id = inputValidated.data.project_id;
+    raw = inputValidated.data.raw;
 
     let parsed = raw;
     if (typeof parsed === "string") {
@@ -837,10 +807,12 @@ class InterfaceService extends BaseService {
       delete item.__v;
 
       const addResult = await this.addInterface(item, { uid, username, role });
-      if (addResult.ok) {
-        success++;
+      if (addResult.ok === false) {
+        errors.push(
+          addResult.message || `${item.title || item.path}: 导入失败`
+        );
       } else {
-        errors.push(addResult.message || `${item.title || item.path}: 导入失败`);
+        success++;
       }
     }
 
@@ -855,9 +827,11 @@ class InterfaceService extends BaseService {
    * 接口编辑冲突检测（WebSocket）
    */
   async checkEditConflict(id, uid) {
-    if (!id) {
-      return fail(400, "id 参数有误");
+    const idValidated = validateInterfaceId(id);
+    if (!idValidated.ok) {
+      return idValidated;
     }
+    id = idValidated.data;
     const result = await this.interfaceModel.get(id);
     if (!result) {
       return fail(400, "接口不存在");

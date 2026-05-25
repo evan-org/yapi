@@ -35,6 +35,21 @@ export {
 } from "./project.util.js";
 export { default as openService } from "./open.service.js";
 export { default as interfaceService } from "./interface.service.js";
+export {
+  handleHeaders,
+  buildQueryPathFromUrl,
+  applyStatusTagFilter,
+  mergeSaveResBody,
+} from "./interface.util.js";
+export {
+  validateAddCategoryParams,
+  validateCategoryId,
+  validateInterfaceProjectId,
+  validateCustomFieldQuery,
+  validateIndexBatchItems,
+  validateBatchUploadInput,
+  validateInterfaceId,
+} from "./interface.validation.js";
 export { default as interfaceColService } from "./interfaceCol.service.js";
 export {
   validateAddColParams,
