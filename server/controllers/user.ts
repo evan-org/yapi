@@ -1,152 +1,178 @@
-// @ts-nocheck
 /**
  * 用户 HTTP 控制器（薄层：Cookie/重定向/权限 → Service）
  */
 import jwt from "jsonwebtoken";
 import yapi from "../runtime.js";
+import type { YapiRuntime } from "../types/global.js";
+import type { AppContext } from "../types/app-context.js";
+import commons from "../utils/commons.js";
 import baseController from "./base.js";
 import { userService } from "../services/index.js";
+import type { ServiceResult } from "../services/service-result.js";
+import { replyServiceResult } from "./controller.util.js";
+
+type UserActor = {
+  role: string;
+  currentUid: number | string;
+};
+
+/** 从 query 取单个标量（兼容 string | string[]） */
+function queryScalar(
+  value: string | string[] | undefined,
+  fallback?: string | number
+): string | number {
+  if (Array.isArray(value)) {
+    return value[0] ?? fallback ?? "";
+  }
+  return value ?? fallback ?? "";
+}
 
 class userController extends baseController {
-  constructor(ctx) {
+  constructor(ctx: AppContext) {
     super(ctx);
   }
 
   /** 写入登录 Cookie */
-  setLoginCookie(uid, passsalt) {
+  setLoginCookie(uid: number | string, passsalt: string) {
     const token = jwt.sign({ uid }, passsalt, { expiresIn: "7 days", algorithm: "HS256" });
     this.ctx.cookies.set("_yapi_token", token, {
-      expires: yapi.commons.expireDate(7),
+      expires: commons.expireDate(7),
       httpOnly: true,
     });
-    this.ctx.cookies.set("_yapi_uid", uid, {
-      expires: yapi.commons.expireDate(7),
+    this.ctx.cookies.set("_yapi_uid", String(uid), {
+      expires: commons.expireDate(7),
       httpOnly: true,
     });
+  }
+
+  _actor(): UserActor {
+    return {
+      role: this.getRole() || "",
+      currentUid: this.getUid(),
+    };
   }
 
   /** Service 结果 → HTTP 响应 */
-  _reply(ctx, result, successMsg) {
-    if (!result.ok) {
-      ctx.body = yapi.commons.resReturn(null, result.code, result.message);
-      return;
-    }
-    ctx.body = yapi.commons.resReturn(
-      result.data,
-      0,
-      successMsg !== undefined ? successMsg : undefined
-    );
+  _reply(ctx: AppContext, result: ServiceResult<unknown>, successMsg?: string) {
+    replyServiceResult(ctx, result, successMsg);
   }
 
-  async login(ctx) {
-    const result = await userService.login(ctx.request.body);
-    if (!result.ok) {
+  async login(ctx: AppContext) {
+    const result = await userService.login(
+      ctx.request.body as { email?: string; password?: string }
+    );
+    if (result.ok === false) {
       return this._reply(ctx, result);
     }
-    this.setLoginCookie(result.data.cookie.uid, result.data.cookie.passsalt);
-    ctx.body = yapi.commons.resReturn(result.data.session, 0, "logout success...");
+    const loginData = result.data as unknown as {
+      cookie: { uid: number | string; passsalt: string };
+      session: unknown;
+    };
+    this.setLoginCookie(loginData.cookie.uid, loginData.cookie.passsalt);
+    ctx.body = commons.resReturn(loginData.session, 0, "logout success...");
   }
 
-  async logout(ctx) {
+  async logout(ctx: AppContext) {
     ctx.cookies.set("_yapi_token", null);
     ctx.cookies.set("_yapi_uid", null);
-    ctx.body = yapi.commons.resReturn("ok");
+    ctx.body = commons.resReturn("ok", 0, undefined);
   }
 
-  async upStudy(ctx) {
+  async upStudy(ctx: AppContext) {
     this._reply(ctx, await userService.markStudyDone(this.getUid()));
   }
 
-  async loginByToken(ctx) {
+  async loginByToken(ctx: AppContext) {
     try {
-      const ret = await yapi.emitHook("third_login", ctx);
+      const hook = (yapi as YapiRuntime).emitHook;
+      if (!hook) {
+        throw new Error("third_login hook 未注册");
+      }
+      const ret = (await hook("third_login", ctx)) as unknown as {
+        email: string;
+        username: string;
+      };
       const third = await userService.ensureThirdPartyUser(ret.email, ret.username);
       if (third.ok) {
         this.setLoginCookie(third.data.uid, third.data.passsalt);
-        yapi.commons.log("login success");
+        commons.log("login success", "info");
         ctx.redirect("/group");
       }
     } catch (e) {
-      yapi.commons.log(e.message, "error");
+      const message = e instanceof Error ? e.message : String(e);
+      commons.log(message, "error");
       ctx.redirect("/");
     }
   }
 
-  async getLdapAuth(ctx) {
-    const result = await userService.loginByLdap(ctx.request.body);
-    if (!result.ok) {
+  async getLdapAuth(ctx: AppContext) {
+    const body = ctx.request.body as { email: string; password: string };
+    const result = await userService.loginByLdap(body);
+    if (result.ok === false) {
       return this._reply(ctx, result);
     }
-    this.setLoginCookie(result.data.cookie.uid, result.data.cookie.passsalt);
-    ctx.body = yapi.commons.resReturn(result.data.session, 0, "logout success...");
+    const ldapData = result.data as unknown as {
+      cookie: { uid: number | string; passsalt: string };
+      session: unknown;
+    };
+    this.setLoginCookie(ldapData.cookie.uid, ldapData.cookie.passsalt);
+    ctx.body = commons.resReturn(ldapData.session, 0, "logout success...");
   }
 
-  async changePassword(ctx) {
+  async changePassword(ctx: AppContext) {
     this._reply(
       ctx,
-      await userService.changePassword(ctx.request.body, {
-        role: this.getRole(),
-        currentUid: this.getUid(),
-      })
+      await userService.changePassword(ctx.request.body as Record<string, unknown>, this._actor())
     );
   }
 
-  async reg(ctx) {
-    const result = await userService.register(ctx.request.body);
-    if (!result.ok) {
+  async reg(ctx: AppContext) {
+    const result = await userService.register(
+      ctx.request.body as { username?: string; password?: string; email?: string }
+    );
+    if (result.ok === false) {
       return this._reply(ctx, result);
     }
-    this.setLoginCookie(result.data.cookie.uid, result.data.cookie.passsalt);
-    ctx.body = yapi.commons.resReturn(result.data.user);
+    const regData = result.data as unknown as {
+      cookie: { uid: number | string; passsalt: string };
+      user: unknown;
+    };
+    this.setLoginCookie(regData.cookie.uid, regData.cookie.passsalt);
+    ctx.body = commons.resReturn(regData.user, 0, undefined);
   }
 
-  async list(ctx) {
-    const page = ctx.request.query.page || 1;
-    const limit = ctx.request.query.limit || 10;
+  async list(ctx: AppContext) {
+    const page = Number(queryScalar(ctx.request.query.page, 1));
+    const limit = Number(queryScalar(ctx.request.query.limit, 10));
     this._reply(ctx, await userService.listPaged(page, limit));
   }
 
-  async findById(ctx) {
+  async findById(ctx: AppContext) {
+    const id = queryScalar(ctx.request.query.id);
+    this._reply(ctx, await userService.findById(id, this._actor()));
+  }
+
+  async del(ctx: AppContext) {
+    const body = ctx.request.body as { id?: number | string };
+    this._reply(ctx, await userService.remove(body.id, this._actor()));
+  }
+
+  async update(ctx: AppContext) {
     this._reply(
       ctx,
-      await userService.findById(ctx.request.query.id, {
-        role: this.getRole(),
-        currentUid: this.getUid(),
-      })
+      await userService.updateProfile(ctx.request.body as Record<string, unknown>, this._actor())
     );
   }
 
-  async del(ctx) {
-    this._reply(
-      ctx,
-      await userService.remove(ctx.request.body.id, {
-        role: this.getRole(),
-        currentUid: this.getUid(),
-      })
-    );
+  async uploadAvatar(ctx: AppContext) {
+    const body = ctx.request.body as { basecode?: string };
+    this._reply(ctx, await userService.uploadAvatar(this.getUid(), body.basecode));
   }
 
-  async update(ctx) {
-    this._reply(
-      ctx,
-      await userService.updateProfile(ctx.request.body, {
-        role: this.getRole(),
-        currentUid: this.getUid(),
-      })
-    );
-  }
-
-  async uploadAvatar(ctx) {
-    this._reply(
-      ctx,
-      await userService.uploadAvatar(this.getUid(), ctx.request.body.basecode)
-    );
-  }
-
-  async avatar(ctx) {
-    const uid = ctx.query.uid ? ctx.query.uid : this.getUid();
-    const result = await userService.getAvatarBuffer(uid);
-    if (!result.ok) {
+  async avatar(ctx: AppContext) {
+    const uidRaw = ctx.query.uid ? queryScalar(ctx.query.uid) : this.getUid();
+    const result = await userService.getAvatarBuffer(uidRaw);
+    if (result.ok === false) {
       ctx.body = "error:" + result.message;
       return;
     }
@@ -154,22 +180,29 @@ class userController extends baseController {
     ctx.body = result.data.buffer;
   }
 
-  async search(ctx) {
-    const result = await userService.search(ctx.request.query.q);
-    if (!result.ok) {
+  async search(ctx: AppContext) {
+    const q = String(queryScalar(ctx.request.query.q, ""));
+    const result = await userService.search(q);
+    if (result.ok === false) {
       return this._reply(ctx, result);
     }
-    ctx.body = yapi.commons.resReturn(result.data, 0, "ok");
+    ctx.body = commons.resReturn(result.data, 0, "ok");
   }
 
-  async project(ctx) {
+  async project(ctx: AppContext) {
     const { id, type } = ctx.request.query;
-    const result = await userService.loadNavigationChain(id, type);
-    if (!result.ok) {
-      ctx.body = yapi.commons.resReturn({}, result.code, result.message);
+    const result = await userService.loadNavigationChain(
+      queryScalar(id),
+      String(queryScalar(type, ""))
+    );
+    if (result.ok === false) {
+      ctx.body = commons.resReturn({}, result.code, result.message);
       return;
     }
-    const data = result.data;
+    const data = result.data as unknown as {
+      project?: { _id: number | string; role?: string };
+      group?: { _id: number | string; role?: string };
+    };
     if (data.project) {
       const ownerAuth = await this.checkAuth(data.project._id, "project", "danger");
       if (ownerAuth) {
@@ -190,7 +223,7 @@ class userController extends baseController {
         data.group.role = "member";
       }
     }
-    ctx.body = yapi.commons.resReturn(data);
+    ctx.body = commons.resReturn(data, 0, undefined);
   }
 }
 
