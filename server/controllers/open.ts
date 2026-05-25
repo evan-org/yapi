@@ -1,21 +1,17 @@
 // @ts-nocheck
-import projectModel from '../models/project.js';
-
-import interfaceColModel from '../models/interfaceCol.js';
-
-import interfaceCaseModel from '../models/interfaceCase.js';
-
-import interfaceModel from '../models/interface.js';
-
-import interfaceCatModel from '../models/interfaceCat.js';
-
-import followModel from '../models/follow.js';
-
-import userModel from '../models/user.js';
-
 import yapi from '../runtime.js';
 
 import baseController from './base.js';
+
+import {
+  projectRepository,
+  interfaceColRepository,
+  interfaceCaseRepository,
+  interfaceRepository,
+  interfaceCatRepository,
+  followRepository,
+  userRepository,
+} from '../repositories/index.js';
 
 import { handleParams,
   crossRequest,
@@ -46,13 +42,13 @@ yapi.emitHook("import_data", importDataModule);
 class openController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.projectModel = yapi.getInst(projectModel);
-    this.interfaceColModel = yapi.getInst(interfaceColModel);
-    this.interfaceCaseModel = yapi.getInst(interfaceCaseModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
-    this.interfaceCatModel = yapi.getInst(interfaceCatModel);
-    this.followModel = yapi.getInst(followModel);
-    this.userModel = yapi.getInst(userModel);
+    this.projectModel = projectRepository;
+    this.interfaceColModel = interfaceColRepository;
+    this.interfaceCaseModel = interfaceCaseRepository;
+    this.interfaceModel = interfaceRepository;
+    this.interfaceCatModel = interfaceCatRepository;
+    this.followModel = followRepository;
+    this.userModel = userRepository;
     this.handleValue = this.handleValue.bind(this);
     this.schemaMap = {
       runAutoTest: {
@@ -141,7 +137,7 @@ class openController extends baseController {
      * 如果没有分类,增加一个默认分类
      */
     if (menuList.length === 0) {
-      const catInst = yapi.getInst(interfaceCatModel);
+      const catInst = interfaceCatRepository;
       const menu = await catInst.save({
         name: "默认分类",
         project_id: project_id,

@@ -5,12 +5,12 @@
  */
 import yapi from '../runtime.js';
 import {
-  projectModel,
-  userModel,
-  interfaceModel,
-  groupModel,
-  tokenModel,
-} from '../models/index.js';
+  projectRepository,
+  userRepository,
+  interfaceRepository,
+  groupRepository,
+  tokenRepository,
+} from '../repositories/index.js';
 
 import _ from 'underscore';
 
@@ -30,8 +30,8 @@ class baseController {
 
   async init(ctx) {
     this.$user = null;
-    this.tokenModel = yapi.getInst(tokenModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.tokenModel = tokenRepository;
+    this.projectModel = projectRepository;
     let ignoreRouter = [
       "/api/user/login_by_token",
       "/api/user/login",
@@ -112,7 +112,7 @@ class baseController {
             username: "system"
           }
         } else {
-          let userInst = yapi.getInst(userModel); // 创建user实体
+          let userInst = userRepository;
           result = await userInst.findById(tokenUid);
         }
 
@@ -140,7 +140,7 @@ class baseController {
       if (!token || !uid) {
         return false;
       }
-      let userInst = yapi.getInst(userModel); // 创建user实体
+      let userInst = userRepository;
       let result = await userInst.findById(uid);
       if (!result) {
         return false;
@@ -231,7 +231,7 @@ class baseController {
         return "admin";
       }
       if (type === "interface") {
-        let interfaceInst = yapi.getInst(interfaceModel);
+        let interfaceInst = interfaceRepository;
         let interfaceData = await interfaceInst.get(id);
         result.interfaceData = interfaceData;
         // 项目创建者相当于 owner
@@ -243,7 +243,7 @@ class baseController {
       }
 
       if (type === "project") {
-        let projectInst = yapi.getInst(projectModel);
+        let projectInst = projectRepository;
         let projectData = await projectInst.get(id);
         if (projectData.uid === this.getUid()) {
           // 建立项目的人
@@ -269,7 +269,7 @@ class baseController {
       }
 
       if (type === "group") {
-        let groupInst = yapi.getInst(groupModel);
+        let groupInst = groupRepository;
         let groupData = await groupInst.get(id);
         // 建立分组的人
         if (groupData.uid === this.getUid()) {

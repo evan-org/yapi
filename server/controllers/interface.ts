@@ -1,14 +1,4 @@
 // @ts-nocheck
-import interfaceModel from '../models/interface.js';
-
-import interfaceCatModel from '../models/interfaceCat.js';
-
-import interfaceCaseModel from '../models/interfaceCase.js';
-
-import followModel from '../models/follow.js';
-
-import groupModel from '../models/group.js';
-
 import _ from 'underscore';
 
 import url from 'url';
@@ -18,9 +8,15 @@ import baseController from './base.js';
 import yapi from '../runtime.js';
 import { clientPublicFile } from "../utils/client-public.js";
 
-import userModel from '../models/user.js';
-
-import projectModel from '../models/project.js';
+import {
+  interfaceRepository,
+  interfaceCatRepository,
+  interfaceCaseRepository,
+  followRepository,
+  groupRepository,
+  userRepository,
+  projectRepository,
+} from '../repositories/index.js';
 
 import jsondiffpatch from 'jsondiffpatch';
 
@@ -32,11 +28,6 @@ import mergeJsonSchema from '../common/mergeJsonSchema.js';
 import fs from 'fs-extra';
 
 import path from 'path';
-
-
-// import annotatedCss from 'jsondiffpatch/public/formatters-styles/annotated.css';
-
-// import htmlCss from 'jsondiffpatch/public/formatters-styles/html.css';
 
 
 
@@ -85,13 +76,13 @@ function handleHeaders(values) {
 class interfaceController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(interfaceModel);
-    this.catModel = yapi.getInst(interfaceCatModel);
-    this.projectModel = yapi.getInst(projectModel);
-    this.caseModel = yapi.getInst(interfaceCaseModel);
-    this.followModel = yapi.getInst(followModel);
-    this.userModel = yapi.getInst(userModel);
-    this.groupModel = yapi.getInst(groupModel);
+    this.Model = interfaceRepository;
+    this.catModel = interfaceCatRepository;
+    this.projectModel = projectRepository;
+    this.caseModel = interfaceCaseRepository;
+    this.followModel = followRepository;
+    this.userModel = userRepository;
+    this.groupModel = groupRepository;
 
     const minLengthStringField = {
       type: "string",
@@ -921,7 +912,7 @@ class interfaceController extends baseController {
       result = await this.Model.get(id);
 
       if (result.edit_uid !== 0 && result.edit_uid !== this.getUid()) {
-        userInst = yapi.getInst(userModel);
+        userInst = userRepository;
         userinfo = await userInst.findById(result.edit_uid);
         data = {
           errno: result.edit_uid,

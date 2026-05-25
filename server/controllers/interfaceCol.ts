@@ -1,26 +1,24 @@
 // @ts-nocheck
-import interfaceColModel from '../models/interfaceCol.js';
-
-import interfaceCaseModel from '../models/interfaceCase.js';
-
-import interfaceModel from '../models/interface.js';
-
-import projectModel from '../models/project.js';
-
 import baseController from './base.js';
 
 import yapi from '../runtime.js';
 
 import _ from 'underscore';
 
+import {
+  interfaceColRepository,
+  interfaceCaseRepository,
+  interfaceRepository,
+  projectRepository,
+} from '../repositories/index.js';
 
 class interfaceColController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.colModel = yapi.getInst(interfaceColModel);
-    this.caseModel = yapi.getInst(interfaceCaseModel);
-    this.interfaceModel = yapi.getInst(interfaceModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.colModel = interfaceColRepository;
+    this.caseModel = interfaceCaseRepository;
+    this.interfaceModel = interfaceRepository;
+    this.projectModel = projectRepository;
   }
 
   /**

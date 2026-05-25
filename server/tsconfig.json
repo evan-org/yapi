@@ -30,7 +30,8 @@
       "lib/*": ["./lib/*"],
       "routes/*": ["./routes/*"],
       "routes/modules/*": ["./routes/modules/*"],
-      "services/*": ["./services/*"]
+      "services/*": ["./services/*"],
+      "repositories/*": ["./repositories/*"]
     }
   },
   "include": ["**/*.ts", "types/**/*.d.ts"],

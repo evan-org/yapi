@@ -13,13 +13,14 @@ globs: server/**/*
 ## 分层（必须遵守）
 
 ```
-routes/modules/*.routes.ts  →  controllers/*.ts  →  services/*.ts  →  models/*.ts
+routes/modules/*.routes.ts  →  controllers/*.ts  →  services/*.ts  →  repositories/*.repo.ts → models/*.ts
 ```
 
 - **routes/**：`index.ts` 入口；`modules/` 各模块路由；`lib/action-runner.ts` 执行 Action
-- **controllers/**：HTTP 薄层，只做 ctx 适配
+- **controllers/**：HTTP 薄层，只做 ctx 适配；数据访问用 `repositories/index.js`，勿直接 `yapi.getInst(model)`
 - **services/**：业务逻辑，不依赖 Hono Context
-- **models/**：Mongoose 数据访问
+- **repositories/**：`*.repo.ts` 封装 Model 单例
+- **models/**：Mongoose Schema 定义
 - **lib/**：`context.ts`（AppContext）、`bind-routes.ts`（RouteBinder）
 - Mock：`middleware/mock.ts` + `mock-handler.ts`
 - 新接口：在 `routes/modules/` 加路由 → `services/` 写逻辑 → `controllers/` 薄封装

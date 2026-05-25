@@ -7,9 +7,7 @@
  */
 import yapi from "../runtime.js";
 
-import projectModel from '../models/project.js';
-
-import interfaceModel from '../models/interface.js';
+import { projectRepository, interfaceRepository } from '../repositories/index.js';
 
 import mockExtra from '../common/mock-extra.js';
 
@@ -20,7 +18,6 @@ import _ from 'underscore';
 import Mock from 'mockjs';
 
 import variable from '../common/variable.js';
-
 /**
  *
  * @param {*} apiPath /user/tom
@@ -167,7 +164,7 @@ async function mockServerMiddleware(ctx, next) {
   if (!projectId) {
     return (ctx.body = yapi.commons.resReturn(null, 400, "projectId不能为空"));
   }
-  let projectInst = yapi.getInst(projectModel),
+  let projectInst = projectRepository,
     project;
   try {
     project = await projectInst.get(projectId);
@@ -178,7 +175,7 @@ async function mockServerMiddleware(ctx, next) {
     return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的项目"));
   }
   let interfaceData, newpath;
-  let interfaceInst = yapi.getInst(interfaceModel);
+  let interfaceInst = interfaceRepository;
   try {
     newpath = path.substr(project.basepath.length);
     interfaceData = await interfaceInst.getByPath(project._id, newpath, ctx.method);
