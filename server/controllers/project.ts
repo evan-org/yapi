@@ -301,106 +301,16 @@ class projectController extends baseController {
    * @example ./api/project/add.json
    */
   async copy(ctx) {
-    try {
-      let params = ctx.params;
-
-      // 拷贝项目的ID
-      let copyId = params._id;
-      if ((await this.checkAuth(params.group_id, "group", "edit")) !== true) {
-        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
-      }
-
-      params.basepath = params.basepath || "";
-
-      let data = Object.assign(params, {
-        project_type: params.project_type || "private",
-        uid: this.getUid(),
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
-        env: params.env || [{ name: "local", domain: "http://127.0.0.1" }]
-      });
-
-      delete data._id;
-      let result = await this.Model.save(data);
-      let colInst = interfaceColRepository;
-      let catInst = interfaceCatRepository;
-
-      // 增加集合
-      if (result._id) {
-        await colInst.save({
-          name: "公共测试集",
-          project_id: result._id,
-          desc: "公共测试集",
-          uid: this.getUid(),
-          add_time: yapi.commons.time(),
-          up_time: yapi.commons.time()
-        });
-
-        // 拷贝接口列表
-        let cat = params.cat;
-        for (let i = 0; i < cat.length; i++) {
-          let item = cat[i];
-          let catDate = {
-            name: item.name,
-            project_id: result._id,
-            desc: item.desc,
-            uid: this.getUid(),
-            add_time: yapi.commons.time(),
-            up_time: yapi.commons.time()
-          };
-          let catResult = await catInst.save(catDate);
-
-          // 获取每个集合中的interface
-          let interfaceData = await this.interfaceModel.listByInterStatus(item._id);
-
-          // 将interfaceData存到新的catID中
-          for (let key = 0; key < interfaceData.length; key++) {
-            let interfaceItem = interfaceData[key].toObject();
-            let data = Object.assign(interfaceItem, {
-              uid: this.getUid(),
-              catid: catResult._id,
-              project_id: result._id,
-              add_time: yapi.commons.time(),
-              up_time: yapi.commons.time()
-            });
-            delete data._id;
-
-            await this.interfaceModel.save(data);
-          }
-        }
-      }
-
-      // 增加member
-      let copyProject = await this.Model.get(copyId);
-      let copyProjectMembers = copyProject.members;
-
-      let uid = this.getUid();
-      // 将项目添加者变成项目组长,除admin以外
-      if (this.getRole() !== "admin") {
-        let userdata = await yapi.commons.getUserdata(uid, "owner");
-        let check = await this.Model.checkMemberRepeat(copyId, uid);
-        if (check === 0) {
-          copyProjectMembers.push(userdata);
-        }
-      }
-      await this.Model.addMember(result._id, copyProjectMembers);
-
-      // 在每个测试结合下添加interface
-
-      let username = this.getUsername();
-      yapi.commons.saveLog({
-        content: `<a href="/user/profile/${this.getUid()}">${username}</a> 复制了项目 ${
-          params.preName
-        } 为 <a href="/project/${result._id}">${params.name}</a>`,
-        type: "project",
-        uid,
-        username: username,
-        typeid: result._id
-      });
-      ctx.body = yapi.commons.resReturn(result);
-    } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 402, err.message);
+    let params = ctx.params;
+    if ((await this.checkAuth(params.group_id, "group", "edit")) !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
     }
+    const result = await projectService.copyProject(params, {
+      uid: this.getUid(),
+      username: this.getUsername(),
+      role: this.getRole(),
+    });
+    this._reply(ctx, result);
   }
 
   /**

@@ -7,6 +7,7 @@ import yapi from "../runtime.js";
 import {
   interfaceRepository,
   interfaceCatRepository,
+  interfaceCaseRepository,
   groupRepository,
   projectRepository,
   userRepository,
@@ -19,6 +20,7 @@ class InterfaceService extends BaseService {
     super();
     this.interfaceModel = interfaceRepository;
     this.catModel = interfaceCatRepository;
+    this.caseModel = interfaceCaseRepository;
     this.groupModel = groupRepository;
     this.projectModel = projectRepository;
     this.userModel = userRepository;
@@ -110,6 +112,90 @@ class InterfaceService extends BaseService {
     );
 
     return ok({ project, list: chunks.flat() });
+  }
+
+  /**
+   * 删除接口及关联用例
+   */
+  async deleteInterface(id, { uid, username }) {
+    const data = await this.interfaceModel.get(id);
+    if (!data) {
+      return fail(400, "接口不存在");
+    }
+    const result = await this.interfaceModel.del(id);
+    yapi.emitHook("interface_del", id).then();
+    await this.caseModel.delByInterfaceId(id);
+    const cate = await this.catModel.get(data.catid);
+    if (cate) {
+      yapi.commons.saveLog({
+        content: `<a href="/user/profile/${uid}">${username}</a> 删除了分类 <a href="/project/${cate.project_id}/interface/api/cat_${data.catid}">${cate.name}</a> 下的接口 "${data.title}"`,
+        type: "project",
+        uid,
+        username,
+        typeid: cate.project_id,
+      });
+    }
+    await this.projectModel.up(data.project_id, {
+      up_time: new Date().getTime(),
+    });
+    return ok({ result, data });
+  }
+
+  /**
+   * 删除分类及下属接口
+   */
+  async deleteCategory(catId, { uid, username }) {
+    const catData = await this.catModel.get(catId);
+    if (!catData) {
+      return fail(400, "不存在的分类");
+    }
+    yapi.commons.saveLog({
+      content: `<a href="/user/profile/${uid}">${username}</a> 删除了分类 "${catData.name}" 及该分类下的接口`,
+      type: "project",
+      uid,
+      username,
+      typeid: catData.project_id,
+    });
+    const interfaceData = await this.interfaceModel.listByCatid(catId);
+    for (const item of interfaceData) {
+      try {
+        yapi.emitHook("interface_del", item._id).then();
+        await this.caseModel.delByInterfaceId(item._id);
+      } catch (e) {
+        yapi.commons.log(e.message, "error");
+      }
+    }
+    await this.catModel.del(catId);
+    const r = await this.interfaceModel.delByCatid(catId);
+    return ok(r);
+  }
+
+  /**
+   * 新增接口分类
+   */
+  async addCategory({ name, project_id, desc, uid, username }) {
+    if (!project_id) {
+      return fail(400, "项目id不能为空");
+    }
+    if (!name) {
+      return fail(400, "名称不能为空");
+    }
+    const result = await this.catModel.save({
+      name,
+      project_id,
+      desc,
+      uid,
+      add_time: yapi.commons.time(),
+      up_time: yapi.commons.time(),
+    });
+    yapi.commons.saveLog({
+      content: `<a href="/user/profile/${uid}">${username}</a> 添加了分类  <a href="/project/${project_id}/interface/api/cat_${result._id}">${name}</a>`,
+      type: "project",
+      uid,
+      username,
+      typeid: project_id,
+    });
+    return ok(result);
   }
 }
 

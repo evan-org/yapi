@@ -868,6 +868,9 @@ class interfaceController extends baseController {
       }
 
       let data = await this.Model.get(id);
+      if (!data) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "接口不存在"));
+      }
 
       if (data.uid != this.getUid()) {
         let auth = await this.checkAuth(data.project_id, "project", "danger");
@@ -876,24 +879,14 @@ class interfaceController extends baseController {
         }
       }
 
-      // let inter = await this.Model.get(id);
-      let result = await this.Model.del(id);
-      yapi.emitHook("interface_del", id).then();
-      await this.caseModel.delByInterfaceId(id);
-      let username = this.getUsername();
-      this.catModel.get(data.catid).then((cate) => {
-        yapi.commons.saveLog({
-          content: `<a href="/user/profile/${this.getUid()}">${username}</a> 删除了分类 <a href="/project/${
-            cate.project_id
-          }/interface/api/cat_${data.catid}">${cate.name}</a> 下的接口 "${data.title}"`,
-          type: "project",
-          uid: this.getUid(),
-          username: username,
-          typeid: cate.project_id
-        });
+      const result = await interfaceService.deleteInterface(id, {
+        uid: this.getUid(),
+        username: this.getUsername(),
       });
-      this.projectModel.up(data.project_id, { up_time: new Date().getTime() }).then();
-      ctx.body = yapi.commons.resReturn(result);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      ctx.body = yapi.commons.resReturn(result.data.result);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }
@@ -957,27 +950,17 @@ class interfaceController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 400, "名称不能为空"));
       }
 
-      let result = await this.catModel.save({
+      const result = await interfaceService.addCategory({
         name: params.name,
         project_id: params.project_id,
         desc: params.desc,
         uid: this.getUid(),
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time()
+        username: this.getUsername(),
       });
-
-      let username = this.getUsername();
-      yapi.commons.saveLog({
-        content: `<a href="/user/profile/${this.getUid()}">${username}</a> 添加了分类  <a href="/project/${
-          params.project_id
-        }/interface/api/cat_${result._id}">${params.name}</a>`,
-        type: "project",
-        uid: this.getUid(),
-        username: username,
-        typeid: params.project_id
-      });
-
-      ctx.body = yapi.commons.resReturn(result);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      ctx.body = yapi.commons.resReturn(result.data);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
@@ -1022,7 +1005,7 @@ class interfaceController extends baseController {
       let id = ctx.request.body.catid;
       let catData = await this.catModel.get(id);
       if (!catData) {
-        ctx.body = yapi.commons.resReturn(null, 400, "不存在的分类");
+        return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的分类"));
       }
 
       if (catData.uid !== this.getUid()) {
@@ -1032,32 +1015,16 @@ class interfaceController extends baseController {
         }
       }
 
-      let username = this.getUsername();
-      yapi.commons.saveLog({
-        content: `<a href="/user/profile/${this.getUid()}">${username}</a> 删除了分类 "${
-          catData.name
-        }" 及该分类下的接口`,
-        type: "project",
+      const result = await interfaceService.deleteCategory(id, {
         uid: this.getUid(),
-        username: username,
-        typeid: catData.project_id
+        username: this.getUsername(),
       });
-
-      let interfaceData = await this.Model.listByCatid(id);
-
-      interfaceData.forEach(async(item) => {
-        try {
-          yapi.emitHook("interface_del", item._id).then();
-          await this.caseModel.delByInterfaceId(item._id);
-        } catch (e) {
-          yapi.commons.log(e.message, "error");
-        }
-      });
-      await this.catModel.del(id);
-      let r = await this.Model.delByCatid(id);
-      return (ctx.body = yapi.commons.resReturn(r));
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      return (ctx.body = yapi.commons.resReturn(result.data));
     } catch (e) {
-      yapi.commons.resReturn(null, 400, e.message);
+      return (ctx.body = yapi.commons.resReturn(null, 400, e.message));
     }
   }
 

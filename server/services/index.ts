@@ -16,3 +16,4 @@ export { default as groupService } from "./group.service.js";
 export { default as projectService } from "./project.service.js";
 export { default as openService } from "./open.service.js";
 export { default as interfaceService } from "./interface.service.js";
+export { default as interfaceColService } from "./interfaceCol.service.js";
