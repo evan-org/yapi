@@ -12,16 +12,16 @@ const commonLib = require(path.join(vendorsRoot, "common/plugin.js"));
 const { exts: systemConfigPlugin } = require(path.join(vendorsRoot, "common/config"));
 
 /**
- * 收集已启用且含 client 的插件名（Next 端后续按名动态加载）
+ * 收集已启用的插件名（含 server 或历史 client 标记）
  */
-function collectClientPluginNames(configPlugin, type) {
+function collectEnabledPluginNames(configPlugin, type) {
   const names = [];
   if (!configPlugin || !Array.isArray(configPlugin) || !configPlugin.length) {
     return names;
   }
   const initialized = commonLib.initPlugins(configPlugin, type);
   initialized.forEach((plugin) => {
-    if (plugin.client && plugin.enable) {
+    if (plugin.enable !== false && (plugin.server || plugin.client)) {
       names.push(plugin.name);
     }
   });
@@ -35,8 +35,8 @@ function generate() {
     configPlugins = require(configPath).plugins || [];
   }
 
-  const fromConfig = collectClientPluginNames(configPlugins, "plugin");
-  const fromExts = collectClientPluginNames(systemConfigPlugin, "ext");
+  const fromConfig = collectEnabledPluginNames(configPlugins, "plugin");
+  const fromExts = collectEnabledPluginNames(systemConfigPlugin, "ext");
   const allNames = [...fromConfig, ...fromExts];
 
   const body = `/**

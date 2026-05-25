@@ -55,9 +55,6 @@ function registerPublicAssets(app) {
  * 创建并启动 Hono 应用（API 专用）
  */
 async function startServer() {
-  if (isDev) {
-    require(path.join(__dirname, "../scripts/dev-bootstrap.js"));
-  }
   assertRuntimeConfig();
 
   const app = new Hono();

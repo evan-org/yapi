@@ -3,12 +3,15 @@
  * 插件业务能力由服务端 exts 提供，Next 通过路由与项目设置页接入
  */
 export const enabledPluginNames: string[] = [
+  "import-postman",
+  "import-har",
   "advanced-mock",
   "import-swagger",
   "statistics",
   "export-data",
   "gen-services",
   "export-swagger2-data",
+  "import-yapi-json",
   "wiki",
   "swagger-auto-sync"
 ];

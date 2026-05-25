@@ -104,7 +104,7 @@ docker compose exec yapi node server/install.js
 | 命令 | 说明 |
 |------|------|
 | `npm run dev` | API + Next 开发 |
-| `npm run build` | 生产构建前端 |
+| `npm run build` / `build-web` | 生产构建 Next 前端 |
 | `npm run test:server` | 服务端单元测试 |
 | `npm run lint:web` | Next 前端 ESLint |
 | `npm run install-server` | 数据库初始化 |

@@ -64,5 +64,4 @@ yarn.lock
 .yarn/install-state.gz
 # 旧 Vite 构建产物；保留跳转页
 static/prd/
-static/dev.html
 !static/index.html

@@ -6,7 +6,7 @@ log/
 
 # 旧 Vite 前端构建产物（已迁移至 vendors/web/.next）
 vendors/static/prd/
-vendors/example/client/
+vendors/example/
 
 # Next 构建缓存（本地）
 vendors/web/.next/
