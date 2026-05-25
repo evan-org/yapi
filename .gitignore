@@ -1,4 +1,5 @@
 # 后端运行时（均在 server/ 内）
+server/.env
 server/config.json
 server/init.lock
 server/log/
