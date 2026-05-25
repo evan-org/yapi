@@ -19,6 +19,41 @@ import {
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
 
+/**
+ * 规范化项目 basepath
+ */
+export function normalizeBasepath(basepath) {
+  if (!basepath) {
+    return "";
+  }
+  if (basepath === "/") {
+    return "";
+  }
+  if (basepath[0] !== "/") {
+    basepath = "/" + basepath;
+  }
+  if (basepath[basepath.length - 1] === "/") {
+    basepath = basepath.substr(0, basepath.length - 1);
+  }
+  if (!/^\/[a-zA-Z0-9\-\/\._]+$/.test(basepath)) {
+    return false;
+  }
+  return basepath;
+}
+
+/** 数组某字段是否重复 */
+export function hasDuplicateField(arr, key) {
+  const s = new Set();
+  arr.forEach((item) => s.add(item[key]));
+  return s.size !== arr.length;
+}
+
+const MEMBER_ROLE_NAMES = {
+  owner: "组长",
+  dev: "开发者",
+  guest: "访客",
+};
+
 class ProjectService extends BaseService {
   constructor() {
     super();
@@ -331,6 +366,212 @@ class ProjectService extends BaseService {
       member_uid,
       notice
     );
+    return ok(result);
+  }
+
+  /** 检查项目名是否可用 */
+  async checkNameAvailable(name, groupId) {
+    if (!name) {
+      return fail(401, "项目名不能为空");
+    }
+    const checkRepeat = await this.projectModel.checkNameRepeat(name, groupId);
+    if (checkRepeat > 0) {
+      return fail(401, "已存在的项目名");
+    }
+    return ok({});
+  }
+
+  /**
+   * 新建项目（含默认测试集、分类、创建者为 owner）
+   */
+  async createProject(params, { uid, username, role }) {
+    const checkRepeat = await this.projectModel.checkNameRepeat(params.name, params.group_id);
+    if (checkRepeat > 0) {
+      return fail(401, "已存在的项目名");
+    }
+
+    params.basepath = params.basepath || "";
+    const normalized = normalizeBasepath(params.basepath);
+    if (normalized === false) {
+      return fail(401, "basepath格式有误");
+    }
+
+    const data = {
+      name: params.name,
+      desc: params.desc,
+      basepath: normalized,
+      members: [],
+      project_type: params.project_type || "private",
+      uid,
+      group_id: params.group_id,
+      group_name: params.group_name,
+      icon: params.icon,
+      color: params.color,
+      add_time: yapi.commons.time(),
+      up_time: yapi.commons.time(),
+      is_json5: false,
+      env: [{ name: "local", domain: "http://127.0.0.1" }],
+    };
+
+    const result = await this.projectModel.save(data);
+    if (result._id) {
+      await this.interfaceColModel.save({
+        name: "公共测试集",
+        project_id: result._id,
+        desc: "公共测试集",
+        uid,
+        add_time: yapi.commons.time(),
+        up_time: yapi.commons.time(),
+      });
+      await this.catModel.save({
+        name: "公共分类",
+        project_id: result._id,
+        desc: "公共分类",
+        uid,
+        add_time: yapi.commons.time(),
+        up_time: yapi.commons.time(),
+      });
+    }
+
+    if (role !== "admin") {
+      const userdata = await yapi.commons.getUserdata(uid, "owner");
+      await this.projectModel.addMember(result._id, [userdata]);
+    }
+
+    yapi.commons.saveLog({
+      content: `<a href="/user/profile/${uid}">${username}</a> 添加了项目 <a href="/project/${result._id}">${params.name}</a>`,
+      type: "project",
+      uid,
+      username,
+      typeid: result._id,
+    });
+    yapi.emitHook("project_add", result).then();
+    return ok(result);
+  }
+
+  /** 更新项目基本信息 */
+  async updateProject(id, params, { uid, username }) {
+    const projectData = await this.projectModel.get(id);
+    if (!projectData) {
+      return fail(400, "不存在的项目");
+    }
+
+    if (params.basepath) {
+      const normalized = normalizeBasepath(params.basepath);
+      if (normalized === false) {
+        return fail(401, "basepath格式有误");
+      }
+      params.basepath = normalized;
+    }
+
+    if (projectData.name === params.name) {
+      delete params.name;
+    }
+    if (params.name) {
+      const checkRepeat = await this.projectModel.checkNameRepeat(params.name, params.group_id);
+      if (checkRepeat > 0) {
+        return fail(401, "已存在的项目名");
+      }
+    }
+
+    const data = Object.assign({ up_time: yapi.commons.time() }, params);
+    const result = await this.projectModel.up(id, data);
+    yapi.commons.saveLog({
+      content: `<a href="/user/profile/${uid}">${username}</a> 更新了项目 <a href="/project/${id}/interface/api">${projectData.name}</a>`,
+      type: "project",
+      uid,
+      username,
+      typeid: id,
+    });
+    yapi.emitHook("project_up", result).then();
+    return ok(result);
+  }
+
+  /** 更新项目图标与颜色 */
+  async updateAppearance(id, { color, icon }, { uid, username }) {
+    const result = await this.projectModel.up(id, { color, icon });
+    this.followModel.updateById(uid, id, { color, icon }).then(() => {
+      yapi.commons.saveLog({
+        content: `<a href="/user/profile/${uid}">${username}</a> 修改了项目图标、颜色`,
+        type: "project",
+        uid,
+        username,
+        typeid: id,
+      });
+    });
+    return ok(result);
+  }
+
+  /** 更新项目环境配置 */
+  async updateEnv(id, env, { uid, username }) {
+    if (!env || !Array.isArray(env)) {
+      return fail(405, "env参数格式有误");
+    }
+    if (hasDuplicateField(env, "name")) {
+      return fail(405, "环境变量名重复");
+    }
+    const projectData = await this.projectModel.get(id);
+    if (!projectData) {
+      return fail(400, "不存在的项目");
+    }
+    const result = await this.projectModel.up(id, {
+      env,
+      up_time: yapi.commons.time(),
+    });
+    yapi.commons.saveLog({
+      content: `<a href="/user/profile/${uid}">${username}</a> 更新了项目 <a href="/project/${id}/interface/api">${projectData.name}</a> 的环境`,
+      type: "project",
+      uid,
+      username,
+      typeid: id,
+    });
+    return ok(result);
+  }
+
+  /** 更新项目 tag 配置 */
+  async updateTag(id, tag, { uid, username }) {
+    if (!tag || !Array.isArray(tag)) {
+      return fail(405, "tag参数格式有误");
+    }
+    const projectData = await this.projectModel.get(id);
+    if (!projectData) {
+      return fail(400, "不存在的项目");
+    }
+    const result = await this.projectModel.up(id, {
+      tag,
+      up_time: yapi.commons.time(),
+    });
+    yapi.commons.saveLog({
+      content: `<a href="/user/profile/${uid}">${username}</a> 更新了项目 <a href="/project/${id}/interface/api">${projectData.name}</a> 的tag`,
+      type: "project",
+      uid,
+      username,
+      typeid: id,
+    });
+    return ok(result);
+  }
+
+  /** 修改项目成员角色 */
+  async changeMemberRole({ id, member_uid, role, operator }) {
+    const check = await this.projectModel.checkMemberRepeat(id, member_uid);
+    if (check === 0) {
+      return fail(400, "项目成员不存在");
+    }
+    const normalizedRole =
+      ["owner", "dev", "guest"].find((v) => v === role) || "dev";
+    const result = await this.projectModel.changeMemberRole(
+      id,
+      member_uid,
+      normalizedRole
+    );
+    const member = await userRepository.findById(member_uid);
+    yapi.commons.saveLog({
+      content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 修改了项目中的成员 <a href="/user/profile/${member_uid}">${member ? member.username : ""}</a> 的角色为 "${MEMBER_ROLE_NAMES[normalizedRole]}"`,
+      type: "project",
+      uid: operator.uid,
+      username: operator.username,
+      typeid: id,
+    });
     return ok(result);
   }
 }

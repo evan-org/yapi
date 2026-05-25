@@ -1,73 +1,19 @@
 // @ts-nocheck
 import baseController from 'controllers/base';
-
-import interfaceModel from 'models/interface';
-
-import projectModel from 'models/project';
-
-import interfaceCatModel from 'models/interfaceCat';
-
 import yapi from 'runtime.js';
-
-
+import {
+  interfaceRepository,
+  interfaceCatRepository,
+  projectRepository,
+} from "../../repositories/index.js";
+import { exportDataService, stripExportIds } from "../../services/index.js";
 
 class exportSwaggerController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = yapi.getInst(interfaceCatModel);
-    this.interModel = yapi.getInst(interfaceModel);
-    this.projectModel = yapi.getInst(projectModel);
-  }
-
-  /*
-       handleListClass,handleExistId is same as the exportController(yapi-plugin-export-data).
-       No DRY,but i have no idea to optimize it.
-    */
-
-  async handleListClass(pid, status) {
-    let result = await this.catModel.list(pid),
-      newResult = [];
-    for (let i = 0, item, list; i < result.length; i++) {
-      item = result[i].toObject();
-      list = await this.interModel.listByInterStatus(item._id, status);
-      list = list.sort((a, b) => a.index - b.index);
-      if (list.length > 0) {
-        item.list = list;
-        newResult.push(item);
-      }
-    }
-
-    return newResult;
-  }
-
-  handleExistId(data) {
-    function delArrId(arr, fn) {
-      if (!Array.isArray(arr)) {return;}
-      arr.forEach((item) => {
-        delete item._id;
-        delete item.__v;
-        delete item.uid;
-        delete item.edit_uid;
-        delete item.catid;
-        delete item.project_id;
-
-        if (typeof fn === "function") {fn(item);}
-      });
-    }
-
-    delArrId(data, function(item) {
-      delArrId(item.list, function(api) {
-        delArrId(api.req_body_form);
-        delArrId(api.req_params);
-        delArrId(api.req_query);
-        delArrId(api.req_headers);
-        if (api.query_path && typeof api.query_path === "object") {
-          delArrId(api.query_path.params);
-        }
-      });
-    });
-
-    return data;
+    this.catModel = interfaceCatRepository;
+    this.interModel = interfaceRepository;
+    this.projectModel = projectRepository;
   }
 
   async exportData(ctx) {
@@ -81,14 +27,18 @@ class exportSwaggerController extends baseController {
     let curProject;
     let tp = "";
     try {
-      curProject = await this.projectModel.get(pid);
+      const proj = await exportDataService.getProject(pid);
+      if (!proj.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, proj.code, proj.message));
+      }
+      curProject = proj.data;
       ctx.set("Content-Type", "application/octet-stream");
-      const list = await this.handleListClass(pid, status);
+      const list = await exportDataService.listCategoriesWithApis(pid, status);
 
       switch (type) {
         case "OpenAPIV2":
         { // in this time, only implemented OpenAPI V2.0
-          let data = this.handleExistId(list);
+          let data = stripExportIds(list);
           let model = await convertToSwaggerV2Model(data);
           tp = JSON.stringify(model, null, 2);
           ctx.set("Content-Disposition", "attachment; filename=swaggerApi.json");

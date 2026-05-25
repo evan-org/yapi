@@ -1,82 +1,24 @@
 // @ts-nocheck
 import baseController from 'controllers/base';
-
-import interfaceModel from 'models/interface';
-
-import projectModel from 'models/project';
-
-// import wikiModel from '../yapi-plugin-wiki/wikiModel.js';
-
-import interfaceCatModel from 'models/interfaceCat';
-
 import yapi from "runtime.js";
-import wikiModel from "../yapi-plugin-wiki/wikiModel.js";
+import {
+  interfaceRepository,
+  interfaceCatRepository,
+  projectRepository,
+} from "../../repositories/index.js";
+import { exportDataService, stripExportIds } from "../../services/index.js";
 import markdownIt from "markdown-it";
-
 import markdownItAnchor from 'markdown-it-anchor';
-
 import markdownItTableOfContents from 'markdown-it-table-of-contents';
-
 import defaultTheme from './defaultTheme.js';
-
 import md from '../../common/markdown.js';
-
-
-// import htmlToPdf from 'html-pdf';
 
 class exportController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = yapi.getInst(interfaceCatModel);
-    this.interModel = yapi.getInst(interfaceModel);
-    this.projectModel = yapi.getInst(projectModel);
-
-  }
-
-  async handleListClass(pid, status) {
-    let result = await this.catModel.list(pid),
-      newResult = [];
-    for (let i = 0, item, list; i < result.length; i++) {
-      item = result[i].toObject();
-      list = await this.interModel.listByInterStatus(item._id, status);
-      list = list.sort((a, b) => a.index - b.index);
-      if (list.length > 0) {
-        item.list = list;
-        newResult.push(item);
-      }
-    }
-
-    return newResult;
-  }
-
-  handleExistId(data) {
-    function delArrId(arr, fn) {
-      if (!Array.isArray(arr)) {return;}
-      arr.forEach((item) => {
-        delete item._id;
-        delete item.__v;
-        delete item.uid;
-        delete item.edit_uid;
-        delete item.catid;
-        delete item.project_id;
-
-        if (typeof fn === "function") {fn(item);}
-      });
-    }
-
-    delArrId(data, function(item) {
-      delArrId(item.list, function(api) {
-        delArrId(api.req_body_form);
-        delArrId(api.req_params);
-        delArrId(api.req_query);
-        delArrId(api.req_headers);
-        if (api.query_path && typeof api.query_path === "object") {
-          delArrId(api.query_path.params);
-        }
-      });
-    });
-
-    return data;
+    this.catModel = interfaceCatRepository;
+    this.interModel = interfaceRepository;
+    this.projectModel = projectRepository;
   }
 
   // @feat: serives
@@ -97,13 +39,17 @@ class exportController extends baseController {
     let curProject, wikiData;
     let tp = "";
     try {
-      curProject = await this.projectModel.get(pid);
+      const proj = await exportDataService.getProject(pid);
+      if (!proj.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, proj.code, proj.message));
+      }
+      curProject = proj.data;
       const basepath = curProject.basepath;
       if (isWiki === "true") {
-        wikiData = await yapi.getInst(wikiModel).get(pid);
+        wikiData = await exportDataService.getWiki(pid);
       }
       ctx.set("Content-Type", "application/octet-stream");
-      const list = await this.handleListClass(pid, status);
+      const list = await exportDataService.listCategoriesWithApis(pid, status);
 
       switch (type) {
         case "markdown": {
@@ -112,7 +58,7 @@ class exportController extends baseController {
           return (ctx.body = tp);
         }
         case "json": {
-          let data = this.handleExistId(list);
+          let data = stripExportIds(list);
           if (Array.isArray(data) && fullPath === "full-path" && basepath) {
             data.forEach(function(cate) {
               if (Array.isArray(cate.list)) {
