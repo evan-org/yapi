@@ -655,7 +655,10 @@ class projectController extends baseController {
   async updateToken(ctx) {
     try {
       let project_id = ctx.params.project_id;
-      const result = await projectService.refreshProjectToken(project_id);
+      const result = await projectService.refreshProjectToken(
+        project_id,
+        this.getUid()
+      );
       this._reply(ctx, result);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
