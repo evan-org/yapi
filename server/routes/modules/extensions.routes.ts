@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 内置扩展 HTTP 路由（保持 /api/plugin/* 路径，兼容历史客户端）
+ * 内置扩展 HTTP 路由（/api/extensions/*）
  */
 import advMockController from "../../controllers/advMock.js";
 import statisticsController from "../../controllers/statistics.js";
@@ -9,43 +9,51 @@ import exportPluginController from "../../controllers/exportPlugin.js";
 import exportSwaggerController from "../../controllers/exportSwagger.js";
 import swaggerSyncController from "../../controllers/swaggerSync.js";
 import { registerModuleRoutes } from "../register-routes.js";
-import { extensionHttpRoutes } from "./extension-routes.config.js";
+import {
+  EXTENSIONS_ROUTE_PREFIX,
+  extensionHttpRoutes,
+} from "./extension-routes.config.js";
 
-export { extensionHttpRoutes } from "./extension-routes.config.js";
+export {
+  EXTENSIONS_ROUTE_PREFIX,
+  extensionHttpRoutes,
+} from "./extension-routes.config.js";
 
 /**
  * 注册内置扩展 HTTP 路由
  * @param {import("../../lib/bind-routes.js").default} binder
  */
 export function registerExtensionRoutes(binder) {
+  const prefix = EXTENSIONS_ROUTE_PREFIX;
+
   registerModuleRoutes(binder, {
     controller: advMockController,
-    prefix: "/plugin/",
-    routes: extensionHttpRoutes.filter((r) => r.path.startsWith("advmock")),
+    prefix,
+    routes: extensionHttpRoutes.filter((r) => r.path.startsWith("advanced-mock")),
   });
   registerModuleRoutes(binder, {
     controller: statisticsController,
-    prefix: "/plugin/",
-    routes: extensionHttpRoutes.filter((r) => r.path.startsWith("statismock")),
+    prefix,
+    routes: extensionHttpRoutes.filter((r) => r.path.startsWith("statistics")),
   });
   registerModuleRoutes(binder, {
     controller: wikiController,
-    prefix: "/plugin/",
-    routes: extensionHttpRoutes.filter((r) => r.path.startsWith("wiki_desc")),
+    prefix,
+    routes: extensionHttpRoutes.filter((r) => r.path === "wiki"),
   });
   registerModuleRoutes(binder, {
     controller: exportPluginController,
-    prefix: "/plugin/",
-    routes: [{ action: "exportData", path: "export", method: "get" }],
+    prefix,
+    routes: [{ action: "exportData", path: "export/data", method: "get" }],
   });
   registerModuleRoutes(binder, {
     controller: exportSwaggerController,
-    prefix: "/plugin/",
-    routes: [{ action: "exportData", path: "exportSwagger", method: "get" }],
+    prefix,
+    routes: [{ action: "exportData", path: "export/swagger", method: "get" }],
   });
   registerModuleRoutes(binder, {
     controller: swaggerSyncController,
-    prefix: "/plugin/",
-    routes: extensionHttpRoutes.filter((r) => r.path.startsWith("autoSync")),
+    prefix,
+    routes: extensionHttpRoutes.filter((r) => r.path.startsWith("swagger-sync")),
   });
 }

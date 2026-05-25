@@ -1,7 +1,9 @@
 /**
- * 内置扩展能力 API（路径仍为 /api/plugin/*，与历史 YApi 兼容）
+ * 内置扩展能力 API（/api/extensions/*）
  */
 import { apiRequest } from "./client";
+
+const EXT = "/extensions";
 
 export const extensionsApi = {
   statisticsCount: () =>
@@ -10,17 +12,19 @@ export const extensionsApi = {
       projectCount: number;
       interfaceCount: number;
       interfaceCaseCount: number;
-    }>("/plugin/statismock/count"),
+    }>(`${EXT}/statistics/summary`),
 
   statisticsMock: () =>
-    apiRequest<{ mockCount: number; mockDateList: unknown[] }>("/plugin/statismock/get"),
+    apiRequest<{ mockCount: number; mockDateList: unknown[] }>(
+      `${EXT}/statistics/mock-log`
+    ),
 
   systemStatus: () =>
-    apiRequest<Record<string, unknown>>("/plugin/statismock/get_system_status"),
+    apiRequest<Record<string, unknown>>(`${EXT}/statistics/system`),
 
   wikiGet: (project_id: number) =>
     apiRequest<{ desc?: string; markdown?: string; username?: string }>(
-      `/plugin/wiki_desc/get?project_id=${project_id}`
+      `${EXT}/wiki?project_id=${project_id}`
     ),
 
   wikiUpdate: (payload: {
@@ -28,21 +32,21 @@ export const extensionsApi = {
     desc?: string;
     markdown?: string;
   }) =>
-    apiRequest("/plugin/wiki_desc/up", {
+    apiRequest(`${EXT}/wiki`, {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
   /** 导出项目数据 */
   exportData: (type: string, pid: number) =>
-    `/api/plugin/export?type=${type}&pid=${pid}`,
+    `/api${EXT}/export/data?type=${type}&pid=${pid}`,
 
   /** 全量导出（开放接口） */
-  exportFullUrl: (pid: number) => `/api/open/plugin/export-full?pid=${pid}`,
+  exportFullUrl: (pid: number) => `/api/open${EXT}/export-full?pid=${pid}`,
 
   /** Swagger2 导出 */
   exportSwagger2Url: (pid: number) =>
-    `/api/plugin/exportSwagger?type=OpenAPIV2&pid=${pid}`,
+    `/api${EXT}/export/swagger?type=OpenAPIV2&pid=${pid}`,
 
   autoSyncGet: (project_id: number) =>
     apiRequest<{
@@ -52,43 +56,43 @@ export const extensionsApi = {
       sync_cron?: string;
       sync_mode?: string;
       is_sync_open?: boolean;
-    }>(`/plugin/autoSync/get?project_id=${project_id}`),
+    }>(`${EXT}/swagger-sync?project_id=${project_id}`),
 
   autoSyncSave: (payload: Record<string, unknown>) =>
-    apiRequest("/plugin/autoSync/save", {
+    apiRequest(`${EXT}/swagger-sync`, {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
   advMockGet: (interface_id: number) =>
-    apiRequest(`/plugin/advmock/get?interface_id=${interface_id}`),
+    apiRequest(`${EXT}/advanced-mock?interface_id=${interface_id}`),
 
   advMockSave: (payload: Record<string, unknown>) =>
-    apiRequest("/plugin/advmock/save", {
+    apiRequest(`${EXT}/advanced-mock`, {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
   advMockCaseList: (interface_id: number) =>
-    apiRequest(`/plugin/advmock/case/list?interface_id=${interface_id}`),
+    apiRequest(`${EXT}/advanced-mock/cases?interface_id=${interface_id}`),
 
   advMockCaseGet: (id: number) =>
-    apiRequest(`/plugin/advmock/case/get?id=${id}`),
+    apiRequest(`${EXT}/advanced-mock/cases/detail?id=${id}`),
 
   advMockCaseSave: (payload: Record<string, unknown>) =>
-    apiRequest("/plugin/advmock/case/save", {
+    apiRequest(`${EXT}/advanced-mock/cases`, {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
   advMockCaseDel: (id: number) =>
-    apiRequest("/plugin/advmock/case/del", {
+    apiRequest(`${EXT}/advanced-mock/cases/delete`, {
       method: "POST",
       body: JSON.stringify({ id }),
     }),
 
   advMockCaseHide: (id: number) =>
-    apiRequest("/plugin/advmock/case/hide", {
+    apiRequest(`${EXT}/advanced-mock/cases/hide`, {
       method: "POST",
       body: JSON.stringify({ id }),
     }),

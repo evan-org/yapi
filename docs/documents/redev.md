@@ -94,7 +94,7 @@ npm run dev
 |------|------|
 | `server/controllers/` | advMock、wiki、statistics、export 等 HTTP 层 |
 | `server/services/`、`server/services/import/` | 业务与数据导入 |
-| `server/routes/modules/extensions.routes.ts` | 路由注册，HTTP 仍为 `/api/plugin/*` |
+| `server/routes/modules/extensions.routes.ts` | 路由注册，HTTP 为 `/api/extensions/*` |
 | `client/src/lib/features.ts` | 前端功能入口映射 |
 | `client/src/lib/api/extensions.ts` | 扩展 API 客户端封装 |
 

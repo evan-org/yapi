@@ -91,9 +91,9 @@ class baseController {
       "/api/interface/getCatMenu",
       "/api/interface/list_cat",
       "/api/project/get",
-      "/api/plugin/export",
+      "/api/extensions/export/data",
       "/api/project/up",
-      "/api/plugin/exportSwagger",
+      "/api/extensions/export/swagger",
     ];
 
     const params = Object.assign({}, ctx.query, ctx.request.body) as Record<string, unknown>;
@@ -129,7 +129,7 @@ class baseController {
       const projectData = await this.projectModel.get(checkId);
       if (projectData) {
         const pid = String(checkId);
-        ctx.query.pid = pid; // 兼容：/api/plugin/export
+        ctx.query.pid = pid;
         (ctx.params as Record<string, unknown>).project_id = checkId;
         this.$tokenAuth = true;
         this.$uid = tokenUid;

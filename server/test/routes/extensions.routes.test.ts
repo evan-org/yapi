@@ -1,28 +1,24 @@
 // @ts-nocheck
 /**
- * 内置扩展路由表回归：确保 /api/plugin/* 端点未遗漏
+ * 内置扩展路由表回归：确保 /api/extensions/* 端点未遗漏
  */
 import test from "ava";
 import { extensionHttpRoutes } from "../../routes/modules/extension-routes.config.js";
 
 const EXPECTED_PATHS = [
-  "advmock/get",
-  "advmock/save",
-  "advmock/case/save",
-  "advmock/case/get",
-  "advmock/case/list",
-  "advmock/case/del",
-  "advmock/case/hide",
-  "statismock/count",
-  "statismock/get",
-  "statismock/get_system_status",
-  "statismock/group_data_statis",
-  "wiki_desc/get",
-  "wiki_desc/up",
-  "export",
-  "exportSwagger",
-  "autoSync/get",
-  "autoSync/save",
+  "advanced-mock",
+  "advanced-mock/cases",
+  "advanced-mock/cases/detail",
+  "advanced-mock/cases/delete",
+  "advanced-mock/cases/hide",
+  "statistics/summary",
+  "statistics/mock-log",
+  "statistics/system",
+  "statistics/groups",
+  "wiki",
+  "export/data",
+  "export/swagger",
+  "swagger-sync",
 ];
 
 test("extensionHttpRoutes 包含全部内置扩展端点", (t) => {
@@ -30,5 +26,5 @@ test("extensionHttpRoutes 包含全部内置扩展端点", (t) => {
   for (const p of EXPECTED_PATHS) {
     t.true(paths.includes(p), `缺少路由 path: ${p}`);
   }
-  t.is(paths.length, EXPECTED_PATHS.length);
+  t.is(extensionHttpRoutes.length, 17);
 });

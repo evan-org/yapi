@@ -24,7 +24,7 @@
 
 - `yapi.WEBROOT` = `server/` 目录
 - 配置：**环境变量**（`server/.env`，见 `server/.env.example`），`config.json` 可选兜底；运行时单例 `server/runtime.ts`
-- 扩展 API：`/api/plugin/*`（`routes/modules/extensions.routes.ts`）
+- 扩展 API：`/api/extensions/*`（`routes/modules/extensions.routes.ts`）
 - Docker：`deploy/docker-compose.yml`（构建 context 为仓库根）
 - 前端 API：`client/src/lib/api/`
 
