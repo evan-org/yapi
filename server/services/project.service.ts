@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 项目模块业务逻辑（搜索、删除、详情、Swagger 代理等）
  */
@@ -6,7 +5,8 @@ import axios from "axios";
 import _ from "underscore";
 import sha from "sha.js";
 import yapi from "../runtime.js";
-import commons, { validateSearchKeyword } from "../utils/commons.js";
+import type { YapiRuntime } from "../types/global.js";
+import commons from "../utils/commons.js";
 import { getToken } from "../utils/token.js";
 import {
   projectRepository,
@@ -21,66 +21,54 @@ import {
 } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+import {
+  normalizeBasepath,
+  hasDuplicateField,
+  validateProjectBasepath,
+  validateProjectSearchKeyword,
+  validateSwaggerUrl,
+  validateProjectName,
+  validateProjectId,
+  validateProjectEnvList,
+  validateProjectTagList,
+  resolveProjectMemberRole,
+  PROJECT_MEMBER_ROLE_LABEL,
+  DEFAULT_PROJECT_ENV,
+} from "./project.util.js";
 
-/**
- * 规范化项目 basepath
- */
-export function normalizeBasepath(basepath) {
-  if (!basepath) {
-    return "";
-  }
-  if (basepath === "/") {
-    return "";
-  }
-  if (basepath[0] !== "/") {
-    basepath = "/" + basepath;
-  }
-  if (basepath[basepath.length - 1] === "/") {
-    basepath = basepath.substr(0, basepath.length - 1);
-  }
-  if (!/^\/[a-zA-Z0-9\-\/\._]+$/.test(basepath)) {
-    return false;
-  }
-  return basepath;
+export { normalizeBasepath, hasDuplicateField } from "./project.util.js";
+
+function errorMessage(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
 }
 
-/** 数组某字段是否重复 */
-export function hasDuplicateField(arr, key) {
-  const s = new Set();
-  arr.forEach((item) => s.add(item[key]));
-  return s.size !== arr.length;
+/** plugin 在启动后挂载 emitHook，类型上按 YapiRuntime 访问 */
+function emitProjectHook(name: string, ...args: unknown[]) {
+  const hook = (yapi as YapiRuntime).emitHook;
+  if (hook) {
+    hook(name, ...args).then();
+  }
 }
-
-const MEMBER_ROLE_NAMES = {
-  owner: "组长",
-  dev: "开发者",
-  guest: "访客",
-};
 
 class ProjectService extends BaseService {
-  constructor() {
-    super();
-    this.projectModel = projectRepository;
-    this.groupModel = groupRepository;
-    this.interfaceModel = interfaceRepository;
-    this.interfaceColModel = interfaceColRepository;
-    this.interfaceCaseModel = interfaceCaseRepository;
-    this.followModel = followRepository;
-    this.catModel = interfaceCatRepository;
-    this.tokenModel = tokenRepository;
-  }
+  projectModel = projectRepository;
+  groupModel = groupRepository;
+  interfaceModel = interfaceRepository;
+  interfaceColModel = interfaceColRepository;
+  interfaceCaseModel = interfaceCaseRepository;
+  followModel = followRepository;
+  catModel = interfaceCatRepository;
+  tokenModel = tokenRepository;
 
   /**
    * 全局模糊搜索：项目 / 分组 / 接口
    */
-  async search(keyword) {
-    const q = (keyword || "").trim();
-    if (!q) {
-      return fail(400, "No keyword.");
+  async search(keyword: string) {
+    const validated = validateProjectSearchKeyword(keyword);
+    if (!validated.ok) {
+      return validated;
     }
-    if (!validateSearchKeyword(q)) {
-      return fail(400, "Bad query.");
-    }
+    const q = validated.data;
 
     let projectList = await this.projectModel.search(q);
     let groupList = await this.groupModel.search(q);
@@ -145,7 +133,7 @@ class ProjectService extends BaseService {
     await this.interfaceCaseModel.delByProjectId(projectId);
     await this.interfaceColModel.delByProjectId(projectId);
     await this.followModel.delByProjectId(projectId);
-    yapi.emitHook("project_del", projectId).then();
+    emitProjectHook("project_del", projectId);
     const result = await this.projectModel.del(projectId);
     return ok(result);
   }
@@ -153,12 +141,13 @@ class ProjectService extends BaseService {
   /**
    * 服务端拉取 Swagger/OpenAPI JSON（避免浏览器跨域）
    */
-  async fetchSwaggerJson(url) {
-    if (!url) {
-      return fail(400, "url 不能为空");
+  async fetchSwaggerJson(url: string) {
+    const validated = validateSwaggerUrl(url);
+    if (!validated.ok) {
+      return validated;
     }
     try {
-      const { data } = await axios.get(url);
+      const { data } = await axios.get(validated.data);
       if (data == null || typeof data !== "object") {
         return fail(402, "返回数据格式不是 JSON");
       }
@@ -180,8 +169,8 @@ class ProjectService extends BaseService {
       const data = Object.assign({}, params, {
         project_type: params.project_type || "private",
         uid: actor.uid,
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
+        add_time: commons.time(),
+        up_time: commons.time(),
         env: params.env || [{ name: "local", domain: "http://127.0.0.1" }],
       });
       delete data._id;
@@ -196,8 +185,8 @@ class ProjectService extends BaseService {
         project_id: result._id,
         desc: "公共测试集",
         uid: actor.uid,
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
+        add_time: commons.time(),
+        up_time: commons.time(),
       });
 
       const cat = params.cat || [];
@@ -208,8 +197,8 @@ class ProjectService extends BaseService {
           project_id: result._id,
           desc: item.desc,
           uid: actor.uid,
-          add_time: yapi.commons.time(),
-          up_time: yapi.commons.time(),
+          add_time: commons.time(),
+          up_time: commons.time(),
         });
         const interfaceData = await this.interfaceModel.listByInterStatus(item._id);
         for (let key = 0; key < interfaceData.length; key++) {
@@ -218,8 +207,8 @@ class ProjectService extends BaseService {
             uid: actor.uid,
             catid: catResult._id,
             project_id: result._id,
-            add_time: yapi.commons.time(),
-            up_time: yapi.commons.time(),
+            add_time: commons.time(),
+            up_time: commons.time(),
           });
           delete ifacePayload._id;
           await this.interfaceModel.save(ifacePayload);
@@ -229,7 +218,7 @@ class ProjectService extends BaseService {
       const copyProject = await this.projectModel.get(copyId);
       let copyProjectMembers = copyProject.members || [];
       if (actor.role !== "admin") {
-        const userdata = await yapi.commons.getUserdata(actor.uid, "owner");
+        const userdata = await commons.getUserdata(actor.uid, "owner");
         const check = await this.projectModel.checkMemberRepeat(copyId, actor.uid);
         if (check === 0 && userdata) {
           copyProjectMembers.push(userdata);
@@ -237,7 +226,7 @@ class ProjectService extends BaseService {
       }
       await this.projectModel.addMember(result._id, copyProjectMembers);
 
-      yapi.commons.saveLog({
+      commons.saveLog({
         content: `<a href="/user/profile/${actor.uid}">${actor.username}</a> 复制了项目 ${params.preName} 为 <a href="/project/${result._id}">${params.name}</a>`,
         type: "project",
         uid: actor.uid,
@@ -247,7 +236,7 @@ class ProjectService extends BaseService {
 
       return ok(result);
     } catch (err) {
-      return fail(402, err.message);
+      return fail(402, errorMessage(err));
     }
   }
 
@@ -306,13 +295,12 @@ class ProjectService extends BaseService {
     const add_members = [];
     const exist_members = [];
     const no_members = [];
-    const normalizedRole =
-      ["owner", "dev", "guest"].find((v) => v === role) || "dev";
+    const normalizedRole = resolveProjectMemberRole(role);
 
     for (let i = 0; i < member_uids.length; i++) {
       const memberId = member_uids[i];
       const check = await this.projectModel.checkMemberRepeat(id, memberId);
-      const userdata = await yapi.commons.getUserdata(memberId, normalizedRole);
+      const userdata = await commons.getUserdata(memberId, normalizedRole);
       if (check > 0) {
         exist_members.push(userdata);
       } else if (!userdata) {
@@ -330,7 +318,7 @@ class ProjectService extends BaseService {
             `<a href = "/user/profile/${item.uid}">${item.username}</a>`
         )
         .join("、");
-      yapi.commons.saveLog({
+      commons.saveLog({
         content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 添加了项目成员 ${members}`,
         type: "project",
         uid: operator.uid,
@@ -349,7 +337,7 @@ class ProjectService extends BaseService {
     }
     const result = await this.projectModel.delMember(id, member_uid);
     const member = await userRepository.findById(member_uid);
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 删除了项目中的成员 <a href="/user/profile/${member_uid}">${member ? member.username : ""}</a>`,
       type: "project",
       uid: operator.uid,
@@ -374,11 +362,12 @@ class ProjectService extends BaseService {
   }
 
   /** 检查项目名是否可用 */
-  async checkNameAvailable(name, groupId) {
-    if (!name) {
-      return fail(401, "项目名不能为空");
+  async checkNameAvailable(name: string, groupId: number | string) {
+    const validated = validateProjectName(name);
+    if (!validated.ok) {
+      return validated;
     }
-    const checkRepeat = await this.projectModel.checkNameRepeat(name, groupId);
+    const checkRepeat = await this.projectModel.checkNameRepeat(validated.data, groupId);
     if (checkRepeat > 0) {
       return fail(401, "已存在的项目名");
     }
@@ -394,16 +383,15 @@ class ProjectService extends BaseService {
       return fail(401, "已存在的项目名");
     }
 
-    params.basepath = params.basepath || "";
-    const normalized = normalizeBasepath(params.basepath);
-    if (normalized === false) {
-      return fail(401, "basepath格式有误");
+    const basepathResult = validateProjectBasepath(params.basepath);
+    if (!basepathResult.ok) {
+      return basepathResult;
     }
 
     const data = {
       name: params.name,
       desc: params.desc,
-      basepath: normalized,
+      basepath: basepathResult.data,
       members: [],
       project_type: params.project_type || "private",
       uid,
@@ -411,10 +399,10 @@ class ProjectService extends BaseService {
       group_name: params.group_name,
       icon: params.icon,
       color: params.color,
-      add_time: yapi.commons.time(),
-      up_time: yapi.commons.time(),
+      add_time: commons.time(),
+      up_time: commons.time(),
       is_json5: false,
-      env: [{ name: "local", domain: "http://127.0.0.1" }],
+      env: DEFAULT_PROJECT_ENV,
     };
 
     const result = await this.projectModel.save(data);
@@ -424,32 +412,32 @@ class ProjectService extends BaseService {
         project_id: result._id,
         desc: "公共测试集",
         uid,
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
+        add_time: commons.time(),
+        up_time: commons.time(),
       });
       await this.catModel.save({
         name: "公共分类",
         project_id: result._id,
         desc: "公共分类",
         uid,
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
+        add_time: commons.time(),
+        up_time: commons.time(),
       });
     }
 
     if (role !== "admin") {
-      const userdata = await yapi.commons.getUserdata(uid, "owner");
+      const userdata = await commons.getUserdata(uid, "owner");
       await this.projectModel.addMember(result._id, [userdata]);
     }
 
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 添加了项目 <a href="/project/${result._id}">${params.name}</a>`,
       type: "project",
       uid,
       username,
       typeid: result._id,
     });
-    yapi.emitHook("project_add", result).then();
+    emitProjectHook("project_add", result);
     return ok(result);
   }
 
@@ -461,11 +449,11 @@ class ProjectService extends BaseService {
     }
 
     if (params.basepath) {
-      const normalized = normalizeBasepath(params.basepath);
-      if (normalized === false) {
-        return fail(401, "basepath格式有误");
+      const basepathResult = validateProjectBasepath(params.basepath);
+      if (!basepathResult.ok) {
+        return basepathResult;
       }
-      params.basepath = normalized;
+      params.basepath = basepathResult.data;
     }
 
     if (projectData.name === params.name) {
@@ -478,16 +466,16 @@ class ProjectService extends BaseService {
       }
     }
 
-    const data = Object.assign({ up_time: yapi.commons.time() }, params);
+    const data = Object.assign({ up_time: commons.time() }, params);
     const result = await this.projectModel.up(id, data);
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 更新了项目 <a href="/project/${id}/interface/api">${projectData.name}</a>`,
       type: "project",
       uid,
       username,
       typeid: id,
     });
-    yapi.emitHook("project_up", result).then();
+    emitProjectHook("project_up", result);
     return ok(result);
   }
 
@@ -495,7 +483,7 @@ class ProjectService extends BaseService {
   async updateAppearance(id, { color, icon }, { uid, username }) {
     const result = await this.projectModel.up(id, { color, icon });
     this.followModel.updateById(uid, id, { color, icon }).then(() => {
-      yapi.commons.saveLog({
+      commons.saveLog({
         content: `<a href="/user/profile/${uid}">${username}</a> 修改了项目图标、颜色`,
         type: "project",
         uid,
@@ -508,21 +496,19 @@ class ProjectService extends BaseService {
 
   /** 更新项目环境配置 */
   async updateEnv(id, env, { uid, username }) {
-    if (!env || !Array.isArray(env)) {
-      return fail(405, "env参数格式有误");
-    }
-    if (hasDuplicateField(env, "name")) {
-      return fail(405, "环境变量名重复");
+    const envValidated = validateProjectEnvList(env);
+    if (!envValidated.ok) {
+      return envValidated;
     }
     const projectData = await this.projectModel.get(id);
     if (!projectData) {
       return fail(400, "不存在的项目");
     }
     const result = await this.projectModel.up(id, {
-      env,
-      up_time: yapi.commons.time(),
+      env: envValidated.data,
+      up_time: commons.time(),
     });
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 更新了项目 <a href="/project/${id}/interface/api">${projectData.name}</a> 的环境`,
       type: "project",
       uid,
@@ -534,18 +520,19 @@ class ProjectService extends BaseService {
 
   /** 更新项目 tag 配置 */
   async updateTag(id, tag, { uid, username }) {
-    if (!tag || !Array.isArray(tag)) {
-      return fail(405, "tag参数格式有误");
+    const tagValidated = validateProjectTagList(tag);
+    if (!tagValidated.ok) {
+      return tagValidated;
     }
     const projectData = await this.projectModel.get(id);
     if (!projectData) {
       return fail(400, "不存在的项目");
     }
     const result = await this.projectModel.up(id, {
-      tag,
-      up_time: yapi.commons.time(),
+      tag: tagValidated.data,
+      up_time: commons.time(),
     });
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 更新了项目 <a href="/project/${id}/interface/api">${projectData.name}</a> 的tag`,
       type: "project",
       uid,
@@ -561,16 +548,15 @@ class ProjectService extends BaseService {
     if (check === 0) {
       return fail(400, "项目成员不存在");
     }
-    const normalizedRole =
-      ["owner", "dev", "guest"].find((v) => v === role) || "dev";
+    const normalizedRole = resolveProjectMemberRole(role);
     const result = await this.projectModel.changeMemberRole(
       id,
       member_uid,
       normalizedRole
     );
     const member = await userRepository.findById(member_uid);
-    yapi.commons.saveLog({
-      content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 修改了项目中的成员 <a href="/user/profile/${member_uid}">${member ? member.username : ""}</a> 的角色为 "${MEMBER_ROLE_NAMES[normalizedRole]}"`,
+    commons.saveLog({
+      content: `<a href="/user/profile/${operator.uid}">${operator.username}</a> 修改了项目中的成员 <a href="/user/profile/${member_uid}">${member ? member.username : ""}</a> 的角色为 "${PROJECT_MEMBER_ROLE_LABEL[normalizedRole]}"`,
       type: "project",
       uid: operator.uid,
       username: operator.username,
@@ -585,7 +571,7 @@ class ProjectService extends BaseService {
       let data = await this.tokenModel.get(projectId);
       let token;
       if (!data) {
-        const passsalt = yapi.commons.randStr();
+        const passsalt = commons.randStr();
         token = sha("sha1").update(passsalt).digest("hex").substr(0, 20);
         await this.tokenModel.save({ project_id: projectId, token });
       } else {
@@ -593,34 +579,35 @@ class ProjectService extends BaseService {
       }
       return ok(getToken(token, uid));
     } catch (err) {
-      return fail(402, err.message);
+      return fail(402, errorMessage(err));
     }
   }
 
-  /** 刷新项目 token */
-  async refreshProjectToken(projectId) {
+  /** 刷新项目 token（需 uid 以生成与 get 接口一致的加密 token） */
+  async refreshProjectToken(projectId, uid: number | string) {
     try {
       const data = await this.tokenModel.get(projectId);
       if (!data || !data.token) {
         return fail(402, "没有查到token信息");
       }
-      const passsalt = yapi.commons.randStr();
+      const passsalt = commons.randStr();
       let token = sha("sha1").update(passsalt).digest("hex").substr(0, 20);
       const result = await this.tokenModel.up(projectId, token);
-      token = getToken(token);
+      token = getToken(token, uid);
       result.token = token;
       return ok(result);
     } catch (err) {
-      return fail(402, err.message);
+      return fail(402, errorMessage(err));
     }
   }
 
   /** 获取项目环境变量 */
-  async getProjectEnv(projectId) {
-    if (!projectId) {
-      return fail(405, "项目id不能为空");
+  async getProjectEnv(projectId: number | string) {
+    const validated = validateProjectId(projectId);
+    if (!validated.ok) {
+      return validated;
     }
-    const env = await this.projectModel.getByEnv(projectId);
+    const env = await this.projectModel.getByEnv(validated.data);
     return ok(env);
   }
 }
