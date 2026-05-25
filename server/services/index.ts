@@ -31,3 +31,5 @@ export { default as interfaceService } from "./interface.service.js";
 export { default as interfaceColService } from "./interfaceCol.service.js";
 export { default as exportDataService, stripExportIds } from "./exportData.service.js";
 export { default as swaggerSyncService } from "./swaggerSync.service.js";
+export { getSyncModeName } from "./swaggerSync.util.js";
+export { validateSwaggerSyncProjectId } from "./swaggerSync.validation.js";

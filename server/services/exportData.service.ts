@@ -1,8 +1,6 @@
-// @ts-nocheck
 /**
  * 接口导出插件共用逻辑（分类+接口列表、脱敏 id 等）
  */
-import yapi from "../runtime.js";
 import {
   interfaceRepository,
   interfaceCatRepository,
@@ -11,20 +9,18 @@ import {
 import wikiModel from "../exts/yapi-plugin-wiki/wikiModel.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+
 export { stripExportIds } from "./exportData.util.js";
 
 class ExportDataService extends BaseService {
-  constructor() {
-    super();
-    this.catModel = interfaceCatRepository;
-    this.interfaceModel = interfaceRepository;
-    this.projectModel = projectRepository;
-  }
+  catModel = interfaceCatRepository;
+  interfaceModel = interfaceRepository;
+  projectModel = projectRepository;
 
   /**
    * 按状态聚合分类与接口列表（导出 markdown/json/swagger 共用）
    */
-  async listCategoriesWithApis(projectId, status) {
+  async listCategoriesWithApis(projectId: number | string, status: string) {
     const result = await this.catModel.list(projectId);
     const newResult = [];
     for (let i = 0; i < result.length; i++) {
@@ -40,7 +36,7 @@ class ExportDataService extends BaseService {
   }
 
   /** 项目详情 */
-  async getProject(projectId) {
+  async getProject(projectId: number | string) {
     const project = await this.projectModel.get(projectId);
     if (!project) {
       return fail(404, "项目不存在");
@@ -49,7 +45,7 @@ class ExportDataService extends BaseService {
   }
 
   /** Wiki 文档（可选） */
-  async getWiki(projectId) {
+  async getWiki(projectId: number | string) {
     return this.getModel(wikiModel).get(projectId);
   }
 }

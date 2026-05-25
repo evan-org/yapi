@@ -1,10 +1,9 @@
-// @ts-nocheck
 /**
  * Swagger 自动同步纯函数（无插件 model 依赖）
  */
 
 /** 合并模式中文名 */
-export function getSyncModeName(syncMode) {
+export function getSyncModeName(syncMode: string): string {
   if (syncMode == "good") {
     return "智能合并";
   }
