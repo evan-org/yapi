@@ -80,7 +80,13 @@ CREATE TABLE IF NOT EXISTS yapi_interface (
 );
 CREATE TABLE IF NOT EXISTS yapi_interface_cat (
   _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
+  name TEXT NOT NULL DEFAULT '',
+  project_id BIGINT NOT NULL DEFAULT 0,
+  uid BIGINT NOT NULL DEFAULT 0,
+  desc TEXT NOT NULL DEFAULT '',
+  "index" INTEGER NOT NULL DEFAULT 0,
+  add_time BIGINT NOT NULL DEFAULT 0,
+  up_time BIGINT NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS yapi_interface_case (
   _id SERIAL PRIMARY KEY,
@@ -143,8 +149,9 @@ CREATE INDEX IF NOT EXISTS idx_yapi_log_uid ON yapi_log ((doc->>'uid'));
 CREATE INDEX IF NOT EXISTS idx_yapi_log_typeid ON yapi_log ((doc->>'typeid'), (doc->>'type'));
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_uid ON yapi_interface_col ((doc->>'uid'));
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_pid ON yapi_interface_col ((doc->>'project_id'));
-CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_uid ON yapi_interface_cat ((doc->>'uid'));
-CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_pid ON yapi_interface_cat ((doc->>'project_id'));
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_uid ON yapi_interface_cat (uid);
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_pid ON yapi_interface_cat (project_id);
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_name ON yapi_interface_cat (name);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_uid ON yapi_interface_case ((doc->>'uid'));
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_col ON yapi_interface_case ((doc->>'col_id'));
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_pid ON yapi_interface_case ((doc->>'project_id'));

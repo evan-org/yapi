@@ -129,3 +129,20 @@ export function interfaceFromRow(row: DocRecord): DocRecord {
 
 export const INTERFACE_SELECT =
   '_id, uid, title, path, method, project_id, catid, edit_uid, status, add_time, up_time, type, "index", api_opened, desc, req_body_type, res_body_type, req_body_is_json_schema, res_body_is_json_schema, custom_field_value, markdown, res_body, req_body_other, query_path, req_query, req_headers, req_params, req_body_form, tag';
+
+/** interface_cat 表行 → 业务对象 */
+export function interfaceCatFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    name: row.name,
+    project_id: row.project_id,
+    uid: row.uid,
+    desc: row.desc,
+    index: row.index,
+    add_time: row.add_time,
+    up_time: row.up_time,
+  };
+}
+
+export const INTERFACE_CAT_SELECT =
+  '_id, name, project_id, uid, desc, "index", add_time, up_time';
