@@ -1,58 +1,31 @@
 /**
- * 根据 config.json 与 exts 配置生成 client/plugin-module.js（供 Vite / 开发预构建使用）
+ * 根据 config.json 生成 Next 前端插件注册表（web/src/lib/plugins/registry.ts）
+ * 服务端插件仍由 server/plugin.js 加载，与此脚本无关
  */
 const fs = require("fs");
 const path = require("path");
 
 const vendorsRoot = path.join(__dirname, "..");
-const outputFile = path.join(vendorsRoot, "client", "plugin-module.js");
+const outputFile = path.join(vendorsRoot, "web", "src", "lib", "plugins", "registry.ts");
 
 const commonLib = require(path.join(vendorsRoot, "common/plugin.js"));
 const { exts: systemConfigPlugin } = require(path.join(vendorsRoot, "common/config"));
 
 /**
- * 生成单条插件的 import 与配置项
- * @param {object} plugin
- * @param {"node_modules"|"exts"} source
- * @param {number} index
+ * 收集已启用且含 client 的插件名（Next 端后续按名动态加载）
  */
-function buildPluginEntry(plugin, source, index) {
-  const varName = `pluginMod${index}`;
-  const importPath =
-    source === "node_modules"
-      ? `yapi-plugin-${plugin.name}/client.js`
-      : `../exts/yapi-plugin-${plugin.name}/client.js`;
-  const options =
-    plugin.options != null ? JSON.stringify(plugin.options) : "null";
-  return {
-    importLine: `import * as ${varName} from "${importPath}";`,
-    entry: `"${plugin.name}": { module: pick(${varName}), options: ${options} }`,
-  };
-}
-
-/**
- * 收集已启用且含 client 的插件
- * @param {Array} configPlugin
- * @param {"plugin"|"ext"} type
- * @param {"node_modules"|"exts"} source
- */
-function collectPlugins(configPlugin, type, source) {
-  const lines = [];
-  const imports = [];
+function collectClientPluginNames(configPlugin, type) {
+  const names = [];
   if (!configPlugin || !Array.isArray(configPlugin) || !configPlugin.length) {
-    return { imports, lines };
+    return names;
   }
   const initialized = commonLib.initPlugins(configPlugin, type);
-  let index = 0;
   initialized.forEach((plugin) => {
     if (plugin.client && plugin.enable) {
-      const { importLine, entry } = buildPluginEntry(plugin, source, index);
-      imports.push(importLine);
-      lines.push(entry);
-      index += 1;
+      names.push(plugin.name);
     }
   });
-  return { imports, lines };
+  return names;
 }
 
 function generate() {
@@ -62,29 +35,32 @@ function generate() {
     configPlugins = require(configPath).plugins || [];
   }
 
-  const fromConfig = collectPlugins(configPlugins, "plugin", "node_modules");
-  const fromExts = collectPlugins(systemConfigPlugin, "ext", "exts");
-
-  const imports = [...fromConfig.imports, ...fromExts.imports];
-  const entries = [...fromConfig.lines, ...fromExts.lines];
+  const fromConfig = collectClientPluginNames(configPlugins, "plugin");
+  const fromExts = collectClientPluginNames(systemConfigPlugin, "ext");
+  const allNames = [...fromConfig, ...fromExts];
 
   const body = `/**
  * 自动生成：npm run predev / prebuild 会重新生成，请勿手改
+ * 插件 UI 迁移至 Next 后在此注册客户端模块
  */
-${imports.join("\n")}
+export const enabledPluginNames: string[] = ${JSON.stringify(allNames, null, 2)};
 
-/** 兼容 CJS / ESM 插件入口 */
-function pick(mod) {
-  return mod && mod.default ? mod.default : mod;
-}
+export type PluginRegistry = Record<
+  string,
+  { module: unknown; options: Record<string, unknown> | null }
+>;
 
-export default {
-  ${entries.join(",\n  ")}
-};
+/** 占位注册表，待各 exts 插件提供 Next 客户端入口后填充 */
+export const pluginRegistry: PluginRegistry = {};
 `;
 
+  fs.mkdirSync(path.dirname(outputFile), { recursive: true });
   fs.writeFileSync(outputFile, body, "utf8");
-  console.log("[generate-plugin-module] 已写入", outputFile, `(${entries.length} 个插件)`);
+  console.log(
+    "[generate-plugin-registry] 已写入",
+    outputFile,
+    `(${allNames.length} 个待迁移插件)`
+  );
 }
 
 generate();

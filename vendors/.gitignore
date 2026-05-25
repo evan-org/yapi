@@ -38,16 +38,15 @@ node_modules/
 /examlpe
 /example/
 runtime/
-/prd/
 /dev/
+# 旧 Vite 产物（已移除）
+/prd/
 # Next.js 前端
 web/.next/
 web/out/
-web/node_modules/
 .tags
 .tags1
 /tsconfig.json
-client/plugin-module.js
 .vscode
 /iconfont
 build/default-development

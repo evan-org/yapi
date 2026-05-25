@@ -1,5 +1,6 @@
 /**
  * YApi 服务入口（Hono + Node）
+ * 仅提供 API / WebSocket / 公共资源；页面由 Next.js（vendors/web）承载
  */
 process.env.NODE_PATH = __dirname;
 require("module").Module._initPaths();
@@ -28,14 +29,33 @@ const registerWebSocket = require("./websocket.js");
 
 global.storageCreator = storageCreator;
 
-const indexFile = process.argv[2] === "dev" ? "dev.html" : "index.html";
-const staticRoot = yapi.path.join(yapi.WEBROOT, "static");
+const publicRoot = path.join(yapi.WEBROOT, "public");
+const isDev = process.argv[2] === "dev";
+const nextPort = process.env.YAPI_DEV_CLIENT_PORT || "4000";
 
 /**
- * 创建并启动 Hono 应用
+ * 挂载 public 下静态目录（iconfont、图片、附件等）
+ */
+function registerPublicAssets(app) {
+  const dirs = ["iconfont", "image", "attachment"];
+  dirs.forEach((dir) => {
+    const root = path.join(publicRoot, dir);
+    if (commons.fileExist(root)) {
+      app.use(
+        `/${dir}/*`,
+        serveStatic({
+          root,
+        })
+      );
+    }
+  });
+}
+
+/**
+ * 创建并启动 Hono 应用（API 专用）
  */
 async function startServer() {
-  if (process.argv[2] === "dev") {
+  if (isDev) {
     require(path.join(__dirname, "../scripts/dev-bootstrap.js"));
   }
   assertRuntimeConfig();
@@ -48,6 +68,7 @@ async function startServer() {
     c.json({
       status: "ok",
       framework: "hono",
+      frontend: "nextjs",
       version: require("../package.json").version,
     })
   );
@@ -57,40 +78,27 @@ async function startServer() {
   apiRouter.registerToHono(app, koaCtx);
   registerWebSocket(app, upgradeWebSocket);
 
-  /** SPA 路由回退到 index */
-  app.use("*", async (c, next) => {
-    const pathname = new URL(c.req.url).pathname;
-    if (/^\/(?!api)[a-zA-Z0-9/\-_]*$/.test(pathname)) {
-      return serveStatic({
-        root: staticRoot,
-        path: indexFile,
-      })(c, next);
-    }
-    await next();
-  });
+  registerPublicAssets(app);
 
-  /** /prd 静态资源长缓存与预压缩 */
-  app.use("/prd/*", async (c, next) => {
+  /** 非 API 请求：开发模式提示使用 Next；生产由反向代理或进程管理器转发到 Next */
+  app.all("*", async (c) => {
     const pathname = new URL(c.req.url).pathname;
-    c.header("Cache-Control", "max-age=8640000000");
-    const gzPath = path.join(staticRoot, pathname + ".gz");
-    if (commons.fileExist(gzPath)) {
-      c.header("Content-Encoding", "gzip");
-      return serveStatic({
-        root: staticRoot,
-        rewriteRequestPath: () => pathname + ".gz",
-      })(c, next);
+    if (pathname.startsWith("/api")) {
+      return c.json({ errcode: 404, errmsg: "接口不存在" }, 404);
     }
-    await next();
+    if (isDev) {
+      const host = c.req.header("host")?.split(":")[0] || "127.0.0.1";
+      return c.redirect(`http://${host}:${nextPort}${pathname}`, 302);
+    }
+    return c.json(
+      {
+        errcode: 0,
+        errmsg: "YApi API 服务运行中。请访问 Next.js 前端（默认端口 4000）。",
+        data: { frontend: "nextjs", port: nextPort },
+      },
+      200
+    );
   });
-
-  app.use(
-    "*",
-    serveStatic({
-      root: staticRoot,
-      rewriteRequestPath: (p) => (p === "/" ? `/${indexFile}` : p),
-    })
-  );
 
   const port = Number(yapi.WEBCONFIG.port) || 3001;
   const server = serve({
@@ -111,18 +119,16 @@ async function startServer() {
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
 
-  if (process.argv[2] === "dev") {
-    const devPort = process.env.YAPI_DEV_CLIENT_PORT || "4000";
+  if (isDev) {
     commons.log(
-      `开发服务已启动 (Hono):\n` +
-        `  API:  http://127.0.0.1${port === 80 ? "" : ":" + port}/\n` +
-        `  前端: http://127.0.0.1:${devPort}/`
+      `开发服务已启动 (Hono API + Next.js):\n` +
+        `  API:  http://127.0.0.1${port === 80 ? "" : ":" + port}/api\n` +
+        `  前端: http://127.0.0.1:${nextPort}/`
     );
   } else {
     commons.log(
-      `服务已启动 (Hono)，请打开下面链接访问: \nhttp://127.0.0.1${
-        port === 80 ? "" : ":" + port
-      }/`
+      `API 服务已启动 (Hono): http://127.0.0.1${port === 80 ? "" : ":" + port}/api\n` +
+        `  前端请单独启动: npm run start:web`
     );
   }
 
