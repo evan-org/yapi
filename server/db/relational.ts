@@ -235,3 +235,15 @@ export function followFromRow(row: DocRecord): DocRecord {
 }
 
 export const FOLLOW_SELECT = "_id, uid, projectid, projectname, icon, color";
+
+/** avatar 表行 → 业务对象 */
+export function avatarFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    uid: row.uid,
+    type: row.type,
+    basecode: row.basecode,
+  };
+}
+
+export const AVATAR_SELECT = "_id, uid, type, basecode";

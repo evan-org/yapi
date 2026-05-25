@@ -13,6 +13,7 @@ import {
   logRepository,
   tokenRepository,
   followRepository,
+  avatarRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -590,6 +591,37 @@ test("followRepository 可写入、查询、更新并删除", async (t) => {
     if (groupId) {
       await groupRepository.del(groupId);
     }
+    await disconnectPg();
+  }
+});
+
+test("avatarRepository 可写入、查询与更新", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  const uid = 999990;
+  const basecode = Buffer.from("ci-avatar-png").toString("base64");
+
+  try {
+    const createdId = await avatarRepository.up(uid, basecode, "image/png");
+    t.truthy(createdId);
+
+    const found = await avatarRepository.get(uid);
+    t.truthy(found);
+    t.is(found.type, "image/png");
+    t.is(found.basecode, basecode);
+
+    const updatedId = await avatarRepository.up(uid, `${basecode}-v2`, "image/jpeg");
+    t.is(updatedId, createdId);
+
+    const afterUpdate = await avatarRepository.get(uid);
+    t.is(afterUpdate.type, "image/jpeg");
+    t.is(afterUpdate.basecode, `${basecode}-v2`);
+  } finally {
+    await avatarRepository.del(uid);
     await disconnectPg();
   }
 });
