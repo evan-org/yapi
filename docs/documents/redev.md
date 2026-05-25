@@ -14,7 +14,7 @@ cp config_example.json ./config.json # 复制完成后请修改相关配置
 vi ./config.json
 ```
 
-配置如下，主要配置 MongoDB 数据库，以及 Admin 账号。
+配置如下，主要配置 PostgreSQL 数据库，以及 Admin 账号。
 
 ```json
 {
@@ -23,7 +23,7 @@ vi ./config.json
   "db": {
     "servername": "127.0.0.1",
     "DATABASE":  "yapi",
-    "port": 27017,
+    "port": 5432,
     "user": "yapi",
     "pass": "yapi123"
   },
@@ -39,7 +39,7 @@ vi ./config.json
   }
 }
 ```
-> db.user 和 db.pass 是 mongodb 的用户名和密码，如果没有开启 mongo 认证功能，请删除这两个选项。
+> db.user 和 db.pass 是 PostgreSQL 的用户名和密码；也可使用环境变量 `YAPI_DATABASE_URL`。
 
 3.安装依赖
 
@@ -96,7 +96,7 @@ npm run dev
 
 ## 技术栈说明
 
-后端： koa mongoose
+后端： Hono + PostgreSQL（JSONB）
 
 前端： react redux
 

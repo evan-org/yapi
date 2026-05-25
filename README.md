@@ -34,6 +34,7 @@ npm run dev
 | `npm run dev-client` | 仅前端 |
 | `npm run build` | 构建前端 |
 | `npm run test:server` | 后端测试 |
+| `npm run db:init` | 初始化 PostgreSQL 表结构 |
 
 ## Docker
 

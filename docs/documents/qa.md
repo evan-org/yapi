@@ -33,13 +33,13 @@
 ## Q5 部署不成功怎么办？
 
 1. 确保 node 版本=> 7.6,请运行 node -v 查看版本号
-2. 确保 mongodb 版本 => 2.6，请运行 mongo --version 查看版本号
+2. 确保 PostgreSQL 已安装并可连接（默认端口 5432）
 3. 确保安装了 npm, 运行 npm -v 查看版本号
 4. 确保安装了 git,运行 git --version 查看版本号
 
 确认版本号没问题，请删除原有的安装文件和数据库，重新安装。
 如果还是无法安装，请不要选择最新的版本，可选择上一个版本或上上一个版本等，最新版本出问题的概率会比较大。
 
-## Q6 部署YApi遇到mongodb认证问题？
+## Q6 部署 YApi 遇到 PostgreSQL 连接问题？
 
-* <a href="http://blog.csdn.net/ll657418802/article/details/50846313?locationNum=7" _blank="target">mongodb3.03以上开启认证,解决程序认证连接报错以及第三方客户端无法认证问题</a>
+检查 `YAPI_DATABASE_URL` 或 `YAPI_DB_*` 环境变量、`server/config.json` 的 `db` 段，以及数据库用户权限与 `pg_hba.conf`。

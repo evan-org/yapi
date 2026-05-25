@@ -20,6 +20,7 @@
     "start-server": "npm run start --workspace=yapi-server",
     "start-client": "npm run start --workspace=client -- -p 4000 -H 0.0.0.0",
     "install-server": "npm run install-server --workspace=yapi-server",
+    "db:init": "npm run db:init --workspace=yapi-server",
     "build:server": "npm run build --workspace=yapi-server",
     "typecheck": "npm run typecheck --workspace=yapi-server && npm run typecheck --workspace=client",
     "typecheck:server": "npm run typecheck --workspace=yapi-server",

@@ -6,7 +6,7 @@
 
 ---
 
-* [mongodb集群](index.md#mongodb集群)
+* [PostgreSQL 配置](index.md#如何配置-postgresql)
 * [配置邮箱](index.md#配置邮箱)
 * [配置LDAP登录](index.md#配置LDAP登录)
 * [禁止注册](index.md#禁止注册)
