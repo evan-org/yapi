@@ -12,7 +12,13 @@ export type { ServiceResult, ServiceOk, ServiceFail } from "./service-result.js"
 export { default as followService } from "./follow.service.js";
 export { default as logService } from "./log.service.js";
 export { default as userService } from "./user.service.js";
-export { validateLoginCredentials } from "./user.validation.js";
+export {
+  validateLoginCredentials,
+  validateChangePasswordParams,
+  validateRegisterFields,
+  parseAvatarBasecode,
+  resolveLdapIdentity,
+} from "./user.validation.js";
 export { default as groupService } from "./group.service.js";
 export {
   resolveMemberRole,
