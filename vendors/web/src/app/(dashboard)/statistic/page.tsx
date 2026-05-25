@@ -16,16 +16,24 @@ export default function StatisticPage() {
   const [error, setError] = useState("");
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [system, setSystem] = useState<Record<string, unknown>>({});
+  const [mockStats, setMockStats] = useState<{ mockCount?: number }>({});
 
   const load = useCallback(async () => {
     setError("");
     try {
-      const [countRes, statusRes] = await Promise.all([
+      const [countRes, statusRes, mockRes] = await Promise.all([
         pluginApi.statisticsCount(),
         pluginApi.systemStatus(),
+        pluginApi.statisticsMock().catch((err) => {
+          console.error("加载 Mock 统计失败", err);
+          return null;
+        }),
       ]);
       setCounts((countRes.data as Record<string, number>) || {});
       setSystem((statusRes.data as Record<string, unknown>) || {});
+      if (mockRes?.data) {
+        setMockStats(mockRes.data as { mockCount?: number });
+      }
     } catch (err) {
       console.error("加载统计失败", err);
       setError(err instanceof Error ? err.message : "加载失败");
@@ -77,6 +85,18 @@ export default function StatisticPage() {
           </Card>
         ))}
       </div>
+      {mockStats.mockCount !== undefined ? (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Mock 请求统计
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold text-[#2395f1]">{mockStats.mockCount}</p>
+          </CardContent>
+        </Card>
+      ) : null}
       <Card>
         <CardHeader>
           <CardTitle>运行环境</CardTitle>

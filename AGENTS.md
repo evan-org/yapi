@@ -89,6 +89,7 @@ npm run lint:web         # 改 web/ 后建议跑
 | 项目设置/导入导出 | 参考 `components/project/project-data-panel.tsx`、`lib/api/open.ts` |
 | 成员管理 | `components/shared/member-panel.tsx` + `groupApi` / `projectApi` |
 | 插件注册表 | 改 `scripts/generate-plugin-module.js`，勿手改生成结果长期留存 |
+| 数据导入 | `import-*` 插件须在 `exts/*/server.js` 注册 `import_data` 钩子（非 client.js） |
 | 服务端 bug | 控制器 + `test/server/` 补测 |
 
 ## 易错点

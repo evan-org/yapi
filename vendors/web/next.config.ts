@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         source: "/api/:path*",
         destination: `${apiTarget}/api/:path*`,
       },
+      {
+        source: "/mock/:path*",
+        destination: `${apiTarget}/mock/:path*`,
+      },
     ];
   },
 };

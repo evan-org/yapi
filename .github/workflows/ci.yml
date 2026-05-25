@@ -64,3 +64,7 @@ jobs:
       - name: Verify Next.js build output
         run: node scripts/verify-next-build.js
         working-directory: vendors
+
+      - name: Lint Next.js web
+        run: npm run lint:web
+        working-directory: vendors

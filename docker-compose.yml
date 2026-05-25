@@ -22,17 +22,18 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      MONGO_HOST: mongo
+      MONGO_PORT: "27017"
+      YAPI_API_URL: "http://127.0.0.1:3000"
     volumes:
       - ./config.json:/yapi/config.json:ro
       - yapi_runtime:/yapi
     depends_on:
       mongo:
         condition: service_healthy
-    environment:
-      NODE_ENV: production
-      MONGO_HOST: mongo
-      MONGO_PORT: "27017"
 
 volumes:
   yapi_mongo_data:

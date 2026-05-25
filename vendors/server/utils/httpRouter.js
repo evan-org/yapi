@@ -1,5 +1,5 @@
 /**
- * 兼容 koa-router API 的路由收集器，最终注册到 Fastify。
+ * 兼容 koa-router API 的路由收集器，最终通过 registerToHono 挂载到 Hono。
  */
 class HttpRouter {
   constructor() {

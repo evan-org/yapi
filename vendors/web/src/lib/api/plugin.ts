@@ -39,4 +39,36 @@ export const pluginApi = {
 
   /** 全量导出（开放接口） */
   exportFullUrl: (pid: number) => `/api/open/plugin/export-full?pid=${pid}`,
+
+  /** Swagger2 导出 */
+  exportSwagger2Url: (pid: number) =>
+    `/api/plugin/exportSwagger?type=OpenAPIV2&pid=${pid}`,
+
+  autoSyncGet: (project_id: number) =>
+    apiRequest<{
+      _id?: number;
+      project_id: number;
+      sync_json_url?: string;
+      sync_cron?: string;
+      sync_mode?: string;
+      is_sync_open?: boolean;
+    }>(`/plugin/autoSync/get?project_id=${project_id}`),
+
+  autoSyncSave: (payload: Record<string, unknown>) =>
+    apiRequest("/plugin/autoSync/save", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  advMockGet: (interface_id: number) =>
+    apiRequest(`/plugin/advmock/get?interface_id=${interface_id}`),
+
+  advMockSave: (payload: Record<string, unknown>) =>
+    apiRequest("/plugin/advmock/save", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  advMockCaseList: (interface_id: number) =>
+    apiRequest(`/plugin/advmock/case/list?interface_id=${interface_id}`),
 };

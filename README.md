@@ -97,7 +97,7 @@ docker compose up -d --build
 docker compose exec yapi node server/install.js
 ```
 
-容器内由 `docker-entrypoint.sh` 启动 Hono（内网）与 Next（对外 **4000**）。请确认 `docker-compose.yml` 端口映射与访问端口一致（建议映射 `4000:4000`）。
+容器内由 `docker-entrypoint.sh` 启动 Hono（内网 **3000**，见 `config.json` 的 `port`）与 Next（对外 **4000**）。`docker-compose.yml` 已映射 `4000:4000`，并设置 `YAPI_API_URL=http://127.0.0.1:3000` 供 Next 反代 `/api`。
 
 ## 常用脚本（在 `vendors/` 下）
 

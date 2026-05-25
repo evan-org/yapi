@@ -1,5 +1,7 @@
 ## YApi  可视化接口管理平台
 
+> **本仓库技术栈（2025+）**：前端 `vendors/web`（Next.js 15 + shadcn/ui），后端 `vendors/server`（Hono）。开发与部署说明见仓库根目录 [README.md](../README.md)、[AGENTS.md](../AGENTS.md)。旧 Vite/React 客户端（`vendors/client`）已移除。
+
 体验地址：
 
 [http://yapi.smart-xwork.cn/](http://yapi.smart-xwork.cn/)

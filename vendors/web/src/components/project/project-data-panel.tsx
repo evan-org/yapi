@@ -23,10 +23,11 @@ const IMPORT_TYPES = [
   { key: "swagger", label: "Swagger URL/JSON" },
 ];
 
-const EXPORT_TYPES = [
-  { key: "html", label: "HTML" },
-  { key: "markdown", label: "Markdown" },
-  { key: "json", label: "JSON" },
+const EXPORT_LINKS = [
+  { key: "html", label: "HTML", href: (pid: number) => pluginApi.exportData("html", pid) },
+  { key: "markdown", label: "Markdown", href: (pid: number) => pluginApi.exportData("markdown", pid) },
+  { key: "json", label: "JSON", href: (pid: number) => pluginApi.exportData("json", pid) },
+  { key: "swagger2", label: "Swagger2", href: (pid: number) => pluginApi.exportSwagger2Url(pid) },
 ];
 
 export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
@@ -163,9 +164,9 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
       <section className="space-y-3">
         <h3 className="text-sm font-medium">导出接口文档</h3>
         <div className="flex flex-wrap gap-2">
-          {EXPORT_TYPES.map((t) => (
+          {EXPORT_LINKS.map((t) => (
             <Button key={t.key} variant="outline" size="sm" asChild>
-              <a href={pluginApi.exportData(t.key, projectId)} target="_blank" rel="noreferrer">
+              <a href={t.href(projectId)} target="_blank" rel="noreferrer">
                 {t.label}
               </a>
             </Button>

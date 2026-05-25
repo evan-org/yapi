@@ -14,6 +14,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Alert, AlertDescription } from "../ui/alert";
+import { InterfaceAdvMockPanel } from "./interface-adv-mock-panel";
 const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
 
 interface InterfaceDetailPanelProps {
@@ -264,6 +265,12 @@ export function InterfaceDetailPanel({
           )}
         </CardContent>
       </Card>
+      {data?.project_id ? (
+        <InterfaceAdvMockPanel
+          projectId={data.project_id}
+          interfaceId={interfaceId}
+        />
+      ) : null}
     </div>
   );
 }

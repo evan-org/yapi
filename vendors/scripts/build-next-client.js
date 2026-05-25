@@ -1,5 +1,5 @@
 /**
- * 使用 Next.js 构建前端（输出 standalone，供生产启动脚本使用）
+ * 使用 Next.js 构建前端（产物目录 vendors/web/.next）
  */
 const path = require("path");
 const { execSync } = require("child_process");
