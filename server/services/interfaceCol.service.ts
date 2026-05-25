@@ -1,8 +1,7 @@
-// @ts-nocheck
 /**
  * 测试集合（interfaceCol / interfaceCase）业务逻辑
  */
-import yapi from "../runtime.js";
+import commons from "../utils/commons.js";
 import {
   interfaceColRepository,
   interfaceCaseRepository,
@@ -11,15 +10,21 @@ import {
 } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+import {
+  validateAddColParams,
+  validateAddCaseParams,
+  validateCaseId,
+  validateAddCaseListInput,
+  validateCloneCaseListInput,
+  validateColIndexBatchItems,
+  validateColId,
+} from "./interfaceCol.validation.js";
 
 class InterfaceColService extends BaseService {
-  constructor() {
-    super();
-    this.colModel = interfaceColRepository;
-    this.caseModel = interfaceCaseRepository;
-    this.interfaceModel = interfaceRepository;
-    this.projectModel = projectRepository;
-  }
+  colModel = interfaceColRepository;
+  caseModel = interfaceCaseRepository;
+  interfaceModel = interfaceRepository;
+  projectModel = projectRepository;
 
   /**
    * 获取项目基础信息（列表页鉴权用）
@@ -46,9 +51,9 @@ class InterfaceColService extends BaseService {
         const interfaceIds = [
           ...new Set(caseList.map((c) => c.interface_id).filter(Boolean)),
         ];
-        const pathByInterfaceId = {};
+        const pathByInterfaceId: Record<string | number, string> = {};
         await Promise.all(
-          interfaceIds.map(async (interfaceId) => {
+          interfaceIds.map(async (interfaceId: string | number) => {
             const iface = await this.interfaceModel.getBaseinfo(interfaceId);
             if (iface) {
               pathByInterfaceId[interfaceId] = iface.path;
@@ -72,22 +77,21 @@ class InterfaceColService extends BaseService {
   /**
    * 新增测试集合
    */
-  async addCol({ name, project_id, desc, uid, username }) {
-    if (!project_id) {
-      return fail(400, "项目id不能为空");
+  async addCol(params) {
+    const validated = validateAddColParams(params);
+    if (!validated.ok) {
+      return validated;
     }
-    if (!name) {
-      return fail(400, "名称不能为空");
-    }
+    const { name, project_id, desc, uid, username } = validated.data;
     const result = await this.colModel.save({
       name,
       project_id,
       desc,
       uid,
-      add_time: yapi.commons.time(),
-      up_time: yapi.commons.time(),
+      add_time: commons.time(),
+      up_time: commons.time(),
     });
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 添加了接口集 <a href="/project/${project_id}/interface/col/${result._id}">${name}</a>`,
       type: "project",
       uid,
@@ -107,7 +111,7 @@ class InterfaceColService extends BaseService {
     }
     const result = await this.colModel.del(colId);
     await this.caseModel.delByCol(colId);
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 删除了接口集 ${colData.name} 及其下面的接口`,
       type: "project",
       uid,
@@ -128,7 +132,7 @@ class InterfaceColService extends BaseService {
     const result = await this.caseModel.del(caseId);
     const col = await this.colModel.get(caseData.col_id);
     if (col) {
-      yapi.commons.saveLog({
+      commons.saveLog({
         content: `<a href="/user/profile/${uid}">${username}</a> 删除了接口集 <a href="/project/${caseData.project_id}/interface/col/${caseData.col_id}">${col.name}</a> 下的接口 ${caseData.casename}`,
         type: "project",
         uid,
@@ -146,37 +150,29 @@ class InterfaceColService extends BaseService {
    * 新增测试用例
    */
   async addCase(params, { uid, username }) {
-    if (!params.project_id) {
-      return fail(400, "项目id不能为空");
+    const validated = validateAddCaseParams(params);
+    if (!validated.ok) {
+      return validated;
     }
-    if (!params.interface_id) {
-      return fail(400, "接口id不能为空");
-    }
-    if (!params.col_id) {
-      return fail(400, "接口集id不能为空");
-    }
-    if (!params.casename) {
-      return fail(400, "用例名称不能为空");
-    }
-
-    const saveData = Object.assign({}, params, {
+    const saveData = Object.assign({}, validated.data, {
       uid,
       index: 0,
-      add_time: yapi.commons.time(),
-      up_time: yapi.commons.time(),
+      add_time: commons.time(),
+      up_time: commons.time(),
     });
     const result = await this.caseModel.save(saveData);
+    const { project_id, col_id, casename } = validated.data;
 
-    this.colModel.get(params.col_id).then((col) => {
-      yapi.commons.saveLog({
-        content: `<a href="/user/profile/${uid}">${username}</a> 在接口集 <a href="/project/${params.project_id}/interface/col/${params.col_id}">${col.name}</a> 下添加了测试用例 <a href="/project/${params.project_id}/interface/case/${result._id}">${params.casename}</a>`,
+    this.colModel.get(col_id).then((col) => {
+      commons.saveLog({
+        content: `<a href="/user/profile/${uid}">${username}</a> 在接口集 <a href="/project/${project_id}/interface/col/${col_id}">${col.name}</a> 下添加了测试用例 <a href="/project/${project_id}/interface/case/${result._id}">${casename}</a>`,
         type: "project",
         uid,
         username,
-        typeid: params.project_id,
+        typeid: project_id,
       });
     });
-    this.projectModel.up(params.project_id, { up_time: new Date().getTime() }).then();
+    this.projectModel.up(project_id, { up_time: new Date().getTime() }).then();
     return ok(result);
   }
 
@@ -184,10 +180,11 @@ class InterfaceColService extends BaseService {
    * 更新测试用例（不允许改 interface_id / project_id）
    */
   async updateCase(params, { uid, username }) {
-    if (!params.id) {
-      return fail(400, "用例id不能为空");
+    const idValidated = validateCaseId(params.id);
+    if (!idValidated.ok) {
+      return idValidated;
     }
-    const caseData = await this.caseModel.get(params.id);
+    const caseData = await this.caseModel.get(idValidated.data);
     if (!caseData) {
       return fail(400, "不存在的caseid");
     }
@@ -196,10 +193,10 @@ class InterfaceColService extends BaseService {
     delete updateParams.interface_id;
     delete updateParams.project_id;
 
-    const result = await this.caseModel.up(params.id, updateParams);
+    const result = await this.caseModel.up(idValidated.data, updateParams);
     this.colModel.get(caseData.col_id).then((col) => {
-      yapi.commons.saveLog({
-        content: `<a href="/user/profile/${uid}">${username}</a> 在接口集 <a href="/project/${caseData.project_id}/interface/col/${caseData.col_id}">${col.name}</a> 更新了测试用例 <a href="/project/${caseData.project_id}/interface/case/${params.id}">${params.casename || caseData.casename}</a>`,
+      commons.saveLog({
+        content: `<a href="/user/profile/${uid}">${username}</a> 在接口集 <a href="/project/${caseData.project_id}/interface/col/${caseData.col_id}">${col.name}</a> 更新了测试用例 <a href="/project/${caseData.project_id}/interface/case/${idValidated.data}">${params.casename || caseData.casename}</a>`,
         type: "project",
         uid,
         username,
@@ -255,15 +252,15 @@ class InterfaceColService extends BaseService {
     result.path = projectData.basepath + data.path;
     result.method = data.method;
     result.req_body_type = data.req_body_type;
-    result.req_headers = yapi.commons.handleParamsValue(data.req_headers, result.req_headers);
+    result.req_headers = commons.handleParamsValue(data.req_headers, result.req_headers);
     result.res_body = data.res_body;
     result.res_body_type = data.res_body_type;
-    result.req_body_form = yapi.commons.handleParamsValue(
+    result.req_body_form = commons.handleParamsValue(
       data.req_body_form,
       result.req_body_form
     );
-    result.req_query = yapi.commons.handleParamsValue(data.req_query, result.req_query);
-    result.req_params = yapi.commons.handleParamsValue(data.req_params, result.req_params);
+    result.req_query = commons.handleParamsValue(data.req_query, result.req_query);
+    result.req_params = commons.handleParamsValue(data.req_params, result.req_params);
     result.interface_up_time = data.up_time;
     result.req_body_is_json_schema = data.req_body_is_json_schema;
     result.res_body_is_json_schema = data.res_body_is_json_schema;
@@ -279,7 +276,7 @@ class InterfaceColService extends BaseService {
       return fail(400, "不存在");
     }
     const result = await this.colModel.up(colId, params);
-    yapi.commons.saveLog({
+    commons.saveLog({
       content: `<a href="/user/profile/${uid}">${username}</a> 更新了测试集合 <a href="/project/${colData.project_id}/interface/col/${colId}">${colData.name}</a> 的信息`,
       type: "project",
       uid,
@@ -292,22 +289,18 @@ class InterfaceColService extends BaseService {
   /**
    * 批量从接口列表导入测试用例
    */
-  async addCaseList({ project_id, col_id, interface_list }, { uid, username }) {
-    if (!interface_list || !Array.isArray(interface_list)) {
-      return fail(400, "interface_list 参数有误");
+  async addCaseList(input, { uid, username }) {
+    const validated = validateAddCaseListInput(input);
+    if (!validated.ok) {
+      return validated;
     }
-    if (!project_id) {
-      return fail(400, "项目id不能为空");
-    }
-    if (!col_id) {
-      return fail(400, "接口集id不能为空");
-    }
+    const { project_id, col_id, interface_list } = validated.data;
 
-    const data = {
+    const data: Record<string, any> = {
       uid,
       index: 0,
-      add_time: yapi.commons.time(),
-      up_time: yapi.commons.time(),
+      add_time: commons.time(),
+      up_time: commons.time(),
       project_id,
       col_id,
     };
@@ -322,8 +315,8 @@ class InterfaceColService extends BaseService {
         interfaceData.req_body_other &&
         interfaceData.req_body_is_json_schema
       ) {
-        let req_body_other = yapi.commons.json_parse(interfaceData.req_body_other);
-        req_body_other = yapi.commons.schemaToJson(req_body_other, {
+        let req_body_other = commons.json_parse(interfaceData.req_body_other);
+        req_body_other = commons.schemaToJson(req_body_other, {
           alwaysFakeOptionals: true,
         });
         data.req_body_other = JSON.stringify(req_body_other);
@@ -334,7 +327,7 @@ class InterfaceColService extends BaseService {
       data.req_body_type = interfaceData.req_body_type;
       const caseResultData = await this.caseModel.save(data);
       this.colModel.get(col_id).then((col) => {
-        yapi.commons.saveLog({
+        commons.saveLog({
           content: `<a href="/user/profile/${uid}">${username}</a> 在接口集 <a href="/project/${project_id}/interface/col/${col_id}">${col.name}</a> 下导入了测试用例 <a href="/project/${project_id}/interface/case/${caseResultData._id}">${data.casename}</a>`,
           type: "project",
           uid,
@@ -351,16 +344,12 @@ class InterfaceColService extends BaseService {
   /**
    * 克隆测试集合下的用例到另一集合（含 $ 引用 id 替换）
    */
-  async cloneCaseList({ project_id, col_id, new_col_id }) {
-    if (!project_id) {
-      return fail(400, "项目id不能为空");
+  async cloneCaseList(input) {
+    const validated = validateCloneCaseListInput(input);
+    if (!validated.ok) {
+      return validated;
     }
-    if (!col_id) {
-      return fail(400, "被克隆的接口集id不能为空");
-    }
-    if (!new_col_id) {
-      return fail(400, "克隆的接口集id不能为空");
-    }
+    const { project_id, col_id, new_col_id } = validated.data;
 
     let oldColCaselistData = await this.caseModel.list(col_id, "all");
     oldColCaselistData = oldColCaselistData.sort((a, b) => a.index - b.index);
@@ -423,9 +412,11 @@ class InterfaceColService extends BaseService {
    * 接口集下用例涉及的项目环境列表
    */
   async getCaseEnvList(colId) {
-    if (!colId || colId == 0) {
-      return fail(407, "col_id不能为空");
+    const colValidated = validateColId(colId, "col_id不能为空");
+    if (!colValidated.ok) {
+      return colValidated;
     }
+    colId = colValidated.data;
     const colData = await this.colModel.get(colId);
     if (!colData) {
       return fail(400, "不存在的接口集");
@@ -446,9 +437,11 @@ class InterfaceColService extends BaseService {
    * 按变量参数聚合的用例列表（自动清理孤儿用例）
    */
   async getCaseListByVariableParams(colId) {
-    if (!colId || colId == 0) {
-      return fail(407, "col_id不能为空");
+    const colValidated = validateColId(colId, "col_id不能为空");
+    if (!colValidated.ok) {
+      return colValidated;
     }
+    colId = colValidated.data;
     let resultList = await this.caseModel.list(colId, "all");
     if (resultList.length === 0) {
       return ok([]);
@@ -456,7 +449,7 @@ class InterfaceColService extends BaseService {
 
     for (let index = 0; index < resultList.length; index++) {
       const result = resultList[index].toObject();
-      const item = {};
+      const item: Record<string, any> = {};
       let body;
       let query;
       let bodyParams;
@@ -468,10 +461,10 @@ class InterfaceColService extends BaseService {
       }
       item._id = result._id;
       item.casename = result.casename;
-      body = yapi.commons.json_parse(data.res_body);
+      body = commons.json_parse(data.res_body);
       body = typeof body === "object" ? body : {};
       if (data.res_body_is_json_schema) {
-        body = yapi.commons.schemaToJson(body, {
+        body = commons.schemaToJson(body, {
           alwaysFakeOptionals: true,
         });
       }
@@ -481,9 +474,9 @@ class InterfaceColService extends BaseService {
       if (data.req_body_type === "form") {
         bodyParams = this.requestParamsToObj(data.req_body_form);
       } else {
-        bodyParams = yapi.commons.json_parse(data.req_body_other);
+        bodyParams = commons.json_parse(data.req_body_other);
         if (data.req_body_is_json_schema) {
-          bodyParams = yapi.commons.schemaToJson(bodyParams, {
+          bodyParams = commons.schemaToJson(bodyParams, {
             alwaysFakeOptionals: true,
           });
         }
@@ -501,15 +494,16 @@ class InterfaceColService extends BaseService {
    * 批量更新用例排序 index
    */
   updateCaseIndexBatch(items) {
-    if (!items || !Array.isArray(items)) {
-      return fail(400, "请求参数必须是数组");
+    const validated = validateColIndexBatchItems(items);
+    if (!validated.ok) {
+      return validated;
     }
-    items.forEach((item) => {
+    validated.data.forEach((item) => {
       if (item.id) {
         this.caseModel.upCaseIndex(item.id, item.index).then(
           () => {},
           (err) => {
-            yapi.commons.log(err.message, "error");
+            commons.log(err.message, "error");
           }
         );
       }
@@ -521,15 +515,16 @@ class InterfaceColService extends BaseService {
    * 批量更新接口集排序 index
    */
   updateColIndexBatch(items) {
-    if (!items || !Array.isArray(items)) {
-      return fail(400, "请求参数必须是数组");
+    const validated = validateColIndexBatchItems(items);
+    if (!validated.ok) {
+      return validated;
     }
-    items.forEach((item) => {
+    validated.data.forEach((item) => {
       if (item.id) {
         this.colModel.upColIndex(item.id, item.index).then(
           () => {},
           (err) => {
-            yapi.commons.log(err.message, "error");
+            commons.log(err.message, "error");
           }
         );
       }
@@ -541,10 +536,11 @@ class InterfaceColService extends BaseService {
    * 获取测试集合用例列表（commons.getCaseList 封装）
    */
   async fetchCaseList(colId) {
-    if (!colId || colId == 0) {
-      return fail(407, "col_id不能为空");
+    const colValidated = validateColId(colId, "col_id不能为空");
+    if (!colValidated.ok) {
+      return colValidated;
     }
-    const body = await yapi.commons.getCaseList(colId);
+    const body = await commons.getCaseList(colValidated.data);
     if (body.errcode !== 0) {
       return fail(body.errcode, body.errmsg);
     }
@@ -555,7 +551,7 @@ class InterfaceColService extends BaseService {
    * 执行用例测试脚本
    */
   async runCaseScript(params, colId, interfaceId, uid) {
-    const body = await yapi.commons.runCaseScript(params, colId, interfaceId, uid);
+    const body = await commons.runCaseScript(params, colId, interfaceId);
     return ok(body);
   }
 }
