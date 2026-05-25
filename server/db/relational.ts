@@ -258,3 +258,21 @@ export function storageFromRow(row: DocRecord): DocRecord {
 }
 
 export const STORAGE_SELECT = "_id, key, data";
+
+/** wiki 表行 → 业务对象 */
+export function wikiFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    project_id: row.project_id,
+    desc: row.desc,
+    markdown: row.markdown,
+    username: row.username,
+    uid: row.uid,
+    add_time: row.add_time,
+    up_time: row.up_time,
+    edit_uid: row.edit_uid,
+  };
+}
+
+export const WIKI_SELECT =
+  "_id, project_id, desc, markdown, username, uid, add_time, up_time, edit_uid";
