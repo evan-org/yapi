@@ -273,7 +273,7 @@ export async function ensureTables(): Promise<void> {
   }
 }
 
-/** 创建列索引与 JSONB 表达式索引 */
+/** 创建列索引 */
 export async function ensureIndexes(): Promise<void> {
   const pool = getPool();
   const statements: string[] = [

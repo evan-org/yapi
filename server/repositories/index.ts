@@ -1,7 +1,6 @@
 /**
  * 数据仓储统一导出（ESM，供 controllers / utils 引用）
  */
-export { createModelRepository } from "./base.repo.js";
 export type { ModelInstance } from "./base.repo.js";
 
 export {

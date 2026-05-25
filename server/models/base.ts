@@ -3,13 +3,13 @@
  * 数据模型基类：关系型表委托 repository，非关系型表绑定 JSONB store
  */
 import { getTable, parseFieldList } from "../db/store.js";
-import { RELATIONAL_COLLECTIONS } from "../db/table.js";
+import { JSONB_COLLECTIONS } from "../db/table.js";
 
 class baseModel {
   constructor() {
     this.table = this.getName();
-    // 关系型核心表不走 JSONB store
-    if (!(RELATIONAL_COLLECTIONS as readonly string[]).includes(this.table)) {
+    // 仅整表 JSONB 集合才绑定 store（当前为空）
+    if ((JSONB_COLLECTIONS as readonly string[]).includes(this.table)) {
       this.store = getTable(this.table);
     }
   }
