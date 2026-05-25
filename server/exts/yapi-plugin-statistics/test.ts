@@ -52,9 +52,19 @@ function run() {
         batch.push(data(i));
         if (batch.length >= 5) {
           for (const row of batch) {
-            await pool.query(`INSERT INTO ${tbl} (doc) VALUES ($1::jsonb)`, [
-              JSON.stringify(row),
-            ]);
+            await pool.query(
+              `INSERT INTO ${tbl}
+                (interface_id, project_id, group_id, time, ip, date)
+               VALUES ($1, $2, $3, $4, $5, $6)`,
+              [
+                row.interface_id,
+                row.project_id,
+                row.group_id,
+                row.time,
+                row.ip,
+                row.date,
+              ]
+            );
           }
           batch = [];
         }

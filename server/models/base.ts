@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 数据模型基类：绑定 PostgreSQL JSONB 表 store
+ * 数据模型基类：关系型表委托 repository，非关系型表绑定 JSONB store
  */
 import { getTable, parseFieldList } from "../db/store.js";
 import { RELATIONAL_COLLECTIONS } from "../db/table.js";
