@@ -3,7 +3,7 @@
 ## 架构
 
 - **`server/`**：API / WebSocket / 业务逻辑（`controllers/`、`services/`、`utils/`、`lib/`、`test/`），**不承载前端静态资源**
-- **`client/`**：Next.js 前端，`client/public/` 存放 favicon、图片、iconfont、插件附件等
+- **`client/`**：Next.js 前端，`client/public/` 存放 favicon、图片、iconfont、静态附件等
 - **根目录**：`package.json` + `scripts/` + `deploy/` + `docs/`，勿堆后端配置或依赖
 
 ### server 分层目录

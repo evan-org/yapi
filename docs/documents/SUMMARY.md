@@ -44,10 +44,6 @@
 
 
 ### 自定义
-* [插件](plugin-index.md)
-  * [插件开发](plugin-dev.md)
-  * [插件列表](plugin-list.md)
-  * [钩子](plugin-hooks.md)
 * [二次开发](redev.md)
 
 ---

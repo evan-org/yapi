@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 第三方登录（原 yapi-plugin-qsso，按 config plugins 配置启用）
+ * 第三方登录（qsso，按 WEBCONFIG.plugins / YAPI_PLUGINS 配置启用）
  */
 import request from "request";
 import yapi from "../runtime.js";
