@@ -210,3 +210,14 @@ export function logFromRow(row: DocRecord): DocRecord {
 
 export const LOG_SELECT =
   "_id, content, type, uid, username, typeid, add_time, data";
+
+/** token 表行 → 业务对象 */
+export function tokenFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    project_id: row.project_id,
+    token: row.token,
+  };
+}
+
+export const TOKEN_SELECT = "_id, project_id, token";

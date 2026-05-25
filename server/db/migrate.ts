@@ -153,6 +153,13 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       data JSONB NOT NULL DEFAULT '{}'::jsonb
     )
   `,
+  token: `
+    CREATE TABLE IF NOT EXISTS ${tableName("token")} (
+      _id SERIAL PRIMARY KEY,
+      project_id BIGINT NOT NULL DEFAULT 0,
+      token TEXT NOT NULL DEFAULT ''
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -203,7 +210,8 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_catid ON ${tableName("interface")} (catid)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_query_path ON ${tableName("interface")} ((query_path->>'path'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_avatar_uid ON ${tableName("avatar")} ((doc->>'uid'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_token_pid ON ${tableName("token")} ((doc->>'project_id'))`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_token_pid ON ${tableName("token")} (project_id)`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_token_token ON ${tableName("token")} (token)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON ${tableName("follow")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_follow_pid ON ${tableName("follow")} ((doc->>'project_id'))`,
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_storage_key ON ${tableName("storage")} ((doc->>'key'))`,
