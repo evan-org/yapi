@@ -1,0 +1,31 @@
+---
+description: Hono 后端路由、控制器、公共模块与测试约定
+globs: vendors/server/**/*,vendors/common/**/*
+alwaysApply: false
+---
+
+# 后端（vendors/server + vendors/common）
+
+## 入口与路由
+
+- 入口：`vendors/server/app.js`（Hono）；页面由 Next 承载，开发态非 `/api` 可跳转 Next。
+- 新接口：在 `router.js` 注册，`controllers/` 实现，保持与现有 `yapi.commons.resReturn` 响应格式一致。
+
+## 插件
+
+- 服务端插件：`vendors/exts/` + `server/plugin.js`。
+- HTTP 插件前缀：`/api/plugin/{path}`；开放接口如 `/api/open/import_data`。
+
+## 依赖与测试
+
+- 改 `common/`（如 `utils.js`、`power-string.js`）时确认 `vendors/package.json` 依赖完整（含 `js-base64` 等）。
+- 修改后执行：`cd vendors && npm run test:server`。
+
+## 日志与风格
+
+- 保留并合理使用 `console`；不要用静默吞错替代现有日志。
+- CommonJS 与现有控制器风格一致；勿引入与 Hono 栈冲突的 second HTTP 框架作为正式入口。
+
+## Mock
+
+- Mock 中间件在 `middleware/`；共享变量见 `vendors/common/variable.js`。
