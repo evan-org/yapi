@@ -11,6 +11,7 @@ import {
   interfaceColRepository,
   interfaceCaseRepository,
   logRepository,
+  tokenRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -441,6 +442,71 @@ test("logRepository 可写入、分页查询并删除", async (t) => {
   } finally {
     if (logId) {
       await logRepository.del(logId);
+    }
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("tokenRepository 可写入、查询与更新", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  let tokenRowId;
+  let projectId;
+  let groupId;
+  const tokenValue = `ci-token-${Date.now()}`;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-token-${Date.now()}`,
+      group_desc: "ci",
+      uid: 999992,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const project = await projectRepository.save({
+      name: `ci-proj-token-${Date.now()}`,
+      group_id: groupId,
+      uid: 999992,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = project._id;
+
+    const saved = await tokenRepository.save({
+      project_id: projectId,
+      token: tokenValue,
+    });
+    tokenRowId = saved._id;
+    t.truthy(tokenRowId);
+
+    const found = await tokenRepository.get(projectId);
+    t.truthy(found);
+    t.is(found.token, tokenValue);
+
+    const byToken = await tokenRepository.findId(tokenValue);
+    t.truthy(byToken);
+    t.is(byToken.project_id, projectId);
+
+    const updated = await tokenRepository.up(projectId, `${tokenValue}-new`);
+    t.is(updated.token, `${tokenValue}-new`);
+  } finally {
+    if (projectId) {
+      await tokenRepository.delByProjectId(projectId);
     }
     if (projectId) {
       await projectRepository.del(projectId);

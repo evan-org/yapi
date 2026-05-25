@@ -17,12 +17,12 @@ export const RELATIONAL_COLLECTIONS = [
   "interface_col",
   "interface_case",
   "log",
+  "token",
 ] as const;
 
 /** JSONB 文档存储（结构复杂或插件表） */
 export const JSONB_COLLECTIONS = [
   "follow",
-  "token",
   "avatar",
   "storage",
   "wiki",
