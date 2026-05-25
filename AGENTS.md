@@ -2,6 +2,8 @@
 
 面向 AI 编码助手（Cursor、Cloud Agent 等）的本仓库协作说明。人类开发者也可作架构速查。
 
+**Cursor 项目规则**：`.cursor/rules/*.mdc`（`alwaysApply` + `globs` 分层，与本文档同步，优先防止架构偏移）。
+
 ## 项目是什么
 
 YApi 接口管理平台 fork：业务逻辑在 `vendors/server`（Hono），UI 在 `vendors/web`（Next.js 15 App Router + shadcn/ui）。**不要**再引用或恢复已删除的 `vendors/client/`、Vite、`static/prd` 前端构建链。
