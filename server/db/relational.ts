@@ -315,3 +315,40 @@ export function advMockCaseFromRow(row: DocRecord): DocRecord {
 
 export const ADV_MOCK_CASE_SELECT =
   "_id, interface_id, project_id, ip_enable, name, params, uid, code, delay, headers, up_time, res_body, ip, case_enable";
+
+/** statis_mock 表行 → 业务对象 */
+export function statisMockFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    interface_id: row.interface_id,
+    project_id: row.project_id,
+    group_id: row.group_id,
+    time: row.time,
+    ip: row.ip,
+    date: row.date,
+    up_time: row.up_time,
+  };
+}
+
+export const STATIS_MOCK_SELECT =
+  "_id, interface_id, project_id, group_id, time, ip, date, up_time";
+
+/** interface_auto_sync 表行 → 业务对象 */
+export function interfaceAutoSyncFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    uid: row.uid,
+    project_id: row.project_id,
+    add_time: row.add_time,
+    up_time: row.up_time,
+    is_sync_open: row.is_sync_open,
+    sync_cron: row.sync_cron,
+    sync_json_url: row.sync_json_url,
+    sync_mode: row.sync_mode,
+    old_swagger_content: row.old_swagger_content,
+    last_sync_time: row.last_sync_time,
+  };
+}
+
+export const INTERFACE_AUTO_SYNC_SELECT =
+  "_id, uid, project_id, add_time, up_time, is_sync_open, sync_cron, sync_json_url, sync_mode, old_swagger_content, last_sync_time";

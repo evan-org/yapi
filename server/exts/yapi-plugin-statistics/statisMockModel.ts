@@ -1,6 +1,9 @@
 // @ts-nocheck
-import yapi from "runtime.js";
+/**
+ * Mock 统计模型：委托关系型 statisMockRepository
+ */
 import baseModel from "models/base";
+import { statisMockRepository } from "../../repositories/statisMock.repo.js";
 
 class statisMockModel extends baseModel {
   getName() {
@@ -8,28 +11,27 @@ class statisMockModel extends baseModel {
   }
 
   countByGroupId(id) {
-    return this.store.count({ group_id: id });
+    return statisMockRepository.countByGroupId(id);
   }
 
   save(data) {
-    return this.store.insert(data);
+    return statisMockRepository.save(data);
   }
 
   getTotalCount() {
-    return this.store.count();
+    return statisMockRepository.getTotalCount();
   }
 
   getDayCount(timeInterval) {
-    return this.store.countByDateRange(timeInterval[0], timeInterval[1]);
+    return statisMockRepository.getDayCount(timeInterval);
   }
 
   list() {
-    return this.store.findMany({}, { fields: ["date"] });
+    return statisMockRepository.list();
   }
 
   up(id, data) {
-    data.up_time = yapi.commons.time();
-    return this.store.updateById(id, data);
+    return statisMockRepository.up(id, data);
   }
 }
 

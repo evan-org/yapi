@@ -193,11 +193,26 @@ CREATE TABLE IF NOT EXISTS yapi_adv_mock_case (
 );
 CREATE TABLE IF NOT EXISTS yapi_statis_mock (
   _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
+  interface_id BIGINT NOT NULL DEFAULT 0,
+  project_id BIGINT NOT NULL DEFAULT 0,
+  group_id BIGINT NOT NULL DEFAULT 0,
+  time BIGINT NOT NULL DEFAULT 0,
+  ip TEXT NOT NULL DEFAULT '',
+  date TEXT NOT NULL DEFAULT '',
+  up_time BIGINT NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS yapi_interface_auto_sync (
   _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
+  uid BIGINT NOT NULL DEFAULT 0,
+  project_id BIGINT NOT NULL DEFAULT 0,
+  add_time BIGINT NOT NULL DEFAULT 0,
+  up_time BIGINT NOT NULL DEFAULT 0,
+  is_sync_open BOOLEAN NOT NULL DEFAULT FALSE,
+  sync_cron TEXT NOT NULL DEFAULT '',
+  sync_json_url TEXT NOT NULL DEFAULT '',
+  sync_mode TEXT NOT NULL DEFAULT '',
+  old_swagger_content TEXT NOT NULL DEFAULT '',
+  last_sync_time BIGINT NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_yapi_user_username ON yapi_user (username);
@@ -238,9 +253,9 @@ CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_pid ON yapi_adv_mock (project_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_adv_mock_iid ON yapi_adv_mock (interface_id);
 CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_case_pid ON yapi_adv_mock_case (project_id);
 CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_case_iid ON yapi_adv_mock_case (interface_id);
-CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_date ON yapi_statis_mock ((doc->>'date'));
-CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_pid ON yapi_statis_mock ((doc->>'project_id'));
-CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_gid ON yapi_statis_mock ((doc->>'group_id'));
-CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_iid ON yapi_statis_mock ((doc->>'interface_id'));
-CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_time ON yapi_statis_mock ((doc->>'time'));
-CREATE INDEX IF NOT EXISTS idx_yapi_interface_auto_sync ON yapi_interface_auto_sync ((doc->>'project_id'));
+CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_date ON yapi_statis_mock (date);
+CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_pid ON yapi_statis_mock (project_id);
+CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_gid ON yapi_statis_mock (group_id);
+CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_iid ON yapi_statis_mock (interface_id);
+CREATE INDEX IF NOT EXISTS idx_yapi_statis_mock_time ON yapi_statis_mock (time);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_interface_auto_sync_pid ON yapi_interface_auto_sync (project_id);

@@ -34,3 +34,4 @@ export {
   advMockCaseRepository,
   type AdvMockCaseRepository,
 } from "./advMockCase.repo.js";
+export { statisMockRepository, type StatisMockRepository } from "./statisMock.repo.js";

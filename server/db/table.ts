@@ -24,13 +24,12 @@ export const RELATIONAL_COLLECTIONS = [
   "wiki",
   "adv_mock",
   "adv_mock_case",
-] as const;
-
-/** JSONB 文档存储（结构复杂或插件表） */
-export const JSONB_COLLECTIONS = [
   "statis_mock",
   "interface_auto_sync",
 ] as const;
+
+/** JSONB 文档存储（结构复杂或插件表） */
+export const JSONB_COLLECTIONS = [] as const;
 
 /** 全部逻辑集合名 */
 export const ALL_COLLECTIONS = [
