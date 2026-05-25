@@ -1,10 +1,10 @@
-// @ts-nocheck
 /**
  * 开放 API 业务逻辑（导入、导出、自动化测试等）
  */
 import axios from "axios";
 import _ from "underscore";
 import yapi from "../runtime.js";
+import commons from "../utils/commons.js";
 import {
   projectRepository,
   interfaceRepository,
@@ -14,12 +14,9 @@ import {
 import {
   handleParams as postmanHandleParams,
   crossRequest,
-  handleCurrDomain,
-  checkNameIsExistInArray,
 } from "../common/postmanLib.js";
 import { handleParamsValue, ArrayToObject } from "../common/utils.js";
 import createContex from "../common/createContext.js";
-import { trim } from "../utils/commons.js";
 import HanldeImportData from "../common/HandleImportData.js";
 import {
   importDataModule,
@@ -27,73 +24,32 @@ import {
 } from "./open-import.registry.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+import {
+  parseEnvParams,
+  summarizeTestResults,
+  mergeEnvReqHeaders,
+} from "./open.util.js";
 
-/**
- * 解析自动化测试 env_* 环境参数
- */
-export function parseEnvParams(params) {
-  const result = [];
-  Object.keys(params || {}).forEach((item) => {
-    if (/env_/gi.test(item)) {
-      const curEnv = trim(params[item]);
-      result.push({ curEnv, project_id: item.split("_")[1] });
-    }
-  });
-  return result;
-}
+export {
+  parseEnvParams,
+  summarizeTestResults,
+  mergeEnvReqHeaders,
+} from "./open.util.js";
 
-/**
- * 汇总测试用例执行结果
- */
-export function summarizeTestResults(testList) {
-  let successNum = 0;
-  let failedNum = 0;
-  let len = 0;
-  testList.forEach((item) => {
-    len++;
-    if (item.code === 0) {
-      successNum++;
-    } else {
-      failedNum++;
-    }
-  });
-  let msg;
-  if (failedNum === 0) {
-    msg = `一共 ${len} 测试用例，全部验证通过`;
-  } else {
-    msg = `一共 ${len} 测试用例，${successNum} 个验证通过， ${failedNum} 个未通过。`;
-  }
-  return { msg, len, successNum, failedNum };
-}
-
-/**
- * 合并项目环境 header 到用例请求头
- */
-export function mergeEnvReqHeaders(req_header, envData, curEnvName) {
-  const currDomain = handleCurrDomain(envData, curEnvName);
-  const header = currDomain.header;
-  header.forEach((item) => {
-    if (!checkNameIsExistInArray(item.name, req_header)) {
-      item.abled = true;
-      req_header.push(item);
-    }
-  });
-  return req_header.filter((item) => item && typeof item === "object");
+function errorMessage(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
 }
 
 class OpenService extends BaseService {
-  constructor() {
-    super();
-    this.projectModel = projectRepository;
-    this.interfaceModel = interfaceRepository;
-    this.interfaceCatModel = interfaceCatRepository;
-    this.interfaceColModel = interfaceColRepository;
-  }
+  projectModel = projectRepository;
+  interfaceModel = interfaceRepository;
+  interfaceCatModel = interfaceCatRepository;
+  interfaceColModel = interfaceColRepository;
 
   /**
    * 拉取远程 JSON 文本（导入数据、URL 模式）
    */
-  async fetchRemoteContent(url) {
+  async fetchRemoteContent(url: string) {
     const { data } = await axios.get(url, {
       responseType: "text",
       transformResponse: [(r) => r],
@@ -105,7 +61,7 @@ class OpenService extends BaseService {
   /**
    * 解析导入内容为 JSON 对象
    */
-  async resolveImportJson({ json, url }) {
+  async resolveImportJson({ json, url }: { json?: string; url?: string }) {
     let content = json;
     let warnMessage = "";
 
@@ -124,14 +80,14 @@ class OpenService extends BaseService {
       }
       return ok({ parsed: JSON.parse(content), warnMessage });
     } catch (e) {
-      return fail(40022, "json 格式有误:" + e);
+      return fail(40022, "json 格式有误:" + errorMessage(e));
     }
   }
 
   /**
    * 按项目导出接口树 JSON（开放 API）
    */
-  async exportProjectInterfaces(projectId) {
+  async exportProjectInterfaces(projectId: number | string) {
     const project = await this.projectModel.get(projectId);
     if (!project) {
       return fail(404, "项目不存在");
@@ -165,7 +121,7 @@ class OpenService extends BaseService {
   /**
    * 确保项目至少有一个默认分类，返回 menuList 与 selectCatid
    */
-  async ensureDefaultCat(projectId, uid) {
+  async ensureDefaultCat(projectId: number | string, uid: number | string) {
     let menuList = await this.interfaceCatModel.list(projectId);
     if (menuList.length === 0) {
       const menu = await this.interfaceCatModel.save({
@@ -173,8 +129,8 @@ class OpenService extends BaseService {
         project_id: projectId,
         desc: "默认分类",
         uid,
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
+        add_time: commons.time(),
+        up_time: commons.time(),
       });
       menuList.push(menu);
     }
@@ -184,7 +140,16 @@ class OpenService extends BaseService {
   /**
    * 开放 API：导入接口数据（postman/swagger 等）
    */
-  async importData({ type, json, url, project_id, merge, dataSync, uid, token }) {
+  async importData({
+    type,
+    json,
+    url,
+    project_id,
+    merge,
+    dataSync,
+    uid,
+    token,
+  }: Record<string, any>) {
     ensureImportDataRegistry();
     let warnMessage = "";
     let dataSyncValue = merge;
@@ -194,9 +159,12 @@ class OpenService extends BaseService {
           "importData Api 已废弃 dataSync 传参，请联系管理员将 dataSync 改为 merge.";
         dataSyncValue = dataSync;
       }
-    } catch (e) {}
+    } catch (_e) {}
 
-    if (!type || !importDataModule[type]) {
+    const importer = importDataModule[type as string] as
+      | ((content: unknown) => Promise<unknown>)
+      | undefined;
+    if (!type || !importer) {
       return fail(40022, "不存在的导入方式");
     }
 
@@ -215,10 +183,10 @@ class OpenService extends BaseService {
 
     const { menuList, selectCatid } = await this.ensureDefaultCat(project_id, uid);
     const projectData = await this.projectModel.get(project_id);
-    const parsed = await importDataModule[type](content);
+    const parsed = await importer(content);
 
     let successMessage;
-    const errorMessage = [];
+    const errorMessageList: string[] = [];
     await HanldeImportData(
       parsed,
       project_id,
@@ -226,10 +194,10 @@ class OpenService extends BaseService {
       menuList,
       projectData.basePath,
       dataSyncValue,
-      (err) => {
-        errorMessage.push(err);
+      (err: string) => {
+        errorMessageList.push(err);
       },
-      (msg) => {
+      (msg: string) => {
         successMessage = msg;
       },
       () => {},
@@ -237,8 +205,8 @@ class OpenService extends BaseService {
       yapi.WEBCONFIG.port
     );
 
-    if (errorMessage.length > 0) {
-      return fail(404, errorMessage.join("\n"));
+    if (errorMessageList.length > 0) {
+      return fail(404, errorMessageList.join("\n"));
     }
     const message = successMessage + warnMessage;
     return ok({ message, errcode: 0, errmsg: message });
@@ -247,7 +215,11 @@ class OpenService extends BaseService {
   /**
    * 变量替换（自动化测试上下文）
    */
-  resolveParamValue(val, global, records) {
+  resolveParamValue(
+    val: unknown,
+    global: unknown,
+    records: Record<string, unknown>
+  ) {
     const globalValue = ArrayToObject(global);
     const context = Object.assign({}, { global: globalValue }, records);
     return handleParamsValue(val, context);
@@ -256,12 +228,17 @@ class OpenService extends BaseService {
   /**
    * 执行单条测试用例
    */
-  async executeTestCase(interfaceData, uid, records) {
-    const handleValue = (val, global) => this.resolveParamValue(val, global, records);
-    let requestParams = {};
-    let options;
+  async executeTestCase(
+    interfaceData: Record<string, any>,
+    uid: number | string,
+    records: Record<string, unknown>
+  ) {
+    const handleValue = (val: unknown, global: unknown) =>
+      this.resolveParamValue(val, global, records);
+    const requestParams: Record<string, unknown> = {};
+    let options: Record<string, any>;
     options = postmanHandleParams(interfaceData, handleValue, requestParams);
-    let result = {
+    let result: Record<string, any> = {
       id: interfaceData.id,
       name: interfaceData.casename,
       path: interfaceData.path,
@@ -289,10 +266,10 @@ class OpenService extends BaseService {
         res_body: res.body,
       });
       if (options.data && typeof options.data === "object") {
-        requestParams = Object.assign(requestParams, options.data);
+        Object.assign(requestParams, options.data);
       }
 
-      const validRes = [];
+      const validRes: Array<{ message: string }> = [];
       const responseData = Object.assign(
         {},
         {
@@ -303,7 +280,14 @@ class OpenService extends BaseService {
         }
       );
 
-      await this.runScriptValidation(interfaceData, responseData, validRes, requestParams, uid, records);
+      await this.runScriptValidation(
+        interfaceData,
+        responseData,
+        validRes,
+        requestParams,
+        uid,
+        records
+      );
       result.params = requestParams;
       if (validRes.length === 0) {
         result.code = 0;
@@ -312,7 +296,7 @@ class OpenService extends BaseService {
         result.code = 1;
         result.validRes = validRes;
       }
-    } catch (data) {
+    } catch (data: any) {
       result = Object.assign(options, result, {
         res_header: data.header,
         res_body: data.body || data.message,
@@ -328,9 +312,16 @@ class OpenService extends BaseService {
   /**
    * 用例自定义脚本校验
    */
-  async runScriptValidation(interfaceData, response, validRes, requestParams, uid, records) {
+  async runScriptValidation(
+    interfaceData: Record<string, any>,
+    response: Record<string, unknown>,
+    validRes: Array<{ message: string }>,
+    requestParams: Record<string, unknown>,
+    uid: number | string,
+    records: Record<string, unknown>
+  ) {
     try {
-      const test = await yapi.commons.runCaseScript(
+      const test = await commons.runCaseScript(
         {
           response,
           records,
@@ -338,26 +329,35 @@ class OpenService extends BaseService {
           params: requestParams,
         },
         interfaceData.col_id,
-        interfaceData.interface_id,
-        uid
+        interfaceData.interface_id
       );
       if (test.errcode !== 0) {
-        test.data.logs.forEach((item) => {
+        test.data.logs.forEach((item: string) => {
           validRes.push({ message: item });
         });
       }
     } catch (err) {
-      validRes.push({ message: "Error: " + err.message });
+      validRes.push({ message: "Error: " + errorMessage(err) });
     }
   }
 
   /**
    * 开放 API：执行测试集合自动化测试
    */
-  async runAutoTest({ colId, projectId, params, uid }) {
+  async runAutoTest({
+    colId,
+    projectId,
+    params,
+    uid,
+  }: {
+    colId: number | string;
+    projectId: number | string;
+    params: Record<string, string | undefined>;
+    uid: number | string;
+  }) {
     const startTime = new Date().getTime();
-    const records = {};
-    const testList = [];
+    const records: Record<string, unknown> = {};
+    const testList: Array<Record<string, any>> = [];
     const curEnvList = parseEnvParams(params);
 
     const colData = await this.interfaceColModel.get(colId);
@@ -366,9 +366,13 @@ class OpenService extends BaseService {
     }
 
     const projectData = await this.projectModel.get(projectId);
-    const caseListResult = await yapi.commons.getCaseList(colId);
+    const caseListResult = await commons.getCaseList(colId);
     if (caseListResult.errcode !== 0) {
-      return fail(caseListResult.errcode, caseListResult.errmsg || "获取用例失败", caseListResult);
+      return fail(
+        caseListResult.errcode,
+        caseListResult.errmsg || "获取用例失败",
+        caseListResult
+      );
     }
 
     let caseList = caseListResult.data;
@@ -377,9 +381,16 @@ class OpenService extends BaseService {
       const projectEvn = await this.projectModel.getByEnv(item.project_id);
 
       item.id = item._id;
-      const curEnvItem = _.find(curEnvList, (key) => key.project_id == item.project_id);
+      const curEnvItem = _.find(
+        curEnvList,
+        (key) => key.project_id == item.project_id
+      );
       item.case_env = curEnvItem ? curEnvItem.curEnv || item.case_env : item.case_env;
-      item.req_headers = mergeEnvReqHeaders(item.req_headers, projectEvn.env, item.case_env);
+      item.req_headers = mergeEnvReqHeaders(
+        item.req_headers,
+        projectEvn.env,
+        item.case_env
+      );
       item.pre_script = projectData.pre_script;
       item.after_script = projectData.after_script;
       item.env = projectEvn.env;
