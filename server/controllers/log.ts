@@ -1,13 +1,24 @@
-// @ts-nocheck
 /**
  * 动态日志 HTTP 控制器（薄层：参数 → Service → 响应）
  */
-import yapi from "../runtime.js";
+import type { AppContext } from "../types/app-context.js";
 import baseController from "./base.js";
 import { logService } from "../services/index.js";
+import { replyServiceResult, replyException } from "./controller.util.js";
+
+/** action-runner 入参校验 schema（list_by_update） */
+type LogSchemaMap = {
+  listByUpdate: {
+    "*type": string;
+    "*typeid": string;
+    apis: Array<{ method: string; path: string }>;
+  };
+};
 
 class logController extends baseController {
-  constructor(ctx) {
+  declare schemaMap: LogSchemaMap;
+
+  constructor(ctx: AppContext) {
     super(ctx);
     this.schemaMap = {
       listByUpdate: {
@@ -27,15 +38,25 @@ class logController extends baseController {
    * @interface /log/list
    * @method GET
    */
-  async list(ctx) {
+  async list(ctx: AppContext) {
     try {
-      const result = await logService.listPaged(ctx.request.query);
-      if (!result.ok) {
-        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
-      }
-      ctx.body = yapi.commons.resReturn(result.data);
+      const query = ctx.request.query as {
+        typeid?: string;
+        type?: string;
+        page?: string;
+        limit?: string;
+        selectValue?: string;
+      };
+      const result = await logService.listPaged({
+        typeid: query.typeid,
+        type: query.type,
+        page: query.page ? Number(query.page) : undefined,
+        limit: query.limit ? Number(query.limit) : undefined,
+        selectValue: query.selectValue,
+      });
+      replyServiceResult(ctx, result);
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 402, err.message);
+      replyException(ctx, err);
     }
   }
 
@@ -43,15 +64,17 @@ class logController extends baseController {
    * @interface /log/list_by_update
    * @method POST
    */
-  async listByUpdate(ctx) {
+  async listByUpdate(ctx: AppContext) {
     try {
-      const result = await logService.listByInterfaceUpdates(ctx.params);
-      if (!result.ok) {
-        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
-      }
-      ctx.body = yapi.commons.resReturn(result.data);
+      const params = ctx.params as unknown as {
+        typeid: number;
+        type: string;
+        apis: Array<{ method: string; path: string }>;
+      };
+      const result = await logService.listByInterfaceUpdates(params);
+      replyServiceResult(ctx, result);
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 402, err.message);
+      replyException(ctx, err);
     }
   }
 }

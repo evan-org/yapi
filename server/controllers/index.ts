@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * HTTP 控制器层（/api 路由处理）
  * 各控制器继承 baseController；路由见 routes/modules/；业务逻辑见 services/
@@ -23,7 +22,7 @@ export const controllerMap = {
   follow: followController,
   col: interfaceColController,
   open: openController,
-};
+} as const;
 
 export {
   baseController,
