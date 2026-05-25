@@ -3,15 +3,15 @@
  */
 import yapi from "../runtime.js";
 
-/** Model 类实例类型（JSONB store 数据访问） */
+/** Model 实例（JSONB store 数据访问方法） */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type LegacyModelInstance = any;
+export type ModelInstance = any;
 
 /**
  * 根据 Model 类创建仓储代理（首次访问时才 getInst）
  * @param ModelClass server/models 下的 Model 类
  */
-export function createModelRepository<T extends LegacyModelInstance>(
+export function createModelRepository<T extends ModelInstance>(
   ModelClass: new () => T
 ): T {
   let inst: T | null = null;

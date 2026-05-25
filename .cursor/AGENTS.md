@@ -42,3 +42,4 @@ npm run build
 
 - 不要把 `common`、`exts`、`config.json` 放回根目录
 - 不要恢复 `vendors/` 中间层
+- 不要引入 MongoDB / Mongoose，不要编写旧库数据迁移或 ETL 脚本

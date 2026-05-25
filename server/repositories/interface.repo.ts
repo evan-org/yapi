@@ -1,11 +1,11 @@
 /**
  * 接口（interface）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
+import { createModelRepository, type ModelInstance } from "./base.repo.js";
 
 import InterfaceModel from "../models/interface.js";
 
-export type InterfaceRepository = LegacyModelInstance;
+export type InterfaceRepository = ModelInstance;
 
 /** 接口集合仓储单例 */
 export const interfaceRepository =

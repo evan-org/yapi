@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 从环境变量加载配置，config.json 仅作可选兜底（便于迁移）
+ * 从环境变量加载配置，config.json 仅作可选兜底
  */
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
