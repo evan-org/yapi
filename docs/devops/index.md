@@ -29,11 +29,11 @@ yapi server
 mkdir yapi
 cd yapi
 git clone 本仓库` 命令减少，大概 10+ M）
-cp config_example.json ./config.json //复制完成后请修改相关配置
+cp server/.env.example server/.env   // 复制后修改数据库与管理员邮箱
 # 在仓库根目录
 npm install --production --registry https://registry.npm.taobao.org
-npm run install-server //安装程序会初始化数据库索引和管理员账号，管理员账号名可在 config.json 配置
-node server/app.js //启动服务器后，请访问 127.0.0.1:{config.json配置的端口}，初次运行会有个编译的过程，请耐心等候
+npm run install-server // 初始化表结构与管理员账号，管理员邮箱见 YAPI_ADMIN_ACCOUNT
+npm run dev-server // 或 node server/dist/app.js；访问 127.0.0.1:YAPI_PORT（默认 3001）
 ```
 
 安装后的目录结构（当前 monorepo，节选）：
@@ -41,7 +41,7 @@ node server/app.js //启动服务器后，请访问 127.0.0.1:{config.json配置
 ```
 |-- package.json
 |-- server/          # API（Hono + PostgreSQL）
-|   |-- config.json
+|   |-- .env         # 本地配置（勿提交，见 .env.example）
 |   |-- controllers/
 |   |-- services/
 |   |-- routes/
@@ -64,51 +64,27 @@ node server/app.js //启动服务器后，请访问 127.0.0.1:{config.json配置
     yapi update -v v1.1.0 //升级到指定版本
 
 ## 配置邮箱
-打开项目目录 config.json 文件，新增 mail 配置， 替换默认的邮箱配置
-```json
-{
-  "port": "*****",
-  "adminAccount": "********",
-  "db": {...},
-  "mail": {
-    "enable": true,
-    "host": "smtp.163.com",    //邮箱服务器
-    "port": 465,               //端口
-    "from": "***@163.com",     //发送人邮箱
-    "auth": {
-        "user": "***@163.com", //邮箱服务器账号
-        "pass": "*****"        //邮箱服务器密码
-    }
-  }
-}
+在 `server/.env`（或 Docker 的 `deploy/.env`）中设置邮件相关变量，见 `server/.env.example`：
+
+```bash
+YAPI_MAIL_ENABLE=true
+YAPI_MAIL_HOST=smtp.163.com
+YAPI_MAIL_PORT=465
+YAPI_MAIL_FROM=noreply@example.com
+YAPI_MAIL_USER=your@163.com
+YAPI_MAIL_PASS=*****
 ```
 如何申请STMP服务器账号和密码可以参考下面的教程：<a href="https://jingyan.baidu.com/article/fdbd42771da9b0b89e3f48a8.html" target="_blank">如何开通电子邮箱的SMTP功能</a>
 
 
 ## 配置LDAP登录
-     
-打开项目目录 config.json 文件，添加如下字段：   
 
-```json
-{
-  "port": "*****",
-  "adminAccount": "********",
-  "db": {...},
-  "mail": {...},
-  "ldapLogin": {
-      "enable": true,
-      "server": "ldap://l-ldapt1.com",
-      "baseDn": "CN=Admin,CN=Users,DC=test,DC=com",
-      "bindPassword": "password123",
-      "searchDn": "OU=UserContainer,DC=test,DC=com",
-      "searchStandard": "mail",    // 自定义格式： "searchStandard": "&(objectClass=user)(cn=%s)"
-      "emailPostfix": "@163.com",
-      "emailKey": "mail",
-      "usernameKey": "name"
-   }
-}
+在 `server/.env` 设置 `YAPI_LDAP_LOGIN`（单行 JSON），字段含义与旧版 `ldapLogin` 一致，例如：
 
-```   
+```bash
+YAPI_LDAP_LOGIN={"enable":true,"server":"ldap://l-ldapt1.com","baseDn":"CN=Admin,CN=Users,DC=test,DC=com","bindPassword":"password123","searchDn":"OU=UserContainer,DC=test,DC=com","searchStandard":"mail","emailPostfix":"@163.com","emailKey":"mail","usernameKey":"name"}
+```
+
 这里面的配置项含义如下：  
 
 - `enable` 表示是否配置 LDAP 登录，true(支持 LDAP登录 )/false(不支持LDAP登录);
@@ -128,32 +104,15 @@ node server/app.js //启动服务器后，请访问 127.0.0.1:{config.json配置
 
 
 ## 禁止注册
-在 config.json 添加 `closeRegister:true` 配置项,就可以禁止用户注册 yapi 平台，修改完成后，请重启 yapi 服务器。
-
-```json
-{
-  "port": "*****",
-  "closeRegister":true
-}
-
-```
+在 `server/.env` 设置 `YAPI_CLOSE_REGISTER=true`，修改后重启服务。
 
 ## 版本通知
-（v1.3.19+ 增加）在 config.json 添加 `"versionNotify": true` 配置项，就可以开启版本通知功能，默认为 `false`，修改完成后，请重启 yapi 服务器。
-
-```json
-{
-  "port": "******",
-  "adminAccount": "*****",
-  "versionNotify": true
-}
-
-```
+在 `server/.env` 设置 `YAPI_VERSION_NOTIFY=true`（默认关闭），修改后重启服务。
 
 
 ### 如何配置 PostgreSQL
 
-在 `server/.env` 或 `config.json` 的 `db` 段配置连接，二选一：
+在 `server/.env`（Docker 用 `deploy/.env`）配置数据库连接，二选一：
 
 - 连接串：`YAPI_DATABASE_URL=postgresql://user:pass@127.0.0.1:5432/yapi`
 - 分项：`YAPI_DB_HOST`、`YAPI_DB_PORT`（默认 5432）、`YAPI_DB_NAME`、`YAPI_DB_USER`、`YAPI_DB_PASS`

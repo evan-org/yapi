@@ -42,4 +42,4 @@
 
 ## Q6 部署 YApi 遇到 PostgreSQL 连接问题？
 
-检查 `YAPI_DATABASE_URL` 或 `YAPI_DB_*` 环境变量、`server/config.json` 的 `db` 段，以及数据库用户权限与 `pg_hba.conf`。
+检查 `YAPI_DATABASE_URL` 或 `YAPI_DB_*` 环境变量（`server/.env` 或容器 `env_file`），以及数据库用户权限与 `pg_hba.conf`。
