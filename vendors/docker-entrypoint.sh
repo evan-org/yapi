@@ -20,4 +20,6 @@ if [ ! -f /yapi/init.lock ]; then
   echo "      默认管理员密码: ymfe.org"
 fi
 
-exec node server/app.js "$@"
+# Hono API（内网 3001），Next.js 对外 4000（/api 由 next.config 反代）
+node server/app.js "$@" &
+exec npm run start:web -- -p 4000 -H 0.0.0.0
