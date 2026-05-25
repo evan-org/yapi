@@ -1,5 +1,9 @@
 // @ts-nocheck
+/**
+ * 项目关注模型：委托关系型 followRepository
+ */
 import baseModel from "./base.js";
+import { followRepository } from "../repositories/follow.repo.js";
 
 class followModel extends baseModel {
   getName() {
@@ -7,37 +11,31 @@ class followModel extends baseModel {
   }
 
   save(data) {
-    return this.store.insert({
-      uid: data.uid,
-      projectid: data.projectid,
-      projectname: data.projectname,
-      icon: data.icon,
-      color: data.color,
-    });
+    return followRepository.save(data);
   }
 
   del(projectid, uid) {
-    return this.store.delete({ projectid, uid });
+    return followRepository.del(projectid, uid);
   }
 
   delByProjectId(projectid) {
-    return this.store.delete({ projectid });
+    return followRepository.delByProjectId(projectid);
   }
 
   list(uid) {
-    return this.store.findMany({ uid });
+    return followRepository.list(uid);
   }
 
   listByProjectId(projectid) {
-    return this.store.findMany({ projectid });
+    return followRepository.listByProjectId(projectid);
   }
 
   checkProjectRepeat(uid, projectid) {
-    return this.store.count({ uid, projectid });
+    return followRepository.checkProjectRepeat(uid, projectid);
   }
 
   updateById(id, typeid, data) {
-    return this.store.updateWhere({ uid: id, projectid: typeid }, data);
+    return followRepository.updateById(id, typeid, data);
   }
 }
 

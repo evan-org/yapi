@@ -12,6 +12,7 @@ import {
   interfaceCaseRepository,
   logRepository,
   tokenRepository,
+  followRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -507,6 +508,81 @@ test("tokenRepository 可写入、查询与更新", async (t) => {
   } finally {
     if (projectId) {
       await tokenRepository.delByProjectId(projectId);
+    }
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("followRepository 可写入、查询、更新并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  let followId;
+  let projectId;
+  let groupId;
+  const uid = 999991;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-follow-${Date.now()}`,
+      group_desc: "ci",
+      uid,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const project = await projectRepository.save({
+      name: `ci-proj-follow-${Date.now()}`,
+      group_id: groupId,
+      uid,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = project._id;
+
+    const saved = await followRepository.save({
+      uid,
+      projectid: projectId,
+      projectname: "ci-follow-proj",
+      icon: "star",
+      color: "#ff0000",
+    });
+    followId = saved._id;
+    t.truthy(followId);
+
+    const repeat = await followRepository.checkProjectRepeat(uid, projectId);
+    t.is(repeat, 1);
+
+    const listed = await followRepository.list(uid);
+    t.true(listed.some((row) => row._id === followId));
+
+    const byProject = await followRepository.listByProjectId(projectId);
+    t.true(byProject.some((row) => row._id === followId));
+
+    await followRepository.updateById(uid, projectId, {
+      projectname: "ci-follow-updated",
+      color: "#00ff00",
+    });
+    const afterUpdate = await followRepository.list(uid);
+    const updated = afterUpdate.find((row) => row._id === followId);
+    t.is(updated.projectname, "ci-follow-updated");
+    t.is(updated.color, "#00ff00");
+  } finally {
+    if (projectId && uid) {
+      await followRepository.del(projectId, uid);
     }
     if (projectId) {
       await projectRepository.del(projectId);

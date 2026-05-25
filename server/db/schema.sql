@@ -123,7 +123,11 @@ CREATE TABLE IF NOT EXISTS yapi_interface_col (
 );
 CREATE TABLE IF NOT EXISTS yapi_follow (
   _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
+  uid BIGINT NOT NULL DEFAULT 0,
+  projectid BIGINT NOT NULL DEFAULT 0,
+  projectname TEXT NOT NULL DEFAULT '',
+  icon TEXT NOT NULL DEFAULT '',
+  color TEXT NOT NULL DEFAULT ''
 );
 CREATE TABLE IF NOT EXISTS yapi_log (
   _id SERIAL PRIMARY KEY,
@@ -198,8 +202,9 @@ CREATE INDEX IF NOT EXISTS idx_yapi_interface_query_path ON yapi_interface ((que
 CREATE INDEX IF NOT EXISTS idx_yapi_avatar_uid ON yapi_avatar ((doc->>'uid'));
 CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_token_pid ON yapi_token (project_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_token_token ON yapi_token (token);
-CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON yapi_follow ((doc->>'uid'));
-CREATE INDEX IF NOT EXISTS idx_yapi_follow_pid ON yapi_follow ((doc->>'project_id'));
+CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON yapi_follow (uid);
+CREATE INDEX IF NOT EXISTS idx_yapi_follow_projectid ON yapi_follow (projectid);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_follow_uid_project ON yapi_follow (uid, projectid);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_storage_key ON yapi_storage ((doc->>'key'));
 CREATE INDEX IF NOT EXISTS idx_yapi_wiki_pid ON yapi_wiki ((doc->>'project_id'));
 CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_pid ON yapi_adv_mock ((doc->>'project_id'));
