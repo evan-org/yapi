@@ -1,10 +1,9 @@
 // @ts-nocheck
-import ldap from 'ldapjs';
-
-import yapi from '../runtime.js';
-
-import util from 'util';
-
+/**
+ * LDAP 登录查询（plugin 配置 WEBCONFIG.ldapLogin）
+ */
+import ldap from "ldapjs";
+import yapi from "../runtime.js";
 
 export const ldapQuery = (username, password) =>
 // const deferred = Q.defer();
@@ -134,5 +133,6 @@ export const ldapQuery = (username, password) =>
       // 第二个参数： 查询选项
       client.search(searchDn, opts, ldapSearch);
     });
-  })
-;
+  });
+
+export default ldapQuery;
