@@ -94,7 +94,17 @@ CREATE TABLE IF NOT EXISTS yapi_interface_case (
 );
 CREATE TABLE IF NOT EXISTS yapi_interface_col (
   _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
+  name TEXT NOT NULL DEFAULT '',
+  project_id BIGINT NOT NULL DEFAULT 0,
+  uid BIGINT NOT NULL DEFAULT 0,
+  desc TEXT NOT NULL DEFAULT '',
+  "index" INTEGER NOT NULL DEFAULT 0,
+  add_time BIGINT NOT NULL DEFAULT 0,
+  up_time BIGINT NOT NULL DEFAULT 0,
+  checkHttpCodeIs200 BOOLEAN NOT NULL DEFAULT FALSE,
+  checkResponseSchema BOOLEAN NOT NULL DEFAULT FALSE,
+  checkResponseField JSONB NOT NULL DEFAULT '{}'::jsonb,
+  checkScript JSONB NOT NULL DEFAULT '{}'::jsonb
 );
 CREATE TABLE IF NOT EXISTS yapi_follow (
   _id SERIAL PRIMARY KEY,
@@ -147,8 +157,9 @@ CREATE INDEX IF NOT EXISTS idx_yapi_project_group ON yapi_project (group_id);
 CREATE INDEX IF NOT EXISTS idx_yapi_project_prd_host ON yapi_project (prd_host);
 CREATE INDEX IF NOT EXISTS idx_yapi_log_uid ON yapi_log ((doc->>'uid'));
 CREATE INDEX IF NOT EXISTS idx_yapi_log_typeid ON yapi_log ((doc->>'typeid'), (doc->>'type'));
-CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_uid ON yapi_interface_col ((doc->>'uid'));
-CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_pid ON yapi_interface_col ((doc->>'project_id'));
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_uid ON yapi_interface_col (uid);
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_pid ON yapi_interface_col (project_id);
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_name ON yapi_interface_col (name);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_uid ON yapi_interface_cat (uid);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_pid ON yapi_interface_cat (project_id);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_name ON yapi_interface_cat (name);

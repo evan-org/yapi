@@ -104,6 +104,22 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       up_time BIGINT NOT NULL DEFAULT 0
     )
   `,
+  interface_col: `
+    CREATE TABLE IF NOT EXISTS ${tableName("interface_col")} (
+      _id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL DEFAULT '',
+      project_id BIGINT NOT NULL DEFAULT 0,
+      uid BIGINT NOT NULL DEFAULT 0,
+      desc TEXT NOT NULL DEFAULT '',
+      "index" INTEGER NOT NULL DEFAULT 0,
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      checkHttpCodeIs200 BOOLEAN NOT NULL DEFAULT FALSE,
+      checkResponseSchema BOOLEAN NOT NULL DEFAULT FALSE,
+      checkResponseField JSONB NOT NULL DEFAULT '{}'::jsonb,
+      checkScript JSONB NOT NULL DEFAULT '{}'::jsonb
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -137,8 +153,9 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_project_prd_host ON ${tableName("project")} (prd_host)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_log_uid ON ${tableName("log")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_log_typeid ON ${tableName("log")} ((doc->>'typeid'), (doc->>'type'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_uid ON ${tableName("interface_col")} ((doc->>'uid'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_pid ON ${tableName("interface_col")} ((doc->>'project_id'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_uid ON ${tableName("interface_col")} (uid)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_pid ON ${tableName("interface_col")} (project_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_name ON ${tableName("interface_col")} (name)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_uid ON ${tableName("interface_cat")} (uid)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_pid ON ${tableName("interface_cat")} (project_id)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_name ON ${tableName("interface_cat")} (name)`,

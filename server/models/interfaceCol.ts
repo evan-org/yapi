@@ -1,6 +1,9 @@
 // @ts-nocheck
-import yapi from "../runtime.js";
+/**
+ * 测试集合模型：委托关系型 interfaceColRepository
+ */
 import baseModel from "./base.js";
+import { interfaceColRepository } from "../repositories/interfaceCol.repo.js";
 
 class interfaceCol extends baseModel {
   getName() {
@@ -8,43 +11,35 @@ class interfaceCol extends baseModel {
   }
 
   save(data) {
-    return this.store.insert(data);
+    return interfaceColRepository.save(data);
   }
 
   get(id) {
-    return this.store.findById(id);
+    return interfaceColRepository.get(id);
   }
 
   checkRepeat(name) {
-    return this.store.count({ name });
+    return interfaceColRepository.checkRepeat(name);
   }
 
   list(project_id) {
-    return this.store.findMany(
-      { project_id },
-      {
-        fields: this._fields(
-          "name uid project_id desc add_time up_time index checkHttpCodeIs200 checkResponseSchema checkResponseField checkScript"
-        ),
-      }
-    );
+    return interfaceColRepository.list(project_id);
   }
 
   del(id) {
-    return this.store.delete({ _id: id });
+    return interfaceColRepository.del(id);
   }
 
   delByProjectId(id) {
-    return this.store.delete({ project_id: id });
+    return interfaceColRepository.delByProjectId(id);
   }
 
   up(id, data) {
-    data.up_time = yapi.commons.time();
-    return this.store.updateById(id, data);
+    return interfaceColRepository.up(id, data);
   }
 
   upColIndex(id, index) {
-    return this.store.updateById(id, { index });
+    return interfaceColRepository.upColIndex(id, index);
   }
 }
 
