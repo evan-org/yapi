@@ -16,7 +16,7 @@ done
 echo "MongoDB 已就绪"
 
 if [ ! -f /yapi/server/init.lock ]; then
-  echo "提示: 首次部署请执行: docker compose exec yapi npm run install-server -w yapi-server"
+  echo "提示: 首次部署请执行: docker compose -f deploy/docker-compose.yml exec yapi npm run install-server -w yapi-server"
   echo "      默认管理员密码: ymfe.org"
 fi
 

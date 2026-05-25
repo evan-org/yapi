@@ -3,8 +3,10 @@ server/config.json
 server/init.lock
 server/log/
 
-# 根目录遗留配置（请改用 server/config.json）
+# 根目录遗留（请改用 server/config.json）
 config.json
+log/
+vendors/
 
 # 前端
 client/.next/
@@ -15,8 +17,7 @@ client/node_modules/
 node_modules/
 
 .idea
-log/
-vendors/
+.run/
 
 static/prd/
 example/
