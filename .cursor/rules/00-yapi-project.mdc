@@ -15,6 +15,8 @@ alwaysApply: true
 
 `npm run dev` | `dev-server` | `dev-client` | `test:server` | `build`
 
-## 配置
+## 配置（12-Factor）
 
-复制 `server/config.example.json` → `server/config.json`，配置 **PostgreSQL**（见 `server/.env.example`）。**全新开发**，仅需空库 + `npm run install-server`，不做 Mongo/历史数据迁移。Docker 见 `deploy/`。
+- **唯一来源**：环境变量；本地复制 `server/.env.example` → `server/.env`
+- **Docker**：`deploy/.env.example` → `deploy/.env`，由 `docker-compose.yml` 的 `env_file` 注入，勿挂载 `config.json`
+- 初始化：`npm run install-server`（需已配置数据库连接）

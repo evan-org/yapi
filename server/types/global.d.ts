@@ -6,11 +6,16 @@ import type { Hono } from "hono";
 export interface YapiWebConfig {
   port?: number;
   adminAccount?: string;
+  timeout?: number;
   closeRegister?: boolean;
+  passsalt?: string;
+  scriptEnable?: boolean;
+  versionNotify?: boolean;
   db?: Record<string, unknown>;
   mail?: Record<string, unknown>;
-  ldap?: Record<string, unknown>;
-  /** 第三方集成（如 qsso），与内置 /api/extensions 无关 */
+  /** LDAP 登录，来自 YAPI_LDAP_LOGIN JSON */
+  ldapLogin?: Record<string, unknown>;
+  /** 第三方集成（如 qsso），来自 YAPI_INTEGRATIONS */
   integrations?: unknown[];
   [key: string]: unknown;
 }

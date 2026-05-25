@@ -1,12 +1,15 @@
 # 后端运行时（均在 server/ 内）
 server/.env
-server/config.json
 server/init.lock
 server/log/
 server/dist/
 
-# 根目录遗留（请改用 server/config.json）
+# 废弃配置（勿提交）
+server/config.json
 config.json
+
+# Docker 本地 env
+deploy/.env
 log/
 vendors/
 
