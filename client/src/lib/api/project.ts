@@ -114,10 +114,10 @@ export const projectApi = {
   changeMemberEmailNotice: (
     id: number,
     member_uid: number,
-    email_notice: boolean
+    notice: boolean
   ) =>
     apiRequest("/project/change_member_email_notice", {
       method: "POST",
-      body: JSON.stringify({ id, member_uid, email_notice }),
+      body: JSON.stringify({ id, member_uid, notice }),
     }),
 };

@@ -27,6 +27,64 @@ class InterfaceService extends BaseService {
   }
 
   /**
+   * 项目基础信息（侧栏/列表鉴权）
+   */
+  async getProjectBaseInfo(projectId) {
+    const project = await this.projectModel.getBaseInfo(projectId);
+    if (!project) {
+      return fail(406, "不存在的项目");
+    }
+    return ok(project);
+  }
+
+  /**
+   * 侧栏菜单：分类 + 接口列表（并行加载）
+   */
+  async listMenuByProject(projectId) {
+    const categories = await this.catModel.list(projectId);
+    const newResult = await Promise.all(
+      categories.map(async (catRow) => {
+        const item = catRow.toObject();
+        let list = await this.interfaceModel.listByCatid(item._id);
+        item.list = list.map((row) => row.toObject());
+        return item;
+      })
+    );
+    return ok(newResult);
+  }
+
+  /**
+   * 分类菜单列表
+   */
+  async listCategories(projectId) {
+    const res = await this.catModel.list(projectId);
+    return ok(res);
+  }
+
+  /**
+   * 更新接口分类
+   */
+  async updateCategory({ catid, name, desc, uid, username }) {
+    const cate = await this.catModel.get(catid);
+    if (!cate) {
+      return fail(400, "分类不存在");
+    }
+    const result = await this.catModel.up(catid, {
+      name,
+      desc,
+      up_time: yapi.commons.time(),
+    });
+    yapi.commons.saveLog({
+      content: `<a href="/user/profile/${uid}">${username}</a> 更新了分类 <a href="/project/${cate.project_id}/interface/api/cat_${catid}">${cate.name}</a>`,
+      type: "project",
+      uid,
+      username,
+      typeid: cate.project_id,
+    });
+    return ok({ result, project_id: cate.project_id });
+  }
+
+  /**
    * 接口详情（不含权限；controller 负责鉴权与 username）
    */
   async getById(id) {
@@ -34,7 +92,12 @@ class InterfaceService extends BaseService {
     if (!result) {
       return fail(490, "不存在的");
     }
-    return ok(result.toObject());
+    const data = result.toObject();
+    const userinfo = await this.userModel.findById(result.uid);
+    if (userinfo) {
+      data.username = userinfo.username;
+    }
+    return ok(data);
   }
 
   /**

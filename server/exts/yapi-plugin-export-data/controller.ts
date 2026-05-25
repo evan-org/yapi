@@ -1,15 +1,11 @@
 // @ts-nocheck
 import baseController from 'controllers/base';
-
-import interfaceModel from 'models/interface';
-
-import projectModel from 'models/project';
-
-// import wikiModel from '../yapi-plugin-wiki/wikiModel.js';
-
-import interfaceCatModel from 'models/interfaceCat';
-
 import yapi from "runtime.js";
+import {
+  interfaceRepository,
+  interfaceCatRepository,
+  projectRepository,
+} from "../../repositories/index.js";
 import wikiModel from "../yapi-plugin-wiki/wikiModel.js";
 import markdownIt from "markdown-it";
 
@@ -27,9 +23,9 @@ import md from '../../common/markdown.js';
 class exportController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = yapi.getInst(interfaceCatModel);
-    this.interModel = yapi.getInst(interfaceModel);
-    this.projectModel = yapi.getInst(projectModel);
+    this.catModel = interfaceCatRepository;
+    this.interModel = interfaceRepository;
+    this.projectModel = projectRepository;
 
   }
 

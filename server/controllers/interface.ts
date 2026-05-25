@@ -454,30 +454,21 @@ class interfaceController extends baseController {
     }
 
     try {
-      let result = await this.Model.get(params.id);
-      if (this.$tokenAuth) {
-        if (params.project_id !== result.project_id) {
-          ctx.body = yapi.commons.resReturn(null, 400, "token有误")
-          return;
-        }
+      const loaded = await interfaceService.getById(params.id);
+      if (!loaded.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, loaded.code, loaded.message));
       }
-      // console.log('result', result);
-      if (!result) {
-        return (ctx.body = yapi.commons.resReturn(null, 490, "不存在的"));
+      if (this.$tokenAuth && params.project_id !== loaded.data.project_id) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "token有误"));
       }
-      let userinfo = await this.userModel.findById(result.uid);
-      let project = await this.projectModel.getBaseInfo(result.project_id);
+      const project = await this.projectModel.getBaseInfo(loaded.data.project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
         }
       }
-      yapi.emitHook("interface_get", result).then();
-      result = result.toObject();
-      if (userinfo) {
-        result.username = userinfo.username;
-      }
-      ctx.body = yapi.commons.resReturn(result);
+      yapi.emitHook("interface_get", loaded.data).then();
+      ctx.body = yapi.commons.resReturn(loaded.data);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
@@ -619,30 +610,22 @@ class interfaceController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
     }
 
-    let project = await this.projectModel.getBaseInfo(project_id);
-    if (!project) {
-      return (ctx.body = yapi.commons.resReturn(null, 406, "不存在的项目"));
+    const proj = await interfaceService.getProjectBaseInfo(project_id);
+    if (!proj.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, proj.code, proj.message));
     }
-    if (project.project_type === "private") {
-      if ((await this.checkAuth(project._id, "project", "view")) !== true) {
+    if (proj.data.project_type === "private") {
+      if ((await this.checkAuth(proj.data._id, "project", "view")) !== true) {
         return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
       }
     }
 
     try {
-      let result = await this.catModel.list(project_id),
-        newResult = [];
-      for (let i = 0, item, list; i < result.length; i++) {
-        item = result[i].toObject();
-        list = await this.Model.listByCatid(item._id);
-        for (let j = 0; j < list.length; j++) {
-          list[j] = list[j].toObject();
-        }
-
-        item.list = list;
-        newResult[i] = item;
+      const result = await interfaceService.listMenuByProject(project_id);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
       }
-      ctx.body = yapi.commons.resReturn(newResult);
+      ctx.body = yapi.commons.resReturn(result.data);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }
@@ -969,32 +952,27 @@ class interfaceController extends baseController {
   async upCat(ctx) {
     try {
       let params = ctx.request.body;
-
-      let username = this.getUsername();
       let cate = await this.catModel.get(params.catid);
+      if (!cate) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "分类不存在"));
+      }
 
       let auth = await this.checkAuth(cate.project_id, "project", "edit");
       if (!auth) {
         return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
       }
 
-      let result = await this.catModel.up(params.catid, {
+      const result = await interfaceService.updateCategory({
+        catid: params.catid,
         name: params.name,
         desc: params.desc,
-        up_time: yapi.commons.time()
-      });
-
-      yapi.commons.saveLog({
-        content: `<a href="/user/profile/${this.getUid()}">${username}</a> 更新了分类 <a href="/project/${
-          cate.project_id
-        }/interface/api/cat_${params.catid}">${cate.name}</a>`,
-        type: "project",
         uid: this.getUid(),
-        username: username,
-        typeid: cate.project_id
+        username: this.getUsername(),
       });
-
-      ctx.body = yapi.commons.resReturn(result);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      ctx.body = yapi.commons.resReturn(result.data.result);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 400, e.message);
     }
@@ -1046,16 +1024,19 @@ class interfaceController extends baseController {
     }
 
     try {
-      let project = await this.projectModel.getBaseInfo(project_id);
+      const project = await this.projectModel.getBaseInfo(project_id);
       if (project.project_type === "private") {
         if ((await this.checkAuth(project._id, "project", "edit")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
         }
       }
-      let res = await this.catModel.list(project_id);
-      return (ctx.body = yapi.commons.resReturn(res));
+      const res = await interfaceService.listCategories(project_id);
+      if (!res.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, res.code, res.message));
+      }
+      return (ctx.body = yapi.commons.resReturn(res.data));
     } catch (e) {
-      yapi.commons.resReturn(null, 400, e.message);
+      return (ctx.body = yapi.commons.resReturn(null, 400, e.message));
     }
   }
 
