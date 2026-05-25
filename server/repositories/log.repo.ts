@@ -1,10 +1,10 @@
 /**
  * 日志（log）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
+import { createModelRepository, type ModelInstance } from "./base.repo.js";
 
 import LogModel from "../models/log.js";
 
-export type LogRepository = LegacyModelInstance;
+export type LogRepository = ModelInstance;
 
 export const logRepository = createModelRepository<LogRepository>(LogModel);

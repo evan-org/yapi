@@ -1,5 +1,4 @@
--- YApi PostgreSQL 结构（与 migrate.ts 一致，供手工初始化或审阅）
--- 应用启动时也会自动执行 ensureDatabase()
+-- YApi PostgreSQL 结构（新装库；应用启动时也会自动 ensureDatabase）
 
 CREATE TABLE IF NOT EXISTS yapi_user (
   _id SERIAL PRIMARY KEY,
