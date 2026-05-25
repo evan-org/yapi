@@ -309,7 +309,10 @@ async function mockServerMiddleware(ctx, next) {
         let script = project.project_mock_script;
         await yapi.commons.handleMockScript(script, context);
       }
-      await yapi.emitHook("mock_after", context);
+      const { applyAdvancedMockAfter } = await import("../services/advMock.mock.js");
+      const { trackMockStatistics } = await import("../services/statisMock.track.js");
+      await applyAdvancedMockAfter(context);
+      trackMockStatistics(context);
       let handleMock = new Promise((resolve) => {
         setTimeout(() => {
           resolve(true);

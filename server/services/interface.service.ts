@@ -6,8 +6,8 @@ import fs from "fs-extra";
 import path from "path";
 import jsondiffpatch from "jsondiffpatch";
 import showDiffMsg from "../common/diff-view.js";
+import { onInterfaceDeleted } from "./advMock.mock.js";
 import yapi from "../runtime.js";
-import type { YapiRuntime } from "../types/global.js";
 import commons from "../utils/commons.js";
 import {
   interfaceRepository,
@@ -43,14 +43,6 @@ export {
 } from "./interface.util.js";
 
 const formattersHtml = jsondiffpatch.formatters.html;
-
-/** plugin 启动后挂载 emitHook */
-function emitInterfaceHook(name: string, ...args: unknown[]) {
-  const hook = (yapi as YapiRuntime).emitHook;
-  if (hook) {
-    hook(name, ...args).then();
-  }
-}
 
 type InterfaceOperator = {
   uid: number | string;
@@ -236,7 +228,7 @@ class InterfaceService extends BaseService {
       return fail(400, "接口不存在");
     }
     const result = await this.interfaceModel.del(id);
-    emitInterfaceHook("interface_del", id);
+    await onInterfaceDeleted(id);
     await this.caseModel.delByInterfaceId(id);
     const cate = await this.catModel.get(data.catid);
     if (cate) {
@@ -272,7 +264,7 @@ class InterfaceService extends BaseService {
     const interfaceData = await this.interfaceModel.listByCatid(catId);
     for (const item of interfaceData) {
       try {
-        emitInterfaceHook("interface_del", item._id);
+        await onInterfaceDeleted(item._id);
         await this.caseModel.delByInterfaceId(item._id);
       } catch (e) {
         commons.log(e.message, "error");
@@ -335,7 +327,6 @@ class InterfaceService extends BaseService {
       count = await this.interfaceModel.listCount(option);
     }
 
-    emitInterfaceHook("interface_list", result);
     return ok({
       count,
       total: Math.ceil(count / limit),
@@ -570,7 +561,6 @@ class InterfaceService extends BaseService {
     }
 
     const result = await this.interfaceModel.save(data);
-    emitInterfaceHook("interface_add", result);
     this.catModel.get(params.catid).then((cate) => {
       const title = `<a href="/user/profile/${uid}">${username}</a> 为分类 <a href="/project/${params.project_id}/interface/api/cat_${params.catid}">${cate.name}</a> 添加了接口 <a href="/project/${params.project_id}/interface/api/${result._id}">${data.title}</a> `;
       commons.saveLog({
@@ -737,7 +727,6 @@ class InterfaceService extends BaseService {
       );
     }
 
-    emitInterfaceHook("interface_update", id);
     await this.autoAddTag(params);
     return ok(result);
   }

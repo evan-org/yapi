@@ -1,9 +1,15 @@
 ---
-description: 插件与脚本
-globs: server/exts/**/*,scripts/**/*,client/src/lib/plugins/**/*
+description: 内置扩展功能与脚本
+globs:
+  - server/controllers/**
+  - server/services/**
+  - server/routes/**
+  - client/src/lib/**
 ---
 
-# 插件
+# 内置扩展功能
 
-- 目录：`server/exts/`
-- 注册表生成：`scripts/generate-plugin-module.js`（读取 `server/config.json`）
+- 服务端：`server/controllers/`（advMock、wiki、statistics 等）+ `server/routes/modules/plugin.routes.ts`（`/api/plugin/*`）
+- 导入：`server/services/import/`
+- 客户端：`client/src/lib/features.ts`（功能入口映射）
+- Mock 统计/高级 Mock：`server/services/advMock.mock.ts`、`server/services/statisMock.track.ts`

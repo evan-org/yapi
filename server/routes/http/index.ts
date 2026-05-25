@@ -1,11 +1,9 @@
 // @ts-nocheck
 /**
- * HTTP 路由聚合：内置业务模块 + 插件钩子
+ * HTTP 路由聚合：内置业务模块 + 扩展功能路由
  */
-import yapi from "../runtime.js";
 import RouteBinder from "../lib/bind-routes.js";
 import appContext from "../lib/context.js";
-import { registerPluginRoute } from "./register-routes.js";
 import { registerGroupRoutes } from "./modules/group.routes.js";
 import { registerUserRoutes } from "./modules/user.routes.js";
 import { registerProjectRoutes } from "./modules/project.routes.js";
@@ -14,9 +12,9 @@ import { registerLogRoutes } from "./modules/log.routes.js";
 import { registerFollowRoutes } from "./modules/follow.routes.js";
 import { registerColRoutes } from "./modules/col.routes.js";
 import { registerOpenRoutes } from "./modules/open.routes.js";
+import { registerPluginRoutes } from "./modules/plugin.routes.js";
 
 const binder = new RouteBinder();
-const pluginRoutePaths = [];
 
 /** 内置业务模块路由注册器（顺序无关） */
 const builtinRegistrars = [
@@ -28,15 +26,13 @@ const builtinRegistrars = [
   registerFollowRoutes,
   registerColRoutes,
   registerOpenRoutes,
+  registerPluginRoutes,
 ];
 
 /**
  * 初始化 HTTP 路由（插件路由 + 内置模块）
  */
 function setupHttpRoutes() {
-  yapi.emitHookSync("add_router", (config) =>
-    registerPluginRoute(binder, config, pluginRoutePaths)
-  );
   for (const register of builtinRegistrars) {
     register(binder);
   }

@@ -29,9 +29,6 @@ export interface YapiRuntime {
   commons?: Record<string, unknown>;
   connect?: Promise<unknown>;
   app?: Hono;
-  bindHook?: (name: string, listener: (...args: unknown[]) => unknown) => void;
-  emitHook?: (name: string, ...args: unknown[]) => Promise<unknown[]>;
-  emitHookSync?: (name: string, ...args: unknown[]) => Promise<unknown[]>;
 }
 
 declare global {

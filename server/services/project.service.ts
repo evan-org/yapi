@@ -4,8 +4,7 @@
 import axios from "axios";
 import _ from "underscore";
 import sha from "sha.js";
-import yapi from "../runtime.js";
-import type { YapiRuntime } from "../types/global.js";
+import { onProjectDeleted } from "./advMock.mock.js";
 import commons from "../utils/commons.js";
 import { getToken } from "../utils/token.js";
 import {
@@ -40,14 +39,6 @@ export { normalizeBasepath, hasDuplicateField } from "./project.util.js";
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
-}
-
-/** plugin 在启动后挂载 emitHook，类型上按 YapiRuntime 访问 */
-function emitProjectHook(name: string, ...args: unknown[]) {
-  const hook = (yapi as YapiRuntime).emitHook;
-  if (hook) {
-    hook(name, ...args).then();
-  }
 }
 
 class ProjectService extends BaseService {
@@ -133,7 +124,7 @@ class ProjectService extends BaseService {
     await this.interfaceCaseModel.delByProjectId(projectId);
     await this.interfaceColModel.delByProjectId(projectId);
     await this.followModel.delByProjectId(projectId);
-    emitProjectHook("project_del", projectId);
+    await onProjectDeleted(projectId);
     const result = await this.projectModel.del(projectId);
     return ok(result);
   }
@@ -437,7 +428,6 @@ class ProjectService extends BaseService {
       username,
       typeid: result._id,
     });
-    emitProjectHook("project_add", result);
     return ok(result);
   }
 
@@ -475,7 +465,6 @@ class ProjectService extends BaseService {
       username,
       typeid: id,
     });
-    emitProjectHook("project_up", result);
     return ok(result);
   }
 

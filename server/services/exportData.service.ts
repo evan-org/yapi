@@ -6,7 +6,7 @@ import {
   interfaceCatRepository,
   projectRepository,
 } from "../repositories/index.js";
-import wikiModel from "../exts/yapi-plugin-wiki/wikiModel.js";
+import { wikiRepository } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
 
@@ -46,7 +46,7 @@ class ExportDataService extends BaseService {
 
   /** Wiki 文档（可选） */
   async getWiki(projectId: number | string) {
-    return this.getModel(wikiModel).get(projectId);
+    return wikiRepository.get(projectId);
   }
 }
 
