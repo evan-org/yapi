@@ -4,7 +4,7 @@
  * 高级 Mock：脚本与期望用例 CRUD
  */
 import { useCallback, useEffect, useState } from "react";
-import { pluginApi } from "../../lib/api/plugin";
+import { extensionsApi } from "../../lib/api/extensions";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { JsonCodeEditor } from "../shared/json-code-editor";
@@ -43,8 +43,8 @@ export function InterfaceAdvMockPanel({
     setError("");
     try {
       const [mockRes, caseRes] = await Promise.all([
-        pluginApi.advMockGet(interfaceId),
-        pluginApi.advMockCaseList(interfaceId),
+        extensionsApi.advMockGet(interfaceId),
+        extensionsApi.advMockCaseList(interfaceId),
       ]);
       const mock = mockRes.data as { mock_script?: string; enable?: boolean };
       setScript(mock?.mock_script || "");
@@ -63,7 +63,7 @@ export function InterfaceAdvMockPanel({
     setSaving(true);
     setError("");
     try {
-      await pluginApi.advMockSave({
+      await extensionsApi.advMockSave({
         project_id: projectId,
         interface_id: interfaceId,
         mock_script: script,
@@ -93,7 +93,7 @@ export function InterfaceAdvMockPanel({
     if (!editingCase) return;
     setError("");
     try {
-      await pluginApi.advMockCaseSave({
+      await extensionsApi.advMockCaseSave({
         project_id: projectId,
         interface_id: interfaceId,
         id: editingCase._id,
@@ -116,7 +116,7 @@ export function InterfaceAdvMockPanel({
   async function handleDelCase(id: number) {
     if (!confirm("确定删除该期望？")) return;
     try {
-      await pluginApi.advMockCaseDel(id);
+      await extensionsApi.advMockCaseDel(id);
       await load();
     } catch (err) {
       console.error("删除期望失败", err);
@@ -126,7 +126,7 @@ export function InterfaceAdvMockPanel({
 
   async function handleEditCase(id: number) {
     try {
-      const res = await pluginApi.advMockCaseGet(id);
+      const res = await extensionsApi.advMockCaseGet(id);
       setEditingCase((res.data as AdvMockCase) || null);
     } catch (err) {
       console.error("加载期望失败", err);

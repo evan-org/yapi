@@ -102,7 +102,7 @@ export { projectApi } from "./project";
 export { groupApi } from "./group";
 export { colApi } from "./col";
 export { userApi } from "./user";
-export { pluginApi } from "./plugin";
+export { extensionsApi } from "./extensions";
 export { openApi } from "./open";
 
 

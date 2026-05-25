@@ -4,7 +4,7 @@
  * 项目 Wiki：Markdown 查看与编辑
  */
 import { useCallback, useEffect, useState } from "react";
-import { pluginApi } from "../../lib/api/plugin";
+import { extensionsApi } from "../../lib/api/extensions";
 import { Button } from "../ui/button";
 import { MarkdownRichEditor } from "../shared/markdown-rich-editor";
 import { MarkdownPreview } from "../shared/markdown-preview";
@@ -26,7 +26,7 @@ export function ProjectWikiPanel({ projectId }: ProjectWikiPanelProps) {
   const load = useCallback(async () => {
     setError("");
     try {
-      const res = await pluginApi.wikiGet(projectId);
+      const res = await extensionsApi.wikiGet(projectId);
       const data = res.data as { markdown?: string; desc?: string; username?: string };
       setMarkdown(data.markdown || "");
       setDesc(data.desc || "");
@@ -45,7 +45,7 @@ export function ProjectWikiPanel({ projectId }: ProjectWikiPanelProps) {
     setSaving(true);
     setError("");
     try {
-      await pluginApi.wikiUpdate({
+      await extensionsApi.wikiUpdate({
         project_id: projectId,
         markdown,
         desc,

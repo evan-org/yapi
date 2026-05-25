@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 原内置插件 HTTP 路由（保持 /api/plugin/* 路径，兼容前端）
+ * 内置扩展 HTTP 路由（保持 /api/plugin/* 路径，兼容历史客户端）
  */
 import advMockController from "../../controllers/advMock.js";
 import statisticsController from "../../controllers/statistics.js";
@@ -35,7 +35,7 @@ const pluginRoutes = [
  * 注册内置扩展 HTTP 路由
  * @param {import("../../lib/bind-routes.js").default} binder
  */
-export function registerPluginRoutes(binder) {
+export function registerExtensionRoutes(binder) {
   registerModuleRoutes(binder, {
     controller: advMockController,
     prefix: "/plugin/",
