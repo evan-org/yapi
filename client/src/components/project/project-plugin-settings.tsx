@@ -4,7 +4,8 @@
  * 项目插件设置：Swagger 自动同步、代码生成说明
  */
 import { useCallback, useEffect, useState } from "react";
-import { pluginApi } from "@/lib/api/plugin";
+import { pluginApi } from "../../lib/api/plugin";
+import { GenServicesWizard } from "./gen-services-wizard";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -120,14 +121,9 @@ export function ProjectPluginSettings({ projectId }: ProjectPluginSettingsProps)
         </Button>
       </section>
 
-      <section className="space-y-3 rounded-lg border p-4">
+      <section className="space-y-3">
         <h3 className="text-sm font-medium">代码生成（gen-services）</h3>
-        <p className="text-sm text-muted-foreground">
-          先使用「环境与数据」中的「全量 JSON」导出项目，再按团队模板生成服务端代码。开放接口：
-        </p>
-        <code className="block rounded bg-muted px-3 py-2 text-xs">
-          GET {pluginApi.exportFullUrl(projectId)}
-        </code>
+        <GenServicesWizard projectId={projectId} />
       </section>
     </div>
   );

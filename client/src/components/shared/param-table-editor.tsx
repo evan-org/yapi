@@ -18,12 +18,15 @@ interface ParamTableEditorProps {
   rows: ParamRow[];
   onChange: (rows: ParamRow[]) => void;
   showRequired?: boolean;
+  /** 只读模式（协同锁冲突等场景） */
+  readOnly?: boolean;
 }
 
 export function ParamTableEditor({
   rows,
   onChange,
   showRequired = false,
+  readOnly = false,
 }: ParamTableEditorProps) {
   function updateRow(idx: number, patch: Partial<ParamRow>) {
     const next = [...rows];
@@ -51,6 +54,7 @@ export function ParamTableEditor({
                   <Input
                     className="h-8 text-xs"
                     value={row.name}
+                    readOnly={readOnly}
                     onChange={(e) => updateRow(idx, { name: e.target.value })}
                   />
                 </td>
@@ -58,6 +62,7 @@ export function ParamTableEditor({
                   <Input
                     className="h-8 text-xs"
                     value={row.value || ""}
+                    readOnly={readOnly}
                     onChange={(e) => updateRow(idx, { value: e.target.value })}
                   />
                 </td>
@@ -65,6 +70,7 @@ export function ParamTableEditor({
                   <Input
                     className="h-8 text-xs"
                     value={row.example || ""}
+                    readOnly={readOnly}
                     onChange={(e) => updateRow(idx, { example: e.target.value })}
                   />
                 </td>
@@ -73,6 +79,7 @@ export function ParamTableEditor({
                     <input
                       type="checkbox"
                       checked={row.required === "1"}
+                      disabled={readOnly}
                       onChange={(e) =>
                         updateRow(idx, { required: e.target.checked ? "1" : "0" })
                       }
@@ -80,30 +87,34 @@ export function ParamTableEditor({
                   </td>
                 ) : null}
                 <td className="p-1">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onChange(rows.filter((_, i) => i !== idx))}
-                  >
-                    删
-                  </Button>
+                  {!readOnly ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onChange(rows.filter((_, i) => i !== idx))}
+                    >
+                      删
+                    </Button>
+                  ) : null}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={() =>
-          onChange([...rows, { name: "", value: "", example: "", required: "0" }])
-        }
-      >
-        添加一行
-      </Button>
+      {!readOnly ? (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            onChange([...rows, { name: "", value: "", example: "", required: "0" }])
+          }
+        >
+          添加一行
+        </Button>
+      ) : null}
     </div>
   );
 }

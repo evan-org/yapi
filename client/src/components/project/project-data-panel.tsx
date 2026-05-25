@@ -1,11 +1,12 @@
 "use client";
 
 /**
- * 项目数据：环境、Token、导入导出
+ * 项目数据：环境（含 header/global）、项目脚本、Token、导入导出
  */
 import { useCallback, useEffect, useState } from "react";
 import { openApi, pluginApi, projectApi } from "../../lib/api/client";
-import type { ProjectEnvItem } from "../../lib/api/types";
+import type { ProjectEnvItem, ProjectEnvKeyValue } from "../../lib/api/types";
+import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -30,25 +31,72 @@ const EXPORT_LINKS = [
   { key: "swagger2", label: "Swagger2", href: (pid: number) => pluginApi.exportSwagger2Url(pid) },
 ];
 
+function emptyEnv(): ProjectEnvItem {
+  return { name: "", domain: "", header: [], global: [] };
+}
+
+function kvToParamRows(list: ProjectEnvKeyValue[] | undefined): ParamRow[] {
+  if (!list?.length) {
+    return [];
+  }
+  return list.map((item) => ({
+    name: item.name || "",
+    value: item.value || "",
+    example: "",
+    desc: "",
+  }));
+}
+
+function paramRowsToKv(rows: ParamRow[]): ProjectEnvKeyValue[] {
+  return rows
+    .filter((r) => r.name.trim())
+    .map((r) => ({ name: r.name.trim(), value: r.value || "" }));
+}
+
 export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
-  const [envs, setEnvs] = useState<ProjectEnvItem[]>([]);
+  const [envs, setEnvs] = useState<ProjectEnvItem[]>([emptyEnv()]);
+  const [scripts, setScripts] = useState({
+    pre_script: "",
+    after_script: "",
+    project_mock_script: "",
+  });
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
   const [importType, setImportType] = useState("json");
   const [importJson, setImportJson] = useState("");
   const [merge, setMerge] = useState("normal");
   const [importing, setImporting] = useState(false);
+  const [expandedEnv, setExpandedEnv] = useState<number | null>(0);
 
   const load = useCallback(async () => {
     setError("");
     try {
-      const [envRes, tokenRes] = await Promise.all([
+      const [envRes, tokenRes, projRes] = await Promise.all([
         projectApi.getEnv(projectId),
         projectApi.getToken(projectId),
+        projectApi.get(projectId),
       ]);
       const envData = envRes.data as { env?: ProjectEnvItem[] };
-      setEnvs(envData?.env?.length ? envData.env : [{ name: "", domain: "" }]);
+      const loaded = envData?.env?.length ? envData.env : [emptyEnv()];
+      setEnvs(
+        loaded.map((e) => ({
+          name: e.name || "",
+          domain: e.domain || "",
+          header: e.header || [],
+          global: e.global || [],
+        }))
+      );
       setToken((tokenRes.data as string) || "");
+      const p = projRes.data as {
+        pre_script?: string;
+        after_script?: string;
+        project_mock_script?: string;
+      };
+      setScripts({
+        pre_script: p.pre_script || "",
+        after_script: p.after_script || "",
+        project_mock_script: p.project_mock_script || "",
+      });
     } catch (err) {
       console.error("加载项目数据配置失败", err);
       setError(err instanceof Error ? err.message : "加载失败");
@@ -65,6 +113,20 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
       console.log("环境已保存", projectId);
     } catch (err) {
       setError(err instanceof Error ? err.message : "保存环境失败");
+    }
+  }
+
+  async function saveScripts() {
+    try {
+      await projectApi.upScripts({
+        id: projectId,
+        pre_script: scripts.pre_script,
+        after_script: scripts.after_script,
+        project_mock_script: scripts.project_mock_script,
+      });
+      console.log("项目脚本已保存", projectId);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "保存脚本失败");
     }
   }
 
@@ -103,6 +165,12 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
     }
   }
 
+  function updateEnv(idx: number, patch: Partial<ProjectEnvItem>) {
+    const next = [...envs];
+    next[idx] = { ...next[idx], ...patch };
+    setEnvs(next);
+  }
+
   return (
     <div className="space-y-8">
       {error ? (
@@ -113,26 +181,53 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
 
       <section className="space-y-3">
         <h3 className="text-sm font-medium">环境配置</h3>
+        <p className="text-xs text-muted-foreground">
+          每个环境可配置域名、Header 与全局变量（global.*），供测试集合与变量选择器使用。
+        </p>
         {envs.map((env, idx) => (
-          <div key={idx} className="flex flex-col gap-2 rounded border p-3 sm:flex-row">
-            <Input
-              placeholder="环境名称"
-              value={env.name}
-              onChange={(e) => {
-                const next = [...envs];
-                next[idx] = { ...next[idx], name: e.target.value };
-                setEnvs(next);
-              }}
-            />
-            <Input
-              placeholder="域名，如 https://api.example.com"
-              value={env.domain}
-              onChange={(e) => {
-                const next = [...envs];
-                next[idx] = { ...next[idx], domain: e.target.value };
-                setEnvs(next);
-              }}
-            />
+          <div key={idx} className="rounded border p-3 space-y-3">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Input
+                placeholder="环境名称"
+                value={env.name}
+                onChange={(e) => updateEnv(idx, { name: e.target.value })}
+              />
+              <Input
+                placeholder="域名，如 https://api.example.com"
+                value={env.domain}
+                onChange={(e) => updateEnv(idx, { domain: e.target.value })}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setExpandedEnv(expandedEnv === idx ? null : idx)}
+              >
+                {expandedEnv === idx ? "收起高级" : "Header / 全局变量"}
+              </Button>
+            </div>
+            {expandedEnv === idx ? (
+              <div className="space-y-4 border-t pt-3">
+                <div>
+                  <Label className="mb-2 block text-xs">环境 Header</Label>
+                  <ParamTableEditor
+                    rows={kvToParamRows(env.header as ProjectEnvKeyValue[])}
+                    onChange={(rows) =>
+                      updateEnv(idx, { header: paramRowsToKv(rows) })
+                    }
+                  />
+                </div>
+                <div>
+                  <Label className="mb-2 block text-xs">全局变量 global.*</Label>
+                  <ParamTableEditor
+                    rows={kvToParamRows(env.global as ProjectEnvKeyValue[])}
+                    onChange={(rows) =>
+                      updateEnv(idx, { global: paramRowsToKv(rows) })
+                    }
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
         ))}
         <div className="flex gap-2">
@@ -140,7 +235,7 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => setEnvs([...envs, { name: "", domain: "" }])}
+            onClick={() => setEnvs([...envs, emptyEnv()])}
           >
             添加环境
           </Button>
@@ -148,6 +243,51 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
             保存环境
           </Button>
         </div>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-medium">项目脚本</h3>
+        <p className="text-xs text-muted-foreground">
+          测试集合执行前后的公共脚本（JavaScript），与单接口脚本叠加执行。
+        </p>
+        <div className="space-y-2">
+          <Label>Pre-request 脚本</Label>
+          <Textarea
+            className="font-mono text-xs"
+            rows={5}
+            value={scripts.pre_script}
+            onChange={(e) =>
+              setScripts((s) => ({ ...s, pre_script: e.target.value }))
+            }
+            placeholder="// 请求前执行"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>After-request 脚本</Label>
+          <Textarea
+            className="font-mono text-xs"
+            rows={5}
+            value={scripts.after_script}
+            onChange={(e) =>
+              setScripts((s) => ({ ...s, after_script: e.target.value }))
+            }
+            placeholder="// 请求后执行"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>项目 Mock 脚本</Label>
+          <Textarea
+            className="font-mono text-xs"
+            rows={4}
+            value={scripts.project_mock_script}
+            onChange={(e) =>
+              setScripts((s) => ({ ...s, project_mock_script: e.target.value }))
+            }
+          />
+        </div>
+        <Button type="button" size="sm" onClick={saveScripts}>
+          保存脚本
+        </Button>
       </section>
 
       <section className="space-y-3">

@@ -12,7 +12,7 @@ import type { InterfaceDetail, ProjectEnvItem } from "../../lib/api/types";
 import { MethodBadge } from "./method-badge";
 import { InterfaceRunPanel, type RunResponsePayload } from "./interface-run-panel";
 import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
-import { MockExpressionPicker } from "../shared/mock-expression-picker";
+import { VariablePicker } from "../shared/variable-picker";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
@@ -48,7 +48,8 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
   const [data, setData] = useState<CaseDetail | null>(null);
   const [lastResponse, setLastResponse] = useState<RunResponsePayload | null>(null);
   const [assertMsg, setAssertMsg] = useState("");
-  const [insertField, setInsertField] = useState<"body" | "query">("body");
+  const [insertField, setInsertField] = useState<"body" | "query" | "script">("body");
+  const [envIndex, setEnvIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -222,28 +223,53 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
             <TabsTrigger value="test">断言</TabsTrigger>
           </TabsList>
           <TabsContent value="edit" className="mt-4 space-y-4">
-            <MockExpressionPicker
-              caseKey={data._id}
-              onInsert={(text) => {
-                if (insertField === "body") {
-                  setForm((f) => ({ ...f, req_body_other: `${f.req_body_other || ""}${text}` }));
-                } else {
-                  setForm((f) => {
-                    const rows = [...f.req_query];
-                    if (rows.length === 0) {
-                      rows.push({ name: "", value: text, example: "", required: "0" });
-                    } else {
-                      const last = rows[rows.length - 1];
-                      rows[rows.length - 1] = {
-                        ...last,
-                        value: `${last.value || ""}${text}`,
-                      };
-                    }
-                    return { ...f, req_query: rows };
-                  });
-                }
-              }}
-            />
+            <div className="flex flex-wrap items-center gap-2">
+              <VariablePicker
+                envs={envs}
+                envIndex={envIndex}
+                caseKey={data._id}
+                onInsert={(text) => {
+                  if (insertField === "body") {
+                    setForm((f) => ({
+                      ...f,
+                      req_body_other: `${f.req_body_other || ""}${text}`,
+                    }));
+                  } else if (insertField === "script") {
+                    setForm((f) => ({
+                      ...f,
+                      test_script: `${f.test_script || ""}${text}`,
+                    }));
+                  } else {
+                    setForm((f) => {
+                      const rows = [...f.req_query];
+                      if (rows.length === 0) {
+                        rows.push({ name: "", value: text, example: "", required: "0" });
+                      } else {
+                        const last = rows[rows.length - 1];
+                        rows[rows.length - 1] = {
+                          ...last,
+                          value: `${last.value || ""}${text}`,
+                        };
+                      }
+                      return { ...f, req_query: rows };
+                    });
+                  }
+                }}
+              />
+              {envs.length > 1 ? (
+                <select
+                  className="h-8 rounded-md border px-2 text-xs"
+                  value={envIndex}
+                  onChange={(e) => setEnvIndex(Number(e.target.value))}
+                >
+                  {envs.map((e, i) => (
+                    <option key={i} value={i}>
+                      {e.name || `环境 ${i + 1}`}
+                    </option>
+                  ))}
+                </select>
+              ) : null}
+            </div>
             <div className="flex gap-2 text-xs">
               <button
                 type="button"
@@ -258,6 +284,13 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
                 onClick={() => setInsertField("query")}
               >
                 插入到 Query
+              </button>
+              <button
+                type="button"
+                className={insertField === "script" ? "font-medium text-[#2395f1]" : "text-muted-foreground"}
+                onClick={() => setInsertField("script")}
+              >
+                插入到断言脚本
               </button>
             </div>
             <div className="space-y-2">
@@ -308,6 +341,7 @@ export function InterfaceCaseDetail({ projectId, caseId }: InterfaceCaseDetailPr
                 rows={10}
                 placeholder="assert.equal(status, 200)"
                 value={form.test_script}
+                onFocus={() => setInsertField("script")}
                 onChange={(e) => setForm((f) => ({ ...f, test_script: e.target.value }))}
               />
             </div>

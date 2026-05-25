@@ -5,10 +5,15 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { pluginApi } from "@/lib/api/plugin";
-import { useAuth } from "@/lib/auth/auth-context";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { pluginApi } from "../../../lib/api/plugin";
+import { useAuth } from "../../../lib/auth/auth-context";
+import {
+  MockTrendChart,
+  normalizeMockDateList,
+  type MockTrendPoint,
+} from "../../../components/shared/mock-trend-chart";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Alert, AlertDescription } from "../../../components/ui/alert";
 
 export default function StatisticPage() {
   const router = useRouter();
@@ -16,7 +21,10 @@ export default function StatisticPage() {
   const [error, setError] = useState("");
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [system, setSystem] = useState<Record<string, unknown>>({});
-  const [mockStats, setMockStats] = useState<{ mockCount?: number }>({});
+  const [mockStats, setMockStats] = useState<{
+    mockCount?: number;
+    mockTrend?: MockTrendPoint[];
+  }>({});
 
   const load = useCallback(async () => {
     setError("");
@@ -32,7 +40,11 @@ export default function StatisticPage() {
       setCounts((countRes.data as Record<string, number>) || {});
       setSystem((statusRes.data as Record<string, unknown>) || {});
       if (mockRes?.data) {
-        setMockStats(mockRes.data as { mockCount?: number });
+        const raw = mockRes.data as { mockCount?: number; mockDateList?: unknown[] };
+        setMockStats({
+          mockCount: raw.mockCount,
+          mockTrend: normalizeMockDateList(raw.mockDateList || []),
+        });
       }
     } catch (err) {
       console.error("加载统计失败", err);
@@ -92,8 +104,11 @@ export default function StatisticPage() {
               Mock 请求统计
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <p className="text-3xl font-semibold text-[#2395f1]">{mockStats.mockCount}</p>
+            {mockStats.mockTrend && mockStats.mockTrend.length > 0 ? (
+              <MockTrendChart points={mockStats.mockTrend} />
+            ) : null}
           </CardContent>
         </Card>
       ) : null}

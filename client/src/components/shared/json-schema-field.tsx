@@ -1,10 +1,16 @@
 "use client";
 
 /**
- * JSON Schema 编辑：开关、Schema 文本、预览示例
+ * JSON Schema 编辑：开关、可视化表格 / 源码文本、预览示例
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { interfaceApi } from "../../lib/api/client";
+import {
+  parseSchemaTextToRows,
+  rowsToSchemaText,
+  type SchemaVisualRow,
+} from "../../lib/json-schema-visual";
+import { JsonSchemaVisualEditor } from "./json-schema-visual-editor";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
@@ -30,6 +36,28 @@ export function JsonSchemaField({
   const [preview, setPreview] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"visual" | "raw">("visual");
+  const [visualRows, setVisualRows] = useState<SchemaVisualRow[]>([]);
+
+  /** 外部 schema 文本变化时同步可视化行 */
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+    setVisualRows(parseSchemaTextToRows(schemaText));
+  }, [enabled, schemaText]);
+
+  function syncVisualToText(rows: SchemaVisualRow[]) {
+    setVisualRows(rows);
+    try {
+      const text = rowsToSchemaText(rows);
+      onSchemaTextChange(text);
+      setError("");
+    } catch (err) {
+      console.error("Schema 序列化失败", err);
+      setError(err instanceof Error ? err.message : "Schema 序列化失败");
+    }
+  }
 
   async function handlePreview() {
     setError("");
@@ -50,7 +78,7 @@ export function JsonSchemaField({
 
   return (
     <div className="space-y-2 rounded-lg border p-3">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <Label>{label}</Label>
         <label className="flex items-center gap-2 text-xs">
           <input
@@ -64,14 +92,42 @@ export function JsonSchemaField({
       </div>
       {enabled ? (
         <>
-          <Textarea
-            className="font-mono text-xs"
-            rows={6}
-            readOnly={disabled}
-            placeholder='{"type":"object","properties":{...}}'
-            value={schemaText}
-            onChange={(e) => onSchemaTextChange(e.target.value)}
-          />
+          {!disabled ? (
+            <div className="flex gap-2 text-xs">
+              <Button
+                type="button"
+                size="sm"
+                variant={mode === "visual" ? "default" : "outline"}
+                onClick={() => setMode("visual")}
+              >
+                可视化
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={mode === "raw" ? "default" : "outline"}
+                onClick={() => setMode("raw")}
+              >
+                源码
+              </Button>
+            </div>
+          ) : null}
+          {mode === "visual" ? (
+            <JsonSchemaVisualEditor
+              rows={visualRows}
+              onChange={syncVisualToText}
+              disabled={disabled}
+            />
+          ) : (
+            <Textarea
+              className="font-mono text-xs"
+              rows={6}
+              readOnly={disabled}
+              placeholder='{"type":"object","properties":{...}}'
+              value={schemaText}
+              onChange={(e) => onSchemaTextChange(e.target.value)}
+            />
+          )}
           {!disabled ? (
             <Button type="button" size="sm" variant="outline" onClick={handlePreview} disabled={loading}>
               {loading ? "生成中…" : "预览示例 JSON"}

@@ -4,7 +4,8 @@
  * 接口完整编辑：基础信息、请求、响应、调试、高级 Mock
  */
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, Pencil, Save, Trash2 } from "lucide-react";
+import { Loader2, Lock, Pencil, Save, Trash2 } from "lucide-react";
+import { useInterfaceEditLock } from "../../lib/hooks/use-interface-edit-lock";
 import { interfaceApi, projectApi } from "../../lib/api/client";
 import type { InterfaceDetail, ProjectEnvItem, ProjectTagItem } from "../../lib/api/types";
 import { MethodBadge } from "./method-badge";
@@ -41,6 +42,11 @@ export function InterfaceFullEditor({
   const [error, setError] = useState("");
   const [envs, setEnvs] = useState<ProjectEnvItem[]>([]);
   const [projectTags, setProjectTags] = useState<ProjectTagItem[]>([]);
+  const editLock = useInterfaceEditLock({
+    interfaceId,
+    active: editing,
+  });
+
   const [form, setForm] = useState({
     title: "",
     path: "",
@@ -192,11 +198,22 @@ export function InterfaceFullEditor({
         <div className="flex gap-2">
           {editing ? (
             <>
-              <Button size="sm" onClick={handleSave} disabled={saving}>
+              <Button
+                size="sm"
+                onClick={handleSave}
+                disabled={saving || !!editLock.conflict}
+              >
                 <Save className="mr-1 h-4 w-4" />
                 {saving ? "保存中…" : "保存"}
               </Button>
-              <Button size="sm" variant="outline" onClick={() => setEditing(false)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  editLock.release();
+                  setEditing(false);
+                }}
+              >
                 取消
               </Button>
             </>
@@ -220,6 +237,22 @@ export function InterfaceFullEditor({
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         ) : null}
+        {editing && editLock.conflict ? (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription className="flex items-center gap-2">
+              <Lock className="h-4 w-4 shrink-0" />
+              {editLock.conflict.username} 正在编辑此接口，当前为只读预览，请稍后再试。
+            </AlertDescription>
+          </Alert>
+        ) : null}
+        {editing && editLock.error ? (
+          <Alert className="mb-4">
+            <AlertDescription>{editLock.error}</AlertDescription>
+          </Alert>
+        ) : null}
+        {editing && editLock.hasLock ? (
+          <p className="mb-2 text-xs text-muted-foreground">已获取协同编辑锁</p>
+        ) : null}
 
         <Tabs defaultValue="view">
           <TabsList className="flex flex-wrap h-auto">
@@ -231,7 +264,7 @@ export function InterfaceFullEditor({
           </TabsList>
 
           <TabsContent value="view" className="mt-4 space-y-4">
-            {editing ? (
+            {editing && !editLock.conflict ? (
               <>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
@@ -338,6 +371,7 @@ export function InterfaceFullEditor({
               <ParamTableEditor
                 rows={form.req_params}
                 onChange={(req_params) => setForm((f) => ({ ...f, req_params }))}
+                readOnly={!editing || !!editLock.conflict}
               />
             </div>
             <div>
@@ -346,6 +380,7 @@ export function InterfaceFullEditor({
                 rows={form.req_query}
                 onChange={(req_query) => setForm((f) => ({ ...f, req_query }))}
                 showRequired
+                readOnly={!editing || !!editLock.conflict}
               />
             </div>
             <div>
@@ -353,6 +388,7 @@ export function InterfaceFullEditor({
               <ParamTableEditor
                 rows={form.req_headers}
                 onChange={(req_headers) => setForm((f) => ({ ...f, req_headers }))}
+                readOnly={!editing || !!editLock.conflict}
               />
             </div>
             <JsonSchemaField
@@ -365,7 +401,7 @@ export function InterfaceFullEditor({
               onSchemaTextChange={(req_body_other) =>
                 setForm((f) => ({ ...f, req_body_other }))
               }
-              disabled={!editing}
+              disabled={!editing || !!editLock.conflict}
             />
             {!form.req_body_is_json_schema ? (
               <div className="space-y-2">
@@ -373,7 +409,7 @@ export function InterfaceFullEditor({
                 <select
                   className="h-9 rounded-md border px-2 text-sm"
                   value={form.req_body_type}
-                  disabled={!editing}
+                  disabled={!editing || !!editLock.conflict}
                   onChange={(e) => setForm((f) => ({ ...f, req_body_type: e.target.value }))}
                 >
                   <option value="json">json</option>
@@ -395,14 +431,14 @@ export function InterfaceFullEditor({
                   <Textarea
                     className="font-mono text-xs"
                     rows={8}
-                    readOnly={!editing}
+                    readOnly={!editing || !!editLock.conflict}
                     value={form.req_body_other}
                     onChange={(e) => setForm((f) => ({ ...f, req_body_other: e.target.value }))}
                   />
                 )}
               </div>
             ) : null}
-            {editing ? (
+            {editing && !editLock.conflict ? (
               <Button size="sm" onClick={handleSave} disabled={saving}>
                 保存请求配置
               </Button>
@@ -422,18 +458,18 @@ export function InterfaceFullEditor({
               }
               schemaText={form.res_body}
               onSchemaTextChange={(res_body) => setForm((f) => ({ ...f, res_body }))}
-              disabled={!editing}
+              disabled={!editing || !!editLock.conflict}
             />
             {!form.res_body_is_json_schema ? (
               <Textarea
                 className="font-mono text-xs"
                 rows={12}
-                readOnly={!editing}
+                readOnly={!editing || !!editLock.conflict}
                 value={form.res_body}
                 onChange={(e) => setForm((f) => ({ ...f, res_body: e.target.value }))}
               />
             ) : null}
-            {editing ? (
+            {editing && !editLock.conflict ? (
               <Button size="sm" onClick={handleSave} disabled={saving}>
                 保存响应
               </Button>

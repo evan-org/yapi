@@ -2,7 +2,7 @@
  * 项目相关 API
  */
 import { apiRequest } from "./client";
-import type { ProjectItem } from "./types";
+import type { ProjectEnvItem, ProjectItem, ProjectScriptsPayload } from "./types";
 
 export const projectApi = {
   listByGroup: (group_id: number) =>
@@ -29,14 +29,21 @@ export const projectApi = {
     }),
 
   getEnv: (project_id: number) =>
-    apiRequest<{ env: { name: string; domain: string }[] }>(
+    apiRequest<{ env: ProjectEnvItem[] }>(
       `/project/get_env?project_id=${project_id}`
     ),
 
-  upEnv: (id: number, env: { name: string; domain: string }[]) =>
+  upEnv: (id: number, env: ProjectEnvItem[]) =>
     apiRequest("/project/up_env", {
       method: "POST",
       body: JSON.stringify({ id, env }),
+    }),
+
+  /** 更新项目级 pre/after/mock 脚本 */
+  upScripts: (payload: { id: number } & ProjectScriptsPayload) =>
+    apiRequest("/project/up", {
+      method: "POST",
+      body: JSON.stringify(payload),
     }),
 
   getToken: (project_id: number) =>

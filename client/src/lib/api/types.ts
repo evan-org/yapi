@@ -156,10 +156,23 @@ export interface MemberItem {
   role: string;
 }
 
+/** 环境 Header / 全局变量键值 */
+export interface ProjectEnvKeyValue {
+  name: string;
+  value?: string;
+}
+
 /** 项目环境 */
 export interface ProjectEnvItem {
   name: string;
   domain: string;
-  header?: unknown[];
-  global?: unknown[];
+  header?: ProjectEnvKeyValue[];
+  global?: ProjectEnvKeyValue[];
+}
+
+/** 项目脚本与环境扩展字段 */
+export interface ProjectScriptsPayload {
+  pre_script?: string;
+  after_script?: string;
+  project_mock_script?: string;
 }
