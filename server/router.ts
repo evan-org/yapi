@@ -1,65 +1,48 @@
 // @ts-nocheck
 import HttpRouter from './utils/httpRouter.js';
-
-import interfaceController from './controllers/interface.js';
-
-import groupController from './controllers/group.js';
-
-import userController from './controllers/user.js';
-
-import interfaceColController from './controllers/interfaceCol.js';
-
-import testController from './controllers/test.js';
-
+import controllerMap from './controllers/index.js';
 import yapi from './yapi.js';
-
-import projectController from './controllers/project.js';
-
-import logController from './controllers/log.js';
-
-import followController from './controllers/follow.js';
-
-import openController from './controllers/open.js';
-
 import { createAction } from './utils/commons.js';
 
 const router = new HttpRouter();
-let INTERFACE_CONFIG = {
+
+/** 控制器与 URL 前缀映射（控制器定义见 controllers/） */
+const INTERFACE_CONFIG = {
   interface: {
     prefix: "/interface/",
-    controller: interfaceController
+    controller: controllerMap.interface
   },
   user: {
     prefix: "/user/",
-    controller: userController
+    controller: controllerMap.user
   },
   group: {
     prefix: "/group/",
-    controller: groupController
+    controller: controllerMap.group
   },
   project: {
     prefix: "/project/",
-    controller: projectController
+    controller: controllerMap.project
   },
   log: {
     prefix: "/log/",
-    controller: logController
+    controller: controllerMap.log
   },
   follow: {
     prefix: "/follow/",
-    controller: followController
+    controller: controllerMap.follow
   },
   col: {
     prefix: "/col/",
-    controller: interfaceColController
+    controller: controllerMap.col
   },
   test: {
     prefix: "/test/",
-    controller: testController
+    controller: controllerMap.test
   },
   open: {
     prefix: "/open/",
-    controller: openController
+    controller: controllerMap.open
   }
 };
 let routerConfig = {

@@ -9,5 +9,6 @@ globs: server/**/*
 - 源码为 TypeScript（`*.ts`），`package.json` 含 `"type": "module"`，编译输出 `server/dist/`
 - 配置：`server/config.json`
 - `WEBROOT` = `server/` 目录（`yapi.ts` 自动识别 `dist/` 编译目录）
-- 新路由：`server/router.ts` + `server/controllers/*.ts`
+- 分层：`server/controllers/`（HTTP）、`server/models/`（Mongoose），入口分别为 `index.ts`
+- 新路由：`server/router.ts` 注册 action；新业务加 `controllers/xxx.ts` + `models/xxx.ts` 并在对应 `index.ts` 导出
 - 测试：`npm run test:server`（在仓库根目录）

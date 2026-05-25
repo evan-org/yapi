@@ -6,6 +6,18 @@
 - **`client/`**：Next.js 前端
 - **根目录**：`package.json` + `scripts/` + `deploy/` + `docs/`，勿堆后端配置或依赖
 
+### server 分层目录
+
+| 目录 | 职责 |
+|------|------|
+| `controllers/` | HTTP 控制器，`base.ts` 基类 + 各业务 `*.ts`，统一由 `controllers/index.ts` 导出 |
+| `models/` | Mongoose 数据模型，继承 `models/base.ts`，统一由 `models/index.ts` 导出 |
+| `middleware/` | Mock、Hono 适配等中间件 |
+| `utils/` | 数据库连接、路由工具、通用 commons |
+| `common/` | 跨模块公共逻辑（导入、Mock、插件框架） |
+| `exts/` | 可选插件（各自含 controller/server） |
+| `router.ts` | 注册 `/api` 路由，引用 `controllers/index.ts` |
+
 ## 路径约定
 
 - `yapi.WEBROOT` = `server/` 目录

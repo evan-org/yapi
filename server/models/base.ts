@@ -1,13 +1,14 @@
 // @ts-nocheck
+/**
+ * 数据模型基类（models/ 目录）
+ * 子类需实现 getSchema()、getName()；实例化后由 yapi.db 注册到 Mongoose
+ */
 import yapi from '../yapi.js';
-
 import mongoose from 'mongoose';
-
 import autoIncrement from '../utils/mongoose-auto-increment.js';
 
-
 /**
- * 所有的model都需要继承baseModel, 且需要 getSchema和getName方法，不然会报错
+ * 所有的 model 都需要继承 baseModel，且需要 getSchema 和 getName 方法，不然会报错
  */
 
 class baseModel {

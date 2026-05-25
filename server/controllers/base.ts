@@ -1,15 +1,16 @@
 // @ts-nocheck
+/**
+ * 控制器基类（controllers/ 目录）
+ * 负责登录态、权限与通用 model 实例；业务控制器继承此类
+ */
 import yapi from '../yapi.js';
-
-import projectModel from '../models/project.js';
-
-import userModel from '../models/user.js';
-
-import interfaceModel from '../models/interface.js';
-
-import groupModel from '../models/group.js';
-
-import tokenModel from '../models/token.js';
+import {
+  projectModel,
+  userModel,
+  interfaceModel,
+  groupModel,
+  tokenModel,
+} from '../models/index.js';
 
 import _ from 'underscore';
 
