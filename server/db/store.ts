@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * PostgreSQL JSONB 表访问（原生 API，无 Mongoose 兼容层）
+ * PostgreSQL JSONB 表访问
  */
 import { getPool } from "./pg-pool.js";
 import { buildWhere, type DocRecord } from "./where.js";

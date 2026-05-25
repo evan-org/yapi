@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * PostgreSQL 连接池（替代 Mongoose connect）
+ * PostgreSQL 连接池
  */
 import pg from "pg";
 import yapi from "../runtime.js";

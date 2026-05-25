@@ -7,7 +7,7 @@ import type { LegacyModelInstance } from "../repositories/base.repo.js";
 
 export default class BaseService {
   /**
-   * 获取 Mongoose Model 单例（遗留插件等场景；新业务请用 repositories）
+   * 获取 Model 单例（插件等场景；新业务请用 repositories）
    */
   getModel<T extends LegacyModelInstance>(
     ModelClass: new (...args: unknown[]) => T

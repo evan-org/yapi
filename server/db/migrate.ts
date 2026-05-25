@@ -1,5 +1,5 @@
 /**
- * PostgreSQL 建表与 JSONB 表达式索引（替代 Mongo createIndex）
+ * PostgreSQL 建表与 JSONB 表达式索引
  */
 import { getPool } from "./pg-pool.js";
 import { ALL_COLLECTIONS, tableName } from "./table.js";
@@ -18,7 +18,7 @@ export async function ensureTables(): Promise<void> {
   }
 }
 
-/** 创建与历史 Mongo 索引等价的表达式索引 */
+/** 创建 JSONB 表达式索引 */
 export async function ensureIndexes(): Promise<void> {
   const pool = getPool();
   const statements: string[] = [

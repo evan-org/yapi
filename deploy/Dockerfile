@@ -3,8 +3,8 @@ FROM node:18-bookworm-slim AS builder
 
 WORKDIR /yapi
 
-COPY package.json ./
-COPY server/package.json server/package-lock.json ./server/
+COPY package.json package-lock.json ./
+COPY server/package.json ./server/
 COPY client/package.json client/package-lock.json ./client/
 
 RUN npm install --legacy-peer-deps --workspace=yapi-server --workspace=client

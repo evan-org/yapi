@@ -1,5 +1,5 @@
 /**
- * 集合名 → PostgreSQL 表名（与历史 Mongo collection 对应）
+ * 业务表名 → PostgreSQL 表（yapi_ 前缀）
  */
 const TABLE_PREFIX = "yapi_";
 

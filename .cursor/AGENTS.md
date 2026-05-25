@@ -12,7 +12,7 @@
 |------|------|
 | `controllers/` | HTTP 薄层：鉴权、参数解析、响应包装；继承 `base.ts` |
 | `services/` | 业务逻辑层，Controller 调用 Service，不直接编排 Model |
-| `models/` | Mongoose 数据模型，继承 `models/base.ts` |
+| `models/` | 数据模型（PostgreSQL JSONB），继承 `models/base.ts` |
 | `routes/` | `http/`、`ws/` 入口；`modules/*.routes.ts` 各模块路由 |
 | `lib/` | Hono 适配：`bind-routes`、`context`、`action-runner` |
 | `middleware/` | Mock（`mock.ts` + `mock-handler.ts`）等 |
