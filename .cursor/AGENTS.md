@@ -10,11 +10,12 @@
 
 | 目录 | 职责 |
 |------|------|
-| `controllers/` | HTTP 控制器，`base.ts` 基类 + 各业务 `*.ts`，统一由 `controllers/index.ts` 导出 |
-| `models/` | Mongoose 数据模型，继承 `models/base.ts`，统一由 `models/index.ts` 导出 |
+| `controllers/` | HTTP 薄层：鉴权、参数解析、响应包装；继承 `base.ts` |
+| `services/` | 业务逻辑层，Controller 调用 Service，不直接编排 Model |
+| `models/` | Mongoose 数据模型，继承 `models/base.ts` |
+| `routes/` | `http/`、`ws/` 入口；`modules/*.routes.ts` 各模块路由 |
+| `lib/` | Hono 适配：`bind-routes`、`context`、`action-runner` |
 | `middleware/` | Mock（`mock.ts` + `mock-handler.ts`）等 |
-| `lib/` | Hono 路由挂载（`bind-routes.ts`）、请求上下文（`context.ts`） |
-| `routes/` | 入口 `api.ts` / `websocket.ts`；配置 `config/`；注册 `register-*.ts` |
 | `utils/` | 数据库连接、通用 commons |
 | `common/` | 跨模块公共逻辑（导入、Mock、插件框架） |
 | `exts/` | 可选插件（各自含 controller/server） |

@@ -29,7 +29,8 @@
       "middleware/*": ["./middleware/*"],
       "lib/*": ["./lib/*"],
       "routes/*": ["./routes/*"],
-      "routes/config/*": ["./routes/config/*"]
+      "routes/modules/*": ["./routes/modules/*"],
+      "services/*": ["./services/*"]
     }
   },
   "include": ["**/*.ts", "types/**/*.d.ts"],

@@ -7,6 +7,8 @@ import yapi from '../runtime.js';
 
 import apiResponse from '../common/apiResponse.js';
 
+import { createAction as bindControllerAction } from "../lib/action-runner.js";
+
 import sha1 from 'sha1';
 
 import logModel from '../models/log.js';
@@ -417,66 +419,8 @@ export const saveLog = (logData) => {
   }
 };
 
-/**
- * 将控制器方法注册为 HTTP 或 WebSocket 路由
- *
- * @param {import('../lib/bind-routes.js').default} router - RouteBinder 实例
- * @param {string} baseurl - 路径前缀，通常为 `/api`
- * @param {new (ctx: import('../types/app-context.js').AppContext) => object} routerController - 控制器类
- * @param {string} action - 控制器实例方法名
- * @param {string} path - 相对路径（不含 baseurl）
- * @param {string} method - HTTP 方法或 `all`
- * @param {boolean} [ws] - 是否为 WebSocket 路由
- */
-export const createAction = (router, baseurl, routerController, action, path, method, ws) => {
-  let routeMethod = (method || "get").toLowerCase();
-  if (routeMethod === "delete") {
-    routeMethod = "del";
-  }
-  if (typeof router[routeMethod] !== "function") {
-    throw new Error(`Unsupported route method: ${method}`);
-  }
-  const fullPath = baseurl + path;
-  router[routeMethod](fullPath, async(ctx) => {
-    let inst = new routerController(ctx);
-    try {
-      await inst.init(ctx);
-      ctx.params = Object.assign({}, ctx.request.query, ctx.request.body, ctx.params);
-      if (inst.schemaMap && typeof inst.schemaMap === "object" && inst.schemaMap[action]) {
-
-        let validResult = yapi.commons.validateParams(inst.schemaMap[action], ctx.params);
-
-        if (!validResult.valid) {
-          return (ctx.body = yapi.commons.resReturn(null, apiResponse.ApiCode.BAD_REQUEST, validResult.message));
-        }
-      }
-      if (inst.$auth === true) {
-        await inst[action].call(inst, ctx);
-        if (!ws && ctx.body !== undefined) {
-          const reqPath = ctx.path || fullPath;
-          ctx.body = apiResponse.finalizeResponse(reqPath, ctx.body);
-        }
-      } else {
-        if (ws === true) {
-          ctx.ws.send(JSON.stringify(
-            apiResponse.fail(apiResponse.ApiCode.NOT_LOGIN, "请登录...")
-          ));
-        } else {
-          ctx.body = yapi.commons.resReturn(null, apiResponse.ApiCode.NOT_LOGIN, "请登录...");
-        }
-      }
-    } catch (err) {
-      if (ws === true) {
-        ctx.ws.send(JSON.stringify(
-          apiResponse.fail(apiResponse.ApiCode.SERVER_ERROR, "服务器出错...")
-        ));
-      } else {
-        ctx.body = yapi.commons.resReturn(null, apiResponse.ApiCode.SERVER_ERROR, "服务器出错...");
-      }
-      yapi.commons.log(err, "error");
-    }
-  });
-};
+/** @deprecated 请使用 lib/action-runner.js；保留导出以兼容插件 */
+export const createAction = bindControllerAction;
 
 /**
  *
@@ -701,4 +645,41 @@ export const createWebAPIRequest = function(ops) {
     http_client.end();
   });
 }
+
+/**
+ * 默认导出：供 app.ts 挂载到 yapi.commons
+ */
+export default {
+  schemaToJson,
+  resReturn,
+  log,
+  fileExist,
+  time,
+  fieldSelect,
+  rand,
+  json_parse,
+  randStr,
+  getIp,
+  generatePassword,
+  expireDate,
+  sendMail,
+  validateSearchKeyword,
+  filterRes,
+  handleVarPath,
+  verifyPath,
+  sandbox,
+  trim,
+  ltrim,
+  rtrim,
+  handleParams,
+  validateParams,
+  saveLog,
+  createAction,
+  handleParamsValue,
+  getCaseList,
+  runCaseScript,
+  getUserdata,
+  handleMockScript,
+  createWebAPIRequest,
+};
 

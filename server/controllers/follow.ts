@@ -1,136 +1,62 @@
 // @ts-nocheck
-import yapi from '../runtime.js';
-
-import baseController from './base.js';
-
-import followModel from '../models/follow.js';
-
-import projectModel from '../models/project.js';
-
+/**
+ * 关注项目 HTTP 控制器（薄层：参数 → Service → 响应）
+ */
+import yapi from "../runtime.js";
+import baseController from "./base.js";
+import { followService } from "../services/index.js";
 
 class followController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(followModel);
-    this.projectModel = yapi.getInst(projectModel);
   }
 
   /**
-   * 获取关注项目列表
    * @interface /follow/list
    * @method GET
-   * @category follow
-   * @foldnumber 10
-   * @param {Number} [page] 分页页码
-   * @param {Number} [limit] 分页大小
-   * @returns {Object}
-   * @example /follow/list
    */
-
   async list(ctx) {
-    let uid = this.getUid();
-    // 关注列表暂时不分页 page & limit 为分页配置
-    // page = ctx.request.query.page || 1,
-    // limit = ctx.request.query.limit || 10;
-
-    if (!uid) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "用户id不能为空"));
-    }
-
     try {
-      let result = await this.Model.list(uid);
-
-      ctx.body = yapi.commons.resReturn({
-        list: result
-      });
+      const result = await followService.listByUser(this.getUid());
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      ctx.body = yapi.commons.resReturn(result.data);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, err.message);
     }
   }
 
   /**
-   * 取消关注
    * @interface /follow/del
    * @method POST
-   * @category follow
-   * @foldnumber 10
-   * @param {Number} projectid
-   * @returns {Object}
-   * @example /follow/del
    */
-
   async del(ctx) {
-    let params = ctx.request.body,
-      uid = this.getUid();
-
-    if (!params.projectid) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
-    }
-
-    let checkRepeat = await this.Model.checkProjectRepeat(uid, params.projectid);
-
-    if (checkRepeat == 0) {
-      return (ctx.body = yapi.commons.resReturn(null, 401, "项目未关注"));
-    }
-
     try {
-      let result = await this.Model.del(params.projectid, this.getUid());
-      ctx.body = yapi.commons.resReturn(result);
+      const { projectid } = ctx.request.body;
+      const result = await followService.unfollow(this.getUid(), projectid);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      ctx.body = yapi.commons.resReturn(result.data);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }
   }
 
   /**
-   * 添加关注
    * @interface /follow/add
-   * @method GET
-   * @category follow
-   * @foldnumber 10
-   * @param {Number} projectid 项目id
-   * @param {String} projectname 项目名
-   * @param {String} icon 项目icon
-   * @returns {Object}
-   * @example /follow/add
+   * @method POST
    */
-
   async add(ctx) {
-    let params = ctx.request.body;
-    params = yapi.commons.handleParams(params, {
-      projectid: "number"
-    });
-
-    let uid = this.getUid();
-
-    if (!params.projectid) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
-    }
-
-    let checkRepeat = await this.Model.checkProjectRepeat(uid, params.projectid);
-
-    if (checkRepeat) {
-      return (ctx.body = yapi.commons.resReturn(null, 401, "项目已关注"));
-    }
-
     try {
-      let project = await this.projectModel.get(params.projectid);
-      let data = {
-        uid: uid,
-        projectid: params.projectid,
-        projectname: project.name,
-        icon: project.icon,
-        color: project.color
-      };
-      let result = await this.Model.save(data);
-      result = yapi.commons.fieldSelect(result, [
-        "_id",
-        "uid",
-        "projectid",
-        "projectname",
-        "icon",
-        "color"
-      ]);
-      ctx.body = yapi.commons.resReturn(result);
+      let params = ctx.request.body;
+      params = yapi.commons.handleParams(params, { projectid: "number" });
+      const result = await followService.follow(this.getUid(), params.projectid);
+      if (!result.ok) {
+        return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+      }
+      ctx.body = yapi.commons.resReturn(result.data);
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }

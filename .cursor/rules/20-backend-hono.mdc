@@ -8,10 +8,19 @@ globs: server/**/*
 - 入口：`server/app.ts`（**ESM** + `import` 语法；开发/生产 `tsx` 或 `node dist/app.js`）
 - 源码为 TypeScript（`*.ts`），`package.json` 含 `"type": "module"`，编译输出 `server/dist/`
 - 配置：`server/.env`（见 `.env.example`），`config.json` 可选兜底；运行时 `server/runtime.ts`
-- `WEBROOT` = `server/` 目录（`yapi.ts` 自动识别 `dist/` 编译目录）
-- 分层：`server/controllers/`（HTTP）、`server/models/`（Mongoose），入口分别为 `index.ts`
-- 路由入口：`routes/api.ts`、`routes/websocket.ts`；路由表 `routes/config/`；注册 `routes/register-*.ts`
-- 框架层：`lib/bind-routes.ts`（RouteBinder）、`lib/context.ts`（AppContext）、`types/app-context.d.ts`
-- Mock：`server/middleware/mock.ts` + `mock-handler.ts`
-- 新业务加 `controllers/xxx.ts` + `models/xxx.ts` 并在对应 `index.ts` 导出
+- `WEBROOT` = `server/` 目录（`runtime.ts` 自动识别 `dist/` 编译目录）
+
+## 分层（必须遵守）
+
+```
+routes/modules/*.routes.ts  →  controllers/*.ts  →  services/*.ts  →  models/*.ts
+```
+
+- **routes/**：`index.ts` 入口；`modules/` 各模块路由；`lib/action-runner.ts` 执行 Action
+- **controllers/**：HTTP 薄层，只做 ctx 适配
+- **services/**：业务逻辑，不依赖 Hono Context
+- **models/**：Mongoose 数据访问
+- **lib/**：`context.ts`（AppContext）、`bind-routes.ts`（RouteBinder）
+- Mock：`middleware/mock.ts` + `mock-handler.ts`
+- 新接口：在 `routes/modules/` 加路由 → `services/` 写逻辑 → `controllers/` 薄封装
 - 测试：`npm run test:server`（在仓库根目录）

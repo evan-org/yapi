@@ -1,7 +1,7 @@
 // @ts-nocheck
 /**
  * HTTP 控制器层（/api 路由处理）
- * 各控制器继承 baseController，路由表见 routes/config/api-actions.ts
+ * 各控制器继承 baseController；路由见 routes/modules/；业务逻辑见 services/
  */
 import baseController from "./base.js";
 import interfaceController from "./interface.js";

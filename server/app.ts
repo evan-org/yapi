@@ -21,8 +21,7 @@ import dbModule from "./utils/db.js";
 import mockMiddleware from "./middleware/mock.js";
 import storageCreator from "./utils/storage.js";
 import { assertRuntimeConfig } from "./utils/configCheck.js";
-import { mountApiRoutes } from "./routes/api.js";
-import { mountWebSocketRoutes } from "./routes/websocket.js";
+import { mountApiRoutes, mountWebSocketRoutes } from "./routes/index.js";
 
 const pkg = JSON.parse(
   readFileSync(path.join(yapi.WEBROOT_SERVER, "package.json"), "utf8")
