@@ -1,7 +1,13 @@
 // @ts-nocheck
 /**
  * YApi 服务入口（Hono + Node，ESM）
- * 仅提供 API / WebSocket / 公共资源；页面由 Next.js（client）承载
+ *
+ * 职责：
+ * - /api/* REST 与 WebSocket
+ * - /mock/* Mock 数据
+ * - 非 API 请求在开发环境重定向到 Next.js 前端
+ *
+ * 页面与静态资源由 client/（Next.js）承载，不在此服务内提供。
  */
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -34,15 +40,10 @@ const isDev = process.argv[2] === "dev";
 const nextPort = process.env.YAPI_DEV_CLIENT_PORT || "4000";
 
 /**
- * 创建并启动 Hono 应用（仅 API / WebSocket；静态资源由 Next.js client/public 提供）
+ * 健康检查
+ * @param {import('hono').Hono} app
  */
-async function startServer() {
-  assertRuntimeConfig();
-
-  const app = new Hono();
-  const { upgradeWebSocket, injectWebSocket } = createNodeWebSocket({ app });
-  yapi.app = app;
-
+function registerHealthRoute(app) {
   app.get("/api/health", (c) =>
     c.json({
       status: "ok",
@@ -51,13 +52,13 @@ async function startServer() {
       version: pkg.version,
     })
   );
+}
 
-  app.use("*", mockMiddleware);
-
-  mountApiRoutes(app);
-  mountWebSocketRoutes(app, upgradeWebSocket);
-
-  /** 非 API 请求：开发模式提示使用 Next；生产由反向代理或进程管理器转发到 Next */
+/**
+ * 非 API 路径：开发环境跳转 Next，生产返回提示 JSON
+ * @param {import('hono').Hono} app
+ */
+function registerFrontendFallback(app) {
   app.all("*", async (c) => {
     const pathname = new URL(c.req.url).pathname;
     if (pathname.startsWith("/api")) {
@@ -76,8 +77,68 @@ async function startServer() {
       200
     );
   });
+}
 
+/**
+ * 注册进程退出信号
+ */
+function bindShutdownSignals() {
+  const shutdown = () => {
+    commons.log("正在关闭服务...");
+    process.exit(0);
+  };
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+}
+
+/**
+ * 启动后控制台提示
+ * @param {number} port
+ */
+function logStartup(port) {
+  const hostSuffix = port === 80 ? "" : ":" + port;
+  if (isDev) {
+    commons.log(
+      `开发服务已启动 (Hono API + Next.js):\n` +
+        `  API:  http://127.0.0.1${hostSuffix}/api\n` +
+        `  前端: http://127.0.0.1:${nextPort}/`
+    );
+  } else {
+    commons.log(
+      `API 服务已启动 (Hono): http://127.0.0.1${hostSuffix}/api\n` +
+        `  前端请单独启动: npm run start:web`
+    );
+  }
+}
+
+/**
+ * 创建 Hono 应用并完成路由挂载（不监听端口）
+ * @returns {Promise<import('hono').Hono>}
+ */
+export async function createApp() {
+  assertRuntimeConfig();
+
+  const app = new Hono();
+  const { upgradeWebSocket, injectWebSocket } = createNodeWebSocket({ app });
+  yapi.app = app;
+
+  registerHealthRoute(app);
+  app.use("*", mockMiddleware);
+  mountApiRoutes(app);
+  mountWebSocketRoutes(app, upgradeWebSocket);
+  registerFrontendFallback(app);
+
+  app._injectWebSocket = injectWebSocket;
+  return app;
+}
+
+/**
+ * 创建应用并监听 HTTP 端口
+ */
+async function startServer() {
+  const app = await createApp();
   const port = Number(yapi.WEBCONFIG.port) || 3001;
+
   const server = serve({
     fetch: app.fetch,
     port,
@@ -87,28 +148,12 @@ async function startServer() {
   if (server && typeof server.setTimeout === "function") {
     server.setTimeout(yapi.WEBCONFIG.timeout);
   }
-  injectWebSocket(server);
-
-  const shutdown = () => {
-    commons.log("正在关闭服务...");
-    process.exit(0);
-  };
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
-
-  if (isDev) {
-    commons.log(
-      `开发服务已启动 (Hono API + Next.js):\n` +
-        `  API:  http://127.0.0.1${port === 80 ? "" : ":" + port}/api\n` +
-        `  前端: http://127.0.0.1:${nextPort}/`
-    );
-  } else {
-    commons.log(
-      `API 服务已启动 (Hono): http://127.0.0.1${port === 80 ? "" : ":" + port}/api\n` +
-        `  前端请单独启动: npm run start:web`
-    );
+  if (app._injectWebSocket) {
+    app._injectWebSocket(server);
   }
 
+  bindShutdownSignals();
+  logStartup(port);
   return app;
 }
 
@@ -123,4 +168,4 @@ if (isEntry) {
   });
 }
 
-export default { startServer };
+export default { startServer, createApp };

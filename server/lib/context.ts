@@ -1,16 +1,50 @@
 // @ts-nocheck
 /**
- * Hono Context ↔ 控制器层 AppContext 适配
- * 控制器仍使用历史 ctx 形状（request/body/set），由本模块桥接到 Hono
+ * Hono Context ↔ 控制器 AppContext 适配层
+ *
+ * 控制器通过 ctx.request / ctx.body / ctx.set 读写请求与响应，
+ * 本模块负责解析 body、query、cookie，并在请求结束时写回 Hono Response。
  */
 import { getCookie, setCookie } from "hono/cookie";
 
+const SKIP_BODY_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+
 /**
- * 解析请求体（JSON / form / multipart）
+ * 从 URL 解析 query 对象（同名参数转为数组）
+ * @param {URL} url
+ */
+function parseQuery(url) {
+  const query = {};
+  url.searchParams.forEach((value, key) => {
+    if (Object.prototype.hasOwnProperty.call(query, key)) {
+      const prev = query[key];
+      query[key] = Array.isArray(prev) ? [...prev, value] : [prev, value];
+    } else {
+      query[key] = value;
+    }
+  });
+  return query;
+}
+
+/**
+ * 将 Headers 转为小写 key 的普通对象
+ * @param {Headers} rawHeaders
+ */
+function headersToObject(rawHeaders) {
+  const header = {};
+  rawHeaders.forEach((value, key) => {
+    header[key.toLowerCase()] = value;
+  });
+  return header;
+}
+
+/**
+ * 解析请求体（JSON / form / multipart / 纯文本）
+ * @param {import('hono').Context} c
  */
 async function parseRequestBody(c) {
   const method = c.req.method.toUpperCase();
-  if (method === "GET" || method === "HEAD" || method === "OPTIONS") {
+  if (SKIP_BODY_METHODS.has(method)) {
     return {};
   }
   const contentType = c.req.header("content-type") || "";
@@ -56,24 +90,15 @@ async function parseRequestBody(c) {
 
 /**
  * 由 Hono Context 构建控制器可用的 AppContext
+ * @param {import('hono').Context} c
+ * @param {{ websocket?: import('../types/app-context.js').AppWebSocket }} [options]
+ * @returns {Promise<import('../types/app-context.js').AppContext>}
  */
 async function createAppContext(c, options = {}) {
   const url = new URL(c.req.url);
-  const query = {};
-  url.searchParams.forEach((value, key) => {
-    if (Object.prototype.hasOwnProperty.call(query, key)) {
-      const prev = query[key];
-      query[key] = Array.isArray(prev) ? [...prev, value] : [prev, value];
-    } else {
-      query[key] = value;
-    }
-  });
-
+  const query = parseQuery(url);
   const requestBody = await parseRequestBody(c);
-  const header = {};
-  c.req.raw.headers.forEach((value, key) => {
-    header[key.toLowerCase()] = value;
-  });
+  const header = headersToObject(c.req.raw.headers);
 
   const ctx = {
     req: c.req,
@@ -113,29 +138,15 @@ async function createAppContext(c, options = {}) {
     set(key, value) {
       ctx._responseHeaders[key.toLowerCase()] = value;
     },
-    redirect(url) {
+    redirect(targetUrl) {
       ctx.status = 302;
-      ctx._redirect = url;
+      ctx._redirect = targetUrl;
     },
   };
 
   if (options.websocket) {
-    const ws = options.websocket;
-    const wsApi = {
-      send(data) {
-        ws.send(typeof data === "string" ? data : JSON.stringify(data));
-      },
-      on(event, handler) {
-        if (event === "close") {
-          ws.addEventListener("close", handler);
-        }
-        if (event === "message") {
-          ws.addEventListener("message", (evt) => handler(evt.data));
-        }
-      },
-    };
-    ctx.websocket = wsApi;
-    ctx.ws = wsApi;
+    ctx.websocket = options.websocket;
+    ctx.ws = options.websocket;
   }
 
   return ctx;
@@ -143,6 +154,8 @@ async function createAppContext(c, options = {}) {
 
 /**
  * 将 AppContext 上的响应写回 Hono Response
+ * @param {import('hono').Context} c
+ * @param {import('../types/app-context.js').AppContext} ctx
  */
 async function finalizeResponse(c, ctx) {
   Object.entries(ctx._responseHeaders || {}).forEach(([key, value]) => {

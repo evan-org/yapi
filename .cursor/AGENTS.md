@@ -14,7 +14,7 @@
 | `models/` | Mongoose 数据模型，继承 `models/base.ts`，统一由 `models/index.ts` 导出 |
 | `middleware/` | Mock（`mock.ts` + `mock-handler.ts`）等 |
 | `lib/` | Hono 路由挂载（`bind-routes.ts`）、请求上下文（`context.ts`） |
-| `routes/` | `/api` 与 WebSocket 路由表（`api.ts`、`websocket.ts`） |
+| `routes/` | 入口 `api.ts` / `websocket.ts`；配置 `config/`；注册 `register-*.ts` |
 | `utils/` | 数据库连接、通用 commons |
 | `common/` | 跨模块公共逻辑（导入、Mock、插件框架） |
 | `exts/` | 可选插件（各自含 controller/server） |

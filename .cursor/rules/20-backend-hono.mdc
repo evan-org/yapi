@@ -10,7 +10,8 @@ globs: server/**/*
 - 配置：`server/.env`（见 `.env.example`），`config.json` 可选兜底；运行时 `server/runtime.ts`
 - `WEBROOT` = `server/` 目录（`yapi.ts` 自动识别 `dist/` 编译目录）
 - 分层：`server/controllers/`（HTTP）、`server/models/`（Mongoose），入口分别为 `index.ts`
-- 路由：`server/routes/api.ts`、`server/routes/websocket.ts`；挂载逻辑 `server/lib/bind-routes.ts`；上下文适配 `server/lib/context.ts`
+- 路由入口：`routes/api.ts`、`routes/websocket.ts`；路由表 `routes/config/`；注册 `routes/register-*.ts`
+- 框架层：`lib/bind-routes.ts`（RouteBinder）、`lib/context.ts`（AppContext）、`types/app-context.d.ts`
 - Mock：`server/middleware/mock.ts` + `mock-handler.ts`
 - 新业务加 `controllers/xxx.ts` + `models/xxx.ts` 并在对应 `index.ts` 导出
 - 测试：`npm run test:server`（在仓库根目录）

@@ -28,7 +28,8 @@
       "common/*": ["./common/*"],
       "middleware/*": ["./middleware/*"],
       "lib/*": ["./lib/*"],
-      "routes/*": ["./routes/*"]
+      "routes/*": ["./routes/*"],
+      "routes/config/*": ["./routes/config/*"]
     }
   },
   "include": ["**/*.ts", "types/**/*.d.ts"],

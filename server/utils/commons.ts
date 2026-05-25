@@ -418,14 +418,15 @@ export const saveLog = (logData) => {
 };
 
 /**
+ * 将控制器方法注册为 HTTP 或 WebSocket 路由
  *
- * @param {*} router router
- * @param {*} baseurl base_url_path
- * @param {*} routerController controller
- * @param {*} path  routerPath
- * @param {*} method request_method , post get put delete ...
- * @param {*} action controller action_name
- * @param {*} ws enable ws
+ * @param {import('../lib/bind-routes.js').default} router - RouteBinder 实例
+ * @param {string} baseurl - 路径前缀，通常为 `/api`
+ * @param {new (ctx: import('../types/app-context.js').AppContext) => object} routerController - 控制器类
+ * @param {string} action - 控制器实例方法名
+ * @param {string} path - 相对路径（不含 baseurl）
+ * @param {string} method - HTTP 方法或 `all`
+ * @param {boolean} [ws] - 是否为 WebSocket 路由
  */
 export const createAction = (router, baseurl, routerController, action, path, method, ws) => {
   let routeMethod = (method || "get").toLowerCase();

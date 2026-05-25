@@ -1,5 +1,11 @@
 // @ts-nocheck
-import yapi from '../runtime.js';
+/**
+ * Mock 数据生成逻辑（/mock/*）
+ *
+ * 根据项目 basepath 与接口 path 匹配接口定义，用 mockjs 生成响应；
+ * 导出 matchApi 供单元测试使用。
+ */
+import yapi from "../runtime.js";
 
 import projectModel from '../models/project.js';
 
@@ -141,7 +147,7 @@ function mockValidator(interfaceData, ctx) {
   }
   return { valid: true };
 }
-/** Mock 中间件，兼容 Koa ctx */
+/** Mock 中间件，使用 AppContext（由 Hono 适配层注入） */
 async function mockServerMiddleware(ctx, next) {
   let path = ctx.path;
   let header = ctx.request.header;
