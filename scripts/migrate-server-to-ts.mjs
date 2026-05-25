@@ -11,7 +11,7 @@ const serverRoot = path.join(__dirname, "..", "server");
 
 const SKIP_DIRS = new Set(["node_modules", "dist", "log"]);
 const SKIP_FILES = new Set([".eslintrc.js", ".prettierrc.js"]);
-const SKIP_PATH_PARTS = ["common/tui-editor/dist"];
+const SKIP_PATH_PARTS = [];
 
 function shouldSkip(relPath) {
   if (SKIP_FILES.has(path.basename(relPath))) {
@@ -44,14 +44,6 @@ function transformSource(code, filePath) {
     /require\((['"])(\.[^'"]+)\.js\1\)/g,
     "require($1$2$1)"
   );
-  // require('../common/...') 在 server 根目录文件中修正为 ./common/
-  const rel = path.relative(serverRoot, filePath);
-  if (!rel.includes(path.sep)) {
-    next = next.replace(
-      /require\((['"])\.\.\/common\//g,
-      "require($1./common/"
-    );
-  }
   return next;
 }
 

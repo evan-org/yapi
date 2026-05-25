@@ -1,7 +1,7 @@
 // @ts-nocheck
 /**
  * 数据模型层（PostgreSQL JSONB store）
- * 所有业务 Model 继承 baseModel，通过 yapi.getInst(ModelClass) 获取单例实例
+ * 兼容层 Model（委托 repositories）；新代码请直接使用 repositories/*.repo.ts
  */
 import baseModel from "./base.js";
 import userModel from "./user.js";

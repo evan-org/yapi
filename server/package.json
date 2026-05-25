@@ -60,8 +60,7 @@
     "sha1": "1.1.1",
     "swagger-client": "~3.10.13",
     "underscore": "1.8.3",
-    "url": "0.11.0",
-    "yapi-plugin-qsso": "^1.1.0"
+    "url": "0.11.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",

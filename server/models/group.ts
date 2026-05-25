@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 分组模型：委托关系型 groupRepository（供 yapi.getInst 与插件使用）
+ * 分组模型：委托 groupRepository
  */
 import baseModel from "./base.js";
 import { groupRepository } from "../repositories/group.repo.js";

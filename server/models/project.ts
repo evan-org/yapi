@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 项目模型：委托关系型 projectRepository（供 yapi.getInst 与插件使用）
+ * 项目模型：委托 projectRepository
  */
 import baseModel from "./base.js";
 import { projectRepository } from "../repositories/project.repo.js";

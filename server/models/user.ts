@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 用户模型：委托关系型 userRepository（供 yapi.getInst 与 install 使用）
+ * 用户模型：委托 userRepository（install 等遗留入口仍经 getInst）
  */
 import baseModel from "./base.js";
 import { userRepository } from "../repositories/user.repo.js";
