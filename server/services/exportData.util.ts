@@ -1,13 +1,14 @@
-// @ts-nocheck
 /**
  * 接口导出插件纯函数（无 DB / wiki 依赖，便于单测）
  */
 
+type ExportRow = Record<string, any>;
+
 /**
  * 导出 JSON 时移除内部 id 字段
  */
-export function stripExportIds(data) {
-  function delArrId(arr, fn) {
+export function stripExportIds(data: ExportRow[]): ExportRow[] {
+  function delArrId(arr: ExportRow[] | undefined, fn?: (item: ExportRow) => void) {
     if (!Array.isArray(arr)) {
       return;
     }
@@ -31,7 +32,7 @@ export function stripExportIds(data) {
       delArrId(api.req_query);
       delArrId(api.req_headers);
       if (api.query_path && typeof api.query_path === "object") {
-        delArrId(api.query_path.params);
+        delArrId((api.query_path as ExportRow).params);
       }
     });
   });

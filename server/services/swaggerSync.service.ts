@@ -1,27 +1,27 @@
-// @ts-nocheck
 /**
  * Swagger 自动同步插件业务逻辑
  */
-import yapi from "../runtime.js";
+import commons from "../utils/commons.js";
 import { projectRepository } from "../repositories/index.js";
 import { swaggerSyncRepository } from "../repositories/swaggerSync.repo.js";
 import { getSyncModeName } from "./swaggerSync.util.js";
+import { validateSwaggerSyncProjectId } from "./swaggerSync.validation.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
 
 export { getSyncModeName } from "./swaggerSync.util.js";
 
 class SwaggerSyncService extends BaseService {
-  constructor() {
-    super();
-    this.syncModel = swaggerSyncRepository;
-    this.projectModel = projectRepository;
-  }
+  syncModel = swaggerSyncRepository;
+  projectModel = projectRepository;
 
   /** 保存或更新同步配置 */
-  async saveOrUpdate(body) {
-    if (!body.project_id) {
-      return fail(408, "缺少项目Id");
+  async saveOrUpdate(body: Record<string, unknown>) {
+    const validated = validateSwaggerSyncProjectId(
+      body.project_id as number | string | null | undefined
+    );
+    if (!validated.ok) {
+      return validated;
     }
     let result;
     if (body.id) {
@@ -33,17 +33,24 @@ class SwaggerSyncService extends BaseService {
   }
 
   /** 按项目查询同步配置 */
-  async getByProjectId(projectId) {
-    if (!projectId) {
-      return fail(408, "缺少项目Id");
+  async getByProjectId(projectId: number | string | null | undefined) {
+    const validated = validateSwaggerSyncProjectId(projectId);
+    if (!validated.ok) {
+      return validated;
     }
-    const result = await this.syncModel.getByProjectId(projectId);
+    const result = await this.syncModel.getByProjectId(validated.data);
     return ok(result);
   }
 
   /** 记录自动同步日志 */
-  saveSyncLog(errcode, syncMode, moremsg, uid, projectId) {
-    yapi.commons.saveLog({
+  saveSyncLog(
+    errcode: number,
+    syncMode: string,
+    moremsg: string,
+    uid: number | string,
+    projectId: number | string
+  ) {
+    commons.saveLog({
       content:
         "自动同步接口状态:" +
         (errcode == 0 ? "成功," : "失败,") +
