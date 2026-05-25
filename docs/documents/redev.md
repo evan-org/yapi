@@ -64,32 +64,24 @@ npm run dev
 # 127.0.0.1:3011
 ```
 
-目录结构
+目录结构（当前 monorepo）
 
 ```
-|-- config.json
-|-- init.lock
-|-- log
-`-- vendors
-    |-- CHANGELOG.md
-    |-- LICENSE
-    |-- README.md
-    |-- client
-    |-- common
-    |-- config_example.json
-    |-- doc
-    |-- exts
-    |-- nodemon.json
-    |-- npm-debug.log
-    |-- package.json
-    |-- plugin.json
-    |-- server
-    |-- static
-    |-- test
-    |-- webpack.alias.js
-    |-- yapi-base-flow.jpg
-    |-- ydocfile.js
-    `-- ykit.config.js
+|-- package.json          # workspaces：server + client
+|-- scripts/
+|-- deploy/
+|-- docs/
+|-- server/               # Hono API
+|   |-- app.ts
+|   |-- controllers/
+|   |-- services/
+|   |-- routes/
+|   |-- utils/
+|   |-- lib/
+|   |-- config.json
+|   `-- test/
+`-- client/               # Next.js 前端
+    `-- src/
 ```
 
 

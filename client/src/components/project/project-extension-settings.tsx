@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 项目插件设置：Swagger 自动同步、代码生成说明
+ * 项目扩展设置：Swagger 自动同步、代码生成说明
  */
 import { useCallback, useEffect, useState } from "react";
 import { extensionsApi } from "../../lib/api/extensions";
@@ -11,11 +11,11 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Alert, AlertDescription } from "../ui/alert";
 
-interface ProjectPluginSettingsProps {
+interface ProjectExtensionSettingsProps {
   projectId: number;
 }
 
-export function ProjectPluginSettings({ projectId }: ProjectPluginSettingsProps) {
+export function ProjectExtensionSettings({ projectId }: ProjectExtensionSettingsProps) {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [sync, setSync] = useState({

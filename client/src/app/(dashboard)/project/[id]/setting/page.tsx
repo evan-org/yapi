@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { projectApi } from "@/lib/api/project";
 import type { ProjectItem, ProjectTagItem } from "@/lib/api/types";
 import { ProjectDataPanel } from "@/components/project/project-data-panel";
-import { ProjectPluginSettings } from "@/components/project/project-plugin-settings";
+import { ProjectExtensionSettings } from "@/components/project/project-extension-settings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -143,7 +143,7 @@ export default function ProjectSettingPage() {
         <TabsList>
           <TabsTrigger value="basic">基础信息</TabsTrigger>
           <TabsTrigger value="data">环境与数据</TabsTrigger>
-          <TabsTrigger value="plugins">插件</TabsTrigger>
+          <TabsTrigger value="extensions">扩展</TabsTrigger>
         </TabsList>
         <TabsContent value="basic" className="mt-4">
           <Card>
@@ -212,14 +212,14 @@ export default function ProjectSettingPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="plugins" className="mt-4">
+        <TabsContent value="extensions" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>插件</CardTitle>
+              <CardTitle>扩展</CardTitle>
               <CardDescription>Swagger 自动同步、代码生成等</CardDescription>
             </CardHeader>
             <CardContent>
-              <ProjectPluginSettings projectId={projectId} />
+              <ProjectExtensionSettings projectId={projectId} />
             </CardContent>
           </Card>
         </TabsContent>
