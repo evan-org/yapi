@@ -90,3 +90,42 @@ export function projectFromRow(row: DocRecord): DocRecord {
 
 export const PROJECT_SELECT =
   "_id, uid, name, basepath, switch_notice, desc, group_id, project_type, icon, color, add_time, up_time, pre_script, after_script, project_mock_script, is_mock_open, strice, is_json5, prd_host, env, members, tag";
+
+/** interface 表行 → 业务对象 */
+export function interfaceFromRow(row: DocRecord): DocRecord {
+  const doc: DocRecord = {
+    _id: row._id,
+    uid: row.uid,
+    title: row.title,
+    path: row.path,
+    method: row.method,
+    project_id: row.project_id,
+    catid: row.catid,
+    edit_uid: row.edit_uid,
+    status: row.status,
+    add_time: row.add_time,
+    up_time: row.up_time,
+    type: row.type,
+    index: row.index,
+    api_opened: row.api_opened,
+    desc: row.desc,
+    req_body_type: row.req_body_type,
+    res_body_type: row.res_body_type,
+    req_body_is_json_schema: row.req_body_is_json_schema,
+    res_body_is_json_schema: row.res_body_is_json_schema,
+    custom_field_value: row.custom_field_value,
+    markdown: row.markdown,
+    res_body: row.res_body,
+    req_body_other: row.req_body_other,
+    query_path: readJsonCol(row.query_path, {}),
+    req_query: readJsonCol(row.req_query, []),
+    req_headers: readJsonCol(row.req_headers, []),
+    req_params: readJsonCol(row.req_params, []),
+    req_body_form: readJsonCol(row.req_body_form, []),
+    tag: readJsonCol(row.tag, []),
+  };
+  return doc;
+}
+
+export const INTERFACE_SELECT =
+  '_id, uid, title, path, method, project_id, catid, edit_uid, status, add_time, up_time, type, "index", api_opened, desc, req_body_type, res_body_type, req_body_is_json_schema, res_body_is_json_schema, custom_field_value, markdown, res_body, req_body_other, query_path, req_query, req_headers, req_params, req_body_form, tag';

@@ -1,6 +1,9 @@
 // @ts-nocheck
-import yapi from "../runtime.js";
+/**
+ * 接口模型：委托关系型 interfaceRepository
+ */
 import baseModel from "./base.js";
+import { interfaceRepository } from "../repositories/interface.repo.js";
 
 class interfaceModel extends baseModel {
   getName() {
@@ -8,171 +11,103 @@ class interfaceModel extends baseModel {
   }
 
   save(data) {
-    return this.store.insert(data);
+    return interfaceRepository.save(data);
   }
 
   get(id) {
-    return this.store.findById(id);
+    return interfaceRepository.get(id);
   }
 
   getBaseinfo(id) {
-    return this.store.findById(id, {
-      fields: this._fields("path method uid title project_id cat_id status"),
-    });
+    return interfaceRepository.getBaseinfo(id);
   }
 
   getVar(project_id, method) {
-    return this.store.findMany(
-      { project_id, type: "var", method },
-      { fields: ["_id", "path"] }
-    );
+    return interfaceRepository.getVar(project_id, method);
   }
 
   getByQueryPath(project_id, path, method) {
-    return this.store.findMany({
-      project_id,
-      "query_path.path": path,
-      method,
-    });
+    return interfaceRepository.getByQueryPath(project_id, path, method);
   }
 
   getByPath(project_id, path, method, select) {
-    const fields = this._fields(
-      select ||
-        "_id title uid path method project_id catid edit_uid status add_time up_time type query_path req_query req_headers req_params req_body_type req_body_form req_body_other res_body_type custom_field_value res_body res_body_is_json_schema req_body_is_json_schema"
-    );
-    return this.store.findMany({ project_id, path, method }, { fields });
+    return interfaceRepository.getByPath(project_id, path, method, select);
   }
 
   checkRepeat(id, path, method) {
-    return this.store.count({ project_id: id, path, method });
+    return interfaceRepository.checkRepeat(id, path, method);
   }
 
   countByProjectId(id) {
-    return this.store.count({ project_id: id });
+    return interfaceRepository.countByProjectId(id);
   }
 
   list(project_id, select) {
-    const fields = this._fields(
-      select || "_id title uid path method project_id catid edit_uid status add_time up_time"
-    );
-    return this.store.findMany({ project_id }, { fields, sort: { title: 1 } });
+    return interfaceRepository.list(project_id, select);
   }
 
   listWithPage(project_id, page, limit) {
-    page = parseInt(page);
-    limit = parseInt(limit);
-    return this.store.findMany(
-      { project_id },
-      {
-        sort: { title: 1 },
-        skip: (page - 1) * limit,
-        limit,
-        fields: this._fields(
-          "_id title uid path method project_id catid api_opened edit_uid status add_time up_time tag"
-        ),
-      }
-    );
+    return interfaceRepository.listWithPage(project_id, page, limit);
   }
 
   listByPid(project_id) {
-    return this.store.findMany({ project_id }, { sort: { title: 1 } });
+    return interfaceRepository.listByPid(project_id);
   }
 
   getInterfaceListCount() {
-    return this.store.count();
+    return interfaceRepository.getInterfaceListCount();
   }
 
   listByCatid(catid, select) {
-    const fields = this._fields(
-      select ||
-        "_id title uid path method project_id catid edit_uid status add_time up_time index tag"
-    );
-    return this.store.findMany({ catid }, { fields, sort: { index: 1 } });
+    return interfaceRepository.listByCatid(catid, select);
   }
 
   listByCatidWithPage(catid, page, limit) {
-    page = parseInt(page);
-    limit = parseInt(limit);
-    return this.store.findMany(
-      { catid },
-      {
-        sort: { index: 1 },
-        skip: (page - 1) * limit,
-        limit,
-        fields: this._fields(
-          "_id title uid path method project_id catid edit_uid api_opened status add_time up_time index tag"
-        ),
-      }
-    );
+    return interfaceRepository.listByCatidWithPage(catid, page, limit);
   }
 
   listByOptionWithPage(option, page, limit) {
-    page = parseInt(page);
-    limit = parseInt(limit);
-    return this.store.findMany(option, {
-      sort: { index: 1 },
-      skip: (page - 1) * limit,
-      limit,
-      fields: this._fields(
-        "_id title uid path method project_id catid edit_uid api_opened status add_time up_time index tag"
-      ),
-    });
+    return interfaceRepository.listByOptionWithPage(option, page, limit);
   }
 
   listByInterStatus(catid, status) {
-    const option =
-      status === "open" ? { catid, api_opened: true } : { catid };
-    return this.store.findMany(option, { sort: { title: 1 } });
+    return interfaceRepository.listByInterStatus(catid, status);
   }
 
   del(id) {
-    return this.store.delete({ _id: id });
+    return interfaceRepository.del(id);
   }
 
   delByCatid(id) {
-    return this.store.delete({ catid: id });
+    return interfaceRepository.delByCatid(id);
   }
 
   delByProjectId(id) {
-    return this.store.delete({ project_id: id });
+    return interfaceRepository.delByProjectId(id);
   }
 
   up(id, data) {
-    data.up_time = yapi.commons.time();
-    return this.store.updateById(id, data);
+    return interfaceRepository.up(id, data);
   }
 
   upEditUid(id, uid) {
-    return this.store.updateById(id, { edit_uid: uid });
+    return interfaceRepository.upEditUid(id, uid);
   }
 
   getcustomFieldValue(id, value) {
-    return this.store.findMany(
-      { project_id: id, custom_field_value: value },
-      {
-        fields: this._fields(
-          "title uid path method edit_uid status desc add_time up_time type query_path req_query req_headers req_params req_body_type req_body_form req_body_other res_body_type custom_field_value"
-        ),
-      }
-    );
+    return interfaceRepository.getcustomFieldValue(id, value);
   }
 
   listCount(option) {
-    return this.store.count(option);
+    return interfaceRepository.listCount(option);
   }
 
   upIndex(id, index) {
-    return this.store.updateById(id, { index });
+    return interfaceRepository.upIndex(id, index);
   }
 
   search(keyword) {
-    return this.store.findMany(
-      {
-        $or: [{ title: new RegExp(keyword, "ig") }, { path: new RegExp(keyword, "ig") }],
-      },
-      { limit: 10 }
-    );
+    return interfaceRepository.search(keyword);
   }
 }
 
