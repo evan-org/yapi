@@ -1,10 +1,14 @@
 // @ts-nocheck
-import HttpRouter from './utils/httpRouter.js';
-import controllerMap from './controllers/index.js';
-import yapi from './runtime.js';
-import { createAction } from './utils/commons.js';
+/**
+ * REST API 路由注册（/api/*）
+ */
+import RouteBinder from "../lib/bind-routes.js";
+import appContext from "../lib/context.js";
+import controllerMap from "../controllers/index.js";
+import yapi from "../runtime.js";
+import { createAction } from "../utils/commons.js";
 
-const router = new HttpRouter();
+const binder = new RouteBinder();
 
 /** 控制器与 URL 前缀映射（控制器定义见 controllers/） */
 const INTERFACE_CONFIG = {
@@ -35,10 +39,6 @@ const INTERFACE_CONFIG = {
   col: {
     prefix: "/col/",
     controller: controllerMap.col
-  },
-  test: {
-    prefix: "/test/",
-    controller: controllerMap.test
   },
   open: {
     prefix: "/open/",
@@ -490,68 +490,6 @@ let routerConfig = {
       method: "get"
     }
   ],
-  test: [
-    {
-      action: "testPost",
-      path: "post",
-      method: "post"
-    },
-    {
-      action: "testGet",
-      path: "get",
-      method: "get"
-    },
-    {
-      action: "testPut",
-      path: "put",
-      method: "put"
-    },
-    {
-      action: "testDelete",
-      path: "delete",
-      method: "del"
-    },
-    {
-      action: "testHead",
-      path: "head",
-      method: "head"
-    },
-    {
-      action: "testOptions",
-      path: "options",
-      method: "options"
-    },
-    {
-      action: "testPatch",
-      path: "patch",
-      method: "patch"
-    },
-    {
-      action: "testFilesUpload",
-      path: "files/upload",
-      method: "post"
-    },
-    {
-      action: "testSingleUpload",
-      path: "single/upload",
-      method: "post"
-    },
-    {
-      action: "testHttpCode",
-      path: "http/code",
-      method: "post"
-    },
-    {
-      action: "testRaw",
-      path: "raw",
-      method: "post"
-    },
-    {
-      action: "testResponse",
-      path: "response",
-      method: "get"
-    }
-  ],
   open: [
     {
       action: "projectInterfaceData",
@@ -583,7 +521,7 @@ function addPluginRouter(config) {
     throw new Error("Plugin Route path conflict, please try rename the path");
   }
   pluginsRouterPath.push(routerPath);
-  createAction(router, "/api", config.controller, config.action, routerPath, method, false);
+  createAction(binder, "/api", config.controller, config.action, routerPath, method, false);
 }
 yapi.emitHookSync("add_router", addPluginRouter);
 for (let ctrl in routerConfig) {
@@ -591,7 +529,14 @@ for (let ctrl in routerConfig) {
   actions.forEach((item) => {
     let routerController = INTERFACE_CONFIG[ctrl].controller;
     let routerPath = INTERFACE_CONFIG[ctrl].prefix + item.path;
-    createAction(router, "/api", routerController, item.action, routerPath, item.method);
+    createAction(binder, "/api", routerController, item.action, routerPath, item.method);
   });
 }
-export default router;
+
+/**
+ * 将 API 路由挂载到 Hono 应用
+ * @param {import('hono').Hono} app
+ */
+export function mountApiRoutes(app) {
+  binder.mountToHono(app, appContext);
+}

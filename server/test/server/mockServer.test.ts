@@ -1,6 +1,6 @@
 // @ts-nocheck
 import test from "ava";
-import { matchApi } from '../../middleware/mockServer.js';
+import { matchApi } from "../../middleware/mock-handler.js";
 
 
 test("matchApi", (t) => {

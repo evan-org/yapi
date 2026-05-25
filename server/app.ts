@@ -12,12 +12,11 @@ import { createNodeWebSocket } from "@hono/node-ws";
 import yapi from "./runtime.js";
 import commons from "./utils/commons.js";
 import dbModule from "./utils/db.js";
-import mockServerHono from "./middleware/mockServerHono.js";
+import mockMiddleware from "./middleware/mock.js";
 import storageCreator from "./utils/storage.js";
-import koaCtx from "./adapter/koa-context.js";
 import { assertRuntimeConfig } from "./utils/configCheck.js";
-import apiRouter from "./router.js";
-import registerWebSocket from "./websocket.js";
+import { mountApiRoutes } from "./routes/api.js";
+import { mountWebSocketRoutes } from "./routes/websocket.js";
 
 const pkg = JSON.parse(
   readFileSync(path.join(yapi.WEBROOT_SERVER, "package.json"), "utf8")
@@ -53,10 +52,10 @@ async function startServer() {
     })
   );
 
-  app.use("*", mockServerHono);
+  app.use("*", mockMiddleware);
 
-  apiRouter.registerToHono(app, koaCtx);
-  registerWebSocket(app, upgradeWebSocket);
+  mountApiRoutes(app);
+  mountWebSocketRoutes(app, upgradeWebSocket);
 
   /** 非 API 请求：开发模式提示使用 Next；生产由反向代理或进程管理器转发到 Next */
   app.all("*", async (c) => {

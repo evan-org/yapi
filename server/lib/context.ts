@@ -1,13 +1,12 @@
 // @ts-nocheck
 /**
- * 将 Hono Context 适配为 YApi 控制器沿用的 Koa 风格 ctx，减少业务层改动
+ * Hono Context ↔ 控制器层 AppContext 适配
+ * 控制器仍使用历史 ctx 形状（request/body/set），由本模块桥接到 Hono
  */
-import { getCookie, setCookie } from 'hono/cookie';
-
+import { getCookie, setCookie } from "hono/cookie";
 
 /**
- * 解析请求体（JSON / form / multipart），对齐 koa-body 行为
- * @param {import('hono').Context} c
+ * 解析请求体（JSON / form / multipart）
  */
 async function parseRequestBody(c) {
   const method = c.req.method.toUpperCase();
@@ -56,11 +55,9 @@ async function parseRequestBody(c) {
 }
 
 /**
- * 构建 Koa 兼容上下文
- * @param {import('hono').Context} c
- * @param {{ websocket?: object }} options
+ * 由 Hono Context 构建控制器可用的 AppContext
  */
-async function createKoaContext(c, options = {}) {
+async function createAppContext(c, options = {}) {
   const url = new URL(c.req.url);
   const query = {};
   url.searchParams.forEach((value, key) => {
@@ -145,11 +142,9 @@ async function createKoaContext(c, options = {}) {
 }
 
 /**
- * 将 ctx 上的响应写回 Hono
- * @param {import('hono').Context} c
- * @param {object} ctx
+ * 将 AppContext 上的响应写回 Hono Response
  */
-async function finalizeKoaContext(c, ctx) {
+async function finalizeResponse(c, ctx) {
   Object.entries(ctx._responseHeaders || {}).forEach(([key, value]) => {
     c.header(key, value);
   });
@@ -174,7 +169,7 @@ async function finalizeKoaContext(c, ctx) {
 }
 
 export default {
-  createKoaContext,
-  finalizeKoaContext,
+  createAppContext,
+  finalizeResponse,
   parseRequestBody,
 };

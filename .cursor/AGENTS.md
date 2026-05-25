@@ -12,11 +12,13 @@
 |------|------|
 | `controllers/` | HTTP 控制器，`base.ts` 基类 + 各业务 `*.ts`，统一由 `controllers/index.ts` 导出 |
 | `models/` | Mongoose 数据模型，继承 `models/base.ts`，统一由 `models/index.ts` 导出 |
-| `middleware/` | Mock、Hono 适配等中间件 |
-| `utils/` | 数据库连接、路由工具、通用 commons |
+| `middleware/` | Mock（`mock.ts` + `mock-handler.ts`）等 |
+| `lib/` | Hono 路由挂载（`bind-routes.ts`）、请求上下文（`context.ts`） |
+| `routes/` | `/api` 与 WebSocket 路由表（`api.ts`、`websocket.ts`） |
+| `utils/` | 数据库连接、通用 commons |
 | `common/` | 跨模块公共逻辑（导入、Mock、插件框架） |
 | `exts/` | 可选插件（各自含 controller/server） |
-| `router.ts` | 注册 `/api` 路由，引用 `controllers/index.ts` |
+| `app.ts` | Hono 入口，挂载 routes 与中间件 |
 
 ## 路径约定
 
