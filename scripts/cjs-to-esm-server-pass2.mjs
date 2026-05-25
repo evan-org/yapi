@@ -12,7 +12,7 @@ function walk(dir, acc = []) {
     if (name === "node_modules" || name === "dist") continue;
     const st = fs.statSync(full);
     if (st.isDirectory()) walk(full, acc);
-    else if (name.endsWith(".ts") && !name.endsWith(".d.ts") && !full.includes("tui-editor/dist")) acc.push(full);
+    else if (name.endsWith(".ts") && !name.endsWith(".d.ts")) acc.push(full);
   }
   return acc;
 }

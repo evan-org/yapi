@@ -1,14 +1,13 @@
 "use client";
 
 /**
- * Markdown 富文本编辑（@uiw/react-md-editor：分栏编辑 + 实时预览）
+ * Markdown 富文本编辑（@mdxeditor/editor：Lexical + 工具栏，替代历史 tui-editor）
  */
 import dynamic from "next/dynamic";
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
+import { useTheme } from "next-themes";
 import { cn } from "../../lib/utils";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+const MdxEditorInner = dynamic(() => import("./mdx-editor-inner"), {
   ssr: false,
   loading: () => (
     <div className="flex h-[280px] items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground">
@@ -31,17 +30,23 @@ export function MarkdownRichEditor({
   height = 280,
   className,
 }: MarkdownRichEditorProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   return (
-    <div className={cn("markdown-editor-root", className)} data-color-mode="light">
-      <MDEditor
+    <div
+      className={cn(
+        "markdown-editor-root overflow-hidden rounded-md border",
+        isDark && "dark-theme",
+        className
+      )}
+      style={{ minHeight: height }}
+    >
+      <MdxEditorInner
         value={value}
-        onChange={(v) => onChange(v ?? "")}
-        height={height}
-        visibleDragbar={false}
-        preview="live"
-        textareaProps={{
-          placeholder: "支持 Markdown 语法，可使用标题、列表、代码块等",
-        }}
+        onChange={onChange}
+        className="mdx-editor-themed"
+        contentEditableClassName="mdx-editor-content prose prose-sm max-w-none dark:prose-invert min-h-[200px] px-3 py-2"
       />
     </div>
   );
