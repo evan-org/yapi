@@ -1,5 +1,5 @@
 /**
- * PostgreSQL 建表与索引（核心表关系型列，其余 JSONB）
+ * PostgreSQL 建表与索引（业务表均为关系型列，复杂字段用列级 JSONB）
  */
 import { getPool } from "./pg-pool.js";
 import { JSONB_COLLECTIONS, RELATIONAL_COLLECTIONS, tableName } from "./table.js";

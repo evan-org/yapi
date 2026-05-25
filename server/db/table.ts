@@ -7,7 +7,7 @@ export function tableName(collection: string): string {
   return `${TABLE_PREFIX}${collection}`;
 }
 
-/** 关系型列存储（全新开发核心表） */
+/** 关系型列存储（全部业务表） */
 export const RELATIONAL_COLLECTIONS = [
   "user",
   "group",
@@ -28,7 +28,7 @@ export const RELATIONAL_COLLECTIONS = [
   "interface_auto_sync",
 ] as const;
 
-/** JSONB 文档存储（结构复杂或插件表） */
+/** 整表 JSONB 文档存储（已弃用，保留类型供扩展） */
 export const JSONB_COLLECTIONS = [] as const;
 
 /** 全部逻辑集合名 */
