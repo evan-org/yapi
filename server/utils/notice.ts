@@ -28,8 +28,6 @@ const noticeObj = {
   }
 }
 
-yapi.emitHook("addNotice", noticeObj)
-
 yapi.commons.sendNotice = async function (projectId, data) {
   const followInst = followRepository;
   const userInst = userRepository;

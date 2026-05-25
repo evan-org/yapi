@@ -2,7 +2,7 @@
  * 接口模块纯函数（路径解析、列表过滤、保存时 Schema 合并等，便于单测）
  */
 import url from "url";
-import mergeJsonSchema from "../common/mergeJsonSchema.js";
+import mergeJsonSchema from "../utils/mergeJsonSchema.js";
 import commons from "../utils/commons.js";
 
 /**

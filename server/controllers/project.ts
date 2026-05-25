@@ -342,7 +342,6 @@ class projectController extends baseController {
       }
     }
     result.role = await this.getProjectRole(projectId, "project");
-    (yapi as YapiRuntime).emitHook("project_get", result).then();
     ctx.body = commons.resReturn(result, 0, undefined);
   }
 

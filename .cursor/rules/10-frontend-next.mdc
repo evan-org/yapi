@@ -16,6 +16,6 @@ globs: client/**/*
 - 使用 shadcn/ui + Tailwind；不要引入 Ant Design。
 - 中文注释说明非显而易见业务逻辑。
 
-## 插件
+## 内置扩展功能
 
-- `src/lib/plugins/registry.ts` 的 `enabledPluginNames` 由 `scripts/generate-plugin-module.js` 生成。
+- `src/lib/features.ts`：功能入口映射（统计、Wiki、导入导出等）。

@@ -30,7 +30,7 @@ const pkg = JSON.parse(
 yapi.commons = commons;
 yapi.connect = dbModule.connect();
 
-import "./plugin.js";
+import "./bootstrap/features.js";
 import "./utils/notice.js";
 
 globalThis.storageCreator = storageCreator;

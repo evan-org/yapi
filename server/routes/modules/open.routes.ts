@@ -4,6 +4,7 @@
  * 基础路径: /api/open/
  */
 import openController from "../../controllers/open.js";
+import genServicesController from "../../controllers/genServices.js";
 import { registerModuleRoutes } from "../register-routes.js";
 
 /** @type {import("../types.js").RouteAction[]} */
@@ -22,5 +23,10 @@ export function registerOpenRoutes(binder) {
     controller: openController,
     prefix: "/open/",
     routes,
+  });
+  registerModuleRoutes(binder, {
+    controller: genServicesController,
+    prefix: "/open/",
+    routes: [{ action: "exportFullData", path: "plugin/export-full", method: "get" }],
   });
 }

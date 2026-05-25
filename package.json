@@ -8,8 +8,6 @@
     "client"
   ],
   "scripts": {
-    "predev": "node --import tsx scripts/generate-plugin-module.js",
-    "prebuild": "node --import tsx scripts/generate-plugin-module.js",
     "dev": "npm run dev --workspace=yapi-server & npm run dev --workspace=client",
     "dev-server": "npm run dev --workspace=yapi-server",
     "dev-client": "npm run dev --workspace=client -- -p 4000",

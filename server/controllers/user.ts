@@ -84,11 +84,8 @@ class userController extends baseController {
 
   async loginByToken(ctx: AppContext) {
     try {
-      const hook = (yapi as YapiRuntime).emitHook;
-      if (!hook) {
-        throw new Error("third_login hook 未注册");
-      }
-      const ret = (await hook("third_login", ctx)) as unknown as {
+      const { thirdLoginByToken } = await import("../services/thirdLogin.service.js");
+      const ret = (await thirdLoginByToken(ctx)) as unknown as {
         email: string;
         username: string;
       };

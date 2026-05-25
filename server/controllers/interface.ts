@@ -196,7 +196,6 @@ class interfaceController extends baseController {
           return (ctx.body = commons.resReturn(null, 406, "没有权限"));
         }
       }
-      (yapi as YapiRuntime).emitHook("interface_get", loaded.data).then();
       ctx.body = commons.resReturn(loaded.data, 0, undefined);
     } catch (e) {
       replyException(ctx, e);

@@ -14,10 +14,10 @@ import {
 import {
   handleParams as postmanHandleParams,
   crossRequest,
-} from "../common/postmanLib.js";
-import { handleParamsValue, ArrayToObject } from "../common/utils.js";
-import createContex from "../common/createContext.js";
-import HanldeImportData from "../common/HandleImportData.js";
+} from "../services/import/postmanLib.js";
+import { handleParamsValue, ArrayToObject } from "../utils/schema-utils.js";
+import createContex from "../services/import/createContext.js";
+import HanldeImportData from "../services/import/handleImportData.js";
 import {
   importDataModule,
   ensureImportDataRegistry,
