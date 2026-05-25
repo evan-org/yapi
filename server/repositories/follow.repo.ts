@@ -1,7 +1,7 @@
 /**
  * 关注（follow）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo";
+import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
 
 import FollowModel from "../models/follow.js";
 

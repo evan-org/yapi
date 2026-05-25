@@ -1,7 +1,7 @@
 /**
  * 项目 Token 数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo";
+import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
 
 import TokenModel from "../models/token.js";
 

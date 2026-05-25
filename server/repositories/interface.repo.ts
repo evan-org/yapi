@@ -1,7 +1,7 @@
 /**
  * 接口（interface）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo";
+import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
 
 import InterfaceModel from "../models/interface.js";
 

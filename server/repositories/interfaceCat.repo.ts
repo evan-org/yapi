@@ -1,7 +1,7 @@
 /**
  * 接口分类（interface_cat）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo";
+import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
 
 import InterfaceCatModel from "../models/interfaceCat.js";
 

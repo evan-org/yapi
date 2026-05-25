@@ -1,7 +1,7 @@
 /**
  * 分组（group）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo";
+import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
 
 import GroupModel from "../models/group.js";
 

@@ -1,7 +1,7 @@
 /**
  * 日志（log）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo";
+import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
 
 import LogModel from "../models/log.js";
 

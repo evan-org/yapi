@@ -1,7 +1,7 @@
 /**
  * 键值存储（storage）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo";
+import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
 
 import StorageModel from "../models/storage.js";
 

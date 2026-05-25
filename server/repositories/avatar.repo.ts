@@ -1,7 +1,7 @@
 /**
  * 用户头像（avatar）数据仓储
  */
-import { createModelRepository, type LegacyModelInstance } from "./base.repo";
+import { createModelRepository, type LegacyModelInstance } from "./base.repo.js";
 
 import AvatarModel from "../models/avatar.js";
 
