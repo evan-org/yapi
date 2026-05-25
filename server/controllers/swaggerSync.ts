@@ -1,6 +1,6 @@
 // @ts-nocheck
 import baseController from "./base.js";
-import yapi from "runtime.js";
+import yapi from "../runtime.js";
 import { projectRepository } from "../repositories/index.js";
 import { swaggerSyncRepository } from "../repositories/swaggerSync.repo.js";
 import swaggerSyncService from "../services/swaggerSync.service.js";

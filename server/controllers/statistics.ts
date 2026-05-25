@@ -2,9 +2,9 @@
 /**
  * Created by gxl.gao on 2017/10/24.
  */
-import baseController from 'controllers/base';
+import baseController from "./base.js";
 
-import yapi from 'runtime.js';
+import yapi from "../runtime.js";
 import {
   statisMockRepository,
   groupRepository,

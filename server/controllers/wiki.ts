@@ -1,5 +1,5 @@
 // @ts-nocheck
-import baseController from 'controllers/base';
+import baseController from "./base.js";
 
 import { wikiRepository, projectRepository } from "../repositories/index.js";
 
@@ -8,7 +8,7 @@ import { userRepository } from "../repositories/index.js";
 import jsondiffpatch from 'jsondiffpatch';
 
 const formattersHtml = jsondiffpatch.formatters.html;
-import yapi from 'runtime.js';
+import yapi from "../runtime.js";
 
 // import util from './util.js';
 

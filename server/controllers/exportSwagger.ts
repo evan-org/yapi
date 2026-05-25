@@ -1,6 +1,6 @@
 // @ts-nocheck
-import baseController from 'controllers/base';
-import yapi from 'runtime.js';
+import baseController from "./base.js";
+import yapi from "../runtime.js";
 import {
   interfaceRepository,
   interfaceCatRepository,

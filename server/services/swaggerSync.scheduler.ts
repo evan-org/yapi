@@ -2,7 +2,7 @@
 import schedule from "node-schedule";
 import md5 from "md5";
 import axios from "axios";
-import yapi from "runtime.js";
+import yapi from "../runtime.js";
 import { projectRepository } from "../repositories/index.js";
 import { swaggerSyncRepository } from "../repositories/swaggerSync.repo.js";
 import openService from "./open.service.js";
