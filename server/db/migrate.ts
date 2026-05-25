@@ -33,6 +33,32 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       custom_field1 JSONB NOT NULL DEFAULT '{}'::jsonb
     )
   `,
+  project: `
+    CREATE TABLE IF NOT EXISTS ${tableName("project")} (
+      _id SERIAL PRIMARY KEY,
+      uid BIGINT NOT NULL DEFAULT 0,
+      name TEXT NOT NULL DEFAULT '',
+      basepath TEXT NOT NULL DEFAULT '',
+      switch_notice BOOLEAN NOT NULL DEFAULT FALSE,
+      desc TEXT NOT NULL DEFAULT '',
+      group_id BIGINT NOT NULL DEFAULT 0,
+      project_type TEXT NOT NULL DEFAULT 'private',
+      icon TEXT NOT NULL DEFAULT '',
+      color TEXT NOT NULL DEFAULT '',
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      pre_script TEXT NOT NULL DEFAULT '',
+      after_script TEXT NOT NULL DEFAULT '',
+      project_mock_script TEXT NOT NULL DEFAULT '',
+      is_mock_open BOOLEAN NOT NULL DEFAULT FALSE,
+      strice BOOLEAN NOT NULL DEFAULT FALSE,
+      is_json5 BOOLEAN NOT NULL DEFAULT FALSE,
+      prd_host TEXT NOT NULL DEFAULT '',
+      env JSONB NOT NULL DEFAULT '[]'::jsonb,
+      members JSONB NOT NULL DEFAULT '[]'::jsonb,
+      tag JSONB NOT NULL DEFAULT '[]'::jsonb
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -60,9 +86,10 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_user_email ON ${tableName("user")} (email)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_group_uid ON ${tableName("group")} (uid)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_group_name ON ${tableName("group")} (group_name)`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_project_uid ON ${tableName("project")} ((doc->>'uid'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_project_name ON ${tableName("project")} ((doc->>'name'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_project_group ON ${tableName("project")} ((doc->>'group_id'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_project_uid ON ${tableName("project")} (uid)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_project_name ON ${tableName("project")} (name)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_project_group ON ${tableName("project")} (group_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_project_prd_host ON ${tableName("project")} (prd_host)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_log_uid ON ${tableName("log")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_log_typeid ON ${tableName("log")} ((doc->>'typeid'), (doc->>'type'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_uid ON ${tableName("interface_col")} ((doc->>'uid'))`,
