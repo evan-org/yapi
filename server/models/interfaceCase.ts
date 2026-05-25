@@ -1,6 +1,9 @@
 // @ts-nocheck
-import yapi from "../runtime.js";
+/**
+ * 测试用例模型：委托关系型 interfaceCaseRepository
+ */
 import baseModel from "./base.js";
+import { interfaceCaseRepository } from "../repositories/interfaceCase.repo.js";
 
 class interfaceCase extends baseModel {
   getName() {
@@ -8,47 +11,43 @@ class interfaceCase extends baseModel {
   }
 
   save(data) {
-    return this.store.insert(data);
+    return interfaceCaseRepository.save(data);
   }
 
   getInterfaceCaseListCount() {
-    return this.store.count();
+    return interfaceCaseRepository.getInterfaceCaseListCount();
   }
 
   get(id) {
-    return this.store.findById(id);
+    return interfaceCaseRepository.get(id);
   }
 
   list(col_id, select) {
-    select = select || "casename uid col_id _id index interface_id project_id";
-    const opts =
-      select === "all" ? {} : { fields: this._fields(select) };
-    return this.store.findMany({ col_id }, opts);
+    return interfaceCaseRepository.list(col_id, select);
   }
 
   del(id) {
-    return this.store.delete({ _id: id });
+    return interfaceCaseRepository.del(id);
   }
 
   delByProjectId(id) {
-    return this.store.delete({ project_id: id });
+    return interfaceCaseRepository.delByProjectId(id);
   }
 
   delByInterfaceId(id) {
-    return this.store.delete({ interface_id: id });
+    return interfaceCaseRepository.delByInterfaceId(id);
   }
 
   delByCol(id) {
-    return this.store.delete({ col_id: id });
+    return interfaceCaseRepository.delByCol(id);
   }
 
   up(id, data) {
-    data.up_time = yapi.commons.time();
-    return this.store.updateById(id, data);
+    return interfaceCaseRepository.up(id, data);
   }
 
   upCaseIndex(id, index) {
-    return this.store.updateById(id, { index });
+    return interfaceCaseRepository.upCaseIndex(id, index);
   }
 }
 

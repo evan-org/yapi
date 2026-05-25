@@ -120,6 +120,27 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       checkScript JSONB NOT NULL DEFAULT '{}'::jsonb
     )
   `,
+  interface_case: `
+    CREATE TABLE IF NOT EXISTS ${tableName("interface_case")} (
+      _id SERIAL PRIMARY KEY,
+      uid BIGINT NOT NULL DEFAULT 0,
+      casename TEXT NOT NULL DEFAULT '',
+      col_id BIGINT NOT NULL DEFAULT 0,
+      interface_id BIGINT NOT NULL DEFAULT 0,
+      project_id BIGINT NOT NULL DEFAULT 0,
+      "index" INTEGER NOT NULL DEFAULT 0,
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0,
+      case_env TEXT NOT NULL DEFAULT '',
+      req_body_type TEXT NOT NULL DEFAULT '',
+      req_body_other TEXT NOT NULL DEFAULT '',
+      test_script TEXT NOT NULL DEFAULT '',
+      req_headers JSONB NOT NULL DEFAULT '[]'::jsonb,
+      req_query JSONB NOT NULL DEFAULT '[]'::jsonb,
+      req_params JSONB NOT NULL DEFAULT '[]'::jsonb,
+      req_body_form JSONB NOT NULL DEFAULT '[]'::jsonb
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -159,9 +180,10 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_uid ON ${tableName("interface_cat")} (uid)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_pid ON ${tableName("interface_cat")} (project_id)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_name ON ${tableName("interface_cat")} (name)`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_uid ON ${tableName("interface_case")} ((doc->>'uid'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_col ON ${tableName("interface_case")} ((doc->>'col_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_pid ON ${tableName("interface_case")} ((doc->>'project_id'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_uid ON ${tableName("interface_case")} (uid)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_col ON ${tableName("interface_case")} (col_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_pid ON ${tableName("interface_case")} (project_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_iid ON ${tableName("interface_case")} (interface_id)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_uid ON ${tableName("interface")} (uid)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_path ON ${tableName("interface")} (path, method)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_pid ON ${tableName("interface")} (project_id)`,

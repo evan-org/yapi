@@ -90,7 +90,22 @@ CREATE TABLE IF NOT EXISTS yapi_interface_cat (
 );
 CREATE TABLE IF NOT EXISTS yapi_interface_case (
   _id SERIAL PRIMARY KEY,
-  doc JSONB NOT NULL DEFAULT '{}'::jsonb
+  uid BIGINT NOT NULL DEFAULT 0,
+  casename TEXT NOT NULL DEFAULT '',
+  col_id BIGINT NOT NULL DEFAULT 0,
+  interface_id BIGINT NOT NULL DEFAULT 0,
+  project_id BIGINT NOT NULL DEFAULT 0,
+  "index" INTEGER NOT NULL DEFAULT 0,
+  add_time BIGINT NOT NULL DEFAULT 0,
+  up_time BIGINT NOT NULL DEFAULT 0,
+  case_env TEXT NOT NULL DEFAULT '',
+  req_body_type TEXT NOT NULL DEFAULT '',
+  req_body_other TEXT NOT NULL DEFAULT '',
+  test_script TEXT NOT NULL DEFAULT '',
+  req_headers JSONB NOT NULL DEFAULT '[]'::jsonb,
+  req_query JSONB NOT NULL DEFAULT '[]'::jsonb,
+  req_params JSONB NOT NULL DEFAULT '[]'::jsonb,
+  req_body_form JSONB NOT NULL DEFAULT '[]'::jsonb
 );
 CREATE TABLE IF NOT EXISTS yapi_interface_col (
   _id SERIAL PRIMARY KEY,
@@ -163,9 +178,10 @@ CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_name ON yapi_interface_col (na
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_uid ON yapi_interface_cat (uid);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_pid ON yapi_interface_cat (project_id);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_name ON yapi_interface_cat (name);
-CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_uid ON yapi_interface_case ((doc->>'uid'));
-CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_col ON yapi_interface_case ((doc->>'col_id'));
-CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_pid ON yapi_interface_case ((doc->>'project_id'));
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_uid ON yapi_interface_case (uid);
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_col ON yapi_interface_case (col_id);
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_pid ON yapi_interface_case (project_id);
+CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_iid ON yapi_interface_case (interface_id);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_uid ON yapi_interface (uid);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_path ON yapi_interface (path, method);
 CREATE INDEX IF NOT EXISTS idx_yapi_interface_pid ON yapi_interface (project_id);

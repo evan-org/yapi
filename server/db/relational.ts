@@ -167,3 +167,29 @@ export function interfaceColFromRow(row: DocRecord): DocRecord {
 
 export const INTERFACE_COL_SELECT =
   '_id, name, project_id, uid, desc, "index", add_time, up_time, checkHttpCodeIs200, checkResponseSchema, checkResponseField, checkScript';
+
+/** interface_case 表行 → 业务对象 */
+export function interfaceCaseFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    uid: row.uid,
+    casename: row.casename,
+    col_id: row.col_id,
+    interface_id: row.interface_id,
+    project_id: row.project_id,
+    index: row.index,
+    add_time: row.add_time,
+    up_time: row.up_time,
+    case_env: row.case_env,
+    req_body_type: row.req_body_type,
+    req_body_other: row.req_body_other,
+    test_script: row.test_script,
+    req_headers: readJsonCol(row.req_headers, []),
+    req_query: readJsonCol(row.req_query, []),
+    req_params: readJsonCol(row.req_params, []),
+    req_body_form: readJsonCol(row.req_body_form, []),
+  };
+}
+
+export const INTERFACE_CASE_SELECT =
+  '_id, uid, casename, col_id, interface_id, project_id, "index", add_time, up_time, case_env, req_body_type, req_body_other, test_script, req_headers, req_query, req_params, req_body_form';
