@@ -92,6 +92,18 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       tag JSONB NOT NULL DEFAULT '[]'::jsonb
     )
   `,
+  interface_cat: `
+    CREATE TABLE IF NOT EXISTS ${tableName("interface_cat")} (
+      _id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL DEFAULT '',
+      project_id BIGINT NOT NULL DEFAULT 0,
+      uid BIGINT NOT NULL DEFAULT 0,
+      desc TEXT NOT NULL DEFAULT '',
+      "index" INTEGER NOT NULL DEFAULT 0,
+      add_time BIGINT NOT NULL DEFAULT 0,
+      up_time BIGINT NOT NULL DEFAULT 0
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -127,8 +139,9 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_log_typeid ON ${tableName("log")} ((doc->>'typeid'), (doc->>'type'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_uid ON ${tableName("interface_col")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_col_pid ON ${tableName("interface_col")} ((doc->>'project_id'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_uid ON ${tableName("interface_cat")} ((doc->>'uid'))`,
-    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_pid ON ${tableName("interface_cat")} ((doc->>'project_id'))`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_uid ON ${tableName("interface_cat")} (uid)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_pid ON ${tableName("interface_cat")} (project_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_yapi_interface_cat_name ON ${tableName("interface_cat")} (name)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_uid ON ${tableName("interface_case")} ((doc->>'uid'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_col ON ${tableName("interface_case")} ((doc->>'col_id'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_interface_case_pid ON ${tableName("interface_case")} ((doc->>'project_id'))`,

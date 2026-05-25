@@ -1,12 +1,13 @@
 // @ts-nocheck
 /**
- * Repository 层 PostgreSQL 冒烟（CI 有 PG 时验证 group/project/interface）
+ * Repository 层 PostgreSQL 冒烟（CI 有 PG 时验证核心关系型仓储）
  */
 import test from "ava";
 import {
   groupRepository,
   projectRepository,
   interfaceRepository,
+  interfaceCatRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -154,6 +155,67 @@ test("interfaceRepository 可写入、查询并删除", async (t) => {
   } finally {
     if (interfaceId) {
       await interfaceRepository.del(interfaceId);
+    }
+    if (projectId) {
+      await projectRepository.del(projectId);
+    }
+    if (groupId) {
+      await groupRepository.del(groupId);
+    }
+    await disconnectPg();
+  }
+});
+
+test("interfaceCatRepository 可写入、查询并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  const catName = `ci-cat-${Date.now()}`;
+  let catId;
+  let projectId;
+  let groupId;
+
+  try {
+    const group = await groupRepository.save({
+      group_name: `ci-grp-cat-${Date.now()}`,
+      group_desc: "ci",
+      uid: 999996,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      members: [],
+    });
+    groupId = group._id;
+
+    const project = await projectRepository.save({
+      name: `ci-proj-cat-${Date.now()}`,
+      group_id: groupId,
+      uid: 999996,
+      add_time: commons.time(),
+      up_time: commons.time(),
+      env: [],
+      members: [],
+    });
+    projectId = project._id;
+
+    const saved = await interfaceCatRepository.save({
+      name: catName,
+      project_id: projectId,
+      uid: 999996,
+      desc: "ci cat",
+      add_time: commons.time(),
+      up_time: commons.time(),
+    });
+    catId = saved._id;
+    t.truthy(catId);
+
+    const list = await interfaceCatRepository.list(projectId);
+    t.true(list.some((c) => c._id === catId && c.name === catName));
+  } finally {
+    if (catId) {
+      await interfaceCatRepository.del(catId);
     }
     if (projectId) {
       await projectRepository.del(projectId);
