@@ -1,59 +1,51 @@
-// @ts-nocheck
 /**
  * 关注项目业务逻辑
  */
-import yapi from "../runtime.js";
+import commons from "../utils/commons.js";
 import { followRepository, projectRepository } from "../repositories/index.js";
 import BaseService from "./base.service.js";
+import { ok, fail } from "./service-result.js";
 
 class FollowService extends BaseService {
-  constructor() {
-    super();
-    this.followModel = followRepository;
-    this.projectModel = projectRepository;
-  }
+  followModel = followRepository;
+  projectModel = projectRepository;
 
   /**
    * 获取用户关注列表
-   * @param {number|string} uid
    */
-  async listByUser(uid) {
+  async listByUser(uid: number | string | undefined | null) {
     if (!uid) {
-      return { ok: false, code: 400, message: "用户id不能为空" };
+      return fail(400, "用户id不能为空");
     }
     const list = await this.followModel.list(uid);
-    return { ok: true, data: { list } };
+    return ok({ list });
   }
 
   /**
    * 取消关注
-   * @param {number|string} uid
-   * @param {number} projectid
    */
-  async unfollow(uid, projectid) {
+  async unfollow(uid: number | string, projectid: number | undefined | null) {
     if (!projectid) {
-      return { ok: false, code: 400, message: "项目id不能为空" };
+      return fail(400, "项目id不能为空");
     }
     const exists = await this.followModel.checkProjectRepeat(uid, projectid);
     if (exists === 0) {
-      return { ok: false, code: 401, message: "项目未关注" };
+      return fail(401, "项目未关注");
     }
     const result = await this.followModel.del(projectid, uid);
-    return { ok: true, data: result };
+    return ok(result);
   }
 
   /**
    * 添加关注
-   * @param {number|string} uid
-   * @param {number} projectid
    */
-  async follow(uid, projectid) {
+  async follow(uid: number | string, projectid: number | undefined | null) {
     if (!projectid) {
-      return { ok: false, code: 400, message: "项目id不能为空" };
+      return fail(400, "项目id不能为空");
     }
     const exists = await this.followModel.checkProjectRepeat(uid, projectid);
     if (exists) {
-      return { ok: false, code: 401, message: "项目已关注" };
+      return fail(401, "项目已关注");
     }
     const project = await this.projectModel.get(projectid);
     const data = {
@@ -64,7 +56,7 @@ class FollowService extends BaseService {
       color: project.color,
     };
     let result = await this.followModel.save(data);
-    result = yapi.commons.fieldSelect(result, [
+    result = commons.fieldSelect(result, [
       "_id",
       "uid",
       "projectid",
@@ -72,7 +64,7 @@ class FollowService extends BaseService {
       "icon",
       "color",
     ]);
-    return { ok: true, data: result };
+    return ok(result);
   }
 }
 

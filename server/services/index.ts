@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 业务服务层入口
  *
@@ -9,6 +8,7 @@
  */
 export { default as BaseService } from "./base.service.js";
 export { ok, fail } from "./service-result.js";
+export type { ServiceResult, ServiceOk, ServiceFail } from "./service-result.js";
 export { default as followService } from "./follow.service.js";
 export { default as logService } from "./log.service.js";
 export { default as userService } from "./user.service.js";
@@ -18,3 +18,4 @@ export { default as openService } from "./open.service.js";
 export { default as interfaceService } from "./interface.service.js";
 export { default as interfaceColService } from "./interfaceCol.service.js";
 export { default as exportDataService, stripExportIds } from "./exportData.service.js";
+export { default as swaggerSyncService } from "./swaggerSync.service.js";
