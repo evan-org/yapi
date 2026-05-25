@@ -1,8 +1,6 @@
 // @ts-nocheck
 import _ from 'underscore';
 
-import url from 'url';
-
 import baseController from './base.js';
 
 import yapi from '../runtime.js';
@@ -17,8 +15,6 @@ import {
   userRepository,
   projectRepository,
 } from '../repositories/index.js';
-
-import mergeJsonSchema from '../common/mergeJsonSchema.js';
 
 import { interfaceService } from '../services/index.js';
 
@@ -207,74 +203,31 @@ class interfaceController extends baseController {
    * @returns {Object}
    */
   async save(ctx) {
-    let params = ctx.params;
+    const params = ctx.params;
 
     if (!this.$tokenAuth) {
-      let auth = await this.checkAuth(params.project_id, "project", "edit");
+      const auth = await this.checkAuth(params.project_id, "project", "edit");
       if (!auth) {
         return (ctx.body = yapi.commons.resReturn(null, 40033, "没有权限"));
       }
     }
-    params.method = params.method || "GET";
-    params.method = params.method.toUpperCase();
 
-    let http_path = url.parse(params.path, true);
-
-    if (!yapi.commons.verifyPath(http_path.pathname)) {
-      return (ctx.body = yapi.commons.resReturn(
-        null,
-        400,
-        "path第一位必需为 /, 只允许由 字母数字-/_:.! 组成"
-      ));
-    }
-
-    let result = await this.Model.getByPath(params.project_id, params.path, params.method, "_id res_body");
-
-    if (result.length > 0) {
-      result.forEach(async(item) => {
-        params.id = item._id;
-        // console.log(this.schemaMap['up'])
-        let validParams = Object.assign({}, params)
-        let validResult = yapi.commons.validateParams(this.schemaMap["up"], validParams);
-        if (validResult.valid) {
-          if (params.res_body_is_json_schema && params.dataSync === "good") {
-            try {
-              let new_res_body = yapi.commons.json_parse(params.res_body)
-              let old_res_body = yapi.commons.json_parse(item.res_body)
-              validParams.res_body = JSON.stringify(mergeJsonSchema(old_res_body, new_res_body), null, 2);
-            } catch (err) {}
-          }
-          const iface = await this.Model.get(item._id);
-          const upResult = await interfaceService.updateInterface(
-            validParams,
-            iface,
-            { uid: this.getUid(), username: this.getUsername() },
-            { requestOrigin: ctx.request.origin }
-          );
-          if (!upResult.ok) {
-            return (ctx.body = yapi.commons.resReturn(null, upResult.code, upResult.message));
-          }
-        } else {
-          return (ctx.body = yapi.commons.resReturn(null, 400, validResult.message));
-        }
-      });
-    } else {
-      let validResult = yapi.commons.validateParams(this.schemaMap["add"], params);
-      if (validResult.valid) {
-        const addResult = await interfaceService.addInterface(params, {
-          uid: this.getUid(),
-          username: this.getUsername(),
-          role: this.getRole(),
-        });
-        if (!addResult.ok) {
-          return (ctx.body = yapi.commons.resReturn(null, addResult.code, addResult.message));
-        }
-      } else {
-        return (ctx.body = yapi.commons.resReturn(null, 400, validResult.message));
+    const result = await interfaceService.saveInterface(
+      params,
+      {
+        uid: this.getUid(),
+        username: this.getUsername(),
+        role: this.getRole(),
+      },
+      {
+        schemas: this.schemaMap,
+        requestOrigin: ctx.request.origin,
       }
+    );
+    if (!result.ok) {
+      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
     }
-    ctx.body = yapi.commons.resReturn(result);
-    // return ctx.body = yapi.commons.resReturn(null, 400, 'path第一位必需为 /, 只允许由 字母数字-/_:.! 组成');
+    ctx.body = yapi.commons.resReturn(result.data);
   }
 
   /**

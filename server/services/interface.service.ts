@@ -86,6 +86,7 @@ export function applyStatusTagFilter(option, status, tag) {
   }
   return option;
 }
+import mergeJsonSchema from "../common/mergeJsonSchema.js";
 import {
   interfaceRepository,
   interfaceCatRepository,
@@ -96,6 +97,22 @@ import {
 } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+
+/**
+ * dataSync=good 时合并新旧 JSON Schema 响应体
+ */
+export function mergeSaveResBody(params, existingItem) {
+  if (!params.res_body_is_json_schema || params.dataSync !== "good") {
+    return params.res_body;
+  }
+  try {
+    const newResBody = yapi.commons.json_parse(params.res_body);
+    const oldResBody = yapi.commons.json_parse(existingItem.res_body);
+    return JSON.stringify(mergeJsonSchema(oldResBody, newResBody), null, 2);
+  } catch (err) {
+    return params.res_body;
+  }
+}
 
 class InterfaceService extends BaseService {
   constructor() {
@@ -478,6 +495,59 @@ class InterfaceService extends BaseService {
         up_time: yapi.commons.time(),
       });
     }
+  }
+
+  /**
+   * 按 path+method 保存接口：已存在则更新（可多条），不存在则新增
+   * 不含权限校验；controller 负责鉴权
+   */
+  async saveInterface(params, { uid, username, role }, { schemas, requestOrigin } = {}) {
+    const payload = Object.assign({}, params);
+    payload.method = (payload.method || "GET").toUpperCase();
+
+    const { http_path } = buildQueryPathFromUrl(payload.path);
+    if (!yapi.commons.verifyPath(http_path.pathname)) {
+      return fail(400, "path第一位必需为 /, 只允许由 字母数字-/_:.! 组成");
+    }
+
+    const existing = await this.interfaceModel.getByPath(
+      payload.project_id,
+      payload.path,
+      payload.method,
+      "_id res_body"
+    );
+
+    if (existing.length > 0) {
+      let lastData = null;
+      for (const item of existing) {
+        const validParams = Object.assign({}, payload, { id: item._id });
+        const validResult = yapi.commons.validateParams(schemas.up, validParams);
+        if (!validResult.valid) {
+          return fail(400, validResult.message);
+        }
+        if (payload.res_body !== undefined) {
+          validParams.res_body = mergeSaveResBody(payload, item);
+        }
+        const iface = await this.interfaceModel.get(item._id);
+        const upResult = await this.updateInterface(
+          validParams,
+          iface,
+          { uid, username },
+          { requestOrigin }
+        );
+        if (!upResult.ok) {
+          return upResult;
+        }
+        lastData = upResult.data;
+      }
+      return ok(lastData);
+    }
+
+    const validResult = yapi.commons.validateParams(schemas.add, payload);
+    if (!validResult.valid) {
+      return fail(400, validResult.message);
+    }
+    return this.addInterface(payload, { uid, username, role });
   }
 
   /**
