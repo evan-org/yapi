@@ -247,3 +247,14 @@ export function avatarFromRow(row: DocRecord): DocRecord {
 }
 
 export const AVATAR_SELECT = "_id, uid, type, basecode";
+
+/** storage 表行 → 业务对象（data 仍为 JSON 字符串） */
+export function storageFromRow(row: DocRecord): DocRecord {
+  return {
+    _id: row._id,
+    key: row.key,
+    data: row.data,
+  };
+}
+
+export const STORAGE_SELECT = "_id, key, data";

@@ -178,6 +178,13 @@ const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = 
       basecode TEXT NOT NULL DEFAULT ''
     )
   `,
+  storage: `
+    CREATE TABLE IF NOT EXISTS ${tableName("storage")} (
+      _id SERIAL PRIMARY KEY,
+      key TEXT NOT NULL DEFAULT '',
+      data TEXT NOT NULL DEFAULT ''
+    )
+  `,
 };
 
 /** 创建所有业务表 */
@@ -233,7 +240,7 @@ export async function ensureIndexes(): Promise<void> {
     `CREATE INDEX IF NOT EXISTS idx_yapi_follow_uid ON ${tableName("follow")} (uid)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_follow_projectid ON ${tableName("follow")} (projectid)`,
     `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_follow_uid_project ON ${tableName("follow")} (uid, projectid)`,
-    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_storage_key ON ${tableName("storage")} ((doc->>'key'))`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_storage_key ON ${tableName("storage")} (key)`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_wiki_pid ON ${tableName("wiki")} ((doc->>'project_id'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_pid ON ${tableName("adv_mock")} ((doc->>'project_id'))`,
     `CREATE INDEX IF NOT EXISTS idx_yapi_adv_mock_iid ON ${tableName("adv_mock")} ((doc->>'interface_id'))`,

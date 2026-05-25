@@ -1,39 +1,25 @@
 // @ts-nocheck
+/**
+ * 键值存储模型：委托关系型 storageRepository
+ */
 import baseModel from "./base.js";
+import { storageRepository } from "../repositories/storage.repo.js";
 
 class stroageModel extends baseModel {
   getName() {
     return "storage";
   }
 
-  save(key, data = {}, isInsert = false) {
-    const saveData = {
-      key,
-      data: JSON.stringify(data, null, 2),
-    };
-    if (isInsert) {
-      return this.store.insert(saveData);
-    }
-    return this.store.updateWhere({ key }, saveData, 1);
+  save(key: string, data: Record<string, unknown> = {}, isInsert = false) {
+    return storageRepository.save(key, data, isInsert);
   }
 
-  del(key) {
-    return this.store.delete({ key });
+  del(key: string) {
+    return storageRepository.del(key);
   }
 
-  get(key) {
-    return this.store.findOne({ key }).then((row) => {
-      this.save(key, {});
-      if (!row) {
-        return null;
-      }
-      const raw = row.data;
-      try {
-        return JSON.parse(raw);
-      } catch (e) {
-        return {};
-      }
-    });
+  get(key: string) {
+    return storageRepository.get(key);
   }
 }
 

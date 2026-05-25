@@ -14,6 +14,7 @@ import {
   tokenRepository,
   followRepository,
   avatarRepository,
+  storageRepository,
 } from "../../repositories/index.js";
 import commons from "../../utils/commons.js";
 import {
@@ -622,6 +623,31 @@ test("avatarRepository 可写入、查询与更新", async (t) => {
     t.is(afterUpdate.basecode, `${basecode}-v2`);
   } finally {
     await avatarRepository.del(uid);
+    await disconnectPg();
+  }
+});
+
+test("storageRepository 可写入、读取、更新并删除", async (t) => {
+  if (!shouldRunPgCi()) {
+    t.pass();
+    return;
+  }
+
+  await connectYapiDatabase();
+  const key = `ci-storage-${Date.now()}`;
+
+  try {
+    const inserted = await storageRepository.save(key, { foo: "bar" }, true);
+    t.truthy(inserted._id);
+
+    const loaded = await storageRepository.get(key);
+    t.deepEqual(loaded, { foo: "bar" });
+
+    await storageRepository.save(key, { foo: "baz", extra: 1 });
+    const updated = await storageRepository.get(key);
+    t.deepEqual(updated, { foo: "baz", extra: 1 });
+  } finally {
+    await storageRepository.del(key);
     await disconnectPg();
   }
 });
