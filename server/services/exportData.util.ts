@@ -1,5 +1,5 @@
 /**
- * 接口导出插件纯函数（无 DB / wiki 依赖，便于单测）
+ * 接口导出纯函数（无 DB / wiki 依赖，便于单测）
  */
 
 type ExportRow = Record<string, any>;

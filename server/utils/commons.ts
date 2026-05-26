@@ -7,8 +7,6 @@ import yapi from '../runtime.js';
 
 import apiResponse from '../lib/api-response.js';
 
-import { createAction as bindControllerAction } from "../lib/action-runner.js";
-
 import sha1 from 'sha1';
 
 import {
@@ -415,9 +413,6 @@ export const saveLog = (logData) => {
   }
 };
 
-/** @deprecated 请使用 lib/action-runner.js；保留导出以兼容插件 */
-export const createAction = bindControllerAction;
-
 /**
  *
  * @param {*} params 接口定义的参数
@@ -670,7 +665,6 @@ export default {
   handleParams,
   validateParams,
   saveLog,
-  createAction,
   handleParamsValue,
   getCaseList,
   runCaseScript,

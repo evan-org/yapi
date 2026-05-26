@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 项目扩展设置：Swagger 自动同步、代码生成说明
+ * 项目工具设置：Swagger 自动同步、代码生成
  */
 import { useCallback, useEffect, useState } from "react";
 import { builtinApi } from "../../lib/api/builtin";
@@ -11,11 +11,13 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Alert, AlertDescription } from "../ui/alert";
 
-interface ProjectExtensionSettingsProps {
+interface ProjectSwaggerSyncSettingsProps {
   projectId: number;
 }
 
-export function ProjectExtensionSettings({ projectId }: ProjectExtensionSettingsProps) {
+export function ProjectSwaggerSyncSettings({
+  projectId,
+}: ProjectSwaggerSyncSettingsProps) {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [sync, setSync] = useState({

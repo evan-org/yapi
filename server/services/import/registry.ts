@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 开放 API 数据导入格式注册表（原 import_data 插件钩子，现静态注册）
+ * 开放 API 数据导入格式注册表（静态注册）
  */
 import registerPostman from "./postman.js";
 import registerHar from "./har.js";

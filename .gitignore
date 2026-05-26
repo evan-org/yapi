@@ -7,7 +7,11 @@ server/dist/
 # Docker 本地 env
 deploy/.env
 log/
+# 旧版插件/打包产物（勿提交）
 vendors/
+plugin.js
+plugin.json
+external-plugins.json
 
 # 前端
 client/.next/

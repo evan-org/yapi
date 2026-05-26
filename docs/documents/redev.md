@@ -72,6 +72,10 @@ npm run dev
 
 第三方登录（qsso）等通过环境变量 `YAPI_INTEGRATIONS`（JSON 数组）配置，实现见 `server/services/thirdLogin.service.ts`。
 
+## 已移除的遗留机制
+
+- `server/exts/`、`server/common/`、npm 插件目录、`plugin.js` / `plugin.json`、根目录 `vendors/` 等均不再使用；能力已内置到 `controllers` / `services` / 标准 API 路由。
+
 ## 技术栈说明
 
 后端： Hono + PostgreSQL（JSONB）
