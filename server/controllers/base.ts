@@ -91,9 +91,9 @@ class baseController {
       "/api/interface/getCatMenu",
       "/api/interface/list_cat",
       "/api/project/get",
-      "/api/extensions/export/data",
+      "/api/export/data",
       "/api/project/up",
-      "/api/extensions/export/swagger",
+      "/api/export/swagger",
     ];
 
     const params = Object.assign({}, ctx.query, ctx.request.body) as Record<string, unknown>;

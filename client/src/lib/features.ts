@@ -1,5 +1,5 @@
 /**
- * 内置扩展功能入口（统计、Wiki、导入导出等，对应 server 内置扩展路由）
+ * 内置功能入口（统计、Wiki、导入导出等）
  */
 export const featureRoutes: Record<
   string,

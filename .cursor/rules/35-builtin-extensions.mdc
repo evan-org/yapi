@@ -1,5 +1,5 @@
 ---
-description: 内置扩展功能与脚本
+description: 内置业务能力与脚本
 globs:
   - server/controllers/**
   - server/services/**
@@ -7,9 +7,9 @@ globs:
   - client/src/lib/**
 ---
 
-# 内置扩展功能
+# 内置业务能力
 
-- 服务端：`server/controllers/`（advancedMock、wiki、statistics 等）+ `server/routes/modules/extensions.routes.ts`（`/api/extensions/*`）
+- 服务端：`server/controllers/` + `server/routes/modules/`（`wiki`、`statistics`、`export`、`advanced-mock`、`swagger-sync` 等独立路由模块）
 - 导入：`server/services/import/`
-- 客户端：`client/src/lib/features.ts`（功能入口映射）
+- 客户端：`client/src/lib/features.ts`、`client/src/lib/api/builtin.ts`
 - Mock 统计/高级 Mock：`server/services/advancedMock.service.ts`、`server/services/mockStatistics.track.ts`

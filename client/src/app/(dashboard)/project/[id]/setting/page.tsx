@@ -143,7 +143,7 @@ export default function ProjectSettingPage() {
         <TabsList>
           <TabsTrigger value="basic">基础信息</TabsTrigger>
           <TabsTrigger value="data">环境与数据</TabsTrigger>
-          <TabsTrigger value="extensions">扩展</TabsTrigger>
+          <TabsTrigger value="swagger-sync">Swagger 同步</TabsTrigger>
         </TabsList>
         <TabsContent value="basic" className="mt-4">
           <Card>
@@ -212,7 +212,7 @@ export default function ProjectSettingPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="extensions" className="mt-4">
+        <TabsContent value="swagger-sync" className="mt-4">
           <Card>
             <CardHeader>
               <CardTitle>扩展</CardTitle>
