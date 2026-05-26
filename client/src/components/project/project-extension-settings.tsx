@@ -4,7 +4,7 @@
  * 项目扩展设置：Swagger 自动同步、代码生成说明
  */
 import { useCallback, useEffect, useState } from "react";
-import { extensionsApi } from "../../lib/api/extensions";
+import { builtinApi } from "../../lib/api/builtin";
 import { GenServicesWizard } from "./gen-services-wizard";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -29,7 +29,7 @@ export function ProjectExtensionSettings({ projectId }: ProjectExtensionSettings
   const load = useCallback(async () => {
     setError("");
     try {
-      const res = await extensionsApi.swaggerSyncGet(projectId);
+      const res = await builtinApi.swaggerSyncGet(projectId);
       const data = res.data as {
         _id?: number;
         sync_json_url?: string;
@@ -59,7 +59,7 @@ export function ProjectExtensionSettings({ projectId }: ProjectExtensionSettings
     setSaving(true);
     setError("");
     try {
-      await extensionsApi.swaggerSyncSave({
+      await builtinApi.swaggerSyncSave({
         id: sync.id,
         project_id: projectId,
         sync_json_url: sync.sync_json_url,

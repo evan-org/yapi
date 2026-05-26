@@ -4,7 +4,7 @@
  * 项目数据：环境（含 header/global）、项目脚本、Token、导入导出
  */
 import { useCallback, useEffect, useState } from "react";
-import { interfaceApi, openApi, extensionsApi, projectApi } from "../../lib/api/client";
+import { interfaceApi, openApi, builtinApi, projectApi } from "../../lib/api/client";
 import type { ProjectEnvItem, ProjectEnvKeyValue } from "../../lib/api/types";
 import { ParamTableEditor, type ParamRow } from "../shared/param-table-editor";
 import { Button } from "../ui/button";
@@ -25,10 +25,10 @@ const IMPORT_TYPES = [
 ];
 
 const EXPORT_LINKS = [
-  { key: "html", label: "HTML", href: (pid: number) => extensionsApi.exportData("html", pid) },
-  { key: "markdown", label: "Markdown", href: (pid: number) => extensionsApi.exportData("markdown", pid) },
-  { key: "json", label: "JSON", href: (pid: number) => extensionsApi.exportData("json", pid) },
-  { key: "swagger2", label: "Swagger2", href: (pid: number) => extensionsApi.exportSwagger2Url(pid) },
+  { key: "html", label: "HTML", href: (pid: number) => builtinApi.exportData("html", pid) },
+  { key: "markdown", label: "Markdown", href: (pid: number) => builtinApi.exportData("markdown", pid) },
+  { key: "json", label: "JSON", href: (pid: number) => builtinApi.exportData("json", pid) },
+  { key: "swagger2", label: "Swagger2", href: (pid: number) => builtinApi.exportSwagger2Url(pid) },
 ];
 
 function emptyEnv(): ProjectEnvItem {
@@ -332,7 +332,7 @@ export function ProjectDataPanel({ projectId }: ProjectDataPanelProps) {
             </Button>
           ))}
           <Button variant="outline" size="sm" asChild>
-            <a href={extensionsApi.exportFullUrl(projectId)} target="_blank" rel="noreferrer">
+            <a href={builtinApi.exportFullUrl(projectId)} target="_blank" rel="noreferrer">
               全量 JSON
             </a>
           </Button>

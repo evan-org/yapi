@@ -60,17 +60,15 @@ npm run dev
 
 
 
-## 内置扩展（原 exts / npm 插件目录）
-
-原 `server/exts/` 与插件钩子已移除，能力内置在仓库中：
+## 内置能力（Wiki、统计、导出等）
 
 | 位置 | 说明 |
 |------|------|
 | `server/controllers/` | advancedMock、wiki、statistics、exportData 等 HTTP 层 |
 | `server/services/`、`server/services/import/` | 业务与数据导入 |
-| `server/routes/modules/extensions.routes.ts` | 路由注册，HTTP 为 `/api/extensions/*` |
+| `server/routes/modules/*.routes.ts` | 按业务域注册路由（如 `wiki.routes.ts`、`statistics.routes.ts`） |
 | `client/src/lib/features.ts` | 前端功能入口映射 |
-| `client/src/lib/api/extensions.ts` | 扩展 API 客户端封装 |
+| `client/src/lib/api/builtin.ts` | 内置能力 API 客户端 |
 
 第三方登录（qsso）等通过环境变量 `YAPI_INTEGRATIONS`（JSON 数组）配置，实现见 `server/services/thirdLogin.service.ts`。
 

@@ -24,7 +24,7 @@
 
 - `yapi.WEBROOT` = `server/` 目录
 - 配置：**仅环境变量**（`server/.env` ← `.env.example`；Docker 用 `deploy/.env`）；`server/config/load-config.ts`
-- 扩展 API：`/api/extensions/*`（`routes/modules/extensions.routes.ts`）
+- 内置能力 API：`/api/wiki`、`/api/statistics/*`、`/api/export/*`、`/api/advanced-mock/*`、`/api/swagger-sync` 等独立模块路由
 - Docker：`deploy/docker-compose.yml`（构建 context 为仓库根）
 - 前端 API：`client/src/lib/api/`
 
@@ -39,6 +39,6 @@ npm run build
 
 ## 不要做的事
 
-- 勿恢复 `common/`、`exts/` 目录；配置仅 `server/.env` / `YAPI_*`
+- 配置仅 `server/.env` / `YAPI_*`
 - 不要恢复 `vendors/` 中间层
 - 不要引入 MongoDB / Mongoose，不要编写旧库数据迁移或 ETL 脚本

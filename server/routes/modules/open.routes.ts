@@ -27,6 +27,6 @@ export function registerOpenRoutes(binder) {
   registerModuleRoutes(binder, {
     controller: genServicesController,
     prefix: "/open/",
-    routes: [{ action: "exportFullData", path: "extensions/export-full", method: "get" }],
+    routes: [{ action: "exportFullData", path: "export-full", method: "get" }],
   });
 }
