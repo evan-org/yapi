@@ -16,6 +16,7 @@ globs: client/**/*
 - 使用 shadcn/ui + Tailwind；不要引入 Ant Design。
 - 中文注释说明非显而易见业务逻辑。
 
-## 内置扩展功能
+## 内置功能
 
-- `src/lib/features.ts`：功能入口映射（统计、Wiki、导入导出等）。
+- `src/lib/features.ts`：导航入口映射（统计、Wiki 等）。
+- `src/lib/api/builtin.ts`：Wiki、统计、导出、高级 Mock、Swagger 同步等 API。

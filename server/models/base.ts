@@ -8,7 +8,7 @@ import { JSONB_COLLECTIONS } from "../db/table.js";
 class baseModel {
   constructor() {
     this.table = this.getName();
-    // 仅整表 JSONB 集合才绑定 store（当前为空，供后续插件扩展）
+    // 仅整表 JSONB 集合才绑定 store
     if ((JSONB_COLLECTIONS as readonly string[]).includes(this.table)) {
       this.store = getTable(this.table);
     }

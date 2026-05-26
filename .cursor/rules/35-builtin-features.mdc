@@ -9,7 +9,7 @@ globs:
 
 # 内置业务能力
 
-- 服务端：`server/controllers/` + `server/routes/modules/`（`wiki`、`statistics`、`export`、`advanced-mock`、`swagger-sync` 等独立路由模块）
+- 服务端：`server/controllers/` + `server/routes/modules/`（`wiki`、`statistics`、`export`、`advanced-mock`、`swagger-sync` 等）
 - 导入：`server/services/import/`
 - 客户端：`client/src/lib/features.ts`、`client/src/lib/api/builtin.ts`
 - Mock 统计/高级 Mock：`server/services/advancedMock.service.ts`、`server/services/mockStatistics.track.ts`

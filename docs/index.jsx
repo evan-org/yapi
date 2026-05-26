@@ -11,7 +11,7 @@ features:
   - { name: 'Mock Server', desc: '易用的 Mock Server，再也不用担心 mock 数据的生成了' }
   - { name: '自动化测试', desc: '完善的接口自动化测试,保证数据的正确性' }
   - { name: '数据导入', desc: '支持导入 swagger, postman, har 数据格式，方便迁移旧项目'}
-  - { name: '插件机制', desc: '强大的插件机制，满足各类业务需求'}
+  - { name: '内置能力', desc: 'Wiki、统计、导入导出、高级 Mock、Swagger 同步等开箱即用'}
 
 footer:
   copyRight:

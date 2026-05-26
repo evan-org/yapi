@@ -17,7 +17,7 @@ import tokenModel from "./token.js";
 import avatarModel from "./avatar.js";
 import storageModel from "./storage.js";
 
-/** 按业务域聚合的 Model 类（供控制器、插件统一引用） */
+/** 按业务域聚合的 Model 类（供控制器、repositories 引用） */
 export const modelMap = {
   base: baseModel,
   user: userModel,

@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { projectApi } from "@/lib/api/project";
 import type { ProjectItem, ProjectTagItem } from "@/lib/api/types";
 import { ProjectDataPanel } from "@/components/project/project-data-panel";
-import { ProjectExtensionSettings } from "@/components/project/project-extension-settings";
+import { ProjectSwaggerSyncSettings } from "@/components/project/project-swagger-sync-settings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -219,7 +219,7 @@ export default function ProjectSettingPage() {
               <CardDescription>Swagger 自动同步、代码生成等</CardDescription>
             </CardHeader>
             <CardContent>
-              <ProjectExtensionSettings projectId={projectId} />
+              <ProjectSwaggerSyncSettings projectId={projectId} />
             </CardContent>
           </Card>
         </TabsContent>

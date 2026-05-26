@@ -17,6 +17,3 @@ export const featureRoutes: Record<
   "advanced-mock": { label: "高级 Mock", note: "服务端 Mock 规则" },
   "swagger-auto-sync": { label: "Swagger 自动同步", note: "服务端定时任务" },
 };
-
-/** 始终启用的内置功能名 */
-export const enabledFeatureNames = Object.keys(featureRoutes);

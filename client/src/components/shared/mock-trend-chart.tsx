@@ -61,7 +61,7 @@ export function MockTrendChart({ points, height = 160 }: MockTrendChartProps) {
   );
 }
 
-/** 将插件 API 返回的 mockDateList 规范为图表点 */
+/** 将统计 API 返回的 mockDateList 规范为图表点 */
 export function normalizeMockDateList(raw: unknown[]): MockTrendPoint[] {
   if (!Array.isArray(raw)) {
     return [];

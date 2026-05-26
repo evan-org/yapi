@@ -1,5 +1,5 @@
 /**
- * Swagger 自动同步插件业务逻辑
+ * Swagger 自动同步业务逻辑
  */
 import commons from "../utils/commons.js";
 import { projectRepository } from "../repositories/index.js";
