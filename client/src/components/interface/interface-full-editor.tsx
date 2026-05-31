@@ -129,6 +129,7 @@ export function InterfaceFullEditor({
     try {
       await interfaceApi.update({
         id: data._id,
+        project_id: data.project_id,
         catid: data.catid,
         title: form.title,
         path: form.path,

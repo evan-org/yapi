@@ -34,8 +34,8 @@ class interfaceModel extends baseModel {
     return interfaceRepository.getByPath(project_id, path, method, select);
   }
 
-  checkRepeat(id, path, method) {
-    return interfaceRepository.checkRepeat(id, path, method);
+  checkRepeat(id, path, method, excludeId) {
+    return interfaceRepository.checkRepeat(id, path, method, excludeId);
   }
 
   countByProjectId(id) {
