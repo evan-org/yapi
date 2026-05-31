@@ -52,8 +52,8 @@ const addAndUpCommonField = {
   res_body: "string",
   custom_field_value: "string",
   api_opened: "boolean",
-  req_body_is_json_schema: "string",
-  res_body_is_json_schema: "string",
+  req_body_is_json_schema: "boolean",
+  res_body_is_json_schema: "boolean",
   markdown: "string",
   tag: "array",
 };
@@ -94,7 +94,7 @@ export function buildInterfaceSchemaMap(): InterfaceSchemaMap {
     ),
     save: Object.assign(
       {
-        project_id: "number",
+        "*project_id": "number",
         catid: "number",
         title: minLengthStringField,
         path: minLengthStringField,

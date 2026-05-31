@@ -636,7 +636,8 @@ class InterfaceService extends BaseService {
       const checkRepeat = await this.interfaceModel.checkRepeat(
         interfaceData.project_id,
         params.path,
-        params.method
+        params.method,
+        id
       );
       if (checkRepeat > 0) {
         return fail(401, "已存在的接口:" + params.path + "[" + params.method + "]");
@@ -652,7 +653,7 @@ class InterfaceService extends BaseService {
       }
     }
 
-    const result = await this.interfaceModel.up(id, data);
+    await this.interfaceModel.up(id, data);
     const CurrentInterfaceData = await this.interfaceModel.get(id);
     const toObj = (doc) =>
       doc;
@@ -728,7 +729,7 @@ class InterfaceService extends BaseService {
     }
 
     await this.autoAddTag(params);
-    return ok(result);
+    return ok(CurrentInterfaceData);
   }
 
   /**

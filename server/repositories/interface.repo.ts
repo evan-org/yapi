@@ -278,8 +278,21 @@ export const interfaceRepository: InterfaceRepository = {
     ).then((rows) => rows.map((r) => pickInterfaceFields(r, fields)));
   },
 
-  async checkRepeat(id: number | string, path: string, method: string) {
+  async checkRepeat(
+    id: number | string,
+    path: string,
+    method: string,
+    excludeId?: number | string
+  ) {
     const pool = getPool();
+    if (excludeId !== undefined && excludeId !== null && excludeId !== "") {
+      const res = await pool.query(
+        `SELECT COUNT(*)::int AS c FROM ${TBL}
+         WHERE project_id = $1 AND path = $2 AND method = $3 AND _id <> $4`,
+        [id, path, method, excludeId]
+      );
+      return res.rows[0].c;
+    }
     const res = await pool.query(
       `SELECT COUNT(*)::int AS c FROM ${TBL}
        WHERE project_id = $1 AND path = $2 AND method = $3`,
