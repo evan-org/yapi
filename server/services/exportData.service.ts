@@ -9,8 +9,16 @@ import {
 import { wikiRepository } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+import defaultTheme from "../assets/export/defaultTheme.js";
+import genDefaultTheme from "../assets/export/gen-defaultTheme.js";
 import { stripExportIds } from "./exportData.util.js";
 import { buildSwaggerV2Model } from "./export/swagger-v2.js";
+import { buildExportJsonBody } from "./export/json.js";
+import {
+  buildExportMarkdown,
+  buildExportHtml,
+  safeBuildExport,
+} from "./export/render.js";
 
 export { stripExportIds } from "./exportData.util.js";
 
@@ -69,6 +77,77 @@ class ExportDataService extends BaseService {
     const list = await this.listCategoriesWithApis(projectId, status);
     const model = buildSwaggerV2Model(proj.data, stripExportIds(list));
     return ok(JSON.stringify(model, null, 2));
+  }
+
+  /**
+   * 导出项目接口文档（markdown / json / html）
+   */
+  async exportProjectDownload(options: {
+    projectId: number | string;
+    status: string;
+    type: string;
+    isWiki?: string | boolean;
+    fullPath?: boolean;
+    themeVariant?: "default" | "gen";
+  }) {
+    const {
+      projectId,
+      status,
+      type,
+      isWiki,
+      fullPath = false,
+      themeVariant = "default",
+    } = options;
+
+    if (!projectId) {
+      return fail(200, "pid 不为空");
+    }
+
+    const proj = await this.getProject(projectId);
+    if (!proj.ok) {
+      return proj;
+    }
+    const curProject = proj.data;
+    const loadWiki = isWiki === true || isWiki === "true";
+    const wikiData = loadWiki ? await this.getWiki(projectId) : undefined;
+    const list = await this.listCategoriesWithApis(projectId, status);
+    const themeCss = themeVariant === "gen" ? genDefaultTheme : defaultTheme;
+
+    switch (type) {
+      case "markdown": {
+        const built = safeBuildExport(() =>
+          buildExportMarkdown(curProject, wikiData, list, false)
+        );
+        if (built.ok === false) {
+          return fail(502, built.message);
+        }
+        return ok({
+          contentType: "application/octet-stream",
+          disposition: "attachment; filename=api.md",
+          body: built.body,
+        });
+      }
+      case "json": {
+        return ok({
+          contentType: "application/octet-stream",
+          disposition: "attachment; filename=api.json",
+          body: buildExportJsonBody(list, curProject, fullPath),
+        });
+      }
+      default: {
+        const built = safeBuildExport(() =>
+          buildExportHtml(curProject, wikiData, list, themeCss)
+        );
+        if (built.ok === false) {
+          return fail(502, built.message);
+        }
+        return ok({
+          contentType: "application/octet-stream",
+          disposition: "attachment; filename=api.html",
+          body: built.body,
+        });
+      }
+    }
   }
 }
 

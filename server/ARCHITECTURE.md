@@ -29,7 +29,7 @@ handlers/ → routes/ → controllers/ → services/ → repositories/ → db/
 | `services/user/` | 用户子模块：`auth` / `profile` / `query` / `admin`，由 `user.service.ts` 门面聚合 |
 | `services/group/` | 分组子模块：`query` / `mutation` / `member`，由 `group.service.ts` 门面聚合 |
 | `services/wiki/` | Wiki 子模块：`query` / `mutation` / `lock` / `notify`，由 `wiki.service.ts` 门面聚合 |
-| `services/export/` | 导出格式转换（如 `swagger-v2.ts`），由 `exportData.service` 调用 |
+| `services/export/` | 导出渲染：`swagger-v2` / `render` / `json`，由 `exportData.service` 调用 |
 | `types/` | 类型定义 |
 
 ## 依赖规则
