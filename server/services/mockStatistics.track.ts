@@ -3,6 +3,7 @@
  * Mock 调用统计：每次 mock 成功后写入 statis_mock
  */
 import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { mockStatisticsRepository } from "../repositories/index.js";
 import { formatYMD } from "./statistics.util.js";
 
@@ -16,7 +17,7 @@ export function trackMockStatistics(context) {
     interface_id: interfaceId,
     project_id: projectId,
     group_id: groupId,
-    time: yapi.commons.time(),
+    time: nowSeconds(),
     ip,
     date: formatYMD(new Date()),
   };

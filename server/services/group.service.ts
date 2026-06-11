@@ -3,6 +3,7 @@
  */
 import _ from "underscore";
 import commons from "../utils/commons.js";
+import { nowSeconds } from "../shared/clock.js";
 import {
   groupRepository,
   projectRepository,
@@ -73,8 +74,8 @@ class GroupService extends BaseService {
       group_name: params.group_name,
       group_desc: params.group_desc,
       uid: operator.uid,
-      add_time: commons.time(),
-      up_time: commons.time(),
+      add_time: nowSeconds(),
+      up_time: nowSeconds(),
       members: owners,
     };
     let result = await this.groupModel.save(data);
@@ -105,8 +106,8 @@ class GroupService extends BaseService {
       privateGroup = await this.groupModel.save({
         uid,
         group_name: "User-" + uid,
-        add_time: commons.time(),
-        up_time: commons.time(),
+        add_time: nowSeconds(),
+        up_time: nowSeconds(),
         type: "private",
       });
     }

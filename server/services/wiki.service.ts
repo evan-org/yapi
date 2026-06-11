@@ -6,6 +6,7 @@ import fs from "fs-extra";
 import path from "node:path";
 import jsondiffpatch from "jsondiffpatch";
 import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import notificationService from "./notification.service.js";
 import {
   wikiRepository,
@@ -62,8 +63,8 @@ class WikiService extends BaseService {
         ...saveParams,
         username,
         uid,
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
+        add_time: nowSeconds(),
+        up_time: nowSeconds(),
       };
       result = await this.wikiModel.save(data);
     } else {
@@ -71,7 +72,7 @@ class WikiService extends BaseService {
         ...saveParams,
         username,
         uid,
-        up_time: yapi.commons.time(),
+        up_time: nowSeconds(),
       };
       result = await this.wikiModel.up(existing._id, data);
     }

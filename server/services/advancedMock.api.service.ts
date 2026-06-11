@@ -3,7 +3,7 @@
  * 高级 Mock 期望管理 API 业务逻辑（CRUD）
  * Mock 运行时匹配见 advancedMock.service.ts
  */
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import {
   advancedMockRepository,
   advancedMockCaseRepository,
@@ -121,7 +121,7 @@ class AdvancedMockApiService extends BaseService {
       code: params.code || 200,
       delay: params.delay || 0,
       headers: params.headers || [],
-      up_time: yapi.commons.time(),
+      up_time: nowSeconds(),
       res_body: params.res_body,
       ip: params.ip,
     };

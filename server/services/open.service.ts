@@ -5,6 +5,7 @@ import axios from "axios";
 import _ from "underscore";
 import yapi from "../runtime.js";
 import commons from "../utils/commons.js";
+import { nowSeconds } from "../shared/clock.js";
 import {
   projectRepository,
   interfaceRepository,
@@ -130,8 +131,8 @@ class OpenService extends BaseService {
         project_id: projectId,
         desc: "默认分类",
         uid,
-        add_time: commons.time(),
-        up_time: commons.time(),
+        add_time: nowSeconds(),
+        up_time: nowSeconds(),
       });
       menuList.push(menu);
     }
