@@ -11,72 +11,23 @@
  */
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFileSync } from "node:fs";
-import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-import { createNodeWebSocket } from "@hono/node-ws";
 import yapi from "./runtime.js";
 import commons from "./utils/commons.js";
 import dbModule from "./utils/db.js";
-import mockMiddleware from "./middleware/mock.js";
 import storageCreator from "./utils/storage.js";
 import { assertRuntimeConfig } from "./utils/configCheck.js";
-import { mountApiRoutes, mountWebSocketRoutes } from "./routes/index.js";
-
-const pkg = JSON.parse(
-  readFileSync(path.join(yapi.WEBROOT_SERVER, "package.json"), "utf8")
-);
+import { createHttpApp } from "./handlers/http.js";
 
 yapi.commons = commons;
 
 import "./bootstrap/features.js";
-import { registerNotice } from "./utils/notice.js";
+import notificationService from "./services/notification.service.js";
 import syncUtils from "./services/swaggerSync.scheduler.js";
 
 globalThis.storageCreator = storageCreator;
 
 const isDev = process.argv[2] === "dev";
-const nextPort = process.env.YAPI_DEV_CLIENT_PORT || "7101";
-
-/**
- * 健康检查
- * @param {import('hono').Hono} app
- */
-function registerHealthRoute(app) {
-  app.get("/api/health", (c) =>
-    c.json({
-      status: "ok",
-      framework: "hono",
-      frontend: "nextjs",
-      version: pkg.version,
-    })
-  );
-}
-
-/**
- * 非 API 路径：开发环境跳转 Next，生产返回提示 JSON
- * @param {import('hono').Hono} app
- */
-function registerFrontendFallback(app) {
-  app.all("*", async (c) => {
-    const pathname = new URL(c.req.url).pathname;
-    if (pathname.startsWith("/api")) {
-      return c.json({ errcode: 404, errmsg: "接口不存在" }, 404);
-    }
-    if (isDev) {
-      const host = c.req.header("host")?.split(":")[0] || "127.0.0.1";
-      return c.redirect(`http://${host}:${nextPort}${pathname}`, 302);
-    }
-    return c.json(
-      {
-        errcode: 0,
-        errmsg: "YApi API 服务运行中。请访问 Next.js 前端（默认端口 7101）。",
-        data: { frontend: "nextjs", port: nextPort },
-      },
-      200
-    );
-  });
-}
 
 /**
  * 注册进程退出信号
@@ -115,21 +66,9 @@ function logStartup(port) {
  * @returns {Promise<import('hono').Hono>}
  */
 export async function createApp() {
-  registerNotice();
+  notificationService.attachToCommons(yapi.commons);
   assertRuntimeConfig();
-
-  const app = new Hono();
-  const { upgradeWebSocket, injectWebSocket } = createNodeWebSocket({ app });
-  yapi.app = app;
-
-  registerHealthRoute(app);
-  app.use("*", mockMiddleware);
-  mountApiRoutes(app);
-  mountWebSocketRoutes(app, upgradeWebSocket);
-  registerFrontendFallback(app);
-
-  app._injectWebSocket = injectWebSocket;
-  return app;
+  return createHttpApp();
 }
 
 /**

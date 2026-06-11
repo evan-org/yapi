@@ -10,10 +10,12 @@
 
 | 目录 | 职责 |
 |------|------|
-| `controllers/` | HTTP 薄层：鉴权、参数解析、响应包装；继承 `base.ts` |
-| `services/` | 业务逻辑层，Controller 调用 Service，不直接编排 Model |
-| `models/` | 数据模型（PostgreSQL），继承 `models/base.ts` |
+| `handlers/` | Hono 应用装配（`http.ts`） |
+| `controllers/` | HTTP 薄层：鉴权、参数解析、调 Service；继承 `base.ts` |
+| `services/` | 业务逻辑层，不依赖 Hono Context |
+| `repositories/` | 表级 SQL（`*.repo.ts`） |
 | `routes/` | `http/`、`ws/` 入口；`modules/*.routes.ts` 各模块路由 |
+| `shared/` | 横切契约（`response.ts` 等） |
 | `lib/` | Hono 适配、`api-response` 统一响应契约 |
 | `middleware/` | Mock（`mock.ts` + `mock-handler.ts`）等 |
 | `utils/` | `commons`、Mock/Schema 工具、差异对比、Markdown 等 |
