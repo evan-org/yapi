@@ -24,8 +24,8 @@ if "%MODE%"=="start" (
     echo [start] Starting YApi in development mode...
 )
 
-start "YApi-Server" cmd /c "npm run %MODE% --workspace=yapi-server"
-start "YApi-Client" cmd /c "npm run %MODE% --workspace=client"
+start "YApi-Server" cmd /c "pnpm --filter yapi-server %MODE%"
+start "YApi-Client" cmd /c "pnpm --filter yapi-client %MODE% -- -p 4000"
 
 echo [start] Server and Client started in new windows. Close them to stop.
 endlocal

@@ -18,9 +18,9 @@
 
 ```bash
 cp server/.env.example server/.env   # 按需修改 PostgreSQL、端口、管理员邮箱
-npm install --legacy-peer-deps
-npm run install-server               # 初始化库表；默认管理员见 YAPI_ADMIN_ACCOUNT，初始密码 ymfe.org
-npm run dev
+pnpm install
+pnpm run install-server              # 初始化库表；默认管理员见 YAPI_ADMIN_ACCOUNT，初始密码 ymfe.org
+pnpm run dev
 ```
 
 - API 端口：`YAPI_PORT`（默认 3001，见 `server/.env`）
@@ -28,13 +28,13 @@ npm run dev
 
 | 命令 | 说明 |
 |------|------|
-| `npm run dev` | API + 前端 |
-| `npm run dev-server` | 仅后端 |
-| `npm run dev-client` | 仅前端 |
-| `npm run build` | 构建前端 |
-| `npm run start -- --prod` | 生产模式启动前后端 |
-| `npm run test:server` | 后端测试 |
-| `npm run db:init` | 初始化 PostgreSQL 表结构 |
+| `pnpm run dev` | API + 前端 |
+| `pnpm run dev-server` | 仅后端 |
+| `pnpm run dev-client` | 仅前端 |
+| `pnpm run build` | 构建前端 |
+| `pnpm run start -- --prod` | 生产模式启动前后端 |
+| `pnpm run test:server` | 后端测试 |
+| `pnpm run db:init` | 初始化 PostgreSQL 表结构 |
 
 配置说明见 `server/.env.example`；复杂项（LDAP、第三方集成）使用 `YAPI_LDAP_LOGIN`、`YAPI_INTEGRATIONS` 等 JSON 环境变量。
 
@@ -43,7 +43,7 @@ npm run dev
 ```bash
 cp deploy/.env.example deploy/.env   # 修改数据库密码、管理员邮箱等
 docker compose -f deploy/docker-compose.yml up -d --build
-docker compose -f deploy/docker-compose.yml exec yapi npm run install-server -w yapi-server
+docker compose -f deploy/docker-compose.yml exec yapi pnpm run install-server
 ```
 
 Compose 通过 `env_file` 注入环境变量。

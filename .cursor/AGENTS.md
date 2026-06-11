@@ -31,10 +31,10 @@
 ## 开发（仓库根目录）
 
 ```bash
-npm install --legacy-peer-deps
-npm run dev
-npm run test:server
-npm run build
+pnpm install
+pnpm run dev
+pnpm run test:server
+pnpm run build
 ```
 
 ## 不要做的事

@@ -13,7 +13,7 @@ alwaysApply: true
 
 ## 命令（仓库根目录）
 
-`npm run dev` | `dev-server` | `dev-client` | `test:server` | `build`
+`pnpm run dev` | `dev-server` | `dev-client` | `test:server` | `build`
 
 ## 配置（12-Factor）
 

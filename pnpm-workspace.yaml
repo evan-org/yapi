@@ -1,0 +1,4 @@
+# pnpm monorepo 工作区（与 package.json workspaces 一致）
+packages:
+  - server
+  - client

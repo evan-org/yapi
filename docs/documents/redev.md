@@ -20,13 +20,13 @@ cp server/.env.example server/.env
 
 ```bash
 # 在仓库根目录
-npm install --legacy-peer-deps
+pnpm install
 ```
 
 4. 初始化
 
 ```bash
-npm run install-server  # 初始化库表与管理员（邮箱见 YAPI_ADMIN_ACCOUNT）
+pnpm run install-server  # 初始化库表与管理员（邮箱见 YAPI_ADMIN_ACCOUNT）
 # 默认输出
 # 初始化管理员账号成功,账号名："admin@admin.com"，密码："ymfe.org"
 ```
@@ -34,7 +34,7 @@ npm run install-server  # 初始化库表与管理员（邮箱见 YAPI_ADMIN_ACC
 5. 启动开发环境
 
 ```bash
-npm run dev
+pnpm run dev
 # 访问 http://127.0.0.1:4000（前端）与 http://127.0.0.1:3001（API，端口见 YAPI_PORT）
 ```
 
@@ -79,9 +79,9 @@ npm run dev
 
 ```bash
 # 在仓库根目录
-npm run build
-npm run start -- --prod
-# 或分别启动：npm run start-server && npm run start-client
+pnpm run build
+pnpm run start -- --prod
+# 或分别启动：pnpm run start-server && pnpm run start-client
 ```
 
 Docker 部署见仓库 `deploy/docker-compose.yml` 与根目录 `README.md`。

@@ -9,26 +9,27 @@
   ],
   "scripts": {
     "dev": "node scripts/start.js",
-    "dev-server": "npm run dev --workspace=server",
-    "dev-client": "npm run dev --workspace=client -- -p 4000",
-    "build-client": "npm run build --workspace=client",
+    "dev-server": "pnpm --filter yapi-server dev",
+    "dev-client": "pnpm --filter yapi-client dev -- -p 4000",
+    "build-client": "pnpm --filter yapi-client build",
     "verify-build": "node scripts/verify-next-build.js",
-    "build": "npm run build-client && npm run verify-build",
+    "build": "pnpm run build-client && pnpm run verify-build",
     "start": "node scripts/start.js --prod",
-    "start-server": "npm run start --workspace=server",
-    "start-client": "npm run start --workspace=client -- -p 4000 -H 0.0.0.0",
-    "install-server": "npm run install-server --workspace=server",
-    "db:init": "npm run db:init --workspace=server",
-    "build:server": "npm run build --workspace=server",
-    "typecheck": "npm run typecheck --workspace=server && npm run typecheck --workspace=client",
-    "typecheck:server": "npm run typecheck --workspace=server",
-    "typecheck:client": "npm run typecheck --workspace=client",
-    "test:server": "npm run test --workspace=server",
-    "lint:client": "npm run lint --workspace=client"
+    "start-server": "pnpm --filter yapi-server start",
+    "start-client": "pnpm --filter yapi-client start -- -p 4000 -H 0.0.0.0",
+    "install-server": "pnpm --filter yapi-server install-server",
+    "db:init": "pnpm --filter yapi-server db:init",
+    "build:server": "pnpm --filter yapi-server build",
+    "typecheck": "pnpm run typecheck:server && pnpm run typecheck:client",
+    "typecheck:server": "pnpm --filter yapi-server typecheck",
+    "typecheck:client": "pnpm --filter yapi-client typecheck",
+    "test:server": "pnpm --filter yapi-server test",
+    "lint:client": "pnpm --filter yapi-client lint"
   },
   "license": "Apache-2.0",
+  "packageManager": "pnpm@10.21.0",
   "engines": {
     "node": ">= 18.0.0",
-    "npm": ">= 8.0.0"
+    "pnpm": ">= 9.0.0"
   }
 }

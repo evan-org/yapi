@@ -3,17 +3,17 @@ FROM node:18-bookworm-slim AS builder
 
 WORKDIR /yapi
 
-COPY package.json package-lock.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY server/package.json ./server/
-COPY client/package.json client/package-lock.json ./client/
+COPY client/package.json ./client/
 
-RUN npm install --legacy-peer-deps --workspace=yapi-server --workspace=client
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
 COPY . .
 
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV YAPI_API_URL="http://127.0.0.1:3001"
-RUN npm run build-client && npm prune --production --workspace=yapi-server && npm prune --production --workspace=client
+RUN pnpm run build-client
 
 # 阶段二：生产运行
 FROM node:18-bookworm-slim

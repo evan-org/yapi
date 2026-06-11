@@ -40,11 +40,11 @@ echo "[start] 以${LABEL}模式启动 YApi..."
 trap 'echo -e "\n[start] 正在关闭服务..."; kill 0 2>/dev/null; exit 0' SIGINT SIGTERM
 
 # 启动后端
-npm run "$MODE" --workspace=yapi-server &
+pnpm --filter yapi-server "$MODE" &
 SERVER_PID=$!
 
 # 启动前端
-npm run "$MODE" --workspace=client &
+pnpm --filter yapi-client "$MODE" -- -p 4000 &
 CLIENT_PID=$!
 
 echo "[start] server PID=$SERVER_PID, client PID=$CLIENT_PID"

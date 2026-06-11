@@ -31,16 +31,20 @@ if (!fs.existsSync(serverEnv)) {
 const isWindows = process.platform === "win32";
 
 /**
- * 在子进程中启动 workspace 脚本
+ * 在子进程中通过 pnpm filter 启动 workspace 脚本
  */
-function runWorkspace(workspace, script) {
-  const child = spawn("npm", ["run", script, "--workspace", workspace], {
+function runWorkspace(filter, script, forwardArgs = []) {
+  const args = ["--filter", filter, script];
+  if (forwardArgs.length) {
+    args.push("--", ...forwardArgs);
+  }
+  const child = spawn("pnpm", args, {
     cwd: root,
     stdio: "pipe",
     shell: true,
   });
 
-  const tag = workspace === "yapi-server" ? "server" : "client";
+  const tag = filter === "yapi-server" ? "server" : "client";
 
   child.stdout.on("data", (data) => {
     const lines = data.toString().trimEnd().split("\n");
@@ -66,8 +70,9 @@ function runWorkspace(workspace, script) {
 const mode = isProd ? "start" : "dev";
 console.log(`[start] 以${isProd ? "生产" : "开发"}模式启动 YApi...\n`);
 
+const clientArgs = isProd ? ["-p", "4000", "-H", "0.0.0.0"] : ["-p", "4000"];
 const server = runWorkspace("yapi-server", mode);
-const client = runWorkspace("client", mode);
+const client = runWorkspace("yapi-client", mode, clientArgs);
 
 // Ctrl+C 优雅退出
 function shutdown() {

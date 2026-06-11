@@ -18,7 +18,7 @@ proxy_set_header Connection "upgrade";
 ```bash
 cp deploy/.env.example deploy/.env   # 修改数据库密码、管理员邮箱等
 docker compose -f deploy/docker-compose.yml up -d --build
-docker compose -f deploy/docker-compose.yml exec yapi npm run install-server -w yapi-server
+docker compose -f deploy/docker-compose.yml exec yapi pnpm run install-server
 ```
 
 访问 <http://127.0.0.1:4000>。默认管理员邮箱见 `YAPI_ADMIN_ACCOUNT`，初始密码 `ymfe.org`（可在个人中心修改）。
@@ -29,13 +29,13 @@ docker compose -f deploy/docker-compose.yml exec yapi npm run install-server -w 
 git clone 本仓库 --depth=1
 cd yapi
 cp server/.env.example server/.env   # 修改数据库与管理员邮箱
-npm install --legacy-peer-deps
-npm run install-server
-npm run build
-npm run start -- --prod
+pnpm install
+pnpm run install-server
+pnpm run build
+pnpm run start -- --prod
 ```
 
-开发调试可使用 `npm run dev`（同时启动 API 与前端）。
+开发调试可使用 `pnpm run dev`（同时启动 API 与前端）。
 
 安装后的目录结构（节选）：
 
@@ -54,8 +54,8 @@ npm run start -- --prod
 生产环境可用 pm2 管理 Node 进程，分别守护 API 与前端：
 
 ```bash
-npm run start-server   # API，默认端口见 YAPI_PORT（3001）
-npm run start-client   # 前端，默认 4000
+pnpm run start-server   # API，默认端口见 YAPI_PORT（3001）
+pnpm run start-client   # 前端，默认 4000
 ```
 
 参考：[PM2 官方文档](http://pm2.keymetrics.io/docs/usage/quick-start/)
@@ -66,8 +66,8 @@ npm run start-client   # 前端，默认 4000
 
 ```bash
 git pull
-npm install --legacy-peer-deps
-npm run build
+pnpm install
+pnpm run build
 # 重启 API 与前端进程
 ```
 
@@ -122,4 +122,4 @@ YAPI_LDAP_LOGIN={"enable":true,"server":"ldap://l-ldapt1.com","baseDn":"CN=Admin
 - 连接串：`YAPI_DATABASE_URL=postgresql://user:pass@127.0.0.1:5432/yapi`
 - 分项：`YAPI_DB_HOST`、`YAPI_DB_PORT`（默认 5432）、`YAPI_DB_NAME`、`YAPI_DB_USER`、`YAPI_DB_PASS`
 
-首次部署可执行 `npm run db:init` 初始化表结构（应用启动时也会自动建表）。
+首次部署可执行 `pnpm run db:init` 初始化表结构（应用启动时也会自动建表）。

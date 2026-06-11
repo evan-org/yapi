@@ -29,20 +29,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - uses: actions/setup-node@v4
         with:
           node-version: "18"
-          cache: npm
-          cache-dependency-path: package-lock.json
+          cache: "pnpm"
 
       - name: Install workspaces
-        run: npm install --legacy-peer-deps
+        run: pnpm install --frozen-lockfile
 
       - name: Typecheck server
-        run: npm run typecheck:server
+        run: pnpm run typecheck:server
 
       - name: Run server tests
-        run: npm run test:server
+        run: pnpm run test:server
         env:
           CI: "true"
           YAPI_PORT: "3001"
@@ -61,22 +64,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - uses: actions/setup-node@v4
         with:
           node-version: "18"
-          cache: npm
-          cache-dependency-path: package-lock.json
+          cache: "pnpm"
 
       - name: Install workspaces
-        run: npm install --legacy-peer-deps
+        run: pnpm install --frozen-lockfile
 
       - name: Build frontend
-        run: npm run build
+        run: pnpm run build
         env:
           CI: "true"
 
       - name: Typecheck client
-        run: npm run typecheck:client
+        run: pnpm run typecheck:client
 
       - name: Lint client
-        run: npm run lint:client
+        run: pnpm run lint:client
