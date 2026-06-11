@@ -1,0 +1,6 @@
+{
+  "watch": ["./", "utils/", "lib/", "controllers/", "services/", "routes/"],
+  "ext": "ts,json",
+  "ignore": ["dist/", "node_modules/"],
+  "exec": "tsx app.ts dev -L"
+}

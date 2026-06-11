@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "cursor/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: yapi_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d yapi_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install workspaces
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply database schema
+        env:
+          PGPASSWORD: postgres
+        run: psql -h 127.0.0.1 -U postgres -d yapi_ci -f server/db/schema.sql
+
+      - name: Typecheck server
+        run: pnpm run typecheck:server
+
+      - name: Run server tests
+        run: pnpm run test:server
+        env:
+          CI: "true"
+          YAPI_PORT: "3001"
+          YAPI_ADMIN_ACCOUNT: admin@admin.com
+          YAPI_DB_HOST: "127.0.0.1"
+          YAPI_DB_PORT: "5432"
+          YAPI_DB_NAME: yapi_ci
+          YAPI_DB_USER: postgres
+          YAPI_DB_PASS: postgres
+          YAPI_MAIL_ENABLE: "false"
+
+  build-client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install workspaces
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm run build
+        env:
+          CI: "true"
+
+      - name: Typecheck client
+        run: pnpm run typecheck:client
+
+      - name: Lint client
+        run: pnpm run lint:client

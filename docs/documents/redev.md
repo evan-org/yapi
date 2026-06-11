@@ -1,0 +1,87 @@
+## 安装 YApi
+
+1. 创建工程目录
+
+```bash
+mkdir yapi && cd yapi
+git clone 本仓库 --depth=1 # 或者下载 zip 包解压到仓库根目录
+```
+
+2. 配置环境变量
+
+```bash
+cp server/.env.example server/.env
+# 编辑 server/.env：数据库、管理员邮箱、端口等
+```
+
+常用项见 `server/.env.example`。PostgreSQL 推荐 `YAPI_DATABASE_URL`，或 `YAPI_DB_HOST` + `YAPI_DB_NAME` + `YAPI_DB_USER` + `YAPI_DB_PASS`。
+
+3. 安装依赖
+
+```bash
+# 在仓库根目录
+pnpm install
+```
+
+4. 导入数据库
+
+```bash
+# 依次导入表结构与默认管理员（邮箱 admin@admin.com，密码 ymfe.org）
+psql "$YAPI_DATABASE_URL" -f server/db/schema.sql
+psql "$YAPI_DATABASE_URL" -f server/db/seed.sql
+```
+
+5. 启动开发环境
+
+```bash
+pnpm run dev
+# 访问 http://127.0.0.1:4000（前端）与 http://127.0.0.1:3001（API，端口见 YAPI_PORT）
+```
+
+目录结构（当前 monorepo）
+
+```
+|-- package.json          # workspaces：server + client
+|-- scripts/
+|-- deploy/
+|-- docs/
+|-- server/               # Hono API
+|   |-- app.ts
+|   |-- controllers/
+|   |-- services/
+|   |-- routes/
+|   |-- utils/
+|   |-- lib/
+|   |-- .env
+|   `-- test/
+`-- client/               # Next.js 前端
+    `-- src/
+```
+
+## 内置能力（Wiki、统计、导出等）
+
+| 位置 | 说明 |
+|------|------|
+| `server/controllers/` | advancedMock、wiki、statistics、exportData 等 HTTP 层 |
+| `server/services/`、`server/services/import/` | 业务与数据导入 |
+| `server/routes/modules/*.routes.ts` | 按业务域注册路由（如 `wiki.routes.ts`、`statistics.routes.ts`） |
+| `client/src/lib/features.ts` | 前端功能入口映射 |
+| `client/src/lib/api/builtin.ts` | 内置能力 API 客户端 |
+
+第三方登录（qsso）等通过环境变量 `YAPI_INTEGRATIONS`（JSON 数组）配置，实现见 `server/services/thirdLogin.service.ts`。
+
+## 技术栈
+
+- 后端：Hono + PostgreSQL（关系型表，部分字段为 JSONB 列）
+- 前端：Next.js 15 + React 19
+
+## 启动生产环境
+
+```bash
+# 在仓库根目录
+pnpm run build
+pnpm run start -- --prod
+# 或分别启动：pnpm run start-server && pnpm run start-client
+```
+
+Docker 部署见仓库 `deploy/docker-compose.yml` 与根目录 `README.md`。

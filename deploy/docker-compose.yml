@@ -1,0 +1,48 @@
+# 在仓库根目录执行：
+#   cp deploy/.env.example deploy/.env   # 按需修改
+#   docker compose -f deploy/docker-compose.yml up -d --build
+#   psql "$YAPI_DATABASE_URL" -f server/db/schema.sql && psql "$YAPI_DATABASE_URL" -f server/db/seed.sql
+
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: yapi
+      POSTGRES_PASSWORD: yapi
+      POSTGRES_DB: yapi
+    volumes:
+      - yapi_pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yapi -d yapi"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  yapi:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "7101:7101"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      # 覆盖 .env 中数据库主机为 compose 服务名
+      YAPI_DATABASE_URL: postgresql://yapi:yapi@postgres:5432/yapi
+      YAPI_API_URL: http://127.0.0.1:7102
+      YAPI_DEV_CLIENT_PORT: "7101"
+    volumes:
+      - yapi_runtime:/yapi/server
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  yapi_pg_data:
+  yapi_runtime:
