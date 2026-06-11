@@ -19,6 +19,8 @@ class baseController {
   $auth?: boolean;
   $uid?: string | number;
   $tokenAuth?: boolean;
+  /** init 已写入错误响应（如 token 无效），action-runner 应中止 */
+  $sessionHalted?: boolean;
   schemaMap?: Record<string, unknown>;
   roles: Record<string, string>;
 
@@ -32,7 +34,8 @@ class baseController {
   }
 
   async init(ctx: AppContext) {
-    await authService.bootstrapControllerSession(this, ctx);
+    const result = await authService.bootstrapControllerSession(this, ctx);
+    this.$sessionHalted = !result.continue;
   }
 
   getUid() {

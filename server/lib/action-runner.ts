@@ -38,6 +38,9 @@ export function createAction(
     const inst = new routerController(ctx);
     try {
       await inst.init(ctx);
+      if (inst.$sessionHalted) {
+        return;
+      }
       ctx.params = Object.assign(
         {},
         ctx.request.query,

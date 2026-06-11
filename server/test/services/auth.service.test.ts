@@ -19,3 +19,11 @@ test("checkActionAllowed view 允许 guest 及以上", (t) => {
   t.false(authService.checkActionAllowed("member", "view"));
   t.false(authService.checkActionAllowed(false, "view"));
 });
+
+test("bootstrapControllerSession 免登录路由直接放行", async (t) => {
+  const ctrl = { $user: null, $auth: undefined, $tokenAuth: undefined };
+  const ctx = { path: "/api/user/status", cookies: { get: () => undefined } };
+  const result = await authService.bootstrapControllerSession(ctrl, ctx);
+  t.true(result.continue);
+  t.is(ctrl.$auth, true);
+});
