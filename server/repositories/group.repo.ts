@@ -3,7 +3,7 @@
  * 分组（group）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import {
@@ -275,7 +275,7 @@ export const groupRepository: GroupRepository = {
         data.custom_field1 != null ? jsonCol(data.custom_field1) : null,
         data.group_name ?? null,
         data.group_desc ?? null,
-        yapi.commons.time(),
+        nowSeconds(),
         id,
       ]
     );

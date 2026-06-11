@@ -3,7 +3,7 @@
  * Swagger 自动同步（interface_auto_sync）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import {
@@ -41,7 +41,7 @@ export const swaggerSyncRepository: SwaggerSyncRepository = {
 
   async save(data: DocRecord) {
     const pool = getPool();
-    const now = yapi.commons.time();
+    const now = nowSeconds();
     const res = await pool.query(
       `INSERT INTO ${TBL}
         (uid, project_id, add_time, up_time, is_sync_open, sync_cron, sync_json_url, sync_mode, old_swagger_content, last_sync_time)
@@ -79,7 +79,7 @@ export const swaggerSyncRepository: SwaggerSyncRepository = {
   async upById(id: number | string, data: DocRecord) {
     const patch = { ...data };
     delete patch.id;
-    patch.up_time = yapi.commons.time();
+    patch.up_time = nowSeconds();
     const pool = getPool();
     const sets: string[] = [];
     const params: unknown[] = [];
