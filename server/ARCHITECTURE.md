@@ -26,6 +26,7 @@ handlers/ → routes/ → controllers/ → services/ → repositories/ → db/
 | `services/interface/` | 接口子模块：`query` / `category` / `mutation` / `upload`，由 `interface.service.ts` 门面聚合 |
 | `services/interfaceCol/` | 测试集合子模块：`query` / `col` / `case` / `script`，由 `interfaceCol.service.ts` 门面聚合 |
 | `services/project/` | 项目子模块：`query` / `mutation` / `member` / `token`，由 `project.service.ts` 门面聚合 |
+| `services/user/` | 用户子模块：`auth` / `profile` / `query` / `admin`，由 `user.service.ts` 门面聚合 |
 | `types/` | 类型定义 |
 
 ## 依赖规则
