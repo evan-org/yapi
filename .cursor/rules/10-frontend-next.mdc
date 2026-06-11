@@ -14,6 +14,7 @@ globs: client/**/*
 ## UI
 
 - 使用 shadcn/ui + Tailwind；不要引入 Ant Design。
+- 视觉规范：**Vercel 风格**，见 `docs/design/vercel-ui.md` 与 `.cursor/rules/45-vercel-ui.mdc`。
 - 中文注释说明非显而易见业务逻辑。
 
 ## 内置功能
