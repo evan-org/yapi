@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "rootDir": ".",
+    "outDir": "dist",
+    "strict": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "sourceMap": true,
+    "noEmitOnError": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "types": ["node"],
+    "moduleDetection": "force",
+    "baseUrl": ".",
+    "paths": {
+      "runtime.js": ["./runtime.ts"],
+      "models/*": ["./models/*"],
+      "controllers/*": ["./controllers/*"],
+      "utils/*": ["./utils/*"],
+      "middleware/*": ["./middleware/*"],
+      "lib/*": ["./lib/*"],
+      "routes/*": ["./routes/*"],
+      "routes/modules/*": ["./routes/modules/*"],
+      "services/*": ["./services/*"],
+      "repositories/*": ["./repositories/*"]
+    }
+  },
+  "include": ["**/*.ts", "types/**/*.d.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".eslintrc.js",
+    ".prettierrc.js"
+  ]
+}

@@ -1,0 +1,22 @@
+---
+description: YApi 项目身份与架构边界
+alwaysApply: true
+---
+
+# YApi 项目核心
+
+## 架构
+
+- **后端**：`server/` 自包含（config、controllers、services、utils、lib、依赖、测试均在 server 内）
+- **前端**：`client/`
+- **根目录**：workspaces 编排 + `scripts/`，禁止把后端配置/依赖散落在根目录
+
+## 命令（仓库根目录）
+
+`npm run dev` | `dev-server` | `dev-client` | `test:server` | `build`
+
+## 配置（12-Factor）
+
+- **唯一来源**：环境变量；本地复制 `server/.env.example` → `server/.env`
+- **Docker**：`deploy/.env.example` → `deploy/.env`，由 `docker-compose.yml` 的 `env_file` 注入
+- 初始化：`npm run install-server`（需已配置数据库连接）

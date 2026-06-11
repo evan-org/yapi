@@ -1,0 +1,12 @@
+.git
+.gitignore
+**/.git
+**/node_modules
+**/.idea
+**/log
+**/*.log
+**/test
+**/.env*
+**/dist
+README.md
+.github
