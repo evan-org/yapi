@@ -8,13 +8,13 @@
     "client"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=yapi-server & npm run dev --workspace=client",
+    "dev": "node scripts/start.js",
     "dev-server": "npm run dev --workspace=yapi-server",
     "dev-client": "npm run dev --workspace=client -- -p 4000",
     "build-client": "npm run build --workspace=client",
     "verify-build": "node scripts/verify-next-build.js",
     "build": "npm run build-client && npm run verify-build",
-    "start": "npm run start --workspace=client & npm run start --workspace=yapi-server",
+    "start": "node scripts/start.js --prod",
     "start-server": "npm run start --workspace=yapi-server",
     "start-client": "npm run start --workspace=client -- -p 4000 -H 0.0.0.0",
     "install-server": "npm run install-server --workspace=yapi-server",
