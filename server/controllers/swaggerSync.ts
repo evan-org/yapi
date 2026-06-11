@@ -1,57 +1,62 @@
 // @ts-nocheck
+/**
+ * Swagger 定时同步 HTTP 控制器（薄层）
+ */
 import baseController from "./base.js";
-import yapi from "../runtime.js";
+import commons from "../utils/commons.js";
 import swaggerSyncService from "../services/swaggerSync.service.js";
 import syncUtils from "../services/swaggerSync.scheduler.js";
+import { replyServiceResult, replyException } from "./controller.util.js";
 
 class syncController extends baseController {
   constructor(ctx) {
     super(ctx);
   }
 
-  /**
-   * 保存定时任务
-   */
   async save(ctx) {
-    let requestBody = ctx.request.body;
-    let projectId = requestBody.project_id;
-    if (!projectId) {
-      return (ctx.body = yapi.commons.resReturn(null, 408, "缺少项目Id"));
-    }
+    try {
+      const requestBody = ctx.request.body;
+      const projectId = requestBody.project_id;
+      if (!projectId) {
+        ctx.body = commons.resReturn(null, 408, "缺少项目Id");
+        return;
+      }
 
-    if ((await this.checkAuth(projectId, "project", "edit")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
-    }
+      if ((await this.checkAuth(projectId, "project", "edit")) !== true) {
+        ctx.body = commons.resReturn(null, 405, "没有权限");
+        return;
+      }
 
-    const saved = await swaggerSyncService.saveOrUpdate(requestBody);
-    if (!saved.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, saved.code, saved.message));
-    }
+      const saved = await swaggerSyncService.saveOrUpdate(requestBody);
+      if (!saved.ok) {
+        return replyServiceResult(ctx, saved);
+      }
 
-    if (requestBody.is_sync_open) {
-      syncUtils.addSyncJob(
-        projectId,
-        requestBody.sync_cron,
-        requestBody.sync_json_url,
-        requestBody.sync_mode,
-        requestBody.uid
-      );
-    } else {
-      syncUtils.deleteSyncJob(projectId);
+      if (requestBody.is_sync_open) {
+        syncUtils.addSyncJob(
+          projectId,
+          requestBody.sync_cron,
+          requestBody.sync_json_url,
+          requestBody.sync_mode,
+          requestBody.uid
+        );
+      } else {
+        syncUtils.deleteSyncJob(projectId);
+      }
+      replyServiceResult(ctx, saved);
+    } catch (err) {
+      replyException(ctx, err);
     }
-    return (ctx.body = yapi.commons.resReturn(saved.data));
   }
 
-  /**
-   * 查询定时任务
-   */
   async get(ctx) {
-    let projectId = ctx.query.project_id;
-    const result = await swaggerSyncService.getByProjectId(projectId);
-    if (!result.ok) {
-      return (ctx.body = yapi.commons.resReturn(null, result.code, result.message));
+    try {
+      const projectId = ctx.query.project_id;
+      const result = await swaggerSyncService.getByProjectId(projectId);
+      replyServiceResult(ctx, result);
+    } catch (err) {
+      replyException(ctx, err);
     }
-    return (ctx.body = yapi.commons.resReturn(result.data));
   }
 }
 

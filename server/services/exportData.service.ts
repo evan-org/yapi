@@ -9,6 +9,8 @@ import {
 import { wikiRepository } from "../repositories/index.js";
 import BaseService from "./base.service.js";
 import { ok, fail } from "./service-result.js";
+import { stripExportIds } from "./exportData.util.js";
+import { buildSwaggerV2Model } from "./export/swagger-v2.js";
 
 export { stripExportIds } from "./exportData.util.js";
 
@@ -47,6 +49,26 @@ class ExportDataService extends BaseService {
   /** Wiki 文档（可选） */
   async getWiki(projectId: number | string) {
     return wikiRepository.get(projectId);
+  }
+
+  /**
+   * 导出 Swagger 2.0 JSON 字符串
+   */
+  async exportSwaggerV2(
+    projectId: number | string,
+    status: string,
+    type: string
+  ) {
+    if (type !== "OpenAPIV2") {
+      return fail(400, "type 无效参数");
+    }
+    const proj = await this.getProject(projectId);
+    if (!proj.ok) {
+      return proj;
+    }
+    const list = await this.listCategoriesWithApis(projectId, status);
+    const model = buildSwaggerV2Model(proj.data, stripExportIds(list));
+    return ok(JSON.stringify(model, null, 2));
   }
 }
 
