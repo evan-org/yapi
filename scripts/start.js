@@ -10,18 +10,20 @@ const path = require("path");
 const fs = require("fs");
 
 const root = path.join(__dirname, "..");
-const serverEnv = path.join(root, "server", ".env");
+const serverEnvLocal = path.join(root, "server", ".env.local");
 const serverEnvExample = path.join(root, "server", ".env.example");
 
 // 解析参数
 const args = process.argv.slice(2);
 const isProd = args.includes("--prod");
 
-// 确保 server/.env 存在
-if (!fs.existsSync(serverEnv)) {
+// 确保 server/.env.local 存在（本地私密配置，勿提交）
+if (!fs.existsSync(serverEnvLocal)) {
   if (fs.existsSync(serverEnvExample)) {
-    fs.copyFileSync(serverEnvExample, serverEnv);
-    console.log("[start] 已从 server/.env.example 生成 server/.env，请按需修改后重启");
+    fs.copyFileSync(serverEnvExample, serverEnvLocal);
+    console.log(
+      "[start] 已从 server/.env.example 生成 server/.env.local，请填入数据库等配置后重启"
+    );
   } else {
     console.error("[start] 未找到 server/.env.example，无法自动生成配置");
     process.exit(1);

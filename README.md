@@ -17,7 +17,8 @@
 ## 快速开始
 
 ```bash
-cp server/.env.example server/.env   # 按需修改 PostgreSQL、端口、管理员邮箱
+cp server/.env.example server/.env.local   # 填入数据库等私密配置（勿提交 Git）
+cp client/.env.example client/.env.local   # 可选，API 代理地址
 pnpm install
 # 在 PostgreSQL 中创建数据库后，手动导入表结构与默认数据：
 #   psql "$YAPI_DATABASE_URL" -f server/db/schema.sql

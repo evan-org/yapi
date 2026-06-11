@@ -18,11 +18,11 @@ for arg in "$@"; do
   esac
 done
 
-# 确保 server/.env 存在
-if [ ! -f "$ROOT/server/.env" ]; then
+# 确保 server/.env.local 存在
+if [ ! -f "$ROOT/server/.env.local" ]; then
   if [ -f "$ROOT/server/.env.example" ]; then
-    cp "$ROOT/server/.env.example" "$ROOT/server/.env"
-    echo "[start] 已从 server/.env.example 生成 server/.env，请按需修改后重启"
+    cp "$ROOT/server/.env.example" "$ROOT/server/.env.local"
+    echo "[start] 已从 server/.env.example 生成 server/.env.local，请填入配置后重启"
   else
     echo "[start] 未找到 server/.env.example，无法自动生成配置" >&2
     exit 1

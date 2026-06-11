@@ -7,10 +7,10 @@ set "MODE=dev"
 
 if /i "%1"=="/prod" set "MODE=start"
 
-if not exist "%ROOT%\server\.env" (
+if not exist "%ROOT%\server\.env.local" (
     if exist "%ROOT%\server\.env.example" (
-        copy "%ROOT%\server\.env.example" "%ROOT%\server\.env" >nul
-        echo [start] Copied server\.env.example to server\.env, please edit and restart
+        copy "%ROOT%\server\.env.example" "%ROOT%\server\.env.local" >nul
+        echo [start] Copied server\.env.example to server\.env.local, please edit and restart
     ) else (
         echo [start] server\.env.example not found
         pause
