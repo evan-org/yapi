@@ -5,9 +5,10 @@
  *   --dev     开发模式（默认）
  *   --prod    生产模式
  */
-const { spawn } = require("child_process");
+const { spawn, execSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const { freeDevPorts } = require("./free-ports.js");
 
 const root = path.join(__dirname, "..");
 const serverEnvLocal = path.join(root, "server", ".env.local");
@@ -66,6 +67,31 @@ function runWorkspace(filter, script) {
 }
 
 const mode = isProd ? "start" : "dev";
+
+/** 结束子进程树，避免 nodemon/next 残留占用端口 */
+function killChildTree(child) {
+  if (!child || !child.pid) {
+    return;
+  }
+  try {
+    if (isWindows) {
+      execSync(`taskkill /PID ${child.pid} /T /F`, { stdio: "ignore" });
+    } else {
+      child.kill("SIGTERM");
+    }
+  } catch {
+    try {
+      child.kill("SIGKILL");
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+if (!isProd) {
+  freeDevPorts();
+}
+
 console.log(`[start] 以${isProd ? "生产" : "开发"}模式启动 YApi...\n`);
 
 const server = runWorkspace("yapi-server", mode);
@@ -74,8 +100,8 @@ const client = runWorkspace("yapi-client", mode);
 // Ctrl+C 优雅退出
 function shutdown() {
   console.log("\n[start] 正在关闭服务...");
-  server.kill();
-  client.kill();
+  killChildTree(server);
+  killChildTree(client);
   setTimeout(() => process.exit(0), 2000);
 }
 
