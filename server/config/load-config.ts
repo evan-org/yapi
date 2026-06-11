@@ -74,8 +74,12 @@ function buildDbFromEnv(): Record<string, unknown> {
   const user = envStr("YAPI_DB_USER");
   const pass = envStr("YAPI_DB_PASS");
   const poolSize = envStr("YAPI_DB_POOL_SIZE");
+  const ssl = envBool("YAPI_DB_SSL", false);
 
   const db: Record<string, unknown> = { port };
+  if (ssl) {
+    db.ssl = true;
+  }
   if (servername) {
     db.servername = servername;
   }
@@ -129,7 +133,7 @@ export function loadWebConfig(serverRoot: string): YapiWebConfig {
   loadDotenv({ path: path.join(serverRoot, ".env") });
 
   return {
-    port: Number(envStr("YAPI_PORT") || "3001"),
+    port: Number(envStr("YAPI_PORT") || "7102"),
     adminAccount: envStr("YAPI_ADMIN_ACCOUNT"),
     timeout: Number(envStr("YAPI_TIMEOUT") || "120000"),
     closeRegister: envBool("YAPI_CLOSE_REGISTER", false),

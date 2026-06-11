@@ -33,12 +33,8 @@ const isWindows = process.platform === "win32";
 /**
  * 在子进程中通过 pnpm filter 启动 workspace 脚本
  */
-function runWorkspace(filter, script, forwardArgs = []) {
-  const args = ["--filter", filter, script];
-  if (forwardArgs.length) {
-    args.push("--", ...forwardArgs);
-  }
-  const child = spawn("pnpm", args, {
+function runWorkspace(filter, script) {
+  const child = spawn("pnpm", ["--filter", filter, script], {
     cwd: root,
     stdio: "pipe",
     shell: true,
@@ -70,9 +66,8 @@ function runWorkspace(filter, script, forwardArgs = []) {
 const mode = isProd ? "start" : "dev";
 console.log(`[start] 以${isProd ? "生产" : "开发"}模式启动 YApi...\n`);
 
-const clientArgs = isProd ? ["-p", "4000", "-H", "0.0.0.0"] : ["-p", "4000"];
 const server = runWorkspace("yapi-server", mode);
-const client = runWorkspace("yapi-client", mode, clientArgs);
+const client = runWorkspace("yapi-client", mode);
 
 // Ctrl+C 优雅退出
 function shutdown() {

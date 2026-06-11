@@ -11,6 +11,17 @@ export function jsonCol(value: unknown, fallback: unknown = null) {
   return JSON.stringify(value);
 }
 
+/** 业务字段名 → PostgreSQL 列名（desc/index 等为保留字或需转义） */
+export function sqlColumnName(field: string): string {
+  if (field === "index") {
+    return '"index"';
+  }
+  if (field === "desc") {
+    return "description";
+  }
+  return field;
+}
+
 export function readJsonCol(value: unknown, fallback: unknown) {
   if (value == null) {
     return fallback;
@@ -68,7 +79,7 @@ export function projectFromRow(row: DocRecord): DocRecord {
     name: row.name,
     basepath: row.basepath,
     switch_notice: row.switch_notice,
-    desc: row.desc,
+    desc: row.description,
     group_id: row.group_id,
     project_type: row.project_type,
     icon: row.icon,
@@ -89,7 +100,7 @@ export function projectFromRow(row: DocRecord): DocRecord {
 }
 
 export const PROJECT_SELECT =
-  "_id, uid, name, basepath, switch_notice, desc, group_id, project_type, icon, color, add_time, up_time, pre_script, after_script, project_mock_script, is_mock_open, strice, is_json5, prd_host, env, members, tag";
+  "_id, uid, name, basepath, switch_notice, description, group_id, project_type, icon, color, add_time, up_time, pre_script, after_script, project_mock_script, is_mock_open, strice, is_json5, prd_host, env, members, tag";
 
 /** interface 表行 → 业务对象 */
 export function interfaceFromRow(row: DocRecord): DocRecord {
@@ -108,7 +119,7 @@ export function interfaceFromRow(row: DocRecord): DocRecord {
     type: row.type,
     index: row.index,
     api_opened: row.api_opened,
-    desc: row.desc,
+    desc: row.description,
     req_body_type: row.req_body_type,
     res_body_type: row.res_body_type,
     req_body_is_json_schema: row.req_body_is_json_schema,
@@ -128,7 +139,7 @@ export function interfaceFromRow(row: DocRecord): DocRecord {
 }
 
 export const INTERFACE_SELECT =
-  '_id, uid, title, path, method, project_id, catid, edit_uid, status, add_time, up_time, type, "index", api_opened, desc, req_body_type, res_body_type, req_body_is_json_schema, res_body_is_json_schema, custom_field_value, markdown, res_body, req_body_other, query_path, req_query, req_headers, req_params, req_body_form, tag';
+  '_id, uid, title, path, method, project_id, catid, edit_uid, status, add_time, up_time, type, "index", api_opened, description, req_body_type, res_body_type, req_body_is_json_schema, res_body_is_json_schema, custom_field_value, markdown, res_body, req_body_other, query_path, req_query, req_headers, req_params, req_body_form, tag';
 
 /** interface_cat 表行 → 业务对象 */
 export function interfaceCatFromRow(row: DocRecord): DocRecord {
@@ -137,7 +148,7 @@ export function interfaceCatFromRow(row: DocRecord): DocRecord {
     name: row.name,
     project_id: row.project_id,
     uid: row.uid,
-    desc: row.desc,
+    desc: row.description,
     index: row.index,
     add_time: row.add_time,
     up_time: row.up_time,
@@ -145,7 +156,7 @@ export function interfaceCatFromRow(row: DocRecord): DocRecord {
 }
 
 export const INTERFACE_CAT_SELECT =
-  '_id, name, project_id, uid, desc, "index", add_time, up_time';
+  '_id, name, project_id, uid, description, "index", add_time, up_time';
 
 /** interface_col 表行 → 业务对象 */
 export function interfaceColFromRow(row: DocRecord): DocRecord {
@@ -154,7 +165,7 @@ export function interfaceColFromRow(row: DocRecord): DocRecord {
     name: row.name,
     project_id: row.project_id,
     uid: row.uid,
-    desc: row.desc,
+    desc: row.description,
     index: row.index,
     add_time: row.add_time,
     up_time: row.up_time,
@@ -166,7 +177,7 @@ export function interfaceColFromRow(row: DocRecord): DocRecord {
 }
 
 export const INTERFACE_COL_SELECT =
-  '_id, name, project_id, uid, desc, "index", add_time, up_time, checkHttpCodeIs200, checkResponseSchema, checkResponseField, checkScript';
+  '_id, name, project_id, uid, description, "index", add_time, up_time, checkHttpCodeIs200, checkResponseSchema, checkResponseField, checkScript';
 
 /** interface_case 表行 → 业务对象 */
 export function interfaceCaseFromRow(row: DocRecord): DocRecord {
@@ -264,7 +275,7 @@ export function wikiFromRow(row: DocRecord): DocRecord {
   return {
     _id: row._id,
     project_id: row.project_id,
-    desc: row.desc,
+    desc: row.description,
     markdown: row.markdown,
     username: row.username,
     uid: row.uid,
@@ -275,7 +286,7 @@ export function wikiFromRow(row: DocRecord): DocRecord {
 }
 
 export const WIKI_SELECT =
-  "_id, project_id, desc, markdown, username, uid, add_time, up_time, edit_uid";
+  "_id, project_id, description, markdown, username, uid, add_time, up_time, edit_uid";
 
 /** adv_mock 表行 → 业务对象 */
 export function advancedMockFromRow(row: DocRecord): DocRecord {

@@ -15,7 +15,16 @@ class SyncUtils {
   constructor() {
     this.syncModel = swaggerSyncRepository;
     this.projectModel = projectRepository;
-    this.init();
+    this._started = false;
+  }
+
+  /** 数据库连接就绪后调用，注册已有 Swagger 同步定时任务 */
+  async start() {
+    if (this._started) {
+      return;
+    }
+    this._started = true;
+    await this.init();
   }
 
   // 初始化定时任务

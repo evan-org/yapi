@@ -23,12 +23,12 @@ cp server/.env.example server/.env
 pnpm install
 ```
 
-4. 初始化
+4. 导入数据库
 
 ```bash
-pnpm run install-server  # 初始化库表与管理员（邮箱见 YAPI_ADMIN_ACCOUNT）
-# 默认输出
-# 初始化管理员账号成功,账号名："admin@admin.com"，密码："ymfe.org"
+# 依次导入表结构与默认管理员（邮箱 admin@admin.com，密码 ymfe.org）
+psql "$YAPI_DATABASE_URL" -f server/db/schema.sql
+psql "$YAPI_DATABASE_URL" -f server/db/seed.sql
 ```
 
 5. 启动开发环境

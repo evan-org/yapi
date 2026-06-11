@@ -32,7 +32,7 @@
 1. Node.js >= 18（`node -v`）
 2. PostgreSQL 已安装并可连接（默认 5432）
 3. 已配置 `server/.env`（参考 `server/.env.example`）
-4. 已执行 `pnpm run install-server` 初始化库表与管理员
+4. 已手动导入 `server/db/schema.sql` 与 `server/db/seed.sql`
 
 仍失败时，查看 API 启动日志与数据库连接配置；Docker 部署见 `deploy/docker-compose.yml` 与根目录 `README.md`。
 

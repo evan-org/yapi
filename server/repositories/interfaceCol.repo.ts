@@ -10,6 +10,7 @@ import {
   interfaceColFromRow,
   INTERFACE_COL_SELECT,
   jsonCol,
+  sqlColumnName,
 } from "../db/relational.js";
 import type { DocRecord } from "../db/where.js";
 
@@ -67,7 +68,7 @@ export const interfaceColRepository: InterfaceColRepository = {
     const pool = getPool();
     const res = await pool.query(
       `INSERT INTO ${TBL}
-        (name, project_id, uid, desc, "index", add_time, up_time,
+        (name, project_id, uid, description, "index", add_time, up_time,
          checkHttpCodeIs200, checkResponseSchema, checkResponseField, checkScript)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11::jsonb)
        RETURNING ${INTERFACE_COL_SELECT}`,
@@ -138,8 +139,7 @@ export const interfaceColRepository: InterfaceColRepository = {
     ] as const;
     for (const col of scalarCols) {
       if (data[col] !== undefined) {
-        const sqlCol = col === "index" ? '"index"' : col;
-        sets.push(`${sqlCol} = $${idx}`);
+        sets.push(`${sqlColumnName(col)} = $${idx}`);
         params.push(data[col]);
         idx += 1;
       }

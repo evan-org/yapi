@@ -25,7 +25,7 @@ if "%MODE%"=="start" (
 )
 
 start "YApi-Server" cmd /c "pnpm --filter yapi-server %MODE%"
-start "YApi-Client" cmd /c "pnpm --filter yapi-client %MODE% -- -p 4000"
+start "YApi-Client" cmd /c "pnpm --filter yapi-client %MODE%"
 
 echo [start] Server and Client started in new windows. Close them to stop.
 endlocal

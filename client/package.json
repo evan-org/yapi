@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 7101",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 7101 -H 0.0.0.0",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "ui:add-all": "shadcn add accordion alert alert-dialog aspect-ratio avatar badge breadcrumb button button-group calendar card carousel chart checkbox collapsible command context-menu dialog drawer dropdown-menu empty field form hover-card input input-group input-otp item kbd label menubar navigation-menu pagination popover progress radio-group resizable scroll-area select separator sheet sidebar skeleton slider sonner spinner switch table tabs textarea toggle toggle-group tooltip -y -o"

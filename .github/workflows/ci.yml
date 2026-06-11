@@ -41,6 +41,11 @@ jobs:
       - name: Install workspaces
         run: pnpm install --frozen-lockfile
 
+      - name: Apply database schema
+        env:
+          PGPASSWORD: postgres
+        run: psql -h 127.0.0.1 -U postgres -d yapi_ci -f server/db/schema.sql
+
       - name: Typecheck server
         run: pnpm run typecheck:server
 

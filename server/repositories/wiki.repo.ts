@@ -5,7 +5,7 @@
 import type { ModelInstance } from "./base.repo.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
-import { wikiFromRow, WIKI_SELECT } from "../db/relational.js";
+import { wikiFromRow, WIKI_SELECT, sqlColumnName } from "../db/relational.js";
 import type { DocRecord } from "../db/where.js";
 
 const TBL = tableName("wiki");
@@ -26,7 +26,7 @@ export const wikiRepository: WikiRepository = {
     const pool = getPool();
     const res = await pool.query(
       `INSERT INTO ${TBL}
-        (project_id, desc, markdown, username, uid, add_time, up_time, edit_uid)
+        (project_id, description, markdown, username, uid, add_time, up_time, edit_uid)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING ${WIKI_SELECT}`,
       [
@@ -66,7 +66,7 @@ export const wikiRepository: WikiRepository = {
     ] as const;
     for (const col of cols) {
       if (data[col] !== undefined) {
-        sets.push(`${col} = $${idx}`);
+        sets.push(`${sqlColumnName(col)} = $${idx}`);
         params.push(data[col]);
         idx += 1;
       }

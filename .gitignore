@@ -1,6 +1,5 @@
 # 后端运行时（均在 server/ 内）
 server/.env
-server/init.lock
 server/log/
 server/dist/
 

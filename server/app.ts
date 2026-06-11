@@ -28,15 +28,15 @@ const pkg = JSON.parse(
 );
 
 yapi.commons = commons;
-yapi.connect = dbModule.connect();
 
 import "./bootstrap/features.js";
-import "./utils/notice.js";
+import { registerNotice } from "./utils/notice.js";
+import syncUtils from "./services/swaggerSync.scheduler.js";
 
 globalThis.storageCreator = storageCreator;
 
 const isDev = process.argv[2] === "dev";
-const nextPort = process.env.YAPI_DEV_CLIENT_PORT || "4000";
+const nextPort = process.env.YAPI_DEV_CLIENT_PORT || "7101";
 
 /**
  * 健康检查
@@ -70,7 +70,7 @@ function registerFrontendFallback(app) {
     return c.json(
       {
         errcode: 0,
-        errmsg: "YApi API 服务运行中。请访问 Next.js 前端（默认端口 4000）。",
+        errmsg: "YApi API 服务运行中。请访问 Next.js 前端（默认端口 7101）。",
         data: { frontend: "nextjs", port: nextPort },
       },
       200
@@ -115,6 +115,7 @@ function logStartup(port) {
  * @returns {Promise<import('hono').Hono>}
  */
 export async function createApp() {
+  registerNotice();
   assertRuntimeConfig();
 
   const app = new Hono();
@@ -135,8 +136,10 @@ export async function createApp() {
  * 创建应用并监听 HTTP 端口
  */
 async function startServer() {
+  await dbModule.connect();
+  await syncUtils.start();
   const app = await createApp();
-  const port = Number(yapi.WEBCONFIG.port) || 3001;
+  const port = Number(yapi.WEBCONFIG.port) || 7102;
 
   const server = serve({
     fetch: app.fetch,

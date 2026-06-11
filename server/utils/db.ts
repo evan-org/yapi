@@ -8,6 +8,7 @@ import { connectPg, closePg } from "../db/pg-pool.js";
 function connect(callback) {
   return connectPg(callback).catch((err) => {
     yapi.commons.log(String(err) + ", postgresql connect error", "error");
+    throw err;
   });
 }
 

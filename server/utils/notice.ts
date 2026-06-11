@@ -28,7 +28,8 @@ const noticeObj = {
   }
 }
 
-yapi.commons.sendNotice = async function (projectId, data) {
+export function registerNotice() {
+  yapi.commons.sendNotice = async function (projectId, data) {
   const followInst = followRepository;
   const userInst = userRepository;
   const projectInst = projectRepository;
@@ -61,4 +62,5 @@ yapi.commons.sendNotice = async function (projectId, data) {
   } catch (e) {
     yapi.commons.log("发送失败：" + e, "error");
   }
-};
+  };
+}

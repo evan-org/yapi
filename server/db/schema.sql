@@ -1,4 +1,17 @@
--- YApi PostgreSQL 结构（新装库；应用启动时也会自动 ensureDatabase）
+-- =============================================================================
+-- YApi PostgreSQL 表结构（手动导入，应用启动不会自动建表）
+--
+-- 用法示例：
+--   psql "postgresql://yapi:yapi@127.0.0.1:5432/yapi" -f server/db/schema.sql
+--   psql "postgresql://yapi:yapi@127.0.0.1:5432/yapi" -f server/db/seed.sql
+--   或在 pgAdmin / DBeaver 中依次执行上述两个文件
+--
+-- seed.sql 写入默认管理员（admin@admin.com / ymfe.org）及私有分组
+-- =============================================================================
+
+-- -----------------------------------------------------------------------------
+-- 表结构
+-- -----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS yapi_user (
   _id SERIAL PRIMARY KEY,
@@ -12,6 +25,7 @@ CREATE TABLE IF NOT EXISTS yapi_user (
   add_time BIGINT NOT NULL DEFAULT 0,
   up_time BIGINT NOT NULL DEFAULT 0
 );
+
 CREATE TABLE IF NOT EXISTS yapi_group (
   _id SERIAL PRIMARY KEY,
   uid BIGINT NOT NULL DEFAULT 0,
@@ -23,13 +37,14 @@ CREATE TABLE IF NOT EXISTS yapi_group (
   members JSONB NOT NULL DEFAULT '[]'::jsonb,
   custom_field1 JSONB NOT NULL DEFAULT '{}'::jsonb
 );
+
 CREATE TABLE IF NOT EXISTS yapi_project (
   _id SERIAL PRIMARY KEY,
   uid BIGINT NOT NULL DEFAULT 0,
   name TEXT NOT NULL DEFAULT '',
   basepath TEXT NOT NULL DEFAULT '',
   switch_notice BOOLEAN NOT NULL DEFAULT FALSE,
-  desc TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
   group_id BIGINT NOT NULL DEFAULT 0,
   project_type TEXT NOT NULL DEFAULT 'private',
   icon TEXT NOT NULL DEFAULT '',
@@ -47,6 +62,7 @@ CREATE TABLE IF NOT EXISTS yapi_project (
   members JSONB NOT NULL DEFAULT '[]'::jsonb,
   tag JSONB NOT NULL DEFAULT '[]'::jsonb
 );
+
 CREATE TABLE IF NOT EXISTS yapi_interface (
   _id SERIAL PRIMARY KEY,
   uid BIGINT NOT NULL DEFAULT 0,
@@ -62,7 +78,7 @@ CREATE TABLE IF NOT EXISTS yapi_interface (
   type TEXT NOT NULL DEFAULT 'static',
   "index" INTEGER NOT NULL DEFAULT 0,
   api_opened BOOLEAN NOT NULL DEFAULT FALSE,
-  desc TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
   req_body_type TEXT NOT NULL DEFAULT '',
   res_body_type TEXT NOT NULL DEFAULT '',
   req_body_is_json_schema BOOLEAN NOT NULL DEFAULT FALSE,
@@ -78,16 +94,33 @@ CREATE TABLE IF NOT EXISTS yapi_interface (
   req_body_form JSONB NOT NULL DEFAULT '[]'::jsonb,
   tag JSONB NOT NULL DEFAULT '[]'::jsonb
 );
+
 CREATE TABLE IF NOT EXISTS yapi_interface_cat (
   _id SERIAL PRIMARY KEY,
   name TEXT NOT NULL DEFAULT '',
   project_id BIGINT NOT NULL DEFAULT 0,
   uid BIGINT NOT NULL DEFAULT 0,
-  desc TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
   "index" INTEGER NOT NULL DEFAULT 0,
   add_time BIGINT NOT NULL DEFAULT 0,
   up_time BIGINT NOT NULL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS yapi_interface_col (
+  _id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL DEFAULT '',
+  project_id BIGINT NOT NULL DEFAULT 0,
+  uid BIGINT NOT NULL DEFAULT 0,
+  description TEXT NOT NULL DEFAULT '',
+  "index" INTEGER NOT NULL DEFAULT 0,
+  add_time BIGINT NOT NULL DEFAULT 0,
+  up_time BIGINT NOT NULL DEFAULT 0,
+  checkHttpCodeIs200 BOOLEAN NOT NULL DEFAULT FALSE,
+  checkResponseSchema BOOLEAN NOT NULL DEFAULT FALSE,
+  checkResponseField JSONB NOT NULL DEFAULT '{}'::jsonb,
+  checkScript JSONB NOT NULL DEFAULT '{}'::jsonb
+);
+
 CREATE TABLE IF NOT EXISTS yapi_interface_case (
   _id SERIAL PRIMARY KEY,
   uid BIGINT NOT NULL DEFAULT 0,
@@ -107,28 +140,7 @@ CREATE TABLE IF NOT EXISTS yapi_interface_case (
   req_params JSONB NOT NULL DEFAULT '[]'::jsonb,
   req_body_form JSONB NOT NULL DEFAULT '[]'::jsonb
 );
-CREATE TABLE IF NOT EXISTS yapi_interface_col (
-  _id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL DEFAULT '',
-  project_id BIGINT NOT NULL DEFAULT 0,
-  uid BIGINT NOT NULL DEFAULT 0,
-  desc TEXT NOT NULL DEFAULT '',
-  "index" INTEGER NOT NULL DEFAULT 0,
-  add_time BIGINT NOT NULL DEFAULT 0,
-  up_time BIGINT NOT NULL DEFAULT 0,
-  checkHttpCodeIs200 BOOLEAN NOT NULL DEFAULT FALSE,
-  checkResponseSchema BOOLEAN NOT NULL DEFAULT FALSE,
-  checkResponseField JSONB NOT NULL DEFAULT '{}'::jsonb,
-  checkScript JSONB NOT NULL DEFAULT '{}'::jsonb
-);
-CREATE TABLE IF NOT EXISTS yapi_follow (
-  _id SERIAL PRIMARY KEY,
-  uid BIGINT NOT NULL DEFAULT 0,
-  projectid BIGINT NOT NULL DEFAULT 0,
-  projectname TEXT NOT NULL DEFAULT '',
-  icon TEXT NOT NULL DEFAULT '',
-  color TEXT NOT NULL DEFAULT ''
-);
+
 CREATE TABLE IF NOT EXISTS yapi_log (
   _id SERIAL PRIMARY KEY,
   content TEXT NOT NULL DEFAULT '',
@@ -139,26 +151,39 @@ CREATE TABLE IF NOT EXISTS yapi_log (
   add_time BIGINT NOT NULL DEFAULT 0,
   data JSONB NOT NULL DEFAULT '{}'::jsonb
 );
+
 CREATE TABLE IF NOT EXISTS yapi_token (
   _id SERIAL PRIMARY KEY,
   project_id BIGINT NOT NULL DEFAULT 0,
   token TEXT NOT NULL DEFAULT ''
 );
+
+CREATE TABLE IF NOT EXISTS yapi_follow (
+  _id SERIAL PRIMARY KEY,
+  uid BIGINT NOT NULL DEFAULT 0,
+  projectid BIGINT NOT NULL DEFAULT 0,
+  projectname TEXT NOT NULL DEFAULT '',
+  icon TEXT NOT NULL DEFAULT '',
+  color TEXT NOT NULL DEFAULT ''
+);
+
 CREATE TABLE IF NOT EXISTS yapi_avatar (
   _id SERIAL PRIMARY KEY,
   uid BIGINT NOT NULL DEFAULT 0,
   type TEXT NOT NULL DEFAULT '',
   basecode TEXT NOT NULL DEFAULT ''
 );
+
 CREATE TABLE IF NOT EXISTS yapi_storage (
   _id SERIAL PRIMARY KEY,
   key TEXT NOT NULL DEFAULT '',
   data TEXT NOT NULL DEFAULT ''
 );
+
 CREATE TABLE IF NOT EXISTS yapi_wiki (
   _id SERIAL PRIMARY KEY,
   project_id BIGINT NOT NULL DEFAULT 0,
-  desc TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
   markdown TEXT NOT NULL DEFAULT '',
   username TEXT NOT NULL DEFAULT '',
   uid BIGINT NOT NULL DEFAULT 0,
@@ -166,6 +191,7 @@ CREATE TABLE IF NOT EXISTS yapi_wiki (
   up_time BIGINT NOT NULL DEFAULT 0,
   edit_uid BIGINT NOT NULL DEFAULT 0
 );
+
 CREATE TABLE IF NOT EXISTS yapi_adv_mock (
   _id SERIAL PRIMARY KEY,
   interface_id BIGINT NOT NULL DEFAULT 0,
@@ -175,6 +201,7 @@ CREATE TABLE IF NOT EXISTS yapi_adv_mock (
   mock_script TEXT NOT NULL DEFAULT '',
   enable BOOLEAN NOT NULL DEFAULT FALSE
 );
+
 CREATE TABLE IF NOT EXISTS yapi_adv_mock_case (
   _id SERIAL PRIMARY KEY,
   interface_id BIGINT NOT NULL DEFAULT 0,
@@ -191,6 +218,7 @@ CREATE TABLE IF NOT EXISTS yapi_adv_mock_case (
   ip TEXT NOT NULL DEFAULT '',
   case_enable BOOLEAN NOT NULL DEFAULT TRUE
 );
+
 CREATE TABLE IF NOT EXISTS yapi_statis_mock (
   _id SERIAL PRIMARY KEY,
   interface_id BIGINT NOT NULL DEFAULT 0,
@@ -201,6 +229,7 @@ CREATE TABLE IF NOT EXISTS yapi_statis_mock (
   date TEXT NOT NULL DEFAULT '',
   up_time BIGINT NOT NULL DEFAULT 0
 );
+
 CREATE TABLE IF NOT EXISTS yapi_interface_auto_sync (
   _id SERIAL PRIMARY KEY,
   uid BIGINT NOT NULL DEFAULT 0,
@@ -214,6 +243,10 @@ CREATE TABLE IF NOT EXISTS yapi_interface_auto_sync (
   old_swagger_content TEXT NOT NULL DEFAULT '',
   last_sync_time BIGINT NOT NULL DEFAULT 0
 );
+
+-- -----------------------------------------------------------------------------
+-- 索引
+-- -----------------------------------------------------------------------------
 
 CREATE INDEX IF NOT EXISTS idx_yapi_user_username ON yapi_user (username);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_yapi_user_email ON yapi_user (email);

@@ -18,7 +18,9 @@ proxy_set_header Connection "upgrade";
 ```bash
 cp deploy/.env.example deploy/.env   # 修改数据库密码、管理员邮箱等
 docker compose -f deploy/docker-compose.yml up -d --build
-docker compose -f deploy/docker-compose.yml exec yapi pnpm run install-server
+# 首次部署导入表结构与默认数据：
+# psql "$YAPI_DATABASE_URL" -f server/db/schema.sql
+# psql "$YAPI_DATABASE_URL" -f server/db/seed.sql
 ```
 
 访问 <http://127.0.0.1:4000>。默认管理员邮箱见 `YAPI_ADMIN_ACCOUNT`，初始密码 `ymfe.org`（可在个人中心修改）。
@@ -30,7 +32,9 @@ git clone 本仓库 --depth=1
 cd yapi
 cp server/.env.example server/.env   # 修改数据库与管理员邮箱
 pnpm install
-pnpm run install-server
+# 手动导入表结构与默认数据（示例）
+# psql "postgresql://user:pass@127.0.0.1:5432/yapi" -f server/db/schema.sql
+# psql "postgresql://user:pass@127.0.0.1:5432/yapi" -f server/db/seed.sql
 pnpm run build
 pnpm run start -- --prod
 ```
@@ -122,4 +126,4 @@ YAPI_LDAP_LOGIN={"enable":true,"server":"ldap://l-ldapt1.com","baseDn":"CN=Admin
 - 连接串：`YAPI_DATABASE_URL=postgresql://user:pass@127.0.0.1:5432/yapi`
 - 分项：`YAPI_DB_HOST`、`YAPI_DB_PORT`（默认 5432）、`YAPI_DB_NAME`、`YAPI_DB_USER`、`YAPI_DB_PASS`
 
-首次部署可执行 `pnpm run db:init` 初始化表结构（应用启动时也会自动建表）。
+首次部署请手动执行 `server/db/schema.sql` 与 `server/db/seed.sql`，应用启动不会自动建表或写入种子数据。

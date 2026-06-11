@@ -19,4 +19,4 @@ alwaysApply: true
 
 - **唯一来源**：环境变量；本地复制 `server/.env.example` → `server/.env`
 - **Docker**：`deploy/.env.example` → `deploy/.env`，由 `docker-compose.yml` 的 `env_file` 注入
-- 初始化：`npm run install-server`（需已配置数据库连接）
+- 数据库：手动导入 `server/db/schema.sql` + `server/db/seed.sql`（应用不会自动建表或写种子数据）
