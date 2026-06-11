@@ -13,11 +13,8 @@
     "start": "cross-env NODE_ENV=production tsx app.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "install-server": "tsx install.ts",
-    "db:init": "tsx db/init-cli.ts",
     "pretest": "rm -rf dist && npm run build",
-    "test": "cross-env YAPI_ENV=test ava",
-    "npm-publish": "tsx npm-publish.ts"
+    "test": "cross-env YAPI_ENV=test ava"
   },
   "license": "Apache-2.0",
   "dependencies": {

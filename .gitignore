@@ -1,19 +1,20 @@
 # 后端运行时（均在 server/ 内）
 server/.env
-server/init.lock
+server/.env.local
 server/log/
 server/dist/
 
 # Docker 本地 env
 deploy/.env
 log/
-# 旧版插件/打包产物（勿提交）
+# 勿提交的本地产物
 vendors/
 plugin.js
 plugin.json
 external-plugins.json
 
 # 前端
+client/.env.local
 client/.next/
 client/out/
 client/node_modules/

@@ -2,8 +2,8 @@
 /**
  * HTTP 路由聚合：各业务模块路由
  */
-import RouteBinder from "../lib/bind-routes.js";
-import appContext from "../lib/context.js";
+import RouteBinder from "../../lib/bind-routes.js";
+import appContext from "../../lib/context.js";
 import { registerGroupRoutes } from "../modules/group.routes.js";
 import { registerUserRoutes } from "../modules/user.routes.js";
 import { registerProjectRoutes } from "../modules/project.routes.js";

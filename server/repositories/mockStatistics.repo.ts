@@ -3,7 +3,7 @@
  * Mock 统计（statis_mock）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import { mockStatisticsFromRow, STATIS_MOCK_SELECT } from "../db/relational.js";
@@ -69,7 +69,7 @@ export const mockStatisticsRepository: MockStatisticsRepository = {
   },
 
   async up(id: number | string, data: DocRecord) {
-    data.up_time = yapi.commons.time();
+    data.up_time = nowSeconds();
     const pool = getPool();
     const sets: string[] = [];
     const params: unknown[] = [];

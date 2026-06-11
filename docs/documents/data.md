@@ -1,57 +1,52 @@
 # 数据导入
 
-在数据管理可快速导入其他格式的接口数据，方便快速添加接口。YApi 目前支持 postman, swagger, har 数据导入。
+在项目 **设置 → 环境与数据** 可快速导入其他格式的接口数据。YApi 目前支持 Postman、Swagger、HAR、YApi JSON 数据导入。
 
-v1.3.23+ 增加数据导入的3种同步方式  normal, good, mergin
+支持三种同步方式（`merge` / `dataSync`）：
 
-1. 普通模式(normal)：不导入已存在的接口；   
-2. 智能合并(good)：已存在的接口，将合并返回数据的 response，适用于导入了 swagger 数据，保留对数据结构的改动；例如，用户对字段code 添加了mock信息, 当再次数据导入的时候 mock 字段将不会被覆盖
-3. 完全覆盖(mergin)：不保留旧数据，完全使用新数据，适用于接口定义完全交给后端定义， 默认为 normal
+1. **普通模式（normal）**：不导入已存在的接口
+2. **智能合并（good）**：已存在接口合并返回数据的 response，保留对数据结构的改动（如 mock 字段）
+3. **完全覆盖（mergin）**：不保留旧数据，完全使用新数据；默认为 normal
 
 ## Postman 数据导入
 
-1.首先在 postman 导出接口
+1. 在 Postman 导出接口
 
 <div><img class="doc-img" style="width:50%"  src="./images/usage/postman-1.jpg" /></div>
 
-2.选择 collection_v1,点击 export 导出接口到文件 xxx
+2. 选择 collection_v1，点击 export 导出到文件
 
 <div><img  class="doc-img"  style="width:70%"  src="./images/usage/postman-2.jpg" /></div>
 
-3.打开 yapi 平台，进入到项目页面，点击数据管理，选择相应的分组和 postman 导入  方式， 选择刚才保存的文件路径，开始导入数据
+3. 打开 YApi，进入项目 **设置 → 环境与数据**，选择 Postman 导入方式并上传文件
 
 <div><img  class="doc-img"  style="width:90%"  src="./images/usage/postman-3.jpg" /></div>
 
-## HAR 数据导入
+## HAR 数据导入
 
-<p>可用 chrome 实现录制接口数据的功能，方便开发者快速导入项目接口</p>
+可用 Chrome 开发者工具录制接口数据，方便快速导入。
 
-1.打开 Chrome 浏览器开发者工具，点击 network，首次使用请先 clear 所有请求信息，确保录制功能开启（红色为开启状态）
+1. 打开 Chrome 开发者工具 → Network，首次使用先 Clear，确保录制开启（红色）
 
 <div><img  class="doc-img" style="width:70%" src="./images/usage/chrome-1.jpg" /></div>
 
-2.操作页面实际功能，完成后点击 save as HAR with content,将数据保存到文件 xxx
+2. 操作页面功能后，Save as HAR with content
 
 <div><img  class="doc-img" style="width:70%" src="./images/usage/chrome-2.jpg" /></div>
 
-3.打开 yapi 平台，进入到项目页面，点击数据管理，选择相应的分组和 har 导入  方式， 选择刚才保存的文件路径，开始导入数据
+3. 在项目 **设置 → 环境与数据** 选择 HAR 导入并上传文件
 
 <div><img class="doc-img"   style="width:50%"  src="./images/usage/chrome-3.jpg" /></div>
 
-> Tips: har 数据导入只支持 response.content.mimeType 为 application/json 类型的数据
+> Tips: HAR 导入仅支持 `response.content.mimeType` 为 `application/json` 的数据
 
 ## Swagger 数据导入
 
-<p>什么是 Swagger ？</p>
-<div>[Swagger从入门到精通](https://www.gitbook.com/book/huangwenchao/swagger/details)</div>
+[Swagger 入门](https://www.gitbook.com/book/huangwenchao/swagger/details)
 
-<br />
-1.生成 JSON 语言编写的 Swagger API 文档文件<div>  例如这样的数据 （<a href="http://petstore.swagger.io/v2/swagger.json" target="blank">http://petstore.swagger.io/v2/swagger.json</a>），可以将其内容复制到 JSON 文件中。</div>
-<br />
+1. 准备 Swagger JSON 文件（例如 [petstore 示例](http://petstore.swagger.io/v2/swagger.json)），也支持 URL 导入
 
-> Tips: v1.3.19 版本开始支持 swagger url 导入功能
-
-2.打开 yapi 平台，进入到项目页面，点击数据管理，选择相应的分组和 swagger 导入  方式， 选择刚才的文件，开始导入数据
+2. 在项目 **设置 → 环境与数据** 选择 Swagger 导入并上传或填写 URL
 
 <div><img class="doc-img"   style="width:50%"  src="./images/usage/chrome-4.jpg" /></div>
 
@@ -61,49 +56,39 @@ v1.3.23+ 增加数据导入的3种同步方式  normal, good, mergin
 
 ## YApi 接口 JSON 数据导入
 
-该功能在 v1.3.12 版本上线，可导入在 yapi 平台导出的 json 接口数据。
+可导入在 YApi 平台导出的 JSON 接口数据。
 
 ![](import-json-data.png)
 
-## 通过命令行导入接口数据
+## 通过开放 API 导入（自动化集成）
 
-YApi 支持通过命令行导入接口数据，他的应用场景是做自动化集成，比如配合 swagger ，接口文档前端不用维护，交由后端生成。
+适用于 CI/CD 或与 Swagger 流水线配合，由后端自动生成文档后推送到 YApi。
 
-### 使用方法
+**接口：** `POST /api/open/import_data`
 
-第一步，确保 `yapi-cli >= 1.2.7` 版本，如果低于此版本请升级 `yapi-cli` 工具
+**参数：**
 
+| 字段 | 说明 |
+|------|------|
+| `type` | 导入类型：`swagger`、`postman`、`har`、`json` |
+| `token` | 项目 Token（项目设置 → 环境与数据） |
+| `project_id` | 项目 ID |
+| `json` | 文件内容（与 `url` 二选一） |
+| `url` | 远程 JSON 地址（与 `json` 二选一） |
+| `merge` | `normal` / `good` / `mergin`，默认 `normal` |
+
+**示例：**
+
+```bash
+curl -X POST 'http://127.0.0.1:3001/api/open/import_data' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "type": "swagger",
+    "token": "YOUR_PROJECT_TOKEN",
+    "project_id": 1,
+    "url": "https://petstore.swagger.io/v2/swagger.json",
+    "merge": "normal"
+  }'
 ```
-npm install -g yapi-cli
-```
 
-第二步，在任意一个目录下新建配置文件 `yapi-import.json`，内容如下：
-
-```json
-{
-  "type": "swagger",
-  "token": "17fba0027f300248b804",
-  "file": "swagger.json",
-  "merge": "normal",
-  "server": "http://yapi.local.qunar.com:3000"
-}
-```
-
-`type` 是数据数据方式，目前官方只支持 swagger
-
-`token` 是项目 token，在 `项目设置 -> token` 设置获取
-
-`file` 是 swagger 接口文档文件，可使用绝对路径或 url
-
-`merge` 有三种导入方式(v1.3.23+支持) normal, good, mergin  
-1. 普通模式(normal)：不导入已存在的接口；   
-2. 智能合并(good)：已存在的接口，将合并返回数据的 response，适用于导入了 swagger 数据，保留对数据结构的改动；  
-3. 完全覆盖(mergin)：不保留旧数据，完全使用新数据，适用于接口定义完全交给后端定义， 默认为 normal
-
-`server` 是 yapi 服务器地址
-
-第三步，在`新建配置文件的当前目录`，执行下面指令
-
-```
-yapi import
-```
+将 `127.0.0.1:3001` 替换为实际 API 地址（`YAPI_PORT`）。

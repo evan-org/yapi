@@ -3,13 +3,14 @@
  * 接口（interface）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import {
   interfaceFromRow,
   INTERFACE_SELECT,
   jsonCol,
+  sqlColumnName,
 } from "../db/relational.js";
 import type { DocRecord } from "../db/where.js";
 
@@ -170,8 +171,8 @@ function selectCols(fields?: string[]) {
       cols.add("catid");
       continue;
     }
-    if (f === "index") {
-      cols.add('"index"');
+    if (f === "index" || f === "desc") {
+      cols.add(sqlColumnName(f));
       continue;
     }
     cols.add(f);
@@ -187,7 +188,7 @@ export const interfaceRepository: InterfaceRepository = {
     const res = await pool.query(
       `INSERT INTO ${TBL}
         (uid, title, path, method, project_id, catid, edit_uid, status, add_time, up_time,
-         type, "index", api_opened, desc, req_body_type, res_body_type,
+         type, "index", api_opened, description, req_body_type, res_body_type,
          req_body_is_json_schema, res_body_is_json_schema, custom_field_value, markdown,
          res_body, req_body_other, query_path, req_query, req_headers, req_params, req_body_form, tag)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,
@@ -435,8 +436,7 @@ export const interfaceRepository: InterfaceRepository = {
     let idx = 1;
     for (const col of SCALAR_COLS) {
       if (data[col] !== undefined) {
-        const sqlCol = col === "index" ? '"index"' : col;
-        sets.push(`${sqlCol} = $${idx}`);
+        sets.push(`${sqlColumnName(col)} = $${idx}`);
         params.push(data[col]);
         idx += 1;
       }
@@ -460,7 +460,7 @@ export const interfaceRepository: InterfaceRepository = {
   },
 
   async up(id: number | string, data: DocRecord) {
-    data.up_time = yapi.commons.time();
+    data.up_time = nowSeconds();
     return this.update(id, data);
   },
 

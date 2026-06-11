@@ -1,239 +1,112 @@
 // @ts-nocheck
+/**
+ * 项目 Wiki HTTP 控制器（薄层：鉴权 → Service → 响应）
+ */
+import type { AppContext } from "../types/app-context.js";
 import baseController from "./base.js";
-
-import { wikiRepository, projectRepository } from "../repositories/index.js";
-
-import { userRepository } from "../repositories/index.js";
-
-import jsondiffpatch from 'jsondiffpatch';
-
-const formattersHtml = jsondiffpatch.formatters.html;
 import yapi from "../runtime.js";
-
-// import util from './util.js';
-
-import fs from 'fs-extra';
-
-import path from 'path';
-
-import showDiffMsg from "../utils/diff-view.js";
+import { wikiService } from "../services/index.js";
+import { replyServiceResult, replyException } from "./controller.util.js";
 
 class wikiController extends baseController {
-  constructor(ctx) {
-    super(ctx);
-    this.Model = wikiRepository;
-    this.projectModel = projectRepository;
-  }
-
   /**
    * 获取wiki信息
    * @interface wiki_desc/get
-   * @method get
-   * @category statistics
-   * @foldnumber 10
-   * @returns {Object}
    */
-  async get(ctx) {
+  async get(ctx: AppContext) {
     try {
-      let project_id = ctx.request.query.project_id;
-      if (!project_id) {
-        return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
-      }
-      let result = await this.Model.get(project_id);
-      return (ctx.body = yapi.commons.resReturn(result));
+      const project_id = ctx.request.query.project_id;
+      const result = await wikiService.getByProjectId(project_id);
+      replyServiceResult(ctx, result);
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 400, err.message);
+      replyException(ctx, err);
     }
   }
 
   /**
    * 保存wiki信息
-   * @interface wiki_desc/get
-   * @method get
-   * @category statistics
-   * @foldnumber 10
-   * @returns {Object}
+   * @interface wiki_desc/save
    */
-
-  async save(ctx) {
+  async save(ctx: AppContext) {
     try {
-      let params = ctx.request.body;
+      let params = ctx.request.body as Record<string, unknown>;
       params = yapi.commons.handleParams(params, {
         project_id: "number",
         desc: "string",
-        markdown: "string"
+        markdown: "string",
       });
 
       if (!params.project_id) {
-        return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
+        ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空");
+        return;
       }
       if (!this.$tokenAuth) {
-        let auth = await this.checkAuth(params.project_id, "project", "edit");
+        const auth = await this.checkAuth(
+          params.project_id as number,
+          "project",
+          "edit"
+        );
         if (!auth) {
-          return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
+          ctx.body = yapi.commons.resReturn(null, 400, "没有权限");
+          return;
         }
       }
 
-      let notice = params.email_notice;
-      delete params.email_notice;
-      const username = this.getUsername();
-      const uid = this.getUid();
-
-      // 如果当前数据库里面没有数据
-      let result = await this.Model.get(params.project_id);
-      if (!result) {
-        let data = Object.assign(params, {
-          username,
-          uid,
-          add_time: yapi.commons.time(),
-          up_time: yapi.commons.time()
-        });
-
-        let res = await this.Model.save(data);
-        ctx.body = yapi.commons.resReturn(res);
-      } else {
-        let data = Object.assign(params, {
-          username,
-          uid,
-          up_time: yapi.commons.time()
-        });
-        let upRes = await this.Model.up(result._id, data);
-        ctx.body = yapi.commons.resReturn(upRes);
-      }
-
-      let logData = {
-        type: "wiki",
-        project_id: params.project_id,
-        current: params.desc,
-        old: result ? result.desc : ""
-      };
-      let wikiUrl = `${ctx.request.origin}/project/${params.project_id}/wiki`;
-
-      if (notice) {
-        let diffView = showDiffMsg(jsondiffpatch, formattersHtml, logData);
-
-        let annotatedCss = fs.readFileSync(
-          path.resolve(
-            yapi.WEBROOT,
-            "node_modules/jsondiffpatch/dist/formatters-styles/annotated.css"
-          ),
-          "utf8"
-        );
-        let htmlCss = fs.readFileSync(
-          path.resolve(yapi.WEBROOT, "node_modules/jsondiffpatch/dist/formatters-styles/html.css"),
-          "utf8"
-        );
-        let project = await this.projectModel.getBaseInfo(params.project_id);
-
-        yapi.commons.sendNotice(params.project_id, {
-          title: `${username} 更新了wiki说明`,
-          content: `<html>
-          <head>
-          <meta charset="utf-8" />
-          <style>
-          ${annotatedCss}
-          ${htmlCss}
-          </style>
-          </head>
-          <body>
-          <div><h3>${username}更新了wiki说明</h3>
-          <p>修改用户: ${username}</p>
-          <p>修改项目: <a href="${wikiUrl}">${project.name}</a></p>
-          <p>详细改动日志: ${this.diffHTML(diffView)}</p></div>
-          </body>
-          </html>`
-        });
-      }
-
-      // 保存修改日志信息
-      yapi.commons.saveLog({
-        content: `<a href="/user/profile/${uid}">${username}</a> 更新了 <a href="${wikiUrl}">wiki</a> 的信息`,
-        type: "project",
-        uid,
-        username: username,
-        typeid: params.project_id,
-        data: logData
-      });
-      return 1;
+      const wikiUrl = `${ctx.request.origin}/project/${params.project_id}/wiki`;
+      const result = await wikiService.save(
+        {
+          project_id: params.project_id as number,
+          desc: params.desc as string | undefined,
+          markdown: params.markdown as string | undefined,
+          email_notice: params.email_notice as boolean | undefined,
+        },
+        {
+          username: this.getUsername(),
+          uid: this.getUid(),
+          wikiUrl,
+        }
+      );
+      replyServiceResult(ctx, result);
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 400, err.message);
+      replyException(ctx, err);
     }
   }
-  diffHTML(html) {
-    if (html.length === 0) {
-      return "<span style=\"color: #555\">没有改动，该操作未改动wiki数据</span>";
-    }
 
-    return html.map((item) => `<div>
-      <h4 class="title">${item.title}</h4>
-      <div>${item.content}</div>
-    </div>`);
-  }
-
-  // 处理编辑冲突
-  async wikiConflict(ctx) {
+  // WebSocket 编辑冲突（协议层保留在 Controller）
+  async wikiConflict(ctx: AppContext) {
     try {
-      let result;
-      ctx.websocket.on("message", async(message) => {
-        let id = parseInt(ctx.query.id, 10);
+      ctx.websocket.on("message", async (message: string) => {
+        const id = parseInt(ctx.query.id as string, 10);
         if (!id) {
-          return ctx.websocket.send("id 参数有误");
+          ctx.websocket.send("id 参数有误");
+          return;
         }
-        result = await this.Model.get(id);
-        let data = await this.websocketMsgMap(message, result);
+        const data = await this.websocketMsgMap(message, id);
         if (data) {
           ctx.websocket.send(JSON.stringify(data));
         }
       });
-      ctx.websocket.on("close", async() => {});
+      ctx.websocket.on("close", async () => {});
     } catch (err) {
       yapi.commons.log(err, "error");
     }
   }
 
-  websocketMsgMap(msg, result) {
-    const map = {
-      start: this.startFunc.bind(this),
-      end: this.endFunc.bind(this),
-      editor: this.editorFunc.bind(this)
+  async websocketMsgMap(msg: string, wikiId: number) {
+    const map: Record<string, () => Promise<unknown>> = {
+      start: () => wikiService.onWsStart(wikiId, this.getUid()),
+      end: () => wikiService.onWsEnd(wikiId),
+      editor: () => wikiService.onWsEditor(wikiId, this.getUid()),
     };
-
-    return map[msg](result);
-  }
-
-  // socket 开始链接
-  async startFunc(result) {
-    if (result && result.edit_uid === this.getUid()) {
-      await this.Model.upEditUid(result._id, 0);
+    const handler = map[msg];
+    if (!handler) {
+      return null;
     }
-  }
-
-  // socket 结束链接
-  async endFunc(result) {
-    if (result) {
-      await this.Model.upEditUid(result._id, 0);
+    const result = await handler();
+    if (result && typeof result === "object" && "ok" in result && result.ok) {
+      return result.data;
     }
-  }
-
-  // 正在编辑
-  async editorFunc(result) {
-    let userInst, userinfo, data;
-    if (result && result.edit_uid !== 0 && result.edit_uid !== this.getUid()) {
-      userinfo = await userRepository.findById(result.edit_uid);
-      data = {
-        errno: result.edit_uid,
-        data: { uid: result.edit_uid, username: userinfo.username }
-      };
-    } else {
-      if (result) {
-        await this.Model.upEditUid(result._id, this.getUid());
-      }
-      data = {
-        errno: 0,
-        data: result
-      };
-    }
-    return data;
+    return null;
   }
 }
 

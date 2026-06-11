@@ -9,15 +9,9 @@ import apiResponse from '../lib/api-response.js';
 
 import sha1 from 'sha1';
 
-import {
-  logRepository,
-  projectRepository,
-  interfaceColRepository,
-  interfaceCaseRepository,
-  interfaceRepository,
-  userRepository,
-  followRepository,
-} from '../repositories/index.js';
+import { appLog } from './app-log.js';
+import notificationService from '../services/notification.service.js';
+import userService from '../services/user.service.js';
 
 import json5 from 'json5';
 
@@ -38,7 +32,6 @@ import jsf from 'json-schema-faker';
 import { schemaValidator } from '../utils/schema-utils.js';
 
 import http from "http";
-import assert from "node:assert";
 import vm from "node:vm";
 import localize from "ajv-i18n";
 
@@ -90,49 +83,7 @@ export const resReturn = (data, num, errmsg) => {
   };
 };
 
-export const log = (msg, type) => {
-  if (!msg) {
-    return;
-  }
-
-  type = type || "log";
-
-  let f;
-
-  switch (type) {
-    case "log":
-      f = console.log; // eslint-disable-line
-      break;
-    case "warn":
-      f = console.warn; // eslint-disable-line
-      break;
-    case "error":
-      f = console.error; // eslint-disable-line
-      break;
-    default:
-      f = console.log; // eslint-disable-line
-      break;
-  }
-
-  f(type + ":", msg);
-
-  let date = new Date();
-  let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-
-  let logfile = path.join(yapi.WEBROOT_LOG, year + "-" + month + ".log");
-
-  if (typeof msg === "object") {
-    if (msg instanceof Error) {msg = msg.message;} else {msg = JSON.stringify(msg);}
-  }
-
-  // let data = (new Date).toLocaleString() + '\t|\t' + type + '\t|\t' + msg + '\n';
-  let data = `[ ${new Date().toLocaleString()} ] [ ${type} ] ${msg}\n`;
-
-  fs.writeFileSync(logfile, data, {
-    flag: "a"
-  });
-};
+export const log = appLog;
 
 export const fileExist = (filePath) => {
   try {
@@ -189,35 +140,8 @@ export const expireDate = (day) => {
   return date;
 };
 
-export const sendMail = (options, cb) => {
-  if (!yapi.mail) {return false;}
-  options.subject = options.subject ? options.subject + "-YApi 平台" : "YApi 平台";
-
-  cb =
-    cb ||
-    function(err) {
-      if (err) {
-        yapi.commons.log("send mail " + options.to + " error," + err.message, "error");
-      } else {
-        yapi.commons.log("send mail " + options.to + " success");
-      }
-    };
-
-  try {
-    yapi.mail.sendMail(
-      {
-        from: yapi.WEBCONFIG.mail.from,
-        to: options.to,
-        subject: options.subject,
-        html: options.contents
-      },
-      cb
-    );
-  } catch (e) {
-    yapi.commons.log(e.message, "error");
-    console.error(e.message); // eslint-disable-line
-  }
-};
+export const sendMail = (options, cb) =>
+  notificationService.sendMail(options, cb);
 
 export const validateSearchKeyword = (keyword) => {
   if (/^\*|\?|\+|\$|\^|\\|\.$/.test(keyword)) {
@@ -395,23 +319,7 @@ export const validateParams = (schema2, params) => {
   };
 };
 
-export const saveLog = (logData) => {
-  try {
-    let logInst = logRepository;
-    let data = {
-      content: logData.content,
-      type: logData.type,
-      uid: logData.uid,
-      username: logData.username,
-      typeid: logData.typeid,
-      data: logData.data
-    };
-
-    logInst.save(data).then();
-  } catch (e) {
-    yapi.commons.log(e, 'error'); // eslint-disable-line
-  }
-};
+export const saveLog = (logData) => notificationService.saveLog(logData);
 
 /**
  *
@@ -439,139 +347,7 @@ export function handleParamsValue(params, val) {
   return params;
 }
 
-export async function getCaseList(id) {
-  const caseInst = interfaceCaseRepository;
-  const colInst = interfaceColRepository;
-  const projectInst = projectRepository;
-  const interfaceInst = interfaceRepository;
-
-  let resultList = await caseInst.list(id, "all");
-  let colData = await colInst.get(id);
-  for (let index = 0; index < resultList.length; index++) {
-    let result = resultList[index];
-    let data = await interfaceInst.get(result.interface_id);
-    if (!data) {
-      await caseInst.del(result._id);
-      continue;
-    }
-    let projectData = await projectInst.getBaseInfo(data.project_id);
-    result.path = projectData.basepath + data.path;
-    result.method = data.method;
-    result.title = data.title;
-    result.req_body_type = data.req_body_type;
-    result.req_headers = handleParamsValue(data.req_headers, result.req_headers);
-    result.res_body_type = data.res_body_type;
-    result.req_body_form = handleParamsValue(data.req_body_form, result.req_body_form);
-    result.req_query = handleParamsValue(data.req_query, result.req_query);
-    result.req_params = handleParamsValue(data.req_params, result.req_params);
-    resultList[index] = result;
-  }
-  resultList = resultList.sort((a, b) => a.index - b.index);
-  let ctxBody = yapi.commons.resReturn(resultList);
-  ctxBody.colData = colData;
-  return ctxBody;
-};
-
-function convertString(variable) {
-  if (variable instanceof Error) {
-    return variable.name + ": " + variable.message;
-  }
-  try {
-    if (variable && typeof variable === "string") {
-      return variable;
-    }
-    return JSON.stringify(variable, null, "   ");
-  } catch (err) {
-    return variable || "";
-  }
-}
-
-
-export async function runCaseScript(params, colId, interfaceId) {
-  const colInst = interfaceColRepository;
-  let colData = await colInst.get(colId);
-  const logs = [];
-  const context = {
-    assert,
-    status: params.response.status,
-    body: params.response.body,
-    header: params.response.header,
-    records: params.records,
-    params: params.params,
-    log: (msg) => {
-      logs.push("log: " + convertString(msg));
-    }
-  };
-
-  let result = {};
-  try {
-
-    if (colData.checkHttpCodeIs200) {
-      let status = +params.response.status;
-      if (status !== 200) {
-        throw ("Http status code 不是 200，请检查(该规则来源于于 [测试集->通用规则配置] )")
-      }
-    }
-
-    if (colData.checkResponseField.enable) {
-      if (params.response.body[colData.checkResponseField.name] != colData.checkResponseField.value) {
-        throw (`返回json ${colData.checkResponseField.name} 值不是${colData.checkResponseField.value}，请检查(该规则来源于于 [测试集->通用规则配置] )`)
-      }
-    }
-
-    if (colData.checkResponseSchema) {
-      const interfaceInst = interfaceRepository;
-      let interfaceData = await interfaceInst.get(interfaceId);
-      if (interfaceData.res_body_is_json_schema && interfaceData.res_body) {
-        let schema = JSON.parse(interfaceData.res_body);
-        let result = schemaValidator(schema, context.body)
-        if (!result.valid) {
-          throw (`返回Json 不符合 response 定义的数据结构,原因: ${result.message}
-数据结构如下：
-${JSON.stringify(schema, null, 2)}`)
-        }
-      }
-    }
-
-    if (colData.checkScript.enable) {
-      let globalScript = colData.checkScript.content;
-      // script 是断言
-      if (globalScript) {
-        logs.push("执行脚本：" + globalScript)
-        result = await sandboxFn(context, globalScript);
-      }
-    }
-
-
-    let script = params.script;
-    // script 是断言
-    if (script) {
-      logs.push("执行脚本:" + script)
-      result = await sandboxFn(context, script);
-    }
-    result.logs = logs;
-    return yapi.commons.resReturn(result);
-  } catch (err) {
-    logs.push(convertString(err));
-    result.logs = logs;
-    return yapi.commons.resReturn(result, 400, err.name + ": " + err.message);
-  }
-};
-
-export async function getUserdata(uid, role) {
-  role = role || "dev";
-  let userInst = userRepository;
-  let userData = await userInst.findById(uid);
-  if (!userData) {
-    return null;
-  }
-  return {
-    role: role,
-    uid: userData._id,
-    username: userData.username,
-    email: userData.email
-  };
-};
+export const getUserdata = (uid, role) => userService.getUserdata(uid, role);
 
 // 处理mockJs脚本
 export const handleMockScript = async function(script, context) {
@@ -666,8 +442,6 @@ export default {
   validateParams,
   saveLog,
   handleParamsValue,
-  getCaseList,
-  runCaseScript,
   getUserdata,
   handleMockScript,
   createWebAPIRequest,

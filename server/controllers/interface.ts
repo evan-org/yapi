@@ -6,16 +6,6 @@ import type { YapiRuntime } from "../types/global.js";
 import type { AppContext } from "../types/app-context.js";
 import baseController from "./base.js";
 import commons from "../utils/commons.js";
-import { clientPublicFile } from "../utils/client-public.js";
-import {
-  interfaceRepository,
-  interfaceCatRepository,
-  interfaceCaseRepository,
-  followRepository,
-  groupRepository,
-  userRepository,
-  projectRepository,
-} from "../repositories/index.js";
 import { interfaceService } from "../services/index.js";
 import { interfaceSchemaMap } from "../validators/interface.schemas.js";
 import type { ServiceResult } from "../services/service-result.js";
@@ -37,12 +27,6 @@ function requestOrigin(ctx: AppContext): string {
 }
 
 class interfaceController extends baseController {
-  Model: typeof interfaceRepository;
-  catModel: typeof interfaceCatRepository;
-  caseModel: typeof interfaceCaseRepository;
-  followModel: typeof followRepository;
-  userModel: typeof userRepository;
-  groupModel: typeof groupRepository;
   declare schemaMap: typeof interfaceSchemaMap;
 
   _reply(ctx: AppContext, result: ServiceResult<unknown>) {
@@ -51,13 +35,6 @@ class interfaceController extends baseController {
 
   constructor(ctx: AppContext) {
     super(ctx);
-    this.Model = interfaceRepository;
-    this.catModel = interfaceCatRepository;
-    this.projectModel = projectRepository;
-    this.caseModel = interfaceCaseRepository;
-    this.followModel = followRepository;
-    this.userModel = userRepository;
-    this.groupModel = groupRepository;
     this.schemaMap = interfaceSchemaMap;
   }
 
@@ -190,9 +167,12 @@ class interfaceController extends baseController {
       if (this.$tokenAuth && params.project_id !== loaded.data.project_id) {
         return (ctx.body = commons.resReturn(null, 400, "token有误"));
       }
-      const project = await this.projectModel.getBaseInfo(loaded.data.project_id);
-      if (project.project_type === "private") {
-        if ((await this.checkAuth(project._id, "project", "view")) !== true) {
+      const proj = await interfaceService.getProjectBaseInfo(loaded.data.project_id);
+      if (proj.ok === false) {
+        return (ctx.body = commons.resReturn(null, proj.code, proj.message));
+      }
+      if (proj.data.project_type === "private") {
+        if ((await this.checkAuth(proj.data._id, "project", "view")) !== true) {
           return (ctx.body = commons.resReturn(null, 406, "没有权限"));
         }
       }
@@ -246,16 +226,6 @@ class interfaceController extends baseController {
     } catch (err) {
       replyException(ctx, err);
     }
-  }
-
-  async downloadCrx(ctx: AppContext) {
-    let filename = "crossRequest.zip";
-    let dataBuffer = yapi.fs.readFileSync(
-      clientPublicFile("attachment", "cross-request.zip")
-    );
-    ctx.set("Content-disposition", "attachment; filename=" + filename);
-    ctx.set("Content-Type", "application/zip");
-    ctx.body = dataBuffer;
   }
 
   async listByCat(ctx: AppContext) {
@@ -355,10 +325,11 @@ class interfaceController extends baseController {
     const params = ctx.params as unknown as RouteParams;
 
     let id = params.id;
-    let interfaceData = await this.Model.get(id);
-    if (!interfaceData) {
-      return (ctx.body = commons.resReturn(null, 400, "不存在的接口"));
+    const loaded = await interfaceService.requireInterface(id);
+    if (loaded.ok === false) {
+      return (ctx.body = commons.resReturn(null, loaded.code, loaded.message));
     }
+    const interfaceData = loaded.data;
     if (!this.$tokenAuth) {
       let auth = await this.checkAuth(interfaceData.project_id, "project", "edit");
       if (!auth) {
@@ -398,10 +369,11 @@ class interfaceController extends baseController {
         return (ctx.body = commons.resReturn(null, 400, "接口id不能为空"));
       }
 
-      let data = await this.Model.get(id);
-      if (!data) {
-        return (ctx.body = commons.resReturn(null, 400, "接口不存在"));
+      const loaded = await interfaceService.requireInterface(id, "接口不存在");
+      if (loaded.ok === false) {
+        return (ctx.body = commons.resReturn(null, loaded.code, loaded.message));
       }
+      const data = loaded.data;
 
       if (data.uid != this.getUid()) {
         let auth = await this.checkAuth(data.project_id, "project", "danger");
@@ -486,10 +458,11 @@ class interfaceController extends baseController {
   async upCat(ctx: AppContext) {
     try {
       let params = ctx.request.body as RouteParams;
-      let cate = await this.catModel.get(params.catid);
-      if (!cate) {
-        return (ctx.body = commons.resReturn(null, 400, "分类不存在"));
+      const catLoaded = await interfaceService.requireCategory(params.catid);
+      if (catLoaded.ok === false) {
+        return (ctx.body = commons.resReturn(null, catLoaded.code, catLoaded.message));
       }
+      const cate = catLoaded.data;
 
       let auth = await this.checkAuth(cate.project_id, "project", "edit");
       if (!auth) {
@@ -515,10 +488,11 @@ class interfaceController extends baseController {
   async delCat(ctx: AppContext) {
     try {
       let id = ctx.request.body.catid;
-      let catData = await this.catModel.get(id);
-      if (!catData) {
-        return (ctx.body = commons.resReturn(null, 400, "不存在的分类"));
+      const catLoaded = await interfaceService.requireCategory(id, "不存在的分类");
+      if (catLoaded.ok === false) {
+        return (ctx.body = commons.resReturn(null, catLoaded.code, catLoaded.message));
       }
+      const catData = catLoaded.data;
 
       if (catData.uid !== this.getUid()) {
         let auth = await this.checkAuth(catData.project_id, "project", "danger");
@@ -558,9 +532,12 @@ class interfaceController extends baseController {
     }
 
     try {
-      const project = await this.projectModel.getBaseInfo(routeId(project_id));
-      if (project.project_type === "private") {
-        if ((await this.checkAuth(project._id, "project", "edit")) !== true) {
+      const proj = await interfaceService.getProjectBaseInfo(routeId(project_id));
+      if (proj.ok === false) {
+        return (ctx.body = commons.resReturn(null, proj.code, proj.message));
+      }
+      if (proj.data.project_type === "private") {
+        if ((await this.checkAuth(proj.data._id, "project", "edit")) !== true) {
           return (ctx.body = commons.resReturn(null, 406, "没有权限"));
         }
       }

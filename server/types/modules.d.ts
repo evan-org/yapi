@@ -1,5 +1,5 @@
 /**
- * 无官方类型或 CJS 遗留模块声明（ESM default export）
+ * 无官方类型的第三方模块声明
  */
 declare module "runtime.js" {
   import type { YapiRuntime } from "./global.js";

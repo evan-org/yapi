@@ -3,7 +3,7 @@
  * 高级 Mock 脚本（adv_mock）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import { advancedMockFromRow, ADV_MOCK_SELECT } from "../db/relational.js";
@@ -46,7 +46,7 @@ export const advancedMockRepository: AdvancedMockRepository = {
 
   async save(data: DocRecord) {
     const pool = getPool();
-    const up_time = yapi.commons.time();
+    const up_time = nowSeconds();
     const res = await pool.query(
       `INSERT INTO ${TBL}
         (interface_id, project_id, uid, up_time, mock_script, enable)
@@ -65,7 +65,7 @@ export const advancedMockRepository: AdvancedMockRepository = {
   },
 
   async up(data: DocRecord) {
-    data.up_time = yapi.commons.time();
+    data.up_time = nowSeconds();
     const existing = await fetchOneByInterfaceId(data.interface_id);
     const patch = {
       uid: data.uid,

@@ -1,10 +1,22 @@
 // @ts-nocheck
 /**
- * 运行时配置：仅通过环境变量 + server/.env 加载（12-Factor）
+ * 运行时配置：环境变量 + server/.env + server/.env.local（本地私密配置，后者优先）
  */
 import path from "node:path";
 import { config as loadDotenv } from "dotenv";
 import type { YapiWebConfig } from "../types/global.js";
+
+/** 加载 .env（可选默认）与 .env.local（本地私密，覆盖前者） */
+export function loadEnvFiles(serverRoot: string) {
+  loadDotenv({ path: path.join(serverRoot, ".env") });
+  if (process.env.YAPI_ENV === "test") {
+    return;
+  }
+  loadDotenv({
+    path: path.join(serverRoot, ".env.local"),
+    override: true,
+  });
+}
 
 /**
  * 读取字符串环境变量，空串视为未设置
@@ -74,8 +86,12 @@ function buildDbFromEnv(): Record<string, unknown> {
   const user = envStr("YAPI_DB_USER");
   const pass = envStr("YAPI_DB_PASS");
   const poolSize = envStr("YAPI_DB_POOL_SIZE");
+  const ssl = envBool("YAPI_DB_SSL", false);
 
   const db: Record<string, unknown> = { port };
+  if (ssl) {
+    db.ssl = true;
+  }
   if (servername) {
     db.servername = servername;
   }
@@ -123,13 +139,13 @@ function buildMailFromEnv(): Record<string, unknown> {
 
 /**
  * 加载 WEBCONFIG：dotenv + process.env
- * @param serverRoot server 工作区根目录（含 .env）
+ * @param serverRoot server 工作区根目录（含 .env.local）
  */
 export function loadWebConfig(serverRoot: string): YapiWebConfig {
-  loadDotenv({ path: path.join(serverRoot, ".env") });
+  loadEnvFiles(serverRoot);
 
   return {
-    port: Number(envStr("YAPI_PORT") || "3001"),
+    port: Number(envStr("YAPI_PORT") || "7102"),
     adminAccount: envStr("YAPI_ADMIN_ACCOUNT"),
     timeout: Number(envStr("YAPI_TIMEOUT") || "120000"),
     closeRegister: envBool("YAPI_CLOSE_REGISTER", false),

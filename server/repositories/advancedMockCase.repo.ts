@@ -3,7 +3,7 @@
  * 高级 Mock 期望（adv_mock_case）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import {
@@ -107,7 +107,7 @@ export const advancedMockCaseRepository: AdvancedMockCaseRepository = {
 
   async save(data: DocRecord) {
     const pool = getPool();
-    const up_time = yapi.commons.time();
+    const up_time = nowSeconds();
     const res = await pool.query(
       `INSERT INTO ${TBL}
         (interface_id, project_id, ip_enable, name, params, uid, code, delay, headers, up_time, res_body, ip, case_enable)
@@ -136,7 +136,7 @@ export const advancedMockCaseRepository: AdvancedMockCaseRepository = {
     const id = data.id;
     const patch = { ...data };
     delete patch.id;
-    patch.up_time = yapi.commons.time();
+    patch.up_time = nowSeconds();
     const pool = getPool();
     const sets: string[] = [];
     const params: unknown[] = [];

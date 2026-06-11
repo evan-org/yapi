@@ -3,6 +3,7 @@ import schedule from "node-schedule";
 import md5 from "md5";
 import axios from "axios";
 import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { projectRepository } from "../repositories/index.js";
 import { swaggerSyncRepository } from "../repositories/swaggerSync.repo.js";
 import openService from "./open.service.js";
@@ -15,7 +16,16 @@ class SyncUtils {
   constructor() {
     this.syncModel = swaggerSyncRepository;
     this.projectModel = projectRepository;
-    this.init();
+    this._started = false;
+  }
+
+  /** 数据库连接就绪后调用，注册已有 Swagger 同步定时任务 */
+  async start() {
+    if (this._started) {
+      return;
+    }
+    this._started = true;
+    await this.init();
   }
 
   // 初始化定时任务
@@ -96,7 +106,7 @@ class SyncUtils {
       oldSyncJob.old_swagger_content &&
       oldSyncJob.old_swagger_content == md5(newSwaggerJsonData)
     ) {
-      oldSyncJob.last_sync_time = yapi.commons.time();
+      oldSyncJob.last_sync_time = nowSeconds();
       await this.syncModel.upById(oldSyncJob._id, oldSyncJob);
       return;
     }
@@ -114,7 +124,7 @@ class SyncUtils {
     const errmsg = importResult.ok ? importResult.data.message : importResult.message;
 
     if (importResult.ok) {
-      oldSyncJob.last_sync_time = yapi.commons.time();
+      oldSyncJob.last_sync_time = nowSeconds();
       oldSyncJob.old_swagger_content = md5(newSwaggerJsonData);
       await this.syncModel.upById(oldSyncJob._id, oldSyncJob);
     }

@@ -34,9 +34,9 @@
 
 <span class="list-index">3</span>点击左侧的 “测试集合” 使用[测试集](./case.md)功能。
 
-<span class="list-index">4</span>点击二级导航的“设置”，项目组长即可编辑项目信息和管理成员列表。
+<span class="list-index">4</span>侧栏 **设置**：编辑项目信息、环境、Token、导入导出等（项目组长权限）。
 
-<span class="list-index">5</span>点击二级导航的“动态”，即可查看项目的操作日志。
+<span class="list-index">5</span>侧栏 **动态**：查看项目操作日志；**成员** 管理项目成员。
 
 <img src="./images/usage/project.png" />
 

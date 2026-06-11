@@ -2,12 +2,12 @@
 # Next 对外（含 /api、/mock 反代到 Hono API）
 
 upstream yapi_next {
-  server 127.0.0.1:4000;
+  server 127.0.0.1:7101;
   keepalive 32;
 }
 
 upstream yapi_api {
-  server 127.0.0.1:3001;
+  server 127.0.0.1:7102;
   keepalive 32;
 }
 

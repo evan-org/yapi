@@ -6,13 +6,6 @@ import type { YapiRuntime } from "../types/global.js";
 import type { AppContext } from "../types/app-context.js";
 import baseController from "./base.js";
 import commons from "../utils/commons.js";
-import {
-  projectRepository,
-  groupRepository,
-  logRepository,
-  followRepository,
-  interfaceRepository,
-} from "../repositories/index.js";
 import { projectService } from "../services/index.js";
 import { normalizeBasepath } from "../services/project.service.js";
 import type { ServiceResult } from "../services/service-result.js";
@@ -35,11 +28,6 @@ function routeId(value: unknown): number | string {
 class projectController extends baseController {
   /** Service 结果 → HTTP 响应 */
   declare schemaMap: Record<string, unknown>;
-  Model: typeof projectRepository;
-  groupModel: typeof groupRepository;
-  logModel: typeof logRepository;
-  followModel: typeof followRepository;
-  interfaceModel: typeof interfaceRepository;
 
   _reply(ctx: AppContext, result: ServiceResult<unknown>, successMsg?: string) {
     replyServiceResult(ctx, result, successMsg);
@@ -55,11 +43,6 @@ class projectController extends baseController {
 
   constructor(ctx: AppContext) {
     super(ctx);
-    this.Model = projectRepository;
-    this.groupModel = groupRepository;
-    this.logModel = logRepository;
-    this.followModel = followRepository;
-    this.interfaceModel = interfaceRepository;
 
     const id = "number";
     const member_uid = ["number"];
@@ -358,11 +341,9 @@ class projectController extends baseController {
 
   async list(ctx: AppContext) {
     const group_id = (ctx.params as unknown as RouteParams).group_id as number | string;
-    let groupData = await this.groupModel.get(group_id);
     const auth = await this.checkAuth(routeId(group_id), "group", "view");
     const result = await projectService.listByGroup(routeId(group_id), {
       uid: this.getUid(),
-      groupData,
       auth,
     });
     this._reply(ctx, result as ServiceResult<unknown>);

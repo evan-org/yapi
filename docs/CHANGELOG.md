@@ -1,3 +1,13 @@
+> **说明：** 自 v1.11.0 起，本项目为 **Hono + PostgreSQL + Next.js** monorepo。下方较早版本记录来自原 YApi 发行历史，其中 MongoDB、ykit、yapi-cli 等描述仅作归档参考。
+
+## [1.11.0]
+
+### 架构
+
+* 后端迁移至 Hono + PostgreSQL（关系型表）
+* 前端迁移至 Next.js 15 + React 19（shadcn/ui）
+* 移除插件机制与 `vendors/` 打包层，能力内置至 `controllers` / `services`
+
 ## [1.10.2](https://github.com/YMFE/yapi/compare/v1.10.1...v1.10.2) (2021-10-13)
 
 ### Bug Fixes

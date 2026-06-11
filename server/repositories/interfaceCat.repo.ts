@@ -3,10 +3,14 @@
  * 接口分类（interface_cat）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
-import { interfaceCatFromRow, INTERFACE_CAT_SELECT } from "../db/relational.js";
+import {
+  interfaceCatFromRow,
+  INTERFACE_CAT_SELECT,
+  sqlColumnName,
+} from "../db/relational.js";
 import type { DocRecord } from "../db/where.js";
 
 const TBL = tableName("interface_cat");
@@ -33,7 +37,7 @@ export const interfaceCatRepository: InterfaceCatRepository = {
     const pool = getPool();
     const res = await pool.query(
       `INSERT INTO ${TBL}
-        (name, project_id, uid, desc, "index", add_time, up_time)
+        (name, project_id, uid, description, "index", add_time, up_time)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING ${INTERFACE_CAT_SELECT}`,
       [
@@ -89,8 +93,7 @@ export const interfaceCatRepository: InterfaceCatRepository = {
     const cols = ["name", "project_id", "uid", "desc", "index", "add_time", "up_time"] as const;
     for (const col of cols) {
       if (data[col] !== undefined) {
-        const sqlCol = col === "index" ? '"index"' : col;
-        sets.push(`${sqlCol} = $${idx}`);
+        sets.push(`${sqlColumnName(col)} = $${idx}`);
         params.push(data[col]);
         idx += 1;
       }
@@ -107,7 +110,7 @@ export const interfaceCatRepository: InterfaceCatRepository = {
   },
 
   async up(id: number | string, data: DocRecord) {
-    data.up_time = yapi.commons.time();
+    data.up_time = nowSeconds();
     return this.update(id, data);
   },
 

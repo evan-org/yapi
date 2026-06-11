@@ -4,12 +4,6 @@
 import type { AppContext } from "../types/app-context.js";
 import baseController from "./base.js";
 import commons from "../utils/commons.js";
-import {
-  interfaceColRepository,
-  interfaceCaseRepository,
-  interfaceRepository,
-  projectRepository,
-} from "../repositories/index.js";
 import { interfaceColService } from "../services/index.js";
 import type { ServiceResult } from "../services/service-result.js";
 import { replyServiceResult, replyException } from "./controller.util.js";
@@ -26,20 +20,12 @@ function routeId(value: unknown): number | string {
 }
 
 class interfaceColController extends baseController {
-  colModel: typeof interfaceColRepository;
-  caseModel: typeof interfaceCaseRepository;
-  interfaceModel: typeof interfaceRepository;
-
   _reply(ctx: AppContext, result: ServiceResult<unknown>) {
     replyServiceResult(ctx, result);
   }
 
   constructor(ctx: AppContext) {
     super(ctx);
-    this.colModel = interfaceColRepository;
-    this.caseModel = interfaceCaseRepository;
-    this.interfaceModel = interfaceRepository;
-    this.projectModel = projectRepository;
   }
 
   /**
@@ -131,13 +117,12 @@ class interfaceColController extends baseController {
   async getCaseList(ctx: AppContext) {
     try {
       let id = ctx.query.col_id;
-      let colData = await this.colModel.get(id);
-      if (!colData) {
-        return (ctx.body = commons.resReturn(null, 400, "不存在的接口集"));
+      const proj = await interfaceColService.getProjectByColId(id);
+      if (proj.ok === false) {
+        return (ctx.body = commons.resReturn(null, proj.code, proj.message));
       }
-      let project = await this.projectModel.getBaseInfo(colData.project_id);
-      if (project.project_type === "private") {
-        if ((await this.checkAuth(project._id, "project", "view")) !== true) {
+      if (proj.data.project_type === "private") {
+        if ((await this.checkAuth(proj.data._id, "project", "view")) !== true) {
           return (ctx.body = commons.resReturn(null, 406, "没有权限"));
         }
       }
@@ -165,13 +150,12 @@ class interfaceColController extends baseController {
   async getCaseEnvList(ctx: AppContext) {
     try {
       let id = ctx.query.col_id;
-      const colData = await this.colModel.get(id);
-      if (!colData) {
-        return (ctx.body = commons.resReturn(null, 400, "不存在的接口集"));
+      const proj = await interfaceColService.getProjectByColId(id);
+      if (proj.ok === false) {
+        return (ctx.body = commons.resReturn(null, proj.code, proj.message));
       }
-      let project = await this.projectModel.getBaseInfo(colData.project_id);
-      if (project.project_type === "private") {
-        if ((await this.checkAuth(project._id, "project", "view")) !== true) {
+      if (proj.data.project_type === "private") {
+        if ((await this.checkAuth(proj.data._id, "project", "view")) !== true) {
           return (ctx.body = commons.resReturn(null, 406, "没有权限"));
         }
       }
@@ -201,13 +185,13 @@ class interfaceColController extends baseController {
         return (ctx.body = commons.resReturn(null, 407, "col_id不能为空"));
       }
 
-      const firstCaseList = await this.caseModel.list(id, "all");
-      if (firstCaseList.length > 0) {
-        let project = await this.projectModel.getBaseInfo(firstCaseList[0].project_id);
-        if (project.project_type === "private") {
-          if ((await this.checkAuth(project._id, "project", "view")) !== true) {
-            return (ctx.body = commons.resReturn(null, 406, "没有权限"));
-          }
+      const proj = await interfaceColService.getProjectForVariableParamsCol(id);
+      if (proj.ok === false) {
+        return (ctx.body = commons.resReturn(null, proj.code, proj.message));
+      }
+      if (proj.data && proj.data.project_type === "private") {
+        if ((await this.checkAuth(proj.data._id, "project", "view")) !== true) {
+          return (ctx.body = commons.resReturn(null, 406, "没有权限"));
         }
       }
 
@@ -358,11 +342,11 @@ class interfaceColController extends baseController {
         return (ctx.body = commons.resReturn(null, 400, "用例id不能为空"));
       }
 
-      let caseData = await this.caseModel.get(params.id);
-      if (!caseData) {
-        return (ctx.body = commons.resReturn(null, 400, "不存在的caseid"));
+      const caseLoaded = await interfaceColService.requireCase(params.id);
+      if (caseLoaded.ok === false) {
+        return (ctx.body = commons.resReturn(null, caseLoaded.code, caseLoaded.message));
       }
-      let auth = await this.checkAuth(caseData.project_id, "project", "edit");
+      let auth = await this.checkAuth(caseLoaded.data.project_id, "project", "edit");
       if (!auth) {
         return (ctx.body = commons.resReturn(null, 400, "没有权限"));
       }
@@ -417,11 +401,11 @@ class interfaceColController extends baseController {
       if (!id) {
         return (ctx.body = commons.resReturn(null, 400, "缺少 col_id 参数"));
       }
-      let colData = await this.colModel.get(id);
-      if (!colData) {
-        return (ctx.body = commons.resReturn(null, 400, "不存在"));
+      const colLoaded = await interfaceColService.requireCol(id, "不存在");
+      if (colLoaded.ok === false) {
+        return (ctx.body = commons.resReturn(null, colLoaded.code, colLoaded.message));
       }
-      let auth = await this.checkAuth(colData.project_id, "project", "edit");
+      let auth = await this.checkAuth(colLoaded.data.project_id, "project", "edit");
       if (!auth) {
         return (ctx.body = commons.resReturn(null, 400, "没有权限"));
       }
@@ -490,10 +474,11 @@ class interfaceColController extends baseController {
   async delCol(ctx: AppContext) {
     try {
       let id = ctx.query.col_id;
-      let colData = await this.colModel.get(id);
-      if (!colData) {
-        return (ctx.body = commons.resReturn(null, 400, "不存在的id"));
+      const colLoaded = await interfaceColService.requireCol(id, "不存在的id");
+      if (colLoaded.ok === false) {
+        return (ctx.body = commons.resReturn(null, colLoaded.code, colLoaded.message));
       }
+      const colData = colLoaded.data;
       if (colData.uid !== this.getUid()) {
         let auth = await this.checkAuth(colData.project_id, "project", "danger");
         if (!auth) {
@@ -521,10 +506,11 @@ class interfaceColController extends baseController {
   async delCase(ctx: AppContext) {
     try {
       let caseid = ctx.query.caseid;
-      let caseData = await this.caseModel.get(caseid);
-      if (!caseData) {
-        return (ctx.body = commons.resReturn(null, 400, "不存在的caseid"));
+      const caseLoaded = await interfaceColService.requireCase(caseid);
+      if (caseLoaded.ok === false) {
+        return (ctx.body = commons.resReturn(null, caseLoaded.code, caseLoaded.message));
       }
+      const caseData = caseLoaded.data;
 
       if (caseData.uid !== this.getUid()) {
         let auth = await this.checkAuth(caseData.project_id, "project", "danger");
@@ -551,8 +537,7 @@ class interfaceColController extends baseController {
     const result = await interfaceColService.runCaseScript(
       params,
       params.col_id,
-      params.interface_id,
-      this.getUid()
+      params.interface_id
     );
     ctx.body = result.data;
   }

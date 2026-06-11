@@ -3,7 +3,7 @@
  * 控制器 Action 执行器
  * 负责：实例化控制器 → init 鉴权 → 参数校验 → 调用 action → 响应信封
  */
-import yapi from "../runtime.js";
+import commons from "../utils/commons.js";
 import apiResponse from "../lib/api-response.js";
 
 /**
@@ -38,6 +38,9 @@ export function createAction(
     const inst = new routerController(ctx);
     try {
       await inst.init(ctx);
+      if (inst.$sessionHalted) {
+        return;
+      }
       ctx.params = Object.assign(
         {},
         ctx.request.query,
@@ -49,12 +52,12 @@ export function createAction(
         typeof inst.schemaMap === "object" &&
         inst.schemaMap[action]
       ) {
-        const validResult = yapi.commons.validateParams(
+        const validResult = commons.validateParams(
           inst.schemaMap[action],
           ctx.params
         );
         if (!validResult.valid) {
-          return (ctx.body = yapi.commons.resReturn(
+          return (ctx.body = commons.resReturn(
             null,
             apiResponse.ApiCode.BAD_REQUEST,
             validResult.message
@@ -74,7 +77,7 @@ export function createAction(
           )
         );
       } else {
-        ctx.body = yapi.commons.resReturn(
+        ctx.body = commons.resReturn(
           null,
           apiResponse.ApiCode.NOT_LOGIN,
           "请登录..."
@@ -88,13 +91,13 @@ export function createAction(
           )
         );
       } else {
-        ctx.body = yapi.commons.resReturn(
+        ctx.body = commons.resReturn(
           null,
           apiResponse.ApiCode.SERVER_ERROR,
           "服务器出错..."
         );
       }
-      yapi.commons.log(err, "error");
+      commons.log(err, "error");
     }
   });
 }

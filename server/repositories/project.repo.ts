@@ -3,7 +3,7 @@
  * 项目（project）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import {
@@ -11,6 +11,7 @@ import {
   projectFromRow,
   PROJECT_SELECT,
   readJsonCol,
+  sqlColumnName,
 } from "../db/relational.js";
 import type { DocRecord } from "../db/where.js";
 
@@ -126,7 +127,7 @@ export const projectRepository: ProjectRepository = {
     const pool = getPool();
     const res = await pool.query(
       `INSERT INTO ${TBL}
-        (uid, name, basepath, switch_notice, desc, group_id, project_type, icon, color,
+        (uid, name, basepath, switch_notice, description, group_id, project_type, icon, color,
          add_time, up_time, pre_script, after_script, project_mock_script,
          is_mock_open, strice, is_json5, prd_host, env, members, tag)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19::jsonb,$20::jsonb,$21::jsonb)
@@ -189,7 +190,7 @@ export const projectRepository: ProjectRepository = {
     }
     const fields = parseSelectFields(
       select ||
-        "_id uid name basepath switch_notice desc group_id project_type env icon color add_time up_time pre_script after_script project_mock_script is_mock_open strice is_json5 tag"
+        "_id uid name basepath switch_notice description group_id project_type env icon color add_time up_time pre_script after_script project_mock_script is_mock_open strice is_json5 tag"
     );
     return pickProjectFields(row, fields);
   },
@@ -312,7 +313,7 @@ export const projectRepository: ProjectRepository = {
     ] as const;
     for (const col of scalarCols) {
       if (data[col] !== undefined) {
-        sets.push(`${col} = $${idx}`);
+        sets.push(`${sqlColumnName(col)} = $${idx}`);
         params.push(data[col]);
         idx += 1;
       }
@@ -336,7 +337,7 @@ export const projectRepository: ProjectRepository = {
   },
 
   async up(id: number | string, data: DocRecord) {
-    data.up_time = yapi.commons.time();
+    data.up_time = nowSeconds();
     return this.update(id, data);
   },
 

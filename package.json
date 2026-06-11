@@ -8,27 +8,26 @@
     "client"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=yapi-server & npm run dev --workspace=client",
-    "dev-server": "npm run dev --workspace=yapi-server",
-    "dev-client": "npm run dev --workspace=client -- -p 4000",
-    "build-client": "npm run build --workspace=client",
+    "dev": "node scripts/start.js",
+    "dev-server": "pnpm --filter yapi-server dev",
+    "dev-client": "pnpm --filter yapi-client dev",
+    "build-client": "pnpm --filter yapi-client build",
     "verify-build": "node scripts/verify-next-build.js",
-    "build": "npm run build-client && npm run verify-build",
-    "start": "npm run start --workspace=client & npm run start --workspace=yapi-server",
-    "start-server": "npm run start --workspace=yapi-server",
-    "start-client": "npm run start --workspace=client -- -p 4000 -H 0.0.0.0",
-    "install-server": "npm run install-server --workspace=yapi-server",
-    "db:init": "npm run db:init --workspace=yapi-server",
-    "build:server": "npm run build --workspace=yapi-server",
-    "typecheck": "npm run typecheck --workspace=yapi-server && npm run typecheck --workspace=client",
-    "typecheck:server": "npm run typecheck --workspace=yapi-server",
-    "typecheck:client": "npm run typecheck --workspace=client",
-    "test:server": "npm run test --workspace=yapi-server",
-    "lint:client": "npm run lint --workspace=client"
+    "build": "pnpm run build-client && pnpm run verify-build",
+    "start": "node scripts/start.js --prod",
+    "start-server": "pnpm --filter yapi-server start",
+    "start-client": "pnpm --filter yapi-client start",
+    "build:server": "pnpm --filter yapi-server build",
+    "typecheck": "pnpm run typecheck:server && pnpm run typecheck:client",
+    "typecheck:server": "pnpm --filter yapi-server typecheck",
+    "typecheck:client": "pnpm --filter yapi-client typecheck",
+    "test:server": "pnpm --filter yapi-server test",
+    "lint:client": "pnpm --filter yapi-client lint"
   },
   "license": "Apache-2.0",
+  "packageManager": "pnpm@10.21.0",
   "engines": {
     "node": ">= 18.0.0",
-    "npm": ">= 8.0.0"
+    "pnpm": ">= 9.0.0"
   }
 }

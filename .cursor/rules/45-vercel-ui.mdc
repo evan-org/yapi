@@ -1,0 +1,28 @@
+---
+description: 前端 Vercel 风格 UI 规范（Tailwind）
+globs: client/**/*
+---
+
+# Vercel 风格 UI
+
+完整规范见 `docs/design/vercel-ui.md`。开发 `client/` 时遵循：
+
+## 分区
+
+- **登录 / 营销**：`bg-black`、白字、`border-neutral-800`、白底黑字主按钮；参考 `client/src/app/login/page.tsx`。
+- **工作台（dashboard）**：浅底 `bg-[#fafafa]`、白卡片、`border-neutral-200`、黑底白字主按钮；顶栏白底 `backdrop-blur`。
+
+## 禁止
+
+- 新页面勿用 `#2395f1`、`#32363a` 大块铺色与 `shadow-lg` 卡片。
+- 勿引入 Ant Design。
+
+## 组件
+
+- shadcn/ui 保留行为，用 `className` 覆盖为细边框、克制阴影。
+- 图标：lucide `h-4 w-4`；标题 `text-2xl font-semibold tracking-tight`；说明 `text-sm text-neutral-500`。
+- 布局：工作台内容 `max-w-[1200px] mx-auto px-6 py-8`；项目页侧栏 `w-56 border-r`。
+
+## Logo
+
+三角 SVG +「YApi」文字，与登录页一致；勿再用蓝色方块 `Y`。

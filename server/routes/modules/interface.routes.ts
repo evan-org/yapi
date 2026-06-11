@@ -9,7 +9,6 @@ import { registerModuleRoutes } from "../register-routes.js";
 /** @type {import("../types.js").RouteAction[]} */
 const routes = [
   { action: "add", path: "add", method: "post" },
-  { action: "downloadCrx", path: "download_crx", method: "get" },
   { action: "getCatMenu", path: "getCatMenu", method: "get" },
   { action: "list", path: "list", method: "get" },
   { action: "get", path: "get", method: "get" },

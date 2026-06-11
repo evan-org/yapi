@@ -3,17 +3,17 @@ FROM node:18-bookworm-slim AS builder
 
 WORKDIR /yapi
 
-COPY package.json package-lock.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY server/package.json ./server/
-COPY client/package.json client/package-lock.json ./client/
+COPY client/package.json ./client/
 
-RUN npm install --legacy-peer-deps --workspace=yapi-server --workspace=client
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
 COPY . .
 
 ENV NODE_OPTIONS="--max-old-space-size=4096"
-ENV YAPI_API_URL="http://127.0.0.1:3001"
-RUN npm run build-client && npm prune --production --workspace=yapi-server && npm prune --production --workspace=client
+ENV YAPI_API_URL="http://127.0.0.1:7102"
+RUN pnpm run build-client
 
 # 阶段二：生产运行
 FROM node:18-bookworm-slim
@@ -26,9 +26,9 @@ RUN chmod +x deploy/docker-entrypoint.sh
 
 ENV NODE_ENV=production
 
-EXPOSE 4000
+EXPOSE 7101
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=3 \
-  CMD node -e "require('http').get('http://127.0.0.1:4000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+  CMD node -e "require('http').get('http://127.0.0.1:7101/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
 ENTRYPOINT ["./deploy/docker-entrypoint.sh"]

@@ -3,7 +3,7 @@
  * 操作日志（log）关系型仓储
  */
 import type { ModelInstance } from "./base.repo.js";
-import yapi from "../runtime.js";
+import { nowSeconds } from "../shared/clock.js";
 import { getPool } from "../db/pg-pool.js";
 import { tableName } from "../db/table.js";
 import { jsonCol, logFromRow, LOG_SELECT } from "../db/relational.js";
@@ -67,7 +67,7 @@ export const logRepository: LogRepository = {
         data.uid ?? 0,
         data.username ?? "",
         data.typeid ?? 0,
-        yapi.commons.time(),
+        nowSeconds(),
         jsonCol(data.data, {}),
       ]
     );

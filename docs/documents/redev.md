@@ -1,13 +1,13 @@
-## 安装YApi
+## 安装 YApi
 
-1.创建工程目录
+1. 创建工程目录
 
 ```bash
 mkdir yapi && cd yapi
 git clone 本仓库 --depth=1 # 或者下载 zip 包解压到仓库根目录
 ```
 
-2.配置环境变量
+2. 配置环境变量
 
 ```bash
 cp server/.env.example server/.env
@@ -16,25 +16,25 @@ cp server/.env.example server/.env
 
 常用项见 `server/.env.example`。PostgreSQL 推荐 `YAPI_DATABASE_URL`，或 `YAPI_DB_HOST` + `YAPI_DB_NAME` + `YAPI_DB_USER` + `YAPI_DB_PASS`。
 
-3.安装依赖
+3. 安装依赖
 
 ```bash
 # 在仓库根目录
-npm install  --registry https://registry.npm.taobao.org # 安装依赖
+pnpm install
 ```
 
-4.初始化
+4. 导入数据库
 
 ```bash
-npm run install-server  # 初始化库表与管理员（邮箱见 YAPI_ADMIN_ACCOUNT）
-# 默认输出
-# 初始化管理员账号成功,账号名："admin@admin.com"，密码："ymfe.org"
+# 依次导入表结构与默认管理员（邮箱 admin@admin.com，密码 ymfe.org）
+psql "$YAPI_DATABASE_URL" -f server/db/schema.sql
+psql "$YAPI_DATABASE_URL" -f server/db/seed.sql
 ```
 
-5.启动开发机
+5. 启动开发环境
 
 ```bash
-npm run dev
+pnpm run dev
 # 访问 http://127.0.0.1:4000（前端）与 http://127.0.0.1:3001（API，端口见 YAPI_PORT）
 ```
 
@@ -58,8 +58,6 @@ npm run dev
     `-- src/
 ```
 
-
-
 ## 内置能力（Wiki、统计、导出等）
 
 | 位置 | 说明 |
@@ -72,28 +70,18 @@ npm run dev
 
 第三方登录（qsso）等通过环境变量 `YAPI_INTEGRATIONS`（JSON 数组）配置，实现见 `server/services/thirdLogin.service.ts`。
 
-## 已移除的遗留机制
+## 技术栈
 
-- `server/exts/`、`server/common/`、npm 插件目录、`plugin.js` / `plugin.json`、根目录 `vendors/` 等均不再使用；能力已内置到 `controllers` / `services` / 标准 API 路由。
+- 后端：Hono + PostgreSQL（关系型表，部分字段为 JSONB 列）
+- 前端：Next.js 15 + React 19
 
-## 技术栈说明
-
-后端： Hono + PostgreSQL（JSONB）
-
-前端： Next.js + React
-
-## 启动开发环境服务器
+## 启动生产环境
 
 ```bash
-  # 在仓库根目录
-  npm run dev
-  # 访问 http://127.0.0.1:4000（前端）
+# 在仓库根目录
+pnpm run build
+pnpm run start -- --prod
+# 或分别启动：pnpm run start-server && pnpm run start-client
 ```
 
-## 启动生产环境服务器
-
-```bash
-  # 在仓库根目录
-  ykit pack -m
-  node server/app.js
-```
+Docker 部署见仓库 `deploy/docker-compose.yml` 与根目录 `README.md`。

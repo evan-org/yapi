@@ -1,5 +1,5 @@
 // @ts-nocheck
-import schema from './schema-transformTo-table.js';
+import { schemaTransformToTable } from './schema-transformTo-table.js';
 
 import _ from 'underscore';
 
@@ -225,7 +225,7 @@ function tableBody(dataSource, columns, level) {
 
 function createSchemaTable(body) {
   let template = "";
-  let dataSource = schema.schemaTransformToTable(json_parse(body));
+  let dataSource = schemaTransformToTable(json_parse(body));
   template += `<table>
   <thead class="ant-table-thead">
     <tr>

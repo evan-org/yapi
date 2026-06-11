@@ -5,7 +5,7 @@ import type { AppContext } from "../types/app-context.js";
 import commons from "../utils/commons.js";
 import baseController from "./base.js";
 import renderToHtml from "../utils/reportHtml/index.js";
-import { openService } from "../services/index.js";
+import { openService, notificationService } from "../services/index.js";
 
 type OpenSchemaMap = {
   runAutoTest: Record<string, unknown>;
@@ -141,9 +141,7 @@ class openController extends baseController {
       if (failedNum !== 0) {
         const origin = new URL(ctx.request.url).origin;
         const autoTestUrl = `${origin}/api/open/run_auto_test?id=${colId}&token=${tokenStr}&mode=${runOpts.mode}`;
-        (
-          commons as unknown as { sendNotice: (projectId: unknown, data: unknown) => void }
-        ).sendNotice(pid, {
+        notificationService.sendNotice(pid, {
           title: "YApi自动化测试报告",
           content: `
         <html>
