@@ -28,9 +28,6 @@ export interface YapiRuntime {
   WEBROOT_RUNTIME: string;
   WEBROOT_LOG: string;
   WEBCONFIG: YapiWebConfig;
-  getInst: <T>(m: new (...args: unknown[]) => T, ...args: unknown[]) => T;
-  delInst: (m: unknown) => void;
-  getInsts: Map<unknown, unknown>;
   mail?: import("nodemailer").Transporter;
   commons?: Record<string, unknown>;
   connect?: Promise<unknown>;

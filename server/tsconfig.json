@@ -22,7 +22,6 @@
     "baseUrl": ".",
     "paths": {
       "runtime.js": ["./runtime.ts"],
-      "models/*": ["./models/*"],
       "controllers/*": ["./controllers/*"],
       "utils/*": ["./utils/*"],
       "middleware/*": ["./middleware/*"],
