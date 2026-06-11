@@ -1,11 +1,6 @@
 // @ts-nocheck
 import baseController from "./base.js";
 import yapi from "../runtime.js";
-import {
-  interfaceRepository,
-  interfaceCatRepository,
-  projectRepository,
-} from "../repositories/index.js";
 import { exportDataService, stripExportIds } from "../services/index.js";
 import markdownIt from "markdown-it";
 import markdownItAnchor from 'markdown-it-anchor';
@@ -16,9 +11,6 @@ import md from "../utils/markdown.js";
 class genServicesController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = interfaceCatRepository;
-    this.interModel = interfaceRepository;
-    this.projectModel = projectRepository;
   }
 
   // @feat: serives

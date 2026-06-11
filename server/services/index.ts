@@ -66,3 +66,14 @@ export { default as exportDataService, stripExportIds } from "./exportData.servi
 export { default as swaggerSyncService } from "./swaggerSync.service.js";
 export { getSyncModeName } from "./swaggerSync.util.js";
 export { validateSwaggerSyncProjectId } from "./swaggerSync.validation.js";
+export { default as wikiService } from "./wiki.service.js";
+export { default as statisticsService } from "./statistics.service.js";
+export { default as advancedMockApiService } from "./advancedMock.api.service.js";
+export { default as notificationService } from "./notification.service.js";
+export { default as authService } from "./auth.service.js";
+export type {
+  SessionUser,
+  ProjectRoleType,
+  AuthAction,
+  ProjectRole,
+} from "./auth.service.js";

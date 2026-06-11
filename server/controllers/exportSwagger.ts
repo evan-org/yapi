@@ -1,19 +1,11 @@
 // @ts-nocheck
 import baseController from "./base.js";
 import yapi from "../runtime.js";
-import {
-  interfaceRepository,
-  interfaceCatRepository,
-  projectRepository,
-} from "../repositories/index.js";
 import { exportDataService, stripExportIds } from "../services/index.js";
 
 class exportSwaggerController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.catModel = interfaceCatRepository;
-    this.interModel = interfaceRepository;
-    this.projectModel = projectRepository;
   }
 
   async exportData(ctx) {

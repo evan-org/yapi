@@ -23,6 +23,7 @@ import {
   ensureImportDataRegistry,
 } from "./open-import.registry.js";
 import BaseService from "./base.service.js";
+import interfaceColService from "./interfaceCol.service.js";
 import { ok, fail } from "./service-result.js";
 import {
   parseEnvParams,
@@ -321,7 +322,7 @@ class OpenService extends BaseService {
     records: Record<string, unknown>
   ) {
     try {
-      const test = await commons.runCaseScript(
+      const test = await interfaceColService.executeCaseScript(
         {
           response,
           records,
@@ -366,7 +367,7 @@ class OpenService extends BaseService {
     }
 
     const projectData = await this.projectModel.get(projectId);
-    const caseListResult = await commons.getCaseList(colId);
+    const caseListResult = await interfaceColService.buildCaseListResponse(colId);
     if (caseListResult.errcode !== 0) {
       return fail(
         caseListResult.errcode,

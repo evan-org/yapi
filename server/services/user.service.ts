@@ -468,6 +468,22 @@ class UserService extends BaseService {
   }
 
   /**
+   * 项目/分组成员条目（与历史 commons.getUserdata 一致）
+   */
+  async getUserdata(uid: number | string, role = "dev") {
+    const userData = await this.userModel.findById(uid);
+    if (!userData) {
+      return null;
+    }
+    return {
+      role,
+      uid: userData._id,
+      username: userData.username,
+      email: userData.email,
+    };
+  }
+
+  /**
    * 成员信息（供 group 等模块复用）
    */
   async getMemberProfile(uid: number | string, role = "dev") {

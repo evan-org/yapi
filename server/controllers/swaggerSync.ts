@@ -1,16 +1,12 @@
 // @ts-nocheck
 import baseController from "./base.js";
 import yapi from "../runtime.js";
-import { projectRepository } from "../repositories/index.js";
-import { swaggerSyncRepository } from "../repositories/swaggerSync.repo.js";
 import swaggerSyncService from "../services/swaggerSync.service.js";
 import syncUtils from "../services/swaggerSync.scheduler.js";
 
 class syncController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.syncModel = swaggerSyncRepository;
-    this.projectModel = projectRepository;
   }
 
   /**
