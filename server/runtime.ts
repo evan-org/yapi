@@ -42,7 +42,6 @@ function resolveWebrootServer() {
 const WEBROOT_SERVER = resolveWebrootServer();
 const WEBCONFIG = loadWebConfig(WEBROOT_SERVER);
 
-const insts = new Map();
 let mail;
 
 const WEBROOT = path.resolve(WEBROOT_SERVER, ".");
@@ -55,24 +54,6 @@ if (WEBCONFIG.mail && WEBCONFIG.mail.enable) {
   mail = nodemailer.createTransport(WEBCONFIG.mail);
 }
 
-/**
- * 获取一个 model 实例，如果不存在则创建一个新的返回
- */
-function getInst(m, ...args) {
-  if (!insts.get(m)) {
-    insts.set(m, new m(args));
-  }
-  return insts.get(m);
-}
-
-function delInst(m) {
-  try {
-    insts.delete(m);
-  } catch (err) {
-    console.error(err);
-  }
-}
-
 const runtime = {
   fs,
   path,
@@ -81,9 +62,6 @@ const runtime = {
   WEBROOT_RUNTIME,
   WEBROOT_LOG,
   WEBCONFIG,
-  getInst,
-  delInst,
-  getInsts: insts,
   mail,
 };
 
