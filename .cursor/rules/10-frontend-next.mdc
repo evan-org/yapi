@@ -1,0 +1,22 @@
+---
+description: Next.js 前端约定与路径
+globs: client/**/*
+---
+
+# 前端（client）
+
+## 路径与别名
+
+- `@/` → `client/src/`（见 `client/tsconfig.json`）。
+- 页面：`src/app/`，工作台路由在 `(dashboard)/`。
+- API 封装：`src/lib/api/*.ts`，统一 `apiRequest`，`credentials: "include"`。
+
+## UI
+
+- 使用 shadcn/ui + Tailwind；不要引入 Ant Design。
+- 中文注释说明非显而易见业务逻辑。
+
+## 内置功能
+
+- `src/lib/features.ts`：导航入口映射（统计、Wiki 等）。
+- `src/lib/api/builtin.ts`：Wiki、统计、导出、高级 Mock、Swagger 同步等 API。

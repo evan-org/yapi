@@ -1,0 +1,32 @@
+---
+description: 后端 Hono 分层与配置约定
+globs:
+  - server/**/*
+---
+
+# 后端（server/）
+
+- 入口：`server/app.ts`（**ESM** + `import` 语法；开发/生产 `tsx` 或 `node dist/app.js`）
+- 源码为 TypeScript（`*.ts`），`package.json` 含 `"type": "module"`，编译输出 `server/dist/`
+- 配置：`server/config/load-config.ts` 仅读 **环境变量** + `server/.env`（见 `.env.example`）；运行时 `server/runtime.ts`
+- `WEBROOT` = `server/` 目录（`runtime.ts` 自动识别 `dist/` 编译目录）
+
+## 分层（必须遵守）
+
+```
+routes/modules/*.routes.ts  →  controllers/*.ts  →  services/*.ts  →  repositories/*.repo.ts → models/*.ts
+```
+
+- **routes/**：`index.ts` 入口；`modules/` 各模块路由；`lib/action-runner.ts` 执行 Action
+- **controllers/**：HTTP 薄层，只做 ctx 适配；数据访问用 `repositories/index.js`，勿直接 `yapi.getInst(model)`
+- **services/**：业务逻辑，不依赖 Hono Context
+- **repositories/**：`*.repo.ts` 封装 Model 单例
+- **models/**：数据模型（PostgreSQL JSONB），继承 `models/base.ts`
+- **lib/**：`context.ts`（AppContext）、`bind-routes.ts`（RouteBinder）
+- Mock：`middleware/mock.ts` + `mock-handler.ts`
+- 新接口：在 `routes/modules/` 加路由 → `services/` 写逻辑 → `controllers/` 薄封装
+- 测试：`npm run test:server`（在仓库根目录）
+
+## 配置约定
+
+- 复杂结构使用 `YAPI_*` JSON 环境变量（如 `YAPI_LDAP_LOGIN`、`YAPI_INTEGRATIONS`）

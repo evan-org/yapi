@@ -1,0 +1,34 @@
+{
+  "name": "yapi",
+  "version": "1.11.0",
+  "private": true,
+  "description": "YApi  monorepo：server（API）+ client（Next.js）",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=yapi-server & npm run dev --workspace=client",
+    "dev-server": "npm run dev --workspace=yapi-server",
+    "dev-client": "npm run dev --workspace=client -- -p 4000",
+    "build-client": "npm run build --workspace=client",
+    "verify-build": "node scripts/verify-next-build.js",
+    "build": "npm run build-client && npm run verify-build",
+    "start": "npm run start --workspace=client & npm run start --workspace=yapi-server",
+    "start-server": "npm run start --workspace=yapi-server",
+    "start-client": "npm run start --workspace=client -- -p 4000 -H 0.0.0.0",
+    "install-server": "npm run install-server --workspace=yapi-server",
+    "db:init": "npm run db:init --workspace=yapi-server",
+    "build:server": "npm run build --workspace=yapi-server",
+    "typecheck": "npm run typecheck --workspace=yapi-server && npm run typecheck --workspace=client",
+    "typecheck:server": "npm run typecheck --workspace=yapi-server",
+    "typecheck:client": "npm run typecheck --workspace=client",
+    "test:server": "npm run test --workspace=yapi-server",
+    "lint:client": "npm run lint --workspace=client"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">= 18.0.0",
+    "npm": ">= 8.0.0"
+  }
+}
