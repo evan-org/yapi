@@ -6,7 +6,6 @@ import type { YapiRuntime } from "../types/global.js";
 import type { AppContext } from "../types/app-context.js";
 import baseController from "./base.js";
 import commons from "../utils/commons.js";
-import { clientPublicFile } from "../utils/client-public.js";
 import {
   interfaceRepository,
   interfaceCatRepository,
@@ -246,16 +245,6 @@ class interfaceController extends baseController {
     } catch (err) {
       replyException(ctx, err);
     }
-  }
-
-  async downloadCrx(ctx: AppContext) {
-    let filename = "crossRequest.zip";
-    let dataBuffer = yapi.fs.readFileSync(
-      clientPublicFile("attachment", "cross-request.zip")
-    );
-    ctx.set("Content-disposition", "attachment; filename=" + filename);
-    ctx.set("Content-Type", "application/zip");
-    ctx.body = dataBuffer;
   }
 
   async listByCat(ctx: AppContext) {

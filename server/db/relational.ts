@@ -222,7 +222,7 @@ export function tokenFromRow(row: DocRecord): DocRecord {
 
 export const TOKEN_SELECT = "_id, project_id, token";
 
-/** follow 表行 → 业务对象（字段名与历史 JSONB 文档一致） */
+/** follow 表行 → 业务对象 */
 export function followFromRow(row: DocRecord): DocRecord {
   return {
     _id: row._id,

@@ -42,7 +42,7 @@ export const storageRepository: StorageRepository = {
     if ((updated.rowCount || 0) > 0) {
       return updated.rowCount;
     }
-    // setItem 首次写入时可能尚无行，与 JSONB updateWhere 无匹配行时补插入
+    // 首次写入时可能尚无行，UPDATE 无匹配则补插入
     const res = await pool.query(
       `INSERT INTO ${TBL} (key, data) VALUES ($1, $2) RETURNING ${STORAGE_SELECT}`,
       [key, dataStr]

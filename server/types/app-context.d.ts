@@ -1,6 +1,5 @@
 /**
  * 控制器层使用的请求上下文（由 lib/context.ts 从 Hono Context 构建）
- * 与历史 Koa ctx 字段兼容，便于 controllers 无感迁移
  */
 export interface AppRequest {
   body: Record<string, unknown>;

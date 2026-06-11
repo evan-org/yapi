@@ -7,7 +7,7 @@ module.exports = {
   "instructionsUrlPath": "", // 使用说明demo路径 (需要配合JS-Component注释的@instructions使用)
   "common": { // 通用默认配置，包括主页配置等
     "title": "YApi 接口管理平台", // page title
-    "footer": "&copy; 2018 <a href=\"https://ymfe.org\">YMFE</a> Team. Build by <a href=\"http://ued.qunar.com/ydoc/\">ydoc</a>&nbsp;", // 通用尾
+    "footer": "&copy; YApi. <a href=\"https://github.com/herper-commit/yapi\">GitHub</a>&nbsp;",
     "home": '<img src="./images/logo_header@2x.png" /> &nbsp;YAPI',
     "homeUrl": "./index.html",
     "keywords": "api管理,接口管理,接口文档,api文档",
@@ -25,12 +25,12 @@ module.exports = {
       "title": "", // Page Title
       "homepage": { // 配置首页，样式区别于其他页面
         "version": "v" + require("./package.json").version, // 版本信息将显示在banner底部
-        "button": [{ // 按钮组将显示在banner底部
-          "name": "产品演示",
-          "href": "http://yapi.demo.qunar.com"
+        "button": [{
+          "name": "快速开始",
+          "href": "./documents/quickstart.html"
         }, {
           "name": "Github",
-          "href": "https://github.com/YMFE/yapi"
+          "href": "https://github.com/herper-commit/yapi"
         }],
         "intro": [{ // 首页的正文部分，数组项依次渲染，可重复使用
           "title": "为 API 开发者设计的管理平台", // 介绍板块标题
@@ -151,7 +151,7 @@ module.exports = {
       "title": "内网部署",
       "banner": {
         "title": "内网部署",
-        "description": "部署 YApi 平台是非常容易的，即便您不懂 nodejs 或者 mongodb"
+        "description": "部署 YApi 平台：Docker Compose 或命令行，需 Node.js 与 PostgreSQL"
       },
       "compile": "markdown",
       "menuLevel": 2,
@@ -189,10 +189,6 @@ module.exports = {
       "compile": "markdown",
       "menuLevel": 2,
       "content": "./CHANGELOG.md"
-    }, {
-      "name": "产品演示",
-      "title": "产品演示",
-      "url": "http://yapi.demo.qunar.com/"
     },
     {
       "name": "api",

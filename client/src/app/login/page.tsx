@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 登录页：邮箱/密码、LDAP（与旧版 API 兼容）
+ * 登录页：邮箱/密码、LDAP
  */
 import { useState } from "react";
 import Link from "next/link";

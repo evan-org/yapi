@@ -160,12 +160,13 @@ assert.equal(status, 200)
 
 ## 服务端自动化测试
 
+浏览器内批量测试依赖当前页面环境；**服务端自动化测试** 在 YApi API 侧执行用例，适合 CI/Jenkins 集成。
 
-开始测试功能是在浏览器跑自动化测试，他依赖于浏览器的使用环境。服务端自动化测试功能是在YApi服务端跑自动化测试，不需要依赖浏览器环境，只需要访问 YApi 提供的 url 链接就能跑自动化测试，非常的简单易用，而且可以集成到 jenkins。
+在测试集合页面复制 **服务端测试 URL**（即 `/api/open/run_auto_test`），携带项目 Token 与集合 id 访问即可获取执行结果，例如：
 
-### 详细使用方法
-
-点击服务端测试，出现如下弹窗，用户访问该 url 就可以获取当前测试用例的所有测试结果。
+```
+GET /api/open/run_auto_test?id={colId}&token={projectToken}&mode=json
+```
 
 <img src="./images/autoTest.png" />
 <img src="./images/autoTestResult.png" />

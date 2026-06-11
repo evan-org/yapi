@@ -19,12 +19,12 @@
 ```bash
 cp server/.env.example server/.env   # 按需修改 PostgreSQL、端口、管理员邮箱
 npm install --legacy-peer-deps
-npm run install-server
+npm run install-server               # 初始化库表；默认管理员见 YAPI_ADMIN_ACCOUNT，初始密码 ymfe.org
 npm run dev
 ```
 
 - API 端口：`YAPI_PORT`（默认 3001，见 `server/.env`）
-- 前端：<http://127.0.0.1:4000>
+- 前端：<http://127.0.0.1:4000>（开发时 `/api`、`/mock` 由 Next 代理到 API）
 
 | 命令 | 说明 |
 |------|------|
@@ -32,6 +32,7 @@ npm run dev
 | `npm run dev-server` | 仅后端 |
 | `npm run dev-client` | 仅前端 |
 | `npm run build` | 构建前端 |
+| `npm run start -- --prod` | 生产模式启动前后端 |
 | `npm run test:server` | 后端测试 |
 | `npm run db:init` | 初始化 PostgreSQL 表结构 |
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * 用户模型：委托 userRepository（install 等遗留入口仍经 getInst）
+ * 用户模型：委托 userRepository
  */
 import baseModel from "./base.js";
 import { userRepository } from "../repositories/user.repo.js";

@@ -7,7 +7,7 @@ server/dist/
 # Docker 本地 env
 deploy/.env
 log/
-# 旧版插件/打包产物（勿提交）
+# 勿提交的本地产物
 vendors/
 plugin.js
 plugin.json

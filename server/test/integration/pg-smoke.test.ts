@@ -22,7 +22,7 @@ test("PostgreSQL 服务可连接", async (t) => {
   }
 });
 
-test("PostgreSQL JSONB 表可写入并查询", async (t) => {
+test("PostgreSQL JSONB 列可写入并查询", async (t) => {
   if (!shouldRunPgCi()) {
     t.pass();
     return;

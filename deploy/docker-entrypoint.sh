@@ -20,6 +20,6 @@ if [ ! -f /yapi/server/init.lock ]; then
   echo "      默认管理员密码: ymfe.org"
 fi
 
-# API 在 server/ 工作区内启动；Next 在 client/
-cd /yapi/server && node app.js "$@" &
-cd /yapi && exec npm run start:client --workspace=client -- -p 4000 -H 0.0.0.0
+# API（Hono）与 Next.js 前端分别启动
+cd /yapi && npm run start-server &
+cd /yapi && exec npm run start-client -- -p 4000 -H 0.0.0.0

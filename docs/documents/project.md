@@ -209,7 +209,7 @@ console.log('decryptedData', decryptedData);
 
 ```javascript
 context.promise = new Promise(function(resolve) {
-  var api = context.utils.axios.get('http://yapi.local.qunar.com:3000/api/user/status');
+  var api = context.utils.axios.get('http://127.0.0.1:3001/api/user/status');
   api.then(function(result) {
     //...
     console.log(result.data);

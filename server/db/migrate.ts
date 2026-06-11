@@ -2,7 +2,7 @@
  * PostgreSQL 建表与索引（业务表均为关系型列，复杂字段用列级 JSONB）
  */
 import { getPool } from "./pg-pool.js";
-import { JSONB_COLLECTIONS, RELATIONAL_COLLECTIONS, tableName } from "./table.js";
+import { RELATIONAL_COLLECTIONS, tableName } from "./table.js";
 
 /** 关系型核心表 DDL */
 const RELATIONAL_DDL: Record<(typeof RELATIONAL_COLLECTIONS)[number], string> = {
@@ -261,15 +261,6 @@ export async function ensureTables(): Promise<void> {
   const pool = getPool();
   for (const col of RELATIONAL_COLLECTIONS) {
     await pool.query(RELATIONAL_DDL[col]);
-  }
-  for (const col of JSONB_COLLECTIONS) {
-    const tbl = tableName(col);
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS ${tbl} (
-        _id SERIAL PRIMARY KEY,
-        doc JSONB NOT NULL DEFAULT '{}'::jsonb
-      )
-    `);
   }
 }
 

@@ -12,7 +12,7 @@
 |------|------|
 | `controllers/` | HTTP 薄层：鉴权、参数解析、响应包装；继承 `base.ts` |
 | `services/` | 业务逻辑层，Controller 调用 Service，不直接编排 Model |
-| `models/` | 数据模型（PostgreSQL JSONB），继承 `models/base.ts` |
+| `models/` | 数据模型（PostgreSQL），继承 `models/base.ts` |
 | `routes/` | `http/`、`ws/` 入口；`modules/*.routes.ts` 各模块路由 |
 | `lib/` | Hono 适配、`api-response` 统一响应契约 |
 | `middleware/` | Mock（`mock.ts` + `mock-handler.ts`）等 |
@@ -40,5 +40,4 @@ npm run build
 ## 不要做的事
 
 - 配置仅 `server/.env` / `YAPI_*`
-- 不要恢复 `vendors/` 中间层
-- 不要引入 MongoDB / Mongoose，不要编写旧库数据迁移或 ETL 脚本
+- 不要引入 MongoDB / Mongoose 或恢复已移除的插件打包层

@@ -35,7 +35,6 @@ const DEFAULT_SUCCESS_MSG = "成功！";
  */
 const RAW_RESPONSE_PATH_PREFIXES = [
   "/api/user/avatar",
-  "/api/interface/download_crx",
   "/api/interface/schema2json",
   "/api/open/run_auto_test",
   "/api/open/project_interface_data"
